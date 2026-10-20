@@ -41,8 +41,8 @@ export class UniversalAdProvider implements IAdProvider {
 
     const w = window as any;
 
-    // 1. YouTube Playables Native Interstitial
-    if (w.ytgame?.ads?.requestInterstitialAd) {
+    // 1. YouTube Playables Native Interstitial (only when running inside YouTube)
+    if (w.ytgame?.IN_PLAYABLES_ENV && w.ytgame?.ads?.requestInterstitialAd) {
       try {
         await w.ytgame.ads.requestInterstitialAd();
         return true;
@@ -87,8 +87,8 @@ export class UniversalAdProvider implements IAdProvider {
   public async showRewarded(placement = 'rewarded_booster'): Promise<boolean> {
     const w = window as any;
 
-    // 1. YouTube Playables Native Rewarded Ad
-    if (w.ytgame?.ads?.requestRewardedAd) {
+    // 1. YouTube Playables Native Rewarded Ad (only when running inside YouTube)
+    if (w.ytgame?.IN_PLAYABLES_ENV && w.ytgame?.ads?.requestRewardedAd) {
       try {
         await w.ytgame.ads.requestRewardedAd();
         this.lastInterstitialTime = Date.now(); // Reset cooldown after rewarded ad
