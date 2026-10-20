@@ -5,12 +5,12 @@
 
 ## 1. Project & Workspace Architecture
 
-- **Scope:** This workspace hosts multiple independent HTML5 3D game projects. Each game lives in its own dedicated subdirectory with its own Git repository.
-- **Goal:** High-performance (target 60 FPS) HTML5 3D games free of Unity bloat, easily portable to Android/iOS via Capacitor.
-- **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · Capacitor · TypeScript (strict).
-- **Platform Boundary:** Game logic is platform-agnostic. Platform differences reside exclusively within `src/platform/`.
+- **Scope:** This workspace hosts multiple independent HTML5 3D game projects and a central `backlog/ideas-backlog.json` queue. Each game lives in its own dedicated subdirectory.
+- **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 5 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
+- **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
+- **Platform Boundary:** Game logic is platform-agnostic. Platform differences (`ytgame`, `YaGames`, `CrazyGames`, `PokiSDK`, `MockAdProvider`) reside exclusively within `src/platform/`.
 - **Layering Order:** `core` ← `render` / `physics` / `input` / `platform` ← `game` ← `ui`. Sublayers must never import upper layers.
-- **Visual Theme & Art Direction:** Default to **vibrant colors and bright, sunlit/well-lit environments** across all games unless a dark theme is explicitly targeted for a specific concept.
+- **Visual Theme & Asset Strategy:** Default to **vibrant colors, sunlit daylight environments**, and **Compound Procedural 3D Prefabs + Hot-Swap `.glb` support (`ASSETS_NEEDED.md`)** unless a dark theme is explicitly requested.
 
 ## 2. Language & Communication
 
@@ -72,35 +72,38 @@
 ## 7. Definition of Done
 
 A task is complete only when:
-1. `npm run typecheck` and `npm run build` pass without errors.
+1. `npm run typecheck` and `npm run build` pass without errors (`dist/` bundle `< 5 MB`, zero external network calls).
 2. Unit tests pass (if applicable).
-3. Visual/gameplay changes are verified on the dev/preview server.
+3. YouTube Playables SDK (`ytgame`) & Universal Portal Bridge wired: `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, `loadData`/`saveData`, and all 3 Mandatory Rewarded Ad Hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar).
 4. No memory allocations, `console.log`, or debug remnants in hot paths.
-5. Code committed with a clean English Conventional Commit and pushed to the project repository upon reaching a stable milestone.
+5. Code committed with a clean English Conventional Commit and pushed to the repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
-7. Arcade Shell compliant: 3-column desktop layout with left navigation (portal return `../`, restart, fullscreen, dynamic other games), center stage with ResizeObserver canvas adapting, right rail ad banner (300x250/300x600), persistent sticky ad in fullscreen mode, and verified `public/icon.svg`.
-8. Game Director Critique Pass: Evaluated across camera line-of-sight (zero occlusion from bottom/sides), daylight/vibrant palette, and juice polish before final push.
+7. Dual-Mode Arcade Shell compliant: Auto-collapses sidebars for 100% full-viewport inside YouTube Playables / Yandex / CrazyGames / `?embed=1`, renders 3-column Arcade Shell on GitHub Pages, and includes verified `public/icon.svg`.
+8. Game Director 4-Filter Critique Pass: Evaluated across (A) 360° camera line-of-sight & 9:16/16:9 ergonomics, (B) daylight palette & Compound Procedural Prefabs (`ASSETS_NEEDED.md`), (C) YouTube Playables SDK & 3 Revenue Hooks, and (D) 60 FPS QA before final push.
 
 ## 8. Rules & Skills Directory
 
 | File | Mode | Trigger Condition |
 |---|---|---|
 | `rules/10-code-quality.md` | glob | Triggered when editing `**/src/**/*.ts` |
-| `rules/15-game-studio-pipeline.md` | model_decision | 3-Phase Studio Squad workflow, 3D camera line-of-sight, Game Director critique loop |
+| `rules/15-game-studio-pipeline.md` | model_decision | 2-stage Producer-Consumer pipeline, 3-Phase Studio Squad, 4-Filter Game Director critique |
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
 | `rules/40-rapier-physics.md` | glob | Triggered when editing `**/src/physics/**` |
 | `rules/50-input-abstraction.md` | glob | Triggered when editing `**/src/input/**`, `**/src/ui/**` |
-| `rules/55-arcade-layout-and-shell.md` | model_decision | Arcade shell, 3-column desktop layout, responsive canvas, sidebar, ad rails, game icon pipeline |
+| `rules/55-arcade-layout-and-shell.md` | model_decision | Dual-Mode Arcade Shell (auto full-viewport in YT/Portals, 3-column on GitHub Pages) & `icon.svg` |
 | `rules/60-mobile-capacitor.md` | model_decision | Mobile, Capacitor, WebView, safe area |
-| `rules/65-monetization-ads.md` | model_decision | AdMob, Poki/CrazyGames, IAdProvider abstraction |
+| `rules/62-youtube-playables.md` | model_decision | YouTube Playables SDK (`ytgame`), universal portal bridge, CSP/bundle budget, hot-swap 3D assets |
+| `rules/65-monetization-ads.md` | model_decision | YouTube Playables & Multi-Portal `UniversalAdProvider` + 3 mandatory rewarded ad revenue hooks |
 | `rules/68-pwa-and-meta.md` | model_decision | PWA manifest, offline worker, OpenGraph meta |
 | `rules/70-token-context.md` | model_decision | Large file reads, token economy |
 | `rules/80-dependencies-and-git.md` | model_decision | Package additions, Git repos, commit & push |
 | `rules/90-release-checklist.md` | manual | Triggered exclusively via `@90-release-checklist` |
+| `skills/yt-playable-trend-scout` | skill | 90-day market scan, 100-pt Revenue Matrix, backlog re-validation & Dual Reporting |
+| `skills/game-studio-pipeline` | skill | Pulls #1 backlog game & executes 3-Phase Studio Squad (Designer -> Implementer -> Critic) |
+| `skills/asset-integrator` | skill | Integrates user-supplied `.glb` 3D models/textures into `PrefabFactory` (`ASSETS_NEEDED.md`) |
 | `skills/html5-game-development` | skill | Core 3D game development workflow |
-| `skills/game-studio-pipeline` | skill | 3-Phase Studio Squad (Designer -> Implementer -> Game Director & QA Critic) |
 | `skills/game-performance-audit` | skill | FPS drops, jank, memory audits |
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |

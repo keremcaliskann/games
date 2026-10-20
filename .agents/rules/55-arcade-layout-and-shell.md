@@ -5,8 +5,38 @@ description: "Arcade Shell 3-column layout, responsive canvas stage, left sideba
 
 # Arcade Shell Layout & Game Icon Policy
 
-## 1. Architectural Principle
-HTML5 3D games in this workspace must not open in raw, unconstrained full-window mode on desktop browsers. Each game operates within a standardized **Arcade Shell** that provides brand consistency, portal return navigation, game control shortcuts, cross-game discovery, dedicated advertising zones, and a mandatory vector icon pipeline.
+## 1. Architectural Principle (Dual-Mode Shell)
+Each game operates with a **Dual-Mode Shell** that serves both external game portals (YouTube Playables, Yandex Games, CrazyGames, Poki) and the workspace's GitHub Pages Arcade Portal from a single build:
+
+1. **Embedded Portal Mode (YouTube Playables / Yandex / CrazyGames / Poki / `?embed=1`):**
+   - Automatically hides left and right sidebars so the 3D WebGL stage occupies **100% of the viewport (`100vw × 100dvh`)** in both 9:16 portrait and 16:9 landscape.
+2. **GitHub Pages Standalone Mode (Default Fallback):**
+   - Renders the standardized **3-Column Arcade Shell** providing brand navigation, portal return (`../`), restart/fullscreen shortcuts, cross-game discovery, and right-rail sponsor preview.
+
+```ts
+export function applyDualModeShell(): boolean {
+  const w = window as any;
+  const isEmbedded = Boolean(
+    w.ytgame?.IN_PLAYABLES_ENV ||
+    w.YaGames ||
+    w.CrazyGames?.SDK ||
+    w.PokiSDK ||
+    new URLSearchParams(window.location.search).get('embed') === '1'
+  );
+  if (isEmbedded) {
+    document.body.classList.add('embed-fullscreen-mode');
+  }
+  return isEmbedded;
+}
+```
+
+```css
+body.embed-fullscreen-mode .shell-sidebar-left,
+body.embed-fullscreen-mode .shell-sidebar-right,
+body.embed-fullscreen-mode .fullscreen-ad-banner {
+  display: none !important;
+}
+```
 
 ```
 +-----------------------------------------------------------------------------------+

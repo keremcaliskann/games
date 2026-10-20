@@ -1,111 +1,84 @@
 ---
 name: game-studio-pipeline
-description: Executes the token-optimized 3-Phase Studio Squad workflow (Designer -> Implementer -> Game Director & QA Critic) for building, polishing, and releasing 3D HTML5 games.
+description: Executes the Consumer stage of the autonomous studio — pulls the #1 ranked game from backlog/ideas-backlog.json and runs the 3-Phase Studio Squad (Designer -> Implementer -> Game Director Critic) with full YouTube Playables SDK and multi-portal support.
 metadata:
   icon: groups
 ---
 
-# Autonomous Game Studio Pipeline
+# Autonomous Game Studio Pipeline (`game-studio-pipeline`)
 
-This skill guides the orchestration of a token-optimized, 3-phase multi-agent game studio pipeline for creating production-ready 3D HTML5 games with zero bloat and maximum visual/gameplay fidelity.
-
----
-
-## 1. Pipeline Overview & Token Economy
-
-Instead of launching a dozen independent subagents, the studio operates in **3 sequential squads**:
-
-```
-+-----------------------------------------------------------------------------------------+
-| SQUAD 1: STUDIO DESIGNER                                                                |
-| Produces DESIGN.md: Core loop, solvable level math, economy, and camera ergonomics.     |
-+-----------------------------------------------------------------------------------------+
-                                           │
-                                           ▼
-+-----------------------------------------------------------------------------------------+
-| SQUAD 2: STUDIO IMPLEMENTER                                                             |
-| Builds the complete game: Engine, gameplay, 3D camera rig, daylight lighting, audio,   |
-| 3-column Arcade Shell, and public/icon.svg.                                             |
-+-----------------------------------------------------------------------------------------+
-                                           │
-                                           ▼
-+-----------------------------------------------------------------------------------------+
-| SQUAD 3: GAME DIRECTOR & QA CRITIC                                                      |
-| Conducts 3-point critique (Camera/Visibility, Art/Juice, Tech/Build), directs polish   |
-| patches, and authorizes push to GitHub Pages.                                           |
-+-----------------------------------------------------------------------------------------+
-```
+This skill orchestrates the **Consumer** automation of the decoupled game studio. It pulls the highest-ranked `ready` blueprint from `backlog/ideas-backlog.json` and executes the token-optimized **3-Phase Studio Squad** to ship a 100% playable, revenue-optimized 3D game for **YouTube Playables**, **Yandex Games**, **CrazyGames**, **Poki**, and **GitHub Pages**.
 
 ---
 
-## 2. Phase 1: Studio Designer
+## 1. Queue Intake (`backlog/ideas-backlog.json`)
 
-### Execution
-Invoke subagent or execute with the persona of a veteran Lead Game Designer.
-Deliverable: `DESIGN.md` in the game project directory.
+1. Read `backlog/ideas-backlog.json`.
+2. Select the item with `status === "ready"` that has the **highest `revenueScore` (Rank #1)**.
+3. Immediately update its status to `"in_progress"` while building.
+4. *(Fallback)* If no `"ready"` item exists in `backlog/ideas-backlog.json`, invoke the `yt-playable-trend-scout` skill first to populate the queue.
 
-### Mandatory Deliverables Checklist
-1. **Core Loop Formula:** Input action -> immediate state transformation -> rewarding visual/audio payoff.
-2. **Level Progression & Math:** Deterministic, guaranteed-solvable algorithm with zero deadlock states.
-3. **Ergonomic Boundaries:** Explicitly define the maximum camera orbit pitch and forbidden occlusion zones (e.g., forbidding solid ground planes under floating 3D puzzles).
-4. **Economy Spec:** Coin rewards per level (+25), hint costs, rewarded ad triggers (+50), and interstitial intervals (every 3+ levels).
+---
+
+## 2. Phase 1: Studio Designer (`<game-name>/DESIGN.md`)
+
+Translate the selected backlog blueprint into `<game-name>/DESIGN.md`:
+1. **Core Loop & 2-Second Hook:** Immediate single-finger interaction within 2 seconds of `ytgame.game.gameReady()`.
+2. **100% Solvable Level Math:** Deterministic reverse-generation or verified algorithm ensuring zero impossible levels.
+3. **3 Mandatory Revenue Hooks (`65-monetization-ads`):**
+   - **Hook 1 (In-Level Rescue Boosters):** 2–3 bottom-bar power-ups purchasable via Coins or `showRewarded('booster_<type>')`.
+   - **Hook 2 (Near-Miss Revive Modal):** "So Close!" prompt on failure offering `+Moves / Clear Buffer` via `showRewarded('revive')`.
+   - **Hook 3 (Victory 2x/3x/5x Moving Multiplier Bar):** Oscillating multiplier needle on the Victory screen calling `showRewarded('victory_multiplier')`.
+4. **360° Camera & Compound Prefab Spec:** Unobstructed camera angles (zero ground/pedestal occlusion), 9:16 portrait + 16:9 landscape framing, and multi-part `THREE.Group` procedural prefabs + `ASSETS_NEEDED.md`.
 
 ---
 
 ## 3. Phase 2: Studio Implementer
 
-### Execution
-Invoke subagent or execute with the persona of a Senior Full-Stack Game Engineer & Technical Artist.
+Build the complete project inside `c:/Users/kerem/Desktop/Games/<game-name>`:
 
-### Technical Responsibilities
-1. **Scaffold & Build Setup:**
-   - Independent project folder under `c:/Users/kerem/Desktop/Games/<game-name>`.
-   - `vite.config.ts` with `base: './'`, manual chunks for `three` and `rapier`.
-   - `tsconfig.json` with strict mode.
-2. **Layering Architecture:**
-   - `core` <- `render` / `physics` / `input` / `platform` <- `game` <- `ui`.
-3. **3D Camera & Line-of-Sight:**
-   - `CameraRig` supporting smooth spherical damping and dynamic target radius.
-   - **Crucial Rule:** No visual ground/pedestal props blocking bottom camera angles.
-4. **Daylight & Vibrant Visuals:**
-   - Bright sky background (`scene.background = new THREE.Color(0xbae6fd)` or similar).
-   - `HemisphereLight` (white sky + warm ground bounce) + `DirectionalLight` sun.
-   - High-saturation, distinct entity colors.
-5. **Procedural Web Audio:**
-   - Synthesize all SFX via `AudioContext` in `src/core/audio.ts`. Zero external audio files.
-6. **Arcade Shell & PWA:**
-   - 3-column layout (left sidebar, center ResizeObserver canvas, right ad rail).
-   - Fullscreen mode with persistent sticky ad banner.
-   - Vector `public/icon.svg` (512x512) and `public/manifest.json`.
+1. **YouTube Playables SDK & Universal Portal Bridge (`src/platform/`):**
+   - Include `<script src="https://www.youtube.com/game_api/v1"></script>` first in `index.html`.
+   - Implement `src/platform/sdk.ts` (`firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `isAudioEnabled`/`onAudioEnabledChange`, `loadData` awaited before `saveData`, `sendScore`) with automatic fallback for Yandex (`YaGames`), CrazyGames (`CrazyGames.SDK`), Poki (`PokiSDK`), and `localStorage`.
+   - Implement `src/platform/ads.ts` (`UniversalAdProvider`) routing rewarded/interstitial calls to the active portal or `MockAdProvider`.
+2. **Compound Procedural 3D Prefabs & Hot-Swap (`src/render/PrefabFactory.ts`):**
+   - Build rich multi-part 3D prefabs (`ExtrudeGeometry`, `LatheGeometry`, hierarchical `THREE.Group`, procedural canvas textures).
+   - Add hot-swap support checking `public/models/` and generate `<game-name>/ASSETS_NEEDED.md` documenting optional `.glb` upgrades for the user.
+3. **3D Camera & Daylight Visuals (`src/render/`):**
+   - Bright sunlit background, `HemisphereLight` + `DirectionalLight`, vibrant high-contrast materials.
+   - Zero bottom/side camera occlusion; responsive FOV/zoom for both **9:16 portrait** and **16:9 landscape**.
+4. **Procedural ASMR Web Audio (`src/core/audio.ts`):**
+   - Zero external audio files; pitch-ramped combo clicks, pops, whooshes, and victory arpeggios synced with `ytgame.system.onAudioEnabledChange`.
+5. **Dual-Mode Arcade Shell & Icon (`index.html`, `public/icon.svg`):**
+   - Auto-collapses sidebars (`body.embed-fullscreen-mode`) inside YouTube Playables / Yandex / CrazyGames / `?embed=1` for 100% full-viewport play; renders 3-column Arcade Shell on GitHub Pages.
+   - Create custom `public/icon.svg` (512×512) and `public/manifest.json`.
 
 ---
 
-## 4. Phase 3: Game Director & QA Critic
+## 4. Phase 3: Game Director & QA Critic (`<game-name>/CRITIQUE.md`)
 
-### Execution
-Invoke subagent or execute with the persona of an uncompromising Game Director and QA Auditor.
-Deliverable: `CRITIQUE.md` containing evaluation notes and required polish patches.
-
-### The 3-Filter Audit Rubric
+Audit the completed build across **4 Mandatory Filters**:
 
 ```markdown
-### 1. Camera & Ergonomics
-- [ ] Are bottom and side viewing angles 100% unobstructed?
-- [ ] Does the camera center on the puzzle/action bounds dynamically?
-- [ ] Is input responsive with zero drag/tap confusion?
+### Filter A: Camera & 9:16 / 16:9 Ergonomics
+- [ ] Are bottom and side viewing angles 100% unobstructed (zero ground/pedestal blocking)?
+- [ ] Does the game play effortlessly with one hand in both 9:16 portrait and 16:9 landscape?
 
-### 2. Art Direction & "Juice"
-- [ ] Is the environment bright, sunlit, and cheerful (unless dark is explicitly requested)?
-- [ ] Do interactive elements pop against the background with strong contrast?
-- [ ] Are particle bursts, bounce animations, and screen shake tactile and satisfying?
+### Filter B: Art Direction, Compound Prefabs & ASMR Juice
+- [ ] Is the environment bright, sunlit, and vibrant?
+- [ ] Are entities multi-part Compound Procedural Prefabs (no raw placeholder boxes) with ASSETS_NEEDED.md documented?
+- [ ] Are particle bursts, squash-and-stretch, and Web Audio ASMR feedback satisfying?
 
-### 3. Technical & Release Integrity
+### Filter C: YouTube Playables SDK & Revenue Hooks
+- [ ] Is `<script src="https://www.youtube.com/game_api/v1"></script>` first in `index.html`?
+- [ ] Are `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, and `loadData`/`saveData` wired?
+- [ ] Do all 3 Rewarded Ad hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar) work end-to-end?
+- [ ] Does Dual-Mode Shell hide sidebars in embedded portal mode (`?embed=1` / `ytgame`) and show Arcade Shell on GitHub Pages?
+- [ ] Zero external network fetches (CSP clean) and `dist/` bundle `< 5 MB`?
+
+### Filter D: Technical & Release Integrity
 - [ ] Zero allocations in hot paths (`update`, `fixedUpdate`, `render`).
-- [ ] `npm run typecheck` exits with code 0.
-- [ ] `npm run build` exits with code 0.
-- [ ] Catalog entry in `games.json` and root `index.html` verified.
-- [ ] Automated push to `origin/main` on `https://github.com/keremcaliskann/games`.
+- [ ] `npm run typecheck` and `npm run build` exit with code 0.
 ```
 
-### The Polish Loop
-If any item fails, the implementer immediately patches the code. The Game Director re-evaluates. Once all checkboxes pass, commit with Conventional Commits and push to `origin/main`.
+Apply any polish fixes immediately, mark the game `"completed"` in `backlog/ideas-backlog.json`, synchronize root `games.json`, `index.html`, and `.github/workflows/deploy.yml` via `games-portal-catalog`, commit with English Conventional Commits, and push to `origin/main`.

@@ -45,10 +45,17 @@ Run through this verification checklist before preparing a production build or r
 - [ ] Live target URL verified: `https://keremcaliskann.github.io/games/<game-name>/`.
 
 ## 7. Arcade Shell & Portal Compliance (55-arcade-layout-and-shell)
-- [ ] 3-Column Arcade Shell renders properly on desktop (left navigation, center canvas stage, right ad rail).
+- [ ] Dual-Mode Shell auto-hides sidebars when inside YouTube Playables / Yandex / CrazyGames / `?embed=1`, and renders 3-column Arcade Shell on GitHub Pages.
 - [ ] Left sidebar navigation verified: Portal return link (`../`), Restart button, Fullscreen toggle, and dynamic "Other Games" list.
-- [ ] Three.js canvas resizes dynamically via `ResizeObserver` on container without aspect ratio distortion or stretching.
-- [ ] Dedicated right rail ad banner zone visible (300x250 or 300x600 slot) with styled sponsor frame.
-- [ ] Fullscreen mode functions and retains a visible sticky ad banner area.
+- [ ] Three.js canvas resizes dynamically via `ResizeObserver` on container in both 9:16 portrait and 16:9 landscape without distortion.
 - [ ] Mandatory `public/icon.svg` exists, is valid SVG, and renders in portal, game cards, and favicon.
+
+## 8. YouTube Playables & Revenue Certification (62-youtube-playables, 65-monetization-ads)
+- [ ] `<script src="https://www.youtube.com/game_api/v1"></script>` is the first script tag in `index.html`.
+- [ ] `ytgame.game.firstFrameReady()` and `ytgame.game.gameReady()` are invoked at startup.
+- [ ] `ytgame.system.onPause`, `onResume`, and `onAudioEnabledChange` are wired to `GameClock` and `SoundController`.
+- [ ] `ytgame.game.loadData()` is awaited prior to `saveData()`, with `localStorage` fallback outside YouTube Playables.
+- [ ] All 3 Mandatory Revenue Hooks function cleanly: (1) In-Level Rescue Boosters, (2) Near-Miss Revive Modal, (3) Victory 2x/3x/5x Moving Multiplier Bar.
+- [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 5 MB`.
+- [ ] Compound Procedural 3D Prefabs used (no raw primitive placeholders), with `ASSETS_NEEDED.md` generated if optional `.glb` overrides apply.
 
