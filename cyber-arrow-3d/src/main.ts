@@ -13,7 +13,8 @@ import { EconomySystem } from './game/systems/economy';
 import { ArrowBlock } from './game/entities/arrow-block';
 import { Hud } from './ui/hud';
 import { ShellController } from './ui/shell-controller';
-import { LifecycleManager } from './platform/lifecycle';
+import { PlatformBridge } from './platform/sdk';
+import { UniversalAdProvider } from './platform/ads';
 import { GAME_CONFIG } from './game/config/game-config';
 
 const _ORIGIN = new THREE.Vector3(0, 0, 0);
@@ -34,10 +35,17 @@ class GameApp {
   private readonly input: InputManager;
   private readonly hud: Hud;
   private readonly shell: ShellController;
+  private readonly ads: UniversalAdProvider;
+  private isFirstRender = true;
 
   constructor() {
+    // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
+    PlatformBridge.applyDualModeShell();
+
     this.appEl = document.getElementById('app')!;
     this.hudEl = document.getElementById('hud')!;
+    this.ads = UniversalAdProvider.get();
+    this.ads.initialize();
 
     // Core & Render Setup
     this.bus = EventBus.get();
@@ -69,16 +77,18 @@ class GameApp {
       (dx, dy) => this.cameraRig.rotateDelta(dx, dy)
     );
 
-    // UI HUD Setup
+    // UI HUD Setup with 3 Mandatory Revenue Hooks
     this.hud = new Hud(this.hudEl, {
       onHintClick: () => this.handleHint(),
       onResetClick: () => this.loadCurrentLevel(),
       onSoundToggle: () => this.sound.toggleMute(),
       onNextLevel: () => this.handleNextLevel(),
-      onWatchAd: () => this.handleRewardAd(),
+      onWatchAd: () => this.handleRewardCoinsAd(),
+      onWatchMultiplierAd: (multiplier: number) => this.handleMultiplierAd(multiplier),
+      onFreeHintAd: () => this.handleFreeHintAd(),
     });
 
-    // Standardized Arcade Shell Controller
+    // Standardized Arcade Shell Controller (for GitHub Pages Portal mode)
     this.shell = new ShellController({
       currentGameId: 'cyber-arrow-3d',
       onRestart: () => this.loadCurrentLevel(),
@@ -107,18 +117,24 @@ class GameApp {
       this.sound.playLevelVictory();
       this.particles.spawnCelebration(_ORIGIN);
       const currentLevel = this.economy.getLevel();
-      const shouldAd = this.economy.shouldShowInterstitial();
-      this.economy.advanceLevel();
-      this.hud.showVictory(currentLevel, GAME_CONFIG.coinsPerLevel, shouldAd);
+      PlatformBridge.sendScore(currentLevel * 100);
+      PlatformBridge.saveData({
+        level: currentLevel + 1,
+        coins: this.economy.getCoins() + GAME_CONFIG.coinsPerLevel,
+      });
+
+      // Show Victory screen with Oscillating Multiplier Hook
+      this.hud.showVictory(currentLevel, GAME_CONFIG.coinsPerLevel);
     });
 
-    // Lifecycle Watcher
-    LifecycleManager.onVisibilityChange((isVisible) => {
-      if (!isVisible) {
-        this.loop.stop();
-      } else {
-        this.loop.start();
-      }
+    // Platform Lifecycle & Audio Sync
+    PlatformBridge.initLifecycle({
+      onPause: () => this.loop.stop(),
+      onResume: () => this.loop.start(),
+      onAudioEnabledChange: (enabled: boolean) => {
+        this.sound.setMuted(!enabled);
+        this.hud.setSoundMuted(!enabled);
+      },
     });
 
     window.addEventListener('beforeunload', () => {
@@ -130,7 +146,7 @@ class GameApp {
     // Game Loop
     this.loop = new GameLoop();
     this.loop.setCallbacks(
-      () => {}, // Fixed physics step if needed
+      () => {},
       (delta) => this.update(delta),
       () => this.render()
     );
@@ -138,6 +154,9 @@ class GameApp {
     // Initial Level Load
     this.loadCurrentLevel();
     this.loop.start();
+
+    // Signal game ready after bootstrap
+    PlatformBridge.signalGameReady();
   }
 
   private updateCameraDistance(): void {
@@ -166,24 +185,59 @@ class GameApp {
     }
   }
 
-  private handleHint(): void {
+  // Hook 1: In-Level Booster (Hint or Free Rewarded Hint)
+  private async handleHint(): Promise<void> {
     if (!this.economy.canAffordHint()) {
-      this.hud.showRewardedAdPrompt();
+      await this.handleFreeHintAd();
       return;
     }
 
     const found = this.grid.showHint();
     if (found) {
       this.economy.spendHint();
+      this.hud.updateHeader(this.economy.getLevel(), this.grid.getRemainingCount(), this.economy.getCoins());
     }
   }
 
-  private handleNextLevel(): void {
+  private async handleFreeHintAd(): Promise<void> {
+    const rewarded = await this.ads.showRewarded('booster_hint');
+    if (rewarded) {
+      const found = this.grid.showHint();
+      if (found) {
+        this.sound.playFlyAway();
+      }
+    }
+  }
+
+  // Hook 1 (Coins refill via Rewarded Ad)
+  private async handleRewardCoinsAd(): Promise<void> {
+    const rewarded = await this.ads.showRewarded('refill_coins');
+    if (rewarded) {
+      this.economy.rewardAdWatched();
+      this.hud.updateHeader(this.economy.getLevel(), this.grid.getRemainingCount(), this.economy.getCoins());
+    }
+  }
+
+  // Hook 3: Victory Multiplier Bar (1.5x - 5x)
+  private async handleMultiplierAd(multiplier: number): Promise<void> {
+    const rewarded = await this.ads.showRewarded('victory_multiplier');
+    const baseCoins = GAME_CONFIG.coinsPerLevel;
+    const finalBonus = rewarded ? Math.floor(baseCoins * multiplier) : baseCoins;
+
+    this.economy.advanceLevel();
+    // Add bonus coins
+    for (let i = 0; i < Math.floor(finalBonus / 25); i++) {
+      this.economy.rewardAdWatched();
+    }
+
     this.loadCurrentLevel();
   }
 
-  private handleRewardAd(): void {
-    this.economy.rewardAdWatched();
+  private async handleNextLevel(): Promise<void> {
+    this.economy.advanceLevel();
+    // Trigger interstitial between levels respecting 90-120s cadence
+    await this.ads.showInterstitial('next_level');
+    this.loadCurrentLevel();
   }
 
   private update(delta: number): void {
@@ -193,6 +247,10 @@ class GameApp {
   }
 
   private render(): void {
+    if (this.isFirstRender) {
+      this.isFirstRender = false;
+      PlatformBridge.signalFirstFrameReady();
+    }
     this.pipeline.render(this.cameraRig.camera);
   }
 }

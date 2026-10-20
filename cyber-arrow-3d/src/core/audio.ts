@@ -94,4 +94,12 @@ export class SoundController {
     this.isMuted = !this.isMuted;
     return this.isMuted;
   }
+
+  public getIsMuted(): boolean {
+    return this.isMuted;
+  }
+
+  public setMuted(muted: boolean): void {
+    this.isMuted = muted;
+  }
 }

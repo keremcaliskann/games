@@ -11,10 +11,13 @@ export class CyberHud {
   private readonly titleEl: HTMLElement;
   private readonly subtitleEl: HTMLElement;
   private readonly promptEl: HTMLElement;
+  private readonly adActionsEl: HTMLElement;
   private readonly debugEl: HTMLElement | null = null;
   private readonly unsubscribers: Array<() => void> = [];
   private debugAccumSec = 0;
   private lastDisplayedScore = 0;
+  public onReviveRequested?: () => void;
+  public onMultiplierRequested?: () => void;
 
   private readonly onPauseClick = (e: Event): void => {
     e.stopPropagation();
@@ -66,7 +69,11 @@ export class CyberHud {
     this.promptEl = document.createElement('div');
     this.promptEl.className = 'cf-prompt';
 
-    this.centerPanel.append(this.titleEl, this.subtitleEl, this.promptEl);
+    this.adActionsEl = document.createElement('div');
+    this.adActionsEl.className = 'cf-ad-actions';
+    this.adActionsEl.style.display = 'none';
+
+    this.centerPanel.append(this.titleEl, this.subtitleEl, this.adActionsEl, this.promptEl);
     this.root.append(topBar, this.centerPanel);
 
     const showDebug =
@@ -120,6 +127,8 @@ export class CyberHud {
     }
 
     this.centerPanel.style.display = 'flex';
+    this.adActionsEl.style.display = 'none';
+
     if (state === GameStateId.Menu) {
       this.pauseBtn.style.visibility = 'hidden';
       this.titleEl.textContent = 'CYBER // FLAP';
@@ -136,6 +145,27 @@ export class CyberHud {
       this.titleEl.textContent = 'SIGNAL // LOST';
       this.subtitleEl.textContent = `SCORE: ${score}   |   BEST: ${highScore}`;
       this.promptEl.textContent = '[ TAP / SPACE TO REBOOT DRONE ]';
+
+      // YouTube Playables Revenue Hooks (Revive & Multiplier)
+      this.adActionsEl.style.display = 'flex';
+      this.adActionsEl.innerHTML = `
+        <button id="cf-ad-revive" type="button" class="cf-ad-btn cf-revive-btn">
+          🎬 CANLAN & DEVAM ET (+3sn KALKAN)
+        </button>
+        <button id="cf-ad-mult" type="button" class="cf-ad-btn cf-mult-btn">
+          🎬 3x SKOR BONUSU AL (${score * 3} PT)
+        </button>
+      `;
+
+      this.adActionsEl.querySelector('#cf-ad-revive')?.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        this.onReviveRequested?.();
+      });
+
+      this.adActionsEl.querySelector('#cf-ad-mult')?.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        this.onMultiplierRequested?.();
+      });
     }
   }
 
@@ -228,6 +258,38 @@ export class CyberHud {
         font-size: clamp(12px, 2.5vw, 15px);
         color: #e2e8f0;
         letter-spacing: 1.2px;
+      }
+      .cf-ad-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+      .cf-ad-btn {
+        pointer-events: auto;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        border: none;
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+      .cf-ad-btn:hover {
+        transform: scale(1.02);
+        filter: brightness(1.15);
+      }
+      .cf-revive-btn {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: #fff;
+        box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+      }
+      .cf-mult-btn {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #000;
+        box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
       }
       .cf-prompt {
         font-size: clamp(13px, 2.8vw, 16px);

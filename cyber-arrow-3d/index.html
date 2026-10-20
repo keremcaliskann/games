@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <title>CYBER ARROW 3D // Neon Escape</title>
 
+    <!-- YouTube Playables SDK (Mandatory first script) -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+
     <!-- Mobile & PWA -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -42,6 +45,17 @@
         color: #fff;
         user-select: none;
         -webkit-user-select: none;
+      }
+      /* Dual-Mode Shell: Auto-collapse in YouTube Playables & external portals */
+      body.embed-fullscreen-mode .shell-sidebar-left,
+      body.embed-fullscreen-mode .shell-sidebar-right,
+      body.embed-fullscreen-mode .fullscreen-ad-banner {
+        display: none !important;
+      }
+      body.embed-fullscreen-mode .shell-stage {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
       }
       .arcade-shell {
         display: flex;

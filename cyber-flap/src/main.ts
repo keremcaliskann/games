@@ -22,7 +22,8 @@ import { GamepadSource } from './input/gamepad';
 import { InputManager } from './input/input-manager';
 import { KeyboardPointerSource } from './input/keyboard-mouse';
 import { PhysicsWorld } from './physics/physics-world';
-import { LifecycleManager } from './platform/lifecycle';
+import { PlatformBridge } from './platform/sdk';
+import { UniversalAdProvider } from './platform/ads';
 import { StorageService } from './platform/storage';
 import { CameraRig } from './render/camera-rig';
 import { CyberCity } from './render/cyber-city';
@@ -33,7 +34,13 @@ import { CyberHud } from './ui/hud';
 import { ShellController } from './ui/shell-controller';
 
 async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): Promise<void> {
+  // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
+  PlatformBridge.applyDualModeShell();
+
   await RAPIER.init();
+
+  const ads = UniversalAdProvider.get();
+  void ads.initialize();
 
   const clock = new GameClock();
   const events = new EventBus<GameEvents>();
@@ -43,6 +50,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   const cameraRig = new CameraRig(appContainer.clientWidth, appContainer.clientHeight);
   let city: CyberCity | null = null;
   let loop: GameLoop | null = null;
+  let isFirstRender = true;
 
   const quality = new AdaptiveQuality((newTier) => {
     renderEngine.applyQualityTier(newTier);
@@ -105,6 +113,37 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   fsm.register(new GameOverState(ctx));
 
   const hud = new CyberHud(hudContainer, events, input);
+
+  // Hook 2: Near-Miss Revive on crash
+  hud.onReviveRequested = async () => {
+    const success = await ads.showRewarded('revive_shield');
+    if (success) {
+      ctx.drone.currPos.set(0, 0, 0);
+      ctx.drone.prevPos.set(0, 0, 0);
+      ctx.drone.velocityY = 0;
+      ctx.spawner.reset();
+      ctx.drone.reset();
+      ctx.drone.flap();
+      ctx.audio.playFlap();
+      ctx.fsm.transitionTo(GameStateId.Playing);
+    }
+  };
+
+  // Hook 3: Score Multiplier Bar on game over
+  hud.onMultiplierRequested = async () => {
+    const success = await ads.showRewarded('score_multiplier');
+    if (success) {
+      ctx.score *= 3;
+      if (ctx.score > ctx.highScore) {
+        ctx.highScore = ctx.score;
+        ctx.storage.saveHighScore(ctx.highScore);
+      }
+      ctx.audio.playScore();
+      PlatformBridge.sendScore(ctx.score);
+      events.emit('scoreChange', { score: ctx.score, highScore: ctx.highScore });
+    }
+  };
+
   fsm.transitionTo(GameStateId.Menu);
 
   const handleRestart = (): void => {
@@ -125,6 +164,21 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
 
   window.addEventListener('arcade:restart', handleRestart);
 
+  // Track state transitions for score reporting & interstitial cadence
+  events.on('stateChange', ({ state, score, highScore }) => {
+    if (state === GameStateId.GameOver) {
+      PlatformBridge.sendScore(score);
+      void PlatformBridge.saveData({
+        highScore,
+        totalFlights: 1,
+        bestRingCombo: 0,
+        credits: score,
+      });
+      // Trigger interstitial at natural game over breakpoint
+      void ads.showInterstitial('flight_gameover');
+    }
+  });
+
   loop = new GameLoop({
     fixedUpdate: (dtSec: number): void => {
       input.poll();
@@ -144,13 +198,18 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
       );
     },
     render: (alpha: number): void => {
+      if (isFirstRender) {
+        isFirstRender = false;
+        PlatformBridge.signalFirstFrameReady();
+      }
       drone.renderInterpolated(alpha);
       spawner.renderInterpolated(alpha);
       renderEngine.render(cameraRig.camera);
     },
   });
 
-  const lifecycle = new LifecycleManager({
+  // Universal Platform Lifecycle & Audio Sync
+  PlatformBridge.initLifecycle({
     onPause: (): void => {
       input.reset();
       if (fsm.getCurrentId() === GameStateId.Playing) {
@@ -161,6 +220,9 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     onResume: (): void => {
       loop?.start();
     },
+    onAudioEnabledChange: (enabled: boolean): void => {
+      audio.setMuted(!enabled);
+    },
   });
 
   window.addEventListener(
@@ -169,7 +231,6 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
       shell.dispose();
       window.removeEventListener('arcade:restart', handleRestart);
       loop?.stop();
-      lifecycle.dispose();
       hud.dispose();
       input.dispose();
       spawner.dispose();
@@ -184,6 +245,9 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   );
 
   loop.start();
+
+  // Signal game ready once bootstrap finishes
+  PlatformBridge.signalGameReady();
 }
 
 const appEl = document.getElementById('app');
