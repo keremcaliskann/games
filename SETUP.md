@@ -13,6 +13,7 @@ Games/                                        # Workspace root (shared rules & s
 ├── .agents/
 │   ├── rules/                                # Rule files
 │   │   ├── 10-code-quality.md                # glob: **/src/**/*.ts
+│   │   ├── 15-game-studio-pipeline.md        # model_decision
 │   │   ├── 20-performance-budget.md          # model_decision
 │   │   ├── 30-three-render.md                # glob: **/src/render/**
 │   │   ├── 35-procedural-audio.md            # glob: **/src/core/audio*.ts
@@ -27,6 +28,7 @@ Games/                                        # Workspace root (shared rules & s
 │   │   └── 90-release-checklist.md           # manual: @90-release-checklist
 │   └── skills/
 │       ├── html5-game-development/           # Core skill + references/
+│       ├── game-studio-pipeline/             # 3-Phase Studio Squad workflow
 │       ├── game-performance-audit/
 │       ├── capacitor-mobile-port/
 │       ├── plan-then-implement/
@@ -46,8 +48,8 @@ Games/                                        # Workspace root (shared rules & s
 
 1. Keep `AGENTS.md` and the `.agents/` folder in the root directory.
 2. In Antigravity / Gemini Code Assist, verify:
-   - **Customizations → Rules**: Verify that the 13 rules appear.
-   - **Customizations → Skills**: Verify that the 5 skills appear.
+   - **Customizations → Rules**: Verify that the 14 rules appear.
+   - **Customizations → Skills**: Verify that the 6 skills appear.
 3. To trigger a skill manually, use slash commands (e.g., `/html5-game-development`). Skills are also auto-invoked based on their descriptions.
 4. Each game project lives in its own subdirectory and has its own Git repository. Once features in a project reach a stable state, commit and push them to their remote repository.
 

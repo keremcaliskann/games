@@ -79,12 +79,14 @@ A task is complete only when:
 5. Code committed with a clean English Conventional Commit and pushed to the project repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
 7. Arcade Shell compliant: 3-column desktop layout with left navigation (portal return `../`, restart, fullscreen, dynamic other games), center stage with ResizeObserver canvas adapting, right rail ad banner (300x250/300x600), persistent sticky ad in fullscreen mode, and verified `public/icon.svg`.
+8. Game Director Critique Pass: Evaluated across camera line-of-sight (zero occlusion from bottom/sides), daylight/vibrant palette, and juice polish before final push.
 
 ## 8. Rules & Skills Directory
 
 | File | Mode | Trigger Condition |
 |---|---|---|
 | `rules/10-code-quality.md` | glob | Triggered when editing `**/src/**/*.ts` |
+| `rules/15-game-studio-pipeline.md` | model_decision | 3-Phase Studio Squad workflow, 3D camera line-of-sight, Game Director critique loop |
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
@@ -98,6 +100,7 @@ A task is complete only when:
 | `rules/80-dependencies-and-git.md` | model_decision | Package additions, Git repos, commit & push |
 | `rules/90-release-checklist.md` | manual | Triggered exclusively via `@90-release-checklist` |
 | `skills/html5-game-development` | skill | Core 3D game development workflow |
+| `skills/game-studio-pipeline` | skill | 3-Phase Studio Squad (Designer -> Implementer -> Game Director & QA Critic) |
 | `skills/game-performance-audit` | skill | FPS drops, jank, memory audits |
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |
