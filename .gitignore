@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Production builds
+dist/
+*/dist/
+
+# OS and IDE files
+.DS_Store
+Thumbs.db
+*.local
+.vscode/
+.idea/
+
+# Teamwork working files
+.agents/teamwork/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -1,0 +1,67 @@
+import { StorageManager, PlayerData } from '../../platform/storage';
+import { GAME_CONFIG } from '../config/game-config';
+import { EventBus } from '../../core/events';
+
+/**
+ * Economy and monetization coordinator.
+ * Manages soft currency (coins), rewarded ad hooks, and interstitial cadence.
+ */
+export class EconomySystem {
+  private data: PlayerData;
+  private readonly bus = EventBus.get();
+  private levelsSinceLastAd = 0;
+
+  constructor() {
+    this.data = StorageManager.load();
+  }
+
+  public getLevel(): number {
+    return this.data.currentLevel;
+  }
+
+  public getCoins(): number {
+    return this.data.coins;
+  }
+
+  public advanceLevel(): void {
+    this.data.currentLevel++;
+    this.data.completedLevels++;
+    this.data.coins += GAME_CONFIG.coinsPerLevel;
+    this.levelsSinceLastAd++;
+    this.save();
+    this.bus.emit('coins_updated', this.data.coins);
+  }
+
+  public shouldShowInterstitial(): boolean {
+    if (this.levelsSinceLastAd >= GAME_CONFIG.interstitialIntervalLevels) {
+      this.levelsSinceLastAd = 0;
+      return true;
+    }
+    return false;
+  }
+
+  public canAffordHint(): boolean {
+    return this.data.coins >= GAME_CONFIG.hintCost;
+  }
+
+  public spendHint(): boolean {
+    if (this.canAffordHint()) {
+      this.data.coins -= GAME_CONFIG.hintCost;
+      this.save();
+      this.bus.emit('coins_updated', this.data.coins);
+      return true;
+    }
+    return false;
+  }
+
+  public rewardAdWatched(): void {
+    const bonus = 50;
+    this.data.coins += bonus;
+    this.save();
+    this.bus.emit('coins_updated', this.data.coins);
+  }
+
+  private save(): void {
+    StorageManager.save(this.data);
+  }
+}

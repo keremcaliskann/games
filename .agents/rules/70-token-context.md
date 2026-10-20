@@ -1,0 +1,34 @@
+---
+trigger: model_decision
+description: "Large file reads, long tasks, terminal output management, multi-file refactoring, context window, and token efficiency."
+---
+
+# Token & Context Efficiency
+
+## Reading Strategy
+- Sequence: **Search → Narrow Down → Read**. Use `grep` or file search first, then inspect only the relevant line range.
+- Avoid reading entire files unless performing a complete rewrite.
+- Never re-read unchanged files within the same session.
+- To inspect project structure, read `package.json`, `tsconfig.json`, and the first 2 levels of the `src/` tree rather than opening every file.
+
+## Excluded Files (Do Not Read in Context)
+Never load into context: `node_modules/`, `dist/`, `android/`, `ios/`, `*.glb`, large `*.gltf`, `*.ktx2`, `*.wasm`, images, `package-lock.json`, or `.map` files. Summarize their existence or metadata using shell commands (`ls -la`, `wc -c`) if needed.
+
+## Terminal & Log Output
+- Truncate command outputs: append `| tail -n 40`, `| head -n 40`, or use `--silent`.
+- When builds and tests pass, report only success. On failure, extract only relevant compiler error messages.
+- Launch long-running services (e.g., dev servers, watch tasks) in the background without polling continuously.
+
+## Code Editing
+- Apply surgical, localized edits; do not rewrite entire files for minor adjustments.
+- Do not duplicate newly written code or large diffs in chat responses; state what was modified and why.
+
+## Task Planning
+- Keep Implementation Plan artifacts focused: clear objective, verifiable criteria, file list, and numbered steps.
+- On multi-stage tasks, provide 3–5 line progress checkpoints between major milestones.
+
+## Delivery Summary (≤ 8 Lines)
+1. **What changed:** Single-line list of modified files.
+2. **Why:** Rationale for the changes.
+3. **Verification:** Exact commands executed and observed outcomes.
+4. **Known constraints / Non-goals:** What was deliberately deferred.
