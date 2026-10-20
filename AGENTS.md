@@ -88,6 +88,7 @@ A task is complete only when:
 | `rules/10-code-quality.md` | glob | Triggered when editing `**/src/**/*.ts` |
 | `rules/15-game-studio-pipeline.md` | model_decision | 2-stage Producer-Consumer pipeline, 3-Phase Studio Squad, 4-Filter Game Director critique |
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
+| `rules/25-defensive-gameplay-and-hardening.md` | model_decision | Defensive programming, HUD pointer isolation, state idempotency, procedural feasibility, SDK invariants |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
 | `rules/40-rapier-physics.md` | glob | Triggered when editing `**/src/physics/**` |
@@ -105,6 +106,7 @@ A task is complete only when:
 | `skills/asset-integrator` | skill | Integrates user-supplied `.glb` 3D models/textures into `PrefabFactory` (`ASSETS_NEEDED.md`) |
 | `skills/html5-game-development` | skill | Core 3D game development workflow |
 | `skills/game-performance-audit` | skill | FPS drops, jank, memory audits |
+| `skills/game-preflight-audit` | skill | Automated pre-flight QA, safeguard integrity audit, and deadlock detection |
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |
 | `skills/games-portal-catalog` | skill | Central arcade portal index management |
