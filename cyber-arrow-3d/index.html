@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#090a10" />
     <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
 
     <!-- OpenGraph / Social Sharing -->
     <meta property="og:type" content="website" />
@@ -42,18 +43,190 @@
         user-select: none;
         -webkit-user-select: none;
       }
-      #app {
-        position: fixed;
+      .arcade-shell {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background: var(--dark-bg);
+        color: #fff;
+        position: relative;
+      }
+      .shell-sidebar-left {
+        width: 260px;
+        min-width: 260px;
+        background: rgba(13, 16, 28, 0.96);
+        border-right: 1px solid rgba(0, 240, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        padding: 18px 14px;
+        gap: 16px;
+        z-index: 20;
+      }
+      .shell-brand {
+        margin-bottom: 2px;
+      }
+      .shell-brand-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .shell-brand-badge {
+        background: rgba(0, 240, 255, 0.15);
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .shell-brand-title {
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color: #fff;
+      }
+      .shell-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .shell-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 240, 255, 0.25);
+        border-radius: 8px;
+        color: #e0f7fa;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, transform 0.1s, color 0.15s;
+      }
+      .shell-btn:hover {
+        background: rgba(0, 240, 255, 0.15);
+        border-color: var(--neon-cyan);
+        color: #fff;
+      }
+      .shell-btn:active {
+        transform: scale(0.97);
+      }
+      .btn-icon {
+        font-size: 15px;
+        line-height: 1;
+      }
+      .shell-other-games {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+      .shell-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #7b8fa7;
+        letter-spacing: 1px;
+        margin: 0;
+      }
+      .other-games-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .other-games-list::-webkit-scrollbar {
+        width: 4px;
+      }
+      .other-games-list::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .other-games-list::-webkit-scrollbar-thumb {
+        background: rgba(0, 240, 255, 0.25);
+        border-radius: 2px;
+      }
+      .other-game-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(0, 240, 255, 0.12);
+        border-radius: 6px;
+        text-decoration: none;
+        color: #fff;
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .other-game-item:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: rgba(0, 240, 255, 0.4);
+      }
+      .other-game-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+      .other-game-meta {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+      }
+      .other-game-title {
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #f1f5f9;
+      }
+      .other-game-tag {
+        font-size: 10px;
+        color: var(--neon-cyan);
+        opacity: 0.85;
+        margin-top: 2px;
+      }
+      .other-games-empty {
+        font-size: 11px;
+        color: #64748b;
+        padding: 8px 0;
+      }
+      .shell-stage {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+      }
+      #app, .game-canvas-container {
+        position: absolute;
         inset: 0;
         touch-action: none;
       }
-      #app canvas {
+      #app canvas, .game-canvas-container canvas {
         display: block;
         width: 100%;
         height: 100%;
       }
-      #hud {
-        position: fixed;
+      #hud, .game-hud-overlay {
+        position: absolute;
         inset: 0;
         pointer-events: none;
         padding: env(safe-area-inset-top, 16px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
@@ -61,6 +234,189 @@
         flex-direction: column;
         justify-content: space-between;
         z-index: 10;
+        box-sizing: border-box;
+      }
+      .fullscreen-ad-banner {
+        display: none;
+      }
+      :fullscreen .fullscreen-ad-banner,
+      .arcade-shell:fullscreen .fullscreen-ad-banner,
+      :-webkit-full-screen .fullscreen-ad-banner,
+      .arcade-shell:-webkit-full-screen .fullscreen-ad-banner {
+        display: flex !important;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 54px;
+        background: rgba(7, 8, 16, 0.94);
+        border-top: 1px solid rgba(0, 240, 255, 0.4);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+      }
+      :fullscreen .game-canvas-container,
+      .arcade-shell:fullscreen .game-canvas-container,
+      :-webkit-full-screen .game-canvas-container,
+      .arcade-shell:-webkit-full-screen .game-canvas-container {
+        bottom: 54px;
+      }
+      .arcade-shell:fullscreen .shell-sidebar-right,
+      .arcade-shell:-webkit-full-screen .shell-sidebar-right {
+        display: none;
+      }
+      .fullscreen-ad-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .fullscreen-ad-content .ad-tag {
+        background: rgba(0, 240, 255, 0.2);
+        border: 1px solid var(--neon-cyan);
+        color: var(--neon-cyan);
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .fullscreen-ad-content .ad-placeholder-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #94a3b8;
+        letter-spacing: 1px;
+      }
+      .shell-sidebar-right {
+        width: 320px;
+        min-width: 320px;
+        background: rgba(13, 16, 28, 0.96);
+        border-left: 1px solid rgba(0, 240, 255, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 10px;
+        z-index: 20;
+      }
+      .ad-rail-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+      }
+      .ad-header-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: rgba(0, 240, 255, 0.65);
+        text-transform: uppercase;
+      }
+      .ad-banner-slot.banner-300x600 {
+        width: 300px;
+        height: 600px;
+        max-height: calc(100vh - 70px);
+        max-height: calc(100dvh - 70px);
+        background: linear-gradient(180deg, rgba(20, 24, 40, 0.95), rgba(10, 12, 22, 0.98));
+        border: 1px dashed rgba(0, 240, 255, 0.35);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 240, 255, 0.05);
+      }
+      .ad-mock-creative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 24px;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+      }
+      .ad-mock-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(0, 240, 255, 0.25) 0%, transparent 70%);
+        filter: blur(20px);
+        pointer-events: none;
+      }
+      .ad-mock-brand {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        color: var(--neon-cyan);
+        text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+      }
+      .ad-mock-desc {
+        margin: 0;
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.4;
+      }
+      .ad-mock-cta {
+        background: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-magenta) 100%);
+        color: #050510;
+        font-size: 12px;
+        font-weight: 800;
+        padding: 10px 22px;
+        border-radius: 20px;
+        letter-spacing: 1px;
+        cursor: pointer;
+        box-shadow: 0 0 16px rgba(0, 240, 255, 0.4);
+        transition: transform 0.15s, box-shadow 0.15s;
+      }
+      .ad-mock-cta:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 24px rgba(0, 240, 255, 0.7);
+      }
+
+      /* Responsive Media Queries */
+      @media (max-width: 1024px) {
+        .shell-sidebar-right {
+          display: none;
+        }
+      }
+      @media (max-width: 768px) {
+        .arcade-shell {
+          flex-direction: column;
+        }
+        .shell-sidebar-left {
+          width: 100%;
+          min-width: 100%;
+          height: auto;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          border-right: none;
+          border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+          gap: 8px;
+        }
+        .shell-nav {
+          flex-direction: row;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+        }
+        .shell-btn {
+          padding: 6px 10px;
+          font-size: 11px;
+          gap: 6px;
+        }
+        .shell-other-games {
+          display: none;
+        }
       }
       .hud-header {
         display: flex;
@@ -168,7 +524,7 @@
         margin-bottom: 24px;
       }
       .controls-hint {
-        position: fixed;
+        position: absolute;
         bottom: 74px;
         left: 50%;
         transform: translateX(-50%);
@@ -182,9 +538,62 @@
     </style>
   </head>
   <body>
-    <div id="app"></div>
-    <div id="hud"></div>
-    <div class="controls-hint">👆 DOKUN: OKU FIRLAT &nbsp;|&nbsp; 🔄 SÜRÜKLE: 3D DÖNDÜR</div>
+    <div id="arcade-shell" class="arcade-shell">
+      <!-- Left Navigation Rail -->
+      <aside class="shell-sidebar shell-sidebar-left">
+        <div class="shell-brand">
+          <a href="../" class="shell-brand-link">
+            <span class="shell-brand-badge">ARCADE</span>
+            <span class="shell-brand-title">3D GAMES</span>
+          </a>
+        </div>
+
+        <nav class="shell-nav">
+          <a href="../" class="shell-btn shell-btn-portal" title="Portala Dön">
+            <span class="btn-icon">←</span> Portala Dön
+          </a>
+          <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
+            <span class="btn-icon">🔄</span> Yeniden Başlat
+          </button>
+          <button id="shell-fullscreen-btn" class="shell-btn shell-btn-fullscreen" type="button">
+            <span class="btn-icon">⛶</span> Tam Ekran
+          </button>
+        </nav>
+
+        <section class="shell-other-games">
+          <h3 class="shell-section-title">Diğer Oyunlar</h3>
+          <div id="shell-other-games-list" class="other-games-list"></div>
+        </section>
+      </aside>
+
+      <!-- Center Game Viewport Stage -->
+      <main id="shell-stage" class="shell-stage">
+        <div id="app" class="game-canvas-container"></div>
+        <div id="hud" class="game-hud-overlay"></div>
+        <div class="controls-hint">👆 DOKUN: OKU FIRLAT &nbsp;|&nbsp; 🔄 SÜRÜKLE: 3D DÖNDÜR</div>
+        <div id="fullscreen-ad-banner" class="fullscreen-ad-banner" aria-label="Sponsor Banner">
+          <div class="fullscreen-ad-content">
+            <span class="ad-tag">SPONSOR</span>
+            <span class="ad-placeholder-text">HTML5 3D ARCADE // 60 FPS WEBGL EXPERIENCE</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Advertising Rail -->
+      <aside class="shell-sidebar shell-sidebar-right">
+        <div class="ad-rail-wrapper">
+          <span class="ad-header-tag">SPONSOR // REKLAM</span>
+          <div id="ad-banner-desktop" class="ad-banner-slot banner-300x600">
+            <div class="ad-mock-creative">
+              <div class="ad-mock-glow"></div>
+              <p class="ad-mock-brand">ARCADE 3D</p>
+              <p class="ad-mock-desc">Zero-install instant gaming</p>
+              <div class="ad-mock-cta">PLAY NOW</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

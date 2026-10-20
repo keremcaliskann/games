@@ -207,14 +207,15 @@ export class CyberHud {
         letter-spacing: 2px;
       }
       .cf-debug {
-        position: fixed;
+        position: absolute;
         left: 12px;
-        bottom: 10px;
+        bottom: 12px;
         font-size: 11px;
         color: #00ff9d;
         background: rgba(0, 0, 0, 0.65);
         padding: 3px 8px;
         border-radius: 3px;
+        z-index: 15;
       }
     `;
     document.head.appendChild(style);

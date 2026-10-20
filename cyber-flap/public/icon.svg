@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Radial Gradient -->
+    <radialGradient id="bg-flap" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#0e1428" />
+      <stop offset="60%" stop-color="#080a18" />
+      <stop offset="100%" stop-color="#05020d" />
+    </radialGradient>
+
+    <!-- Neon Glow Filters -->
+    <filter id="glow-cyan" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="14" opacity="0.6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="glow-pink" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur1" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" opacity="0.6" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="plasma-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20" opacity="0.7" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Shading Gradients -->
+    <linearGradient id="fuselage-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#223552" />
+      <stop offset="50%" stop-color="#162238" />
+      <stop offset="100%" stop-color="#0f1726" />
+    </linearGradient>
+
+    <linearGradient id="fuselage-facet-l" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#1c2b42" />
+      <stop offset="100%" stop-color="#101827" />
+    </linearGradient>
+
+    <linearGradient id="fuselage-facet-r" x1="0%" y1="0%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#2a3f5f" />
+      <stop offset="100%" stop-color="#141d2e" />
+    </linearGradient>
+
+    <linearGradient id="wing-dark-l" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d1345" />
+      <stop offset="100%" stop-color="#170924" />
+    </linearGradient>
+
+    <linearGradient id="wing-dark-r" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#361752" />
+      <stop offset="100%" stop-color="#1a0b29" />
+    </linearGradient>
+
+    <!-- Visor Flare Gradient -->
+    <linearGradient id="visor-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f3ff" stop-opacity="0.3" />
+      <stop offset="30%" stop-color="#00f3ff" />
+      <stop offset="50%" stop-color="#ffffff" />
+      <stop offset="70%" stop-color="#00f3ff" />
+      <stop offset="100%" stop-color="#00f3ff" stop-opacity="0.3" />
+    </linearGradient>
+
+    <!-- Plasma Flame Gradients -->
+    <linearGradient id="plasma-core" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#00f0ff" />
+      <stop offset="70%" stop-color="#9d00ff" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ff007f" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="plasma-outer" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.9" />
+      <stop offset="40%" stop-color="#7928ca" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#ff0080" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect x="12" y="12" width="488" height="488" rx="112" fill="url(#bg-flap)" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.4" />
+  <rect x="20" y="20" width="472" height="472" rx="104" fill="none" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.12" />
+
+  <!-- Radar Grid & HUD Elements -->
+  <g opacity="0.25">
+    <!-- Targeting Circles -->
+    <circle cx="256" cy="256" r="195" fill="none" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="10 8" />
+    <circle cx="256" cy="256" r="140" fill="none" stroke="#00f0ff" stroke-width="1" stroke-dasharray="6 6" />
+    <circle cx="256" cy="256" r="75" fill="none" stroke="#00f0ff" stroke-width="1" stroke-dasharray="4 4" />
+
+    <!-- Crosshairs & Grid Lines -->
+    <line x1="36" y1="256" x2="120" y2="256" stroke="#00f0ff" stroke-width="1.5" />
+    <line x1="392" y1="256" x2="476" y2="256" stroke="#00f0ff" stroke-width="1.5" />
+    <line x1="256" y1="36" x2="256" y2="100" stroke="#00f0ff" stroke-width="1.5" />
+    <line x1="256" y1="412" x2="256" y2="476" stroke="#00f0ff" stroke-width="1.5" />
+
+    <!-- Pitch Ladder Indicators -->
+    <line x1="226" y1="180" x2="286" y2="180" stroke="#00f0ff" stroke-width="1" />
+    <line x1="226" y1="180" x2="226" y2="186" stroke="#00f0ff" stroke-width="1" />
+    <line x1="286" y1="180" x2="286" y2="186" stroke="#00f0ff" stroke-width="1" />
+
+    <line x1="210" y1="350" x2="302" y2="350" stroke="#00f0ff" stroke-width="1" />
+    <line x1="210" y1="350" x2="210" y2="344" stroke="#00f0ff" stroke-width="1" />
+    <line x1="302" y1="350" x2="302" y2="344" stroke="#00f0ff" stroke-width="1" />
+
+    <!-- Tech Corner Brackets -->
+    <path d="M 48 80 L 48 48 L 80 48" fill="none" stroke="#00f0ff" stroke-width="2" />
+    <path d="M 464 80 L 464 48 L 432 48" fill="none" stroke="#00f0ff" stroke-width="2" />
+    <path d="M 48 432 L 48 464 L 80 464" fill="none" stroke="#00f0ff" stroke-width="2" />
+    <path d="M 464 432 L 464 464 L 432 464" fill="none" stroke="#00f0ff" stroke-width="2" />
+  </g>
+
+  <!-- HUD Text Overlay -->
+  <text x="56" y="78" fill="#00f0ff" opacity="0.6" font-family="'Courier New', Courier, monospace" font-size="12" font-weight="700" letter-spacing="2">DRN//2099</text>
+  <text x="372" y="78" fill="#00f0ff" opacity="0.6" font-family="'Courier New', Courier, monospace" font-size="12" font-weight="700" letter-spacing="2">60 FPS</text>
+  <text x="56" y="446" fill="#ff007f" opacity="0.7" font-family="'Courier New', Courier, monospace" font-size="11" font-weight="700" letter-spacing="1.5">RADAR:LOCK</text>
+  <text x="368" y="446" fill="#00f0ff" opacity="0.7" font-family="'Courier New', Courier, monospace" font-size="11" font-weight="700" letter-spacing="1.5">MODE:RUN</text>
+
+  <!-- Tilted Glowing Halo Ring (Behind Drone Fuselage) -->
+  <g transform="rotate(-16 256 252)">
+    <ellipse cx="256" cy="252" rx="180" ry="74" fill="none" stroke="#00f0ff" stroke-width="6" stroke-opacity="0.4" filter="url(#glow-cyan)" />
+    <ellipse cx="256" cy="252" rx="180" ry="74" fill="none" stroke="#ffffff" stroke-width="2" stroke-opacity="0.7" />
+    <ellipse cx="256" cy="252" rx="180" ry="74" fill="none" stroke="#00f0ff" stroke-width="1" stroke-dasharray="14 12" stroke-opacity="0.9" />
+  </g>
+
+  <!-- Plasma Thruster Flame (Rear Exhaust Wake) -->
+  <g filter="url(#plasma-glow)">
+    <!-- Outer Thruster Plume -->
+    <polygon points="236,325 256,450 276,325" fill="url(#plasma-outer)" />
+    <!-- Secondary Plasma Jets -->
+    <polygon points="214,320 228,395 236,320" fill="url(#plasma-outer)" opacity="0.8" />
+    <polygon points="276,320 284,395 298,320" fill="url(#plasma-outer)" opacity="0.8" />
+    <!-- Core Intense White-Cyan Needle Flame -->
+    <polygon points="244,325 256,430 268,325" fill="url(#plasma-core)" />
+    <polygon points="251,325 256,390 261,325" fill="#ffffff" />
+  </g>
+
+  <!-- Swept-Back Stealth Wings (Deep Purple with Hot Pink Glowing Neon Edges) -->
+  <!-- Left Wing -->
+  <g>
+    <!-- Wing Body Face -->
+    <polygon points="216,242 80,314 174,326 218,302" fill="url(#wing-dark-l)" stroke="#221035" stroke-width="1.5" />
+    <!-- Inner Panel Inset -->
+    <polygon points="208,252 108,310 172,318 210,300" fill="#1e0a2e" opacity="0.6" />
+    <!-- Leading Edge Hot Pink Neon Glow -->
+    <line x1="216" y1="242" x2="80" y2="314" stroke="#ff007f" stroke-width="5" stroke-linecap="round" filter="url(#glow-pink)" />
+    <line x1="216" y1="242" x2="80" y2="314" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+    <!-- Trailing Edge Accent -->
+    <line x1="80" y1="314" x2="174" y2="326" stroke="#ff007f" stroke-width="2" stroke-opacity="0.6" />
+    <!-- Wingtip Thruster Light -->
+    <circle cx="80" cy="314" r="3.5" fill="#ffffff" filter="url(#glow-pink)" />
+  </g>
+
+  <!-- Right Wing -->
+  <g>
+    <!-- Wing Body Face -->
+    <polygon points="296,242 432,314 338,326 294,302" fill="url(#wing-dark-r)" stroke="#221035" stroke-width="1.5" />
+    <!-- Inner Panel Inset -->
+    <polygon points="304,252 404,310 340,318 302,300" fill="#1e0a2e" opacity="0.6" />
+    <!-- Leading Edge Hot Pink Neon Glow -->
+    <line x1="296" y1="242" x2="432" y2="314" stroke="#ff007f" stroke-width="5" stroke-linecap="round" filter="url(#glow-pink)" />
+    <line x1="296" y1="242" x2="432" y2="314" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+    <!-- Trailing Edge Accent -->
+    <line x1="432" y1="314" x2="338" y2="326" stroke="#ff007f" stroke-width="2" stroke-opacity="0.6" />
+    <!-- Wingtip Thruster Light -->
+    <circle cx="432" cy="314" r="3.5" fill="#ffffff" filter="url(#glow-pink)" />
+  </g>
+
+  <!-- Aerodynamic Faceted Fuselage (Dark Steel Navy #162238 with Cyber Chiseled Form) -->
+  <g>
+    <!-- Rear Keel / Thruster Ring -->
+    <ellipse cx="256" cy="326" rx="28" ry="10" fill="#0c121e" stroke="#00f0ff" stroke-width="2" filter="url(#glow-cyan)" />
+
+    <!-- Lower Fuselage Body -->
+    <polygon points="256,336 216,298 256,260 296,298" fill="url(#fuselage-top)" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.3" />
+
+    <!-- Left Main Fuselage Facet -->
+    <polygon points="256,152 198,246 256,318 256,220" fill="url(#fuselage-facet-l)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.4" />
+
+    <!-- Right Main Fuselage Facet (Specular Lighted) -->
+    <polygon points="256,152 314,246 256,318 256,220" fill="url(#fuselage-facet-r)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.5" />
+
+    <!-- Nose Canopy Dorsal Plate -->
+    <polygon points="256,152 232,216 256,238 280,216" fill="#253a5c" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.6" />
+
+    <!-- Center Spine Ridge (Specular Highlight Line) -->
+    <line x1="256" y1="152" x2="256" y2="320" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.75" />
+
+    <!-- Geometric Panel Seam Accents -->
+    <line x1="232" y1="216" x2="198" y2="246" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.4" />
+    <line x1="280" y1="216" x2="314" y2="246" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.4" />
+  </g>
+
+  <!-- Glowing Neon Cyan Visor Bar & Flare (#00f3ff) -->
+  <g>
+    <!-- Ambient Visor Backlight Glow -->
+    <ellipse cx="256" cy="208" rx="42" ry="14" fill="#00f3ff" opacity="0.3" filter="url(#glow-cyan)" />
+
+    <!-- Visor Horizontal Lens Flare Bar -->
+    <line x1="184" y1="208" x2="328" y2="208" stroke="#00f3ff" stroke-width="2" stroke-opacity="0.6" filter="url(#glow-cyan)" />
+    <line x1="220" y1="208" x2="292" y2="208" stroke="#ffffff" stroke-width="2" stroke-opacity="0.9" />
+
+    <!-- Faceted Visor Plate -->
+    <polygon points="228,212 256,216 284,212 280,204 256,201 232,204" fill="url(#visor-grad)" stroke="#00f3ff" stroke-width="2" filter="url(#glow-cyan)" />
+    <polygon points="234,210 256,213 278,210 276,206 256,203 236,206" fill="#ffffff" opacity="0.85" />
+  </g>
+
+  <!-- Forefront Halo Energy Segment (Arcs in Front of Fuselage for 3D Interlocking) -->
+  <g transform="rotate(-16 256 252)">
+    <path d="M 120 274 A 180 74 0 0 0 392 274" fill="none" stroke="#00f0ff" stroke-width="6" stroke-opacity="0.8" filter="url(#glow-cyan)" />
+    <path d="M 120 274 A 180 74 0 0 0 392 274" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-opacity="0.95" />
+  </g>
+
+  <!-- Tactical Nose Beacon Spark -->
+  <circle cx="256" cy="152" r="3.5" fill="#ffffff" filter="url(#glow-cyan)" />
+</svg>

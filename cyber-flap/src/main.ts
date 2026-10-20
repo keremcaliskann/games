@@ -29,6 +29,7 @@ import { setupCyberLighting } from './render/lighting';
 import { AdaptiveQuality } from './render/quality';
 import { RenderEngine } from './render/renderer';
 import { CyberHud } from './ui/hud';
+import { ShellController } from './ui/shell-controller';
 
 async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): Promise<void> {
   await RAPIER.init();
@@ -102,6 +103,23 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   const hud = new CyberHud(hudContainer, events, input);
   fsm.transitionTo(GameStateId.Menu);
 
+  const handleRestart = (): void => {
+    ctx.clock.reset();
+    ctx.score = 0;
+    ctx.spawner.reset();
+    ctx.drone.reset();
+    ctx.drone.flap();
+    ctx.audio.playFlap();
+    ctx.fsm.transitionTo(GameStateId.Playing);
+  };
+
+  const shell = new ShellController({
+    currentGameId: 'cyber-flap',
+    onRestart: handleRestart,
+  });
+
+  window.addEventListener('arcade:restart', handleRestart);
+
   loop = new GameLoop({
     fixedUpdate: (dtSec: number): void => {
       input.poll();
@@ -142,6 +160,8 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   window.addEventListener(
     'beforeunload',
     () => {
+      shell.dispose();
+      window.removeEventListener('arcade:restart', handleRestart);
       loop?.stop();
       lifecycle.dispose();
       hud.dispose();

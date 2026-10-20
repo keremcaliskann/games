@@ -12,6 +12,7 @@ import { LevelLoader } from './game/systems/level-loader';
 import { EconomySystem } from './game/systems/economy';
 import { ArrowBlock } from './game/entities/arrow-block';
 import { Hud } from './ui/hud';
+import { ShellController } from './ui/shell-controller';
 import { LifecycleManager } from './platform/lifecycle';
 import { GAME_CONFIG } from './game/config/game-config';
 
@@ -30,6 +31,7 @@ class GameApp {
   private readonly grid: PuzzleGrid;
   private readonly input: InputManager;
   private readonly hud: Hud;
+  private readonly shell: ShellController;
 
   constructor() {
     this.appEl = document.getElementById('app')!;
@@ -38,8 +40,12 @@ class GameApp {
     // Core & Render Setup
     this.bus = EventBus.get();
     this.sound = new SoundController();
-    this.pipeline = new RenderPipeline(this.appEl);
     this.cameraRig = new CameraRig(this.appEl);
+    this.pipeline = new RenderPipeline(this.appEl, {
+      onResize: (width, height) => {
+        this.cameraRig.resize(width, height);
+      },
+    });
     LightingSetup.setup(this.pipeline.scene);
 
     // Particle Burst System
@@ -70,6 +76,16 @@ class GameApp {
       onWatchAd: () => this.handleRewardAd(),
     });
 
+    // Standardized Arcade Shell Controller
+    this.shell = new ShellController({
+      currentGameId: 'cyber-arrow-3d',
+      onRestart: () => this.loadCurrentLevel(),
+    });
+
+    window.addEventListener('arcade:restart', () => {
+      this.loadCurrentLevel();
+    });
+
     // Wire Event Bus listeners
     this.bus.on('block_cleared', (block: ArrowBlock) => {
       this.sound.playFlyAway();
@@ -96,6 +112,11 @@ class GameApp {
       } else {
         this.loop.start();
       }
+    });
+
+    window.addEventListener('beforeunload', () => {
+      this.shell.dispose();
+      this.pipeline.dispose();
     });
 
     // Game Loop

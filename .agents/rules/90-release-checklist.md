@@ -42,3 +42,12 @@ Run through this verification checklist before preparing a production build or r
 - [ ] Relative base path (`base: './'`) confirmed in `vite.config.ts`.
 - [ ] `.github/workflows/deploy.yml` exists and is configured for automated build and publish.
 - [ ] Live target URL verified: `https://keremcaliskann.github.io/games/<game-name>/`.
+
+## 7. Arcade Shell & Portal Compliance (55-arcade-layout-and-shell)
+- [ ] 3-Column Arcade Shell renders properly on desktop (left navigation, center canvas stage, right ad rail).
+- [ ] Left sidebar navigation verified: Portal return link (`../`), Restart button, Fullscreen toggle, and dynamic "Other Games" list.
+- [ ] Three.js canvas resizes dynamically via `ResizeObserver` on container without aspect ratio distortion or stretching.
+- [ ] Dedicated right rail ad banner zone visible (300x250 or 300x600 slot) with styled sponsor frame.
+- [ ] Fullscreen mode functions and retains a visible sticky ad banner area.
+- [ ] Mandatory `public/icon.svg` exists, is valid SVG, and renders in portal, game cards, and favicon.
+

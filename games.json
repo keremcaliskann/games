@@ -6,7 +6,8 @@
     "path": "./cyber-arrow-3d/",
     "tags": ["3D Puzzle", "Three.js", "Spatial Logic", "ASMR", "Neon"],
     "date": "2026-10-20",
-    "icon": "🎯",
+    "icon": "./cyber-arrow-3d/icon.svg",
+    "iconEmoji": "🎯",
     "featured": true
   },
   {
@@ -16,7 +17,8 @@
     "path": "./cyber-flap/",
     "tags": ["3D Runner", "Physics", "Three.js", "Cyberpunk", "60 FPS"],
     "date": "2026-10-19",
-    "icon": "⚡",
+    "icon": "./cyber-flap/icon.svg",
+    "iconEmoji": "⚡",
     "featured": false
   }
 ]

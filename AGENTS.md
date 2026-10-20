@@ -77,6 +77,7 @@ A task is complete only when:
 4. No memory allocations, `console.log`, or debug remnants in hot paths.
 5. Code committed with a clean English Conventional Commit and pushed to the project repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
+7. Arcade Shell compliant: 3-column desktop layout with left navigation (portal return `../`, restart, fullscreen, dynamic other games), center stage with ResizeObserver canvas adapting, right rail ad banner (300x250/300x600), persistent sticky ad in fullscreen mode, and verified `public/icon.svg`.
 
 ## 8. Rules & Skills Directory
 
@@ -88,6 +89,7 @@ A task is complete only when:
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
 | `rules/40-rapier-physics.md` | glob | Triggered when editing `**/src/physics/**` |
 | `rules/50-input-abstraction.md` | glob | Triggered when editing `**/src/input/**`, `**/src/ui/**` |
+| `rules/55-arcade-layout-and-shell.md` | model_decision | Arcade shell, 3-column desktop layout, responsive canvas, sidebar, ad rails, game icon pipeline |
 | `rules/60-mobile-capacitor.md` | model_decision | Mobile, Capacitor, WebView, safe area |
 | `rules/65-monetization-ads.md` | model_decision | AdMob, Poki/CrazyGames, IAdProvider abstraction |
 | `rules/68-pwa-and-meta.md` | model_decision | PWA manifest, offline worker, OpenGraph meta |

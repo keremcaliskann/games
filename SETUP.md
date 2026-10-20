@@ -18,7 +18,8 @@ Games/                                        # Workspace root (shared rules & s
 │   │   ├── 35-procedural-audio.md            # glob: **/src/core/audio*.ts
 │   │   ├── 40-rapier-physics.md              # glob: **/src/physics/**
 │   │   ├── 50-input-abstraction.md           # glob: **/src/input/**, **/src/ui/**
-│   │   ├── 60-mobile-capacitor.md           # model_decision
+│   │   ├── 55-arcade-layout-and-shell.md     # model_decision
+│   │   ├── 60-mobile-capacitor.md            # model_decision
 │   │   ├── 65-monetization-ads.md            # model_decision
 │   │   ├── 68-pwa-and-meta.md                # model_decision
 │   │   ├── 70-token-context.md               # model_decision
@@ -45,7 +46,7 @@ Games/                                        # Workspace root (shared rules & s
 
 1. Keep `AGENTS.md` and the `.agents/` folder in the root directory.
 2. In Antigravity / Gemini Code Assist, verify:
-   - **Customizations → Rules**: Verify that the 12 rules appear.
+   - **Customizations → Rules**: Verify that the 13 rules appear.
    - **Customizations → Skills**: Verify that the 5 skills appear.
 3. To trigger a skill manually, use slash commands (e.g., `/html5-game-development`). Skills are also auto-invoked based on their descriptions.
 4. Each game project lives in its own subdirectory and has its own Git repository. Once features in a project reach a stable state, commit and push them to their remote repository.
@@ -55,8 +56,8 @@ Games/                                        # Workspace root (shared rules & s
 | Mode | Behavior | In This Set |
 |---|---|---|
 | `always_on` | Full content is loaded into every session | `AGENTS.md` |
-| `glob` | Loaded when editing matching files | `10`, `30`, `40`, `50` |
-| `model_decision` | Loaded dynamically when query context matches description | `20`, `60`, `70`, `80` |
+| `glob` | Loaded when editing matching files | `10`, `30`, `35`, `40`, `50` |
+| `model_decision` | Loaded dynamically when query context matches description | `20`, `55`, `60`, `65`, `68`, `70`, `80` |
 | `manual` | Loaded only when explicitly invoked via `@` | `90` |
 
 ### Important Notes:

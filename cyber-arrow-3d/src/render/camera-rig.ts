@@ -18,14 +18,14 @@ export class CameraRig {
   private targetRadius = 18;
 
   constructor(container: HTMLElement) {
-    const aspect = container.clientWidth / container.clientHeight;
+    const aspect = container.clientWidth / Math.max(1, container.clientHeight);
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
     this.updateCameraPosition();
+  }
 
-    window.addEventListener('resize', () => {
-      this.camera.aspect = container.clientWidth / container.clientHeight;
-      this.camera.updateProjectionMatrix();
-    });
+  public resize(width: number, height: number): void {
+    this.camera.aspect = width / Math.max(1, height);
+    this.camera.updateProjectionMatrix();
   }
 
   public setDistance(distance: number): void {
