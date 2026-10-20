@@ -18,6 +18,7 @@ export class CyberHud {
   private lastDisplayedScore = 0;
   public onReviveRequested?: () => void;
   public onMultiplierRequested?: () => void;
+  public isAdReady?: () => boolean;
 
   private readonly onPauseClick = (e: Event): void => {
     e.stopPropagation();
@@ -146,26 +147,31 @@ export class CyberHud {
       this.subtitleEl.textContent = `SCORE: ${score}   |   BEST: ${highScore}`;
       this.promptEl.textContent = '[ TAP / SPACE TO REBOOT DRONE ]';
 
-      // YouTube Playables Revenue Hooks (Revive & Multiplier)
-      this.adActionsEl.style.display = 'flex';
-      this.adActionsEl.innerHTML = `
-        <button id="cf-ad-revive" type="button" class="cf-ad-btn cf-revive-btn">
-          🎬 CANLAN & DEVAM ET (+3sn KALKAN)
-        </button>
-        <button id="cf-ad-mult" type="button" class="cf-ad-btn cf-mult-btn">
-          🎬 3x SKOR BONUSU AL (${score * 3} PT)
-        </button>
-      `;
+      // YouTube Playables Revenue Hooks (Revive & Multiplier - only shown if ads are available)
+      const adReady = this.isAdReady ? this.isAdReady() : true;
+      if (adReady) {
+        this.adActionsEl.style.display = 'flex';
+        this.adActionsEl.innerHTML = `
+          <button id="cf-ad-revive" type="button" class="cf-ad-btn cf-revive-btn">
+            🎬 CANLAN & DEVAM ET (+3sn KALKAN)
+          </button>
+          <button id="cf-ad-mult" type="button" class="cf-ad-btn cf-mult-btn">
+            🎬 3x SKOR BONUSU AL (${score * 3} PT)
+          </button>
+        `;
 
-      this.adActionsEl.querySelector('#cf-ad-revive')?.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        this.onReviveRequested?.();
-      });
+        this.adActionsEl.querySelector('#cf-ad-revive')?.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          this.onReviveRequested?.();
+        });
 
-      this.adActionsEl.querySelector('#cf-ad-mult')?.addEventListener('pointerdown', (e) => {
-        e.stopPropagation();
-        this.onMultiplierRequested?.();
-      });
+        this.adActionsEl.querySelector('#cf-ad-mult')?.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          this.onMultiplierRequested?.();
+        });
+      } else {
+        this.adActionsEl.style.display = 'none';
+      }
     }
   }
 

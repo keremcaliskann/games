@@ -8,6 +8,7 @@ export interface HudCallbacks {
   onWatchAd: () => void;
   onWatchMultiplierAd: (multiplier: number) => void;
   onFreeHintAd: () => void;
+  isAdReady?: () => boolean;
 }
 
 /**
@@ -86,10 +87,19 @@ export class Hud {
     this.levelEl.textContent = `LVL ${level}`;
     this.remainingEl.textContent = `KALAN: ${remaining}`;
     this.coinsEl.textContent = `${coins}`;
-    if (coins < 20) {
+    const adReady = this.callbacks.isAdReady ? this.callbacks.isAdReady() : true;
+    if (coins < 20 && adReady) {
       this.hintBtn.innerHTML = `💡 İPUCU <span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 4px; border-radius:4px; margin-left:4px;">🎬 FREE</span>`;
+      this.hintBtn.style.opacity = '1';
+      this.hintBtn.style.pointerEvents = 'auto';
+    } else if (coins < 20 && !adReady) {
+      this.hintBtn.innerHTML = `💡 İPUCU (20🪙)`;
+      this.hintBtn.style.opacity = '0.4';
+      this.hintBtn.style.pointerEvents = 'none';
     } else {
       this.hintBtn.innerHTML = `💡 İPUCU (20🪙)`;
+      this.hintBtn.style.opacity = '1';
+      this.hintBtn.style.pointerEvents = 'auto';
     }
   }
 
@@ -146,9 +156,18 @@ export class Hud {
     const multDisp = modal.querySelector('#multiplier-display') as HTMLElement;
     const multCoins = modal.querySelector('#mult-coins-preview') as HTMLElement;
     const btnMultiply = modal.querySelector('#btn-multiply') as HTMLButtonElement;
+    const gauge = modal.querySelector('#multiplier-display')?.parentElement;
+
+    const adReady = this.callbacks.isAdReady ? this.callbacks.isAdReady() : true;
+    if (!adReady) {
+      if (gauge) gauge.style.display = 'none';
+      btnMultiply.style.display = 'none';
+      modal.querySelector('#btn-claim-base')!.textContent = `Sonraki Seviye (+${baseCoins} Coin) ➔`;
+    }
 
     // Needle oscillation animation
     const interval = setInterval(() => {
+      if (!adReady) return;
       multIdx = (multIdx + 1) % multipliers.length;
       currentMultiplier = multipliers[multIdx];
       multDisp.textContent = `${currentMultiplier}x ÇARPAN!`;

@@ -113,6 +113,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   fsm.register(new GameOverState(ctx));
 
   const hud = new CyberHud(hudContainer, events, input);
+  hud.isAdReady = () => ads.isRewardedReady();
 
   // Hook 2: Near-Miss Revive on crash
   hud.onReviveRequested = async () => {

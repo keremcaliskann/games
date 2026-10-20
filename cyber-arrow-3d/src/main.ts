@@ -86,6 +86,7 @@ class GameApp {
       onWatchAd: () => this.handleRewardCoinsAd(),
       onWatchMultiplierAd: (multiplier: number) => this.handleMultiplierAd(multiplier),
       onFreeHintAd: () => this.handleFreeHintAd(),
+      isAdReady: () => this.ads.isRewardedReady(),
     });
 
     // Standardized Arcade Shell Controller (for GitHub Pages Portal mode)

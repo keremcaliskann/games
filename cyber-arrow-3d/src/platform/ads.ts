@@ -29,6 +29,13 @@ export class UniversalAdProvider implements IAdProvider {
   }
 
   public isRewardedReady(): boolean {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return false;
+    }
+    const w = window as any;
+    if (w.ytgame?.IN_PLAYABLES_ENV) {
+      return Boolean(w.ytgame?.ads?.requestRewardedAd);
+    }
     return true;
   }
 
