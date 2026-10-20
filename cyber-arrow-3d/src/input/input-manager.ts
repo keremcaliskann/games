@@ -38,6 +38,11 @@ export class InputManager {
   }
 
   private handlePointerDown = (e: PointerEvent): void => {
+    // Ignore clicks on interactive HUD elements (buttons, modals, chips)
+    if (e.target instanceof Element && e.target.closest('[data-hud-interactive="true"]')) {
+      return;
+    }
+
     // Only respond to primary mouse click or direct touch
     if (e.button !== 0 && e.pointerType === 'mouse') return;
 

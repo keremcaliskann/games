@@ -161,13 +161,13 @@ export class UniversalAdProvider implements IAdProvider {
 
       let remaining = durationSec;
       modal.innerHTML = `
-        <div style="background: #0f172a; border: 2px solid #0284c7; border-radius: 16px; padding: 28px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);">
+        <div data-hud-interactive="true" style="background: #0f172a; border: 2px solid #0284c7; border-radius: 16px; padding: 28px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 0 40px rgba(2, 132, 199, 0.4);">
           <span style="font-size: 11px; letter-spacing: 2px; color: #38bdf8; font-weight: 800; display: block; margin-bottom: 8px;">YOUTUBE PLAYABLES REWARD REEL</span>
           <h3 style="margin: 0 0 16px; font-size: 18px; font-weight: 700;">${title}</h3>
           <div style="height: 120px; background: #0284c715; border: 1px dashed #0284c7; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
             <span id="mock-ad-countdown" style="font-size: 32px; font-weight: 800; color: #38bdf8;">${remaining}s</span>
           </div>
-          <button id="mock-ad-claim-btn" disabled style="width: 100%; padding: 12px; border-radius: 10px; border: none; background: #334155; color: #94a3b8; font-weight: 800; font-size: 14px; cursor: not-allowed; transition: all 0.2s;">
+          <button id="mock-ad-claim-btn" data-hud-interactive="true" disabled style="width: 100%; padding: 12px; border-radius: 10px; border: none; background: #334155; color: #94a3b8; font-weight: 800; font-size: 14px; cursor: not-allowed; transition: all 0.2s;">
             LÜTFEN BEKLEYİN...
           </button>
         </div>

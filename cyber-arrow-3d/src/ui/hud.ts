@@ -33,16 +33,16 @@ export class Hud {
       <div class="hud-header">
         <div class="hud-chip level" id="hud-level">LVL 1</div>
         <div class="hud-chip remaining" id="hud-remaining">BLOKLAR: 0</div>
-        <div class="hud-chip coins" id="hud-coins" style="cursor: pointer;" title="Ücretsiz Coin Kazan">
+        <div class="hud-chip coins" id="hud-coins" data-hud-interactive="true" style="cursor: pointer;" title="Ücretsiz Coin Kazan">
           🪙 <span id="coin-count">0</span>
           <span style="color: #0284c7; font-weight: 800; margin-left: 4px;">[+🎬]</span>
         </div>
       </div>
 
       <div class="hud-footer">
-        <button class="hud-btn" id="btn-sound">🔊 SES</button>
-        <button class="hud-btn" id="btn-reset">🔄 YENİDEN</button>
-        <button class="hud-btn primary" id="btn-hint">💡 İPUCU (20🪙)</button>
+        <button class="hud-btn" id="btn-sound" data-hud-interactive="true">🔊 SES</button>
+        <button class="hud-btn" id="btn-reset" data-hud-interactive="true">🔄 YENİDEN</button>
+        <button class="hud-btn primary" id="btn-hint" data-hud-interactive="true">💡 İPUCU (20🪙)</button>
       </div>
     `;
 
@@ -141,11 +141,11 @@ export class Hud {
           </div>
         </div>
 
-        <button class="hud-btn primary" id="btn-multiply" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-size: 15px; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;">
+        <button class="hud-btn primary" id="btn-multiply" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-size: 15px; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;">
           🎬 ÇARPANI AL (+${baseCoins * 3} 🪙)
         </button>
 
-        <button class="hud-btn" id="btn-claim-base" style="width: 100%; justify-content: center; padding: 10px; font-size: 13px; color: #94a3b8; background: transparent; border: none;">
+        <button class="hud-btn" id="btn-claim-base" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 10px; font-size: 13px; color: #94a3b8; background: transparent; border: none;">
           Sadece +${baseCoins} Coin Al & Geç ➔
         </button>
       </div>
@@ -200,10 +200,10 @@ export class Hud {
         <h2 class="modal-title" style="margin: 6px 0 10px; color: #f43f5e;">SON ${remainingBlocks} BLOK KALDI! ⚠️</h2>
         <p class="modal-desc">Kısa bir video izleyerek oyunu kaybetmeden devam edin ve 1 blok otomatik çözülsün!</p>
         
-        <button class="hud-btn primary" id="btn-revive" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-weight: 800; background: #10b981;">
+        <button class="hud-btn primary" id="btn-revive" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-weight: 800; background: #10b981;">
           🎬 İZLE & DEVAM ET (+OTO ÇÖZÜM)
         </button>
-        <button class="hud-btn" id="btn-quit" style="width: 100%; justify-content: center; padding: 10px; background: transparent; border: none; color: #94a3b8;">
+        <button class="hud-btn" id="btn-quit" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 10px; background: transparent; border: none; color: #94a3b8;">
           Pes Et ve Yeniden Başlat
         </button>
       </div>
@@ -234,8 +234,8 @@ export class Hud {
         <p class="modal-desc">Kısa bir video izleyerek anında 50 Neon Coin kazanın!</p>
         <div class="modal-reward">+50 NEON COIN 🪙</div>
         <div style="display: flex; gap: 10px;">
-          <button class="hud-btn" id="btn-cancel" style="flex: 1; justify-content: center;">KAPAT</button>
-          <button class="hud-btn primary" id="btn-watch" style="flex: 1.5; justify-content: center;">
+          <button class="hud-btn" id="btn-cancel" data-hud-interactive="true" style="flex: 1; justify-content: center;">KAPAT</button>
+          <button class="hud-btn primary" id="btn-watch" data-hud-interactive="true" style="flex: 1.5; justify-content: center;">
             🎬 İZLE (+50)
           </button>
         </div>

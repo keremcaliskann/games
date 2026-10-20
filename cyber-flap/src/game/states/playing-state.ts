@@ -9,6 +9,8 @@ export class PlayingState implements GameState {
   constructor(private readonly ctx: GameContext) {
     this.physicsCallbacks = {
       onHitHazard: (): void => {
+        // Idempotency latch: Ignore subsequent collisions if already transitioned
+        if (this.ctx.fsm.getCurrentId() !== GameStateId.Playing) return;
         this.ctx.audio.playCrash();
         this.ctx.cameraRig.triggerShake(0.75);
         this.ctx.particles.spawnCrashExplosion(
