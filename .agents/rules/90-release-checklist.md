@@ -19,6 +19,7 @@ Run through this verification checklist before preparing a production build or r
 - [ ] Touch emulation: virtual joystick, camera pan, action buttons.
 - [ ] Tab switching: audio suspends and game clock resumes cleanly when switching browser tabs.
 - [ ] Window resizing: projection matrix and aspect ratio adapt without distortion.
+- [ ] Art Direction (`30-three-render`): Uses vibrant colors and a bright, well-lit environment by default (unless a dark theme was explicitly requested).
 
 ## 3. Performance & Memory Audits
 - [ ] Frame time remains within the 16.6 ms budget in typical and complex gameplay scenes.

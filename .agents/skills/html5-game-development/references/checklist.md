@@ -31,6 +31,7 @@ Work through applicable items before declaring any task complete. Never mark an 
 - [ ] Physics world modifications are deferred outside collision event callbacks.
 
 ## 6. Rendering & Assets
+- [ ] Vibrant color palette and bright, sunlit/well-lit environment used by default (unless dark theme is explicitly specified).
 - [ ] Color maps use `THREE.SRGBColorSpace`; data maps remain linear.
 - [ ] Shared materials and geometries are reused rather than cloned unnecessarily.
 - [ ] Mobile safe areas and viewport resizing behave cleanly without stretching.

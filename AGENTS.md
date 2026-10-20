@@ -10,6 +10,7 @@
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · Capacitor · TypeScript (strict).
 - **Platform Boundary:** Game logic is platform-agnostic. Platform differences reside exclusively within `src/platform/`.
 - **Layering Order:** `core` ← `render` / `physics` / `input` / `platform` ← `game` ← `ui`. Sublayers must never import upper layers.
+- **Visual Theme & Art Direction:** Default to **vibrant colors and bright, sunlit/well-lit environments** across all games unless a dark theme is explicitly targeted for a specific concept.
 
 ## 2. Language & Communication
 

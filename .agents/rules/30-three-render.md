@@ -26,6 +26,12 @@ description: "Three.js renderer, scenes, materials, lighting, shadows, asset loa
 - Lighting: 1 directional sun light + hemisphere/ambient fill. Avoid multiple dynamic point lights.
 - Shadows: 1 directional light with shadow map size 1024–2048. Fit `shadow.camera` frustum tightly to the playable volume. In static environments, set `renderer.shadowMap.autoUpdate = false` and trigger updates on demand via `needsUpdate = true`. Use `PCFShadowMap`.
 
+## Art Direction, Vibrant Colors & Bright Environments
+- **Bright & Vibrant by Default:** Unless a dark/noir/cyberpunk theme is explicitly requested for a specific game, all games must use **bright, sunlit, well-lit environments** and **vibrant, high-saturation color palettes**.
+- **Scene Background & Fog:** Prefer cheerful daylight skies, soft pastel gradients, or clean light backgrounds (e.g., `#7dd3fc`, `#e0f2fe`, `#fef3c7`, `#f8fafc`) rather than pitch-black or dark navy voids. Match `scene.fog` to `scene.background` for smooth horizon blending.
+- **Daylight Illumination:** Pair a warm `DirectionalLight` (intensity `1.8–2.5`, color `#fffbeb`) with a bright `HemisphereLight` (sky `#ffffff`, ground bounce `#e2e8f0` or warm sand `#fde68a`, intensity `1.0–1.4`) so shadowed faces never look muddy or black.
+- **High-Contrast Playability:** Use distinct, saturated colors for interactive elements, obstacles, collectibles, and player characters so they pop immediately on mobile screens under outdoor ambient light.
+
 ## Color Management
 - Color textures (diffuse/albedo, emissive): set `texture.colorSpace = THREE.SRGBColorSpace`.
 - Non-color data maps (normal, roughness, metalness, AO, height): keep linear (do not assign sRGB).
