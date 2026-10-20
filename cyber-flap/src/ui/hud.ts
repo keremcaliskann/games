@@ -14,6 +14,7 @@ export class CyberHud {
   private readonly debugEl: HTMLElement | null = null;
   private readonly unsubscribers: Array<() => void> = [];
   private debugAccumSec = 0;
+  private lastDisplayedScore = 0;
 
   private readonly onPauseClick = (e: Event): void => {
     e.stopPropagation();
@@ -97,7 +98,16 @@ export class CyberHud {
   }
 
   private updateScoreText(score: number, highScore: number): void {
-    this.scoreEl.textContent = score < 10 ? `0${score}` : `${score}`;
+    const formatted = score < 10 ? `0${score}` : `${score}`;
+    if (this.scoreEl.textContent !== formatted) {
+      this.scoreEl.textContent = formatted;
+      if (score > this.lastDisplayedScore && score > 0) {
+        this.scoreEl.classList.remove('cf-score-bump');
+        void this.scoreEl.offsetWidth; // Trigger reflow for animation restart
+        this.scoreEl.classList.add('cf-score-bump');
+      }
+      this.lastDisplayedScore = score;
+    }
     this.bestEl.textContent = `BEST // ${highScore < 10 ? `0${highScore}` : `${highScore}`}`;
   }
 
@@ -139,38 +149,56 @@ export class CyberHud {
         width: 100%;
       }
       .cf-stats {
-        background: rgba(8, 4, 24, 0.72);
-        border: 1px solid #00f3ff;
-        box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
-        padding: 8px 16px;
-        border-radius: 4px;
+        background: rgba(15, 23, 42, 0.88);
+        border: 2px solid #38bdf8;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), 0 0 14px rgba(56, 189, 248, 0.35);
+        padding: 8px 18px;
+        border-radius: 8px;
+        backdrop-filter: blur(8px);
       }
       .cf-score {
-        font-size: 32px;
-        font-weight: 700;
-        color: #00f3ff;
-        text-shadow: 0 0 10px #00f3ff;
+        font-size: 34px;
+        font-weight: 800;
+        color: #38bdf8;
+        text-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
         line-height: 1.05;
+        display: inline-block;
+        transform-origin: center center;
+      }
+      @keyframes cf-score-pop {
+        0% { transform: scale(1); }
+        40% { transform: scale(1.32); color: #facc15; text-shadow: 0 0 18px #facc15; }
+        100% { transform: scale(1); }
+      }
+      .cf-score-bump {
+        animation: cf-score-pop 0.32s ease-out;
       }
       .cf-best {
         font-size: 12px;
-        color: #ff007f;
+        font-weight: 700;
+        color: #facc15;
         letter-spacing: 1.5px;
         margin-top: 4px;
+        text-shadow: 0 0 8px rgba(250, 204, 21, 0.5);
       }
       .cf-pause-btn {
         pointer-events: auto;
         min-width: 48px;
         min-height: 48px;
-        background: rgba(8, 4, 24, 0.8);
-        border: 1px solid #ff007f;
-        color: #00f3ff;
+        background: rgba(15, 23, 42, 0.88);
+        border: 2px solid #38bdf8;
+        color: #38bdf8;
         font-family: inherit;
         font-size: 18px;
-        font-weight: 700;
-        border-radius: 4px;
+        font-weight: 800;
+        border-radius: 8px;
         cursor: pointer;
-        box-shadow: 0 0 10px rgba(255, 0, 127, 0.4);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 10px rgba(56, 189, 248, 0.3);
+        transition: transform 0.1s ease, background 0.15s ease;
+      }
+      .cf-pause-btn:hover {
+        background: rgba(30, 41, 59, 0.95);
+        transform: scale(1.05);
       }
       .cf-center-panel {
         align-self: center;
@@ -179,31 +207,33 @@ export class CyberHud {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        background: rgba(7, 3, 22, 0.84);
-        border: 1px solid #00f3ff;
-        box-shadow: 0 0 24px rgba(0, 243, 255, 0.3), inset 0 0 16px rgba(255, 0, 127, 0.2);
+        background: rgba(15, 23, 42, 0.92);
+        border: 2px solid #38bdf8;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 24px rgba(56, 189, 248, 0.18);
         padding: 28px 36px;
-        border-radius: 6px;
+        border-radius: 12px;
+        backdrop-filter: blur(12px);
         max-width: 90vw;
       }
       .cf-title {
         margin: 0;
         font-size: clamp(26px, 5vw, 44px);
-        color: #00f3ff;
-        text-shadow: 0 0 14px #00f3ff, 2px 2px 0 #ff007f;
+        color: #38bdf8;
+        text-shadow: 0 0 18px rgba(56, 189, 248, 0.6), 2px 2px 0 #0284c7;
         letter-spacing: 3px;
+        font-weight: 900;
       }
       .cf-subtitle {
         margin: 12px 0 22px;
         font-size: clamp(12px, 2.5vw, 15px);
-        color: #e2d9ff;
+        color: #e2e8f0;
         letter-spacing: 1.2px;
       }
       .cf-prompt {
         font-size: clamp(13px, 2.8vw, 16px);
-        color: #ff007f;
-        text-shadow: 0 0 8px #ff007f;
-        font-weight: 700;
+        color: #f43f5e;
+        text-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+        font-weight: 800;
         letter-spacing: 2px;
       }
       .cf-debug {
@@ -212,9 +242,10 @@ export class CyberHud {
         bottom: 12px;
         font-size: 11px;
         color: #00ff9d;
-        background: rgba(0, 0, 0, 0.65);
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(56, 189, 248, 0.3);
         padding: 3px 8px;
-        border-radius: 3px;
+        border-radius: 4px;
         z-index: 15;
       }
     `;

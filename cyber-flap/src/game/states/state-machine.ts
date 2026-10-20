@@ -8,6 +8,7 @@ import type { CameraRig } from '../../render/camera-rig';
 import type { CyberCity } from '../../render/cyber-city';
 import type { CyberDrone } from '../entities/drone';
 import type { ObstacleSpawner } from '../systems/obstacle-spawner';
+import type { ParticleSystem } from '../systems/particle-system';
 
 export const GameStateId = {
   Menu: 'menu',
@@ -71,6 +72,7 @@ export interface GameContext {
   readonly spawner: ObstacleSpawner;
   readonly city: CyberCity;
   readonly cameraRig: CameraRig;
+  readonly particles: ParticleSystem;
   readonly fsm: StateMachine;
   score: number;
   highScore: number;

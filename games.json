@@ -2,23 +2,27 @@
   {
     "id": "cyber-arrow-3d",
     "title": "CYBER ARROW 3D",
-    "description": "Tactile neon spatial untangling puzzle. Orbit the 3D structure, clear unobstructed arrow blocks, and trigger satisfying ASMR particle escapes.",
+    "description": "Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.",
     "path": "./cyber-arrow-3d/",
-    "tags": ["3D Puzzle", "Three.js", "Spatial Logic", "ASMR", "Neon"],
+    "tags": ["3D Puzzle", "Spatial Logic", "ASMR Escape", "Three.js", "Casual"],
     "date": "2026-10-20",
     "icon": "./cyber-arrow-3d/icon.svg",
     "iconEmoji": "🎯",
-    "featured": true
+    "featured": true,
+    "themeColor": "#6366f1",
+    "accentGradient": "linear-gradient(135deg, #818cf8, #4f46e5)"
   },
   {
     "id": "cyber-flap",
     "title": "CYBER FLAP // 2099",
-    "description": "High-octane 3D cyberpunk drone flight runner. Dodge neon obstacles across futuristic cityscapes with precision flight controls.",
+    "description": "High-energy 3D aerobatic drone runner. Soar through sunlit city skies, thread precision aerial rings, and dodge dynamic obstacles with responsive 60 FPS controls.",
     "path": "./cyber-flap/",
-    "tags": ["3D Runner", "Physics", "Three.js", "Cyberpunk", "60 FPS"],
+    "tags": ["3D Sky Runner", "Aerobatic Flight", "Physics", "60 FPS", "Arcade"],
     "date": "2026-10-19",
     "icon": "./cyber-flap/icon.svg",
     "iconEmoji": "⚡",
-    "featured": false
+    "featured": false,
+    "themeColor": "#0284c7",
+    "accentGradient": "linear-gradient(135deg, #38bdf8, #0284c7)"
   }
 ]

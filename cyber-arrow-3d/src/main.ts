@@ -16,6 +16,8 @@ import { ShellController } from './ui/shell-controller';
 import { LifecycleManager } from './platform/lifecycle';
 import { GAME_CONFIG } from './game/config/game-config';
 
+const _ORIGIN = new THREE.Vector3(0, 0, 0);
+
 class GameApp {
   private readonly appEl: HTMLElement;
   private readonly hudEl: HTMLElement;
@@ -89,16 +91,21 @@ class GameApp {
     // Wire Event Bus listeners
     this.bus.on('block_cleared', (block: ArrowBlock) => {
       this.sound.playFlyAway();
-      this.particles.spawnBurst(block.group.position, 22);
+      this.particles.spawnBurst(block.group.position, 24);
       this.hud.setRemaining(this.grid.getRemainingCount());
     });
 
-    this.bus.on('block_blocked', () => {
+    this.bus.on('block_blocked', (block: ArrowBlock) => {
       this.sound.playBlocked();
+      this.cameraRig.addTrauma(0.35);
+      if (block) {
+        this.particles.spawnBonkSparks(block.group.position, block.dirVector);
+      }
     });
 
     this.bus.on('level_completed', () => {
       this.sound.playLevelVictory();
+      this.particles.spawnCelebration(_ORIGIN);
       const currentLevel = this.economy.getLevel();
       const shouldAd = this.economy.shouldShowInterstitial();
       this.economy.advanceLevel();
@@ -115,6 +122,7 @@ class GameApp {
     });
 
     window.addEventListener('beforeunload', () => {
+      this.particles.dispose();
       this.shell.dispose();
       this.pipeline.dispose();
     });
@@ -180,7 +188,7 @@ class GameApp {
 
   private update(delta: number): void {
     this.cameraRig.update(delta);
-    this.grid.update(delta, () => {});
+    this.grid.update(delta);
     this.particles.update(delta);
   }
 

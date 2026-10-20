@@ -110,7 +110,7 @@ export class ShellController {
           id: 'cyber-flap',
           title: 'CYBER FLAP // 2099',
           icon: '../cyber-flap/icon.svg',
-          tags: ['3D Runner', 'Cyberpunk'],
+          tags: ['3D Sky Runner', '60 FPS'],
         },
         {
           id: 'cyber-arrow-3d',

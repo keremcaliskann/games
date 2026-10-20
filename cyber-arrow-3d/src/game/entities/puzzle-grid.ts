@@ -156,17 +156,19 @@ export class PuzzleGrid {
     return count;
   }
 
-  public update(delta: number, onBlockFinished: (block: ArrowBlock) => void): void {
+  /**
+   * Updates all active block animations without allocating any closures or objects.
+   */
+  public update(delta: number): void {
     for (let i = 0; i < this.blocksList.length; i++) {
       const b = this.blocksList[i];
       if (b.state === 'BONK' || b.state === 'FLYING') {
-        b.update(delta, (finishedBlock) => {
-          onBlockFinished(finishedBlock);
-
+        const isFlyFinished = b.update(delta);
+        if (isFlyFinished) {
           if (this.getRemainingCount() === 0) {
             this.bus.emit('level_completed', null);
           }
-        });
+        }
       }
     }
   }

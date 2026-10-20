@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <title>KEREM'S 3D HTML5 ARCADE // Game Portal</title>
     <meta name="description" content="High-performance, 60 FPS HTML5 3D browser games built with Three.js, Rapier.js and Vite." />
-    <meta name="theme-color" content="#070810" />
+    <meta name="theme-color" content="#f8fafc" />
+    <link rel="icon" type="image/svg+xml" href="./cyber-arrow-3d/icon.svg" />
 
     <!-- Mobile Web App Capability -->
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
     <!-- OpenGraph Social Metadata -->
     <meta property="og:type" content="website" />
@@ -21,12 +22,17 @@
     <meta name="twitter:title" content="KEREM'S 3D HTML5 ARCADE // Game Portal" />
     <style>
       :root {
-        --cyan: #00f0ff;
-        --magenta: #ff0077;
-        --amber: #ffaa00;
-        --dark-bg: #070810;
-        --card-bg: rgba(16, 20, 36, 0.75);
-        --border-color: rgba(0, 240, 255, 0.25);
+        --primary: #4f46e5;
+        --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        --accent-cyan: #0284c7;
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --text-sub: #64748b;
+        --card-bg: #ffffff;
+        --card-border: rgba(226, 232, 240, 0.8);
+        --tag-bg: #f1f5f9;
+        --tag-border: #e2e8f0;
+        --tag-text: #334155;
       }
       * {
         box-sizing: border-box;
@@ -34,9 +40,9 @@
       body {
         margin: 0;
         padding: 0;
-        background: radial-gradient(circle at 50% 10%, #151930 0%, #070810 80%);
+        background: linear-gradient(135deg, #f0f7ff 0%, #faf5ff 45%, #fff7ed 100%);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        color: #fff;
+        color: #0f172a;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
@@ -48,31 +54,32 @@
       }
       .badge {
         display: inline-block;
-        padding: 4px 12px;
+        padding: 6px 14px;
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 800;
         letter-spacing: 1.5px;
-        color: var(--cyan);
-        background: rgba(0, 240, 255, 0.1);
-        border: 1px solid rgba(0, 240, 255, 0.3);
+        color: #ffffff;
+        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
         border-radius: 20px;
-        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+        margin-bottom: 8px;
+        text-transform: uppercase;
       }
       h1 {
-        font-size: clamp(28px, 6vw, 46px);
+        font-size: clamp(32px, 6vw, 52px);
         font-weight: 900;
-        letter-spacing: 2px;
-        margin: 0;
-        background: linear-gradient(135deg, #ffffff 30%, var(--cyan) 100%);
+        letter-spacing: -0.5px;
+        margin: 12px 0 0 0;
+        background: linear-gradient(135deg, #0f172a 20%, #312e81 60%, #0284c7 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
       }
       p.subtitle {
-        color: #94a3b8;
-        font-size: 14px;
+        color: #475569;
+        font-size: 15px;
         max-width: 580px;
         margin: 12px auto 0 auto;
-        line-height: 1.5;
+        line-height: 1.6;
       }
       .container {
         max-width: 1100px;
@@ -87,12 +94,12 @@
         gap: 24px;
       }
       .game-card {
-        background: var(--card-bg);
-        border: 1px solid var(--border-color);
-        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        border-radius: 22px;
         padding: 24px;
-        backdrop-filter: blur(12px);
-        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 25px -5px rgba(0, 0, 0, 0.04);
+        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -100,72 +107,77 @@
         overflow: hidden;
       }
       .game-card:hover {
-        transform: translateY(-4px);
-        border-color: var(--cyan);
-        box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
+        border-color: #818cf8;
       }
       .game-card.featured {
-        border-color: rgba(0, 240, 255, 0.6);
-        box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+        border: 2px solid #6366f1;
+        box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.18);
       }
       .game-card.featured:hover {
-        border-color: var(--cyan);
-        box-shadow: 0 10px 35px rgba(0, 240, 255, 0.35);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px -8px rgba(99, 102, 241, 0.3);
+        border-color: #4f46e5;
       }
       .featured-badge {
         display: inline-block;
         font-size: 10px;
         font-weight: 800;
         letter-spacing: 1px;
-        color: #070810;
-        background: var(--cyan);
-        padding: 3px 9px;
-        border-radius: 10px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        padding: 4px 10px;
+        border-radius: 12px;
         margin-left: auto;
         text-transform: uppercase;
-        box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
       }
       .card-header {
         display: flex;
         align-items: center;
-        gap: 12px;
-        margin-bottom: 14px;
+        gap: 14px;
+        margin-bottom: 16px;
       }
       .game-icon {
-        font-size: 32px;
-        width: 54px;
-        height: 54px;
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+        border: 1px solid rgba(99, 102, 241, 0.15);
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(0, 240, 255, 0.08);
-        border: 1px solid rgba(0, 240, 255, 0.2);
-        border-radius: 14px;
-        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(0, 0, 0, 0.04);
         flex-shrink: 0;
+        overflow: hidden;
       }
       .game-icon-img {
-        width: 38px;
-        height: 38px;
+        width: 44px;
+        height: 44px;
         object-fit: contain;
-        filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.45));
-        transition: transform 0.2s ease;
+        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
       }
       .game-card:hover .game-icon-img {
-        transform: scale(1.1);
+        transform: scale(1.08);
       }
       .card-title {
         font-size: 20px;
         font-weight: 800;
         margin: 0;
-        color: #fff;
+        color: #0f172a;
         letter-spacing: 0.5px;
       }
+      .card-date {
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+      }
       .card-desc {
-        color: #94a3b8;
+        color: #475569;
         font-size: 13.5px;
-        line-height: 1.5;
-        margin-bottom: 20px;
+        line-height: 1.55;
+        margin: 0 0 20px 0;
         flex: 1;
       }
       .tags {
@@ -177,40 +189,49 @@
       .tag {
         font-size: 11px;
         font-weight: 600;
-        padding: 3px 10px;
+        padding: 4px 10px;
         border-radius: 12px;
-        background: rgba(255, 255, 255, 0.06);
-        color: #cbd5e1;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #e2e8f0;
       }
       .play-btn {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        background: linear-gradient(135deg, var(--cyan) 0%, #0077ff 100%);
-        color: #05060f;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        color: #ffffff;
         text-decoration: none;
-        padding: 13px 20px;
-        border-radius: 12px;
+        padding: 14px 22px;
+        border-radius: 14px;
         font-size: 14px;
         font-weight: 800;
         letter-spacing: 0.5px;
-        transition: transform 0.1s, box-shadow 0.2s;
-        box-shadow: 0 4px 18px rgba(0, 240, 255, 0.3);
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .play-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
       }
       .play-btn:active {
-        transform: scale(0.97);
+        transform: scale(0.98);
       }
       footer {
         text-align: center;
         padding: 24px;
         font-size: 12px;
         color: #64748b;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        border-top: 1px solid #e2e8f0;
       }
       footer a {
-        color: var(--cyan);
+        color: #4f46e5;
         text-decoration: none;
+        font-weight: 600;
+      }
+      footer a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
@@ -227,21 +248,21 @@
           <div>
             <div class="card-header">
               <div class="game-icon">
-                <img src="./cyber-arrow-3d/icon.svg" alt="CYBER ARROW 3D" class="game-icon-img" width="38" height="38" onerror="this.onerror=null; this.parentElement.textContent='🎯';" />
+                <img src="./cyber-arrow-3d/icon.svg" alt="CYBER ARROW 3D" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🎯';" />
               </div>
               <div>
                 <h2 class="card-title">CYBER ARROW 3D</h2>
-                <span style="font-size: 11px; color: var(--cyan);">2026-10-20</span>
+                <span class="card-date">2026-10-20</span>
               </div>
               <span class="featured-badge">FEATURED</span>
             </div>
-            <p class="card-desc">Tactile neon spatial untangling puzzle. Orbit the 3D structure, clear unobstructed arrow blocks, and trigger satisfying ASMR particle escapes.</p>
+            <p class="card-desc">Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.</p>
             <div class="tags">
               <span class="tag">3D Puzzle</span>
-              <span class="tag">Three.js</span>
               <span class="tag">Spatial Logic</span>
-              <span class="tag">ASMR</span>
-              <span class="tag">Neon</span>
+              <span class="tag">ASMR Escape</span>
+              <span class="tag">Three.js</span>
+              <span class="tag">Casual</span>
             </div>
           </div>
           <a href="./cyber-arrow-3d/" class="play-btn">PLAY GAME ➔</a>
@@ -250,20 +271,20 @@
           <div>
             <div class="card-header">
               <div class="game-icon">
-                <img src="./cyber-flap/icon.svg" alt="CYBER FLAP // 2099" class="game-icon-img" width="38" height="38" onerror="this.onerror=null; this.parentElement.textContent='⚡';" />
+                <img src="./cyber-flap/icon.svg" alt="CYBER FLAP // 2099" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='⚡';" />
               </div>
               <div>
                 <h2 class="card-title">CYBER FLAP // 2099</h2>
-                <span style="font-size: 11px; color: var(--cyan);">2026-10-19</span>
+                <span class="card-date">2026-10-19</span>
               </div>
             </div>
-            <p class="card-desc">High-octane 3D cyberpunk drone flight runner. Dodge neon obstacles across futuristic cityscapes with precision flight controls.</p>
+            <p class="card-desc">High-energy 3D aerobatic drone runner. Soar through sunlit city skies, thread precision aerial rings, and dodge dynamic obstacles with responsive 60 FPS controls.</p>
             <div class="tags">
-              <span class="tag">3D Runner</span>
+              <span class="tag">3D Sky Runner</span>
+              <span class="tag">Aerobatic Flight</span>
               <span class="tag">Physics</span>
-              <span class="tag">Three.js</span>
-              <span class="tag">Cyberpunk</span>
               <span class="tag">60 FPS</span>
+              <span class="tag">Arcade</span>
             </div>
           </div>
           <a href="./cyber-flap/" class="play-btn">PLAY GAME ➔</a>
@@ -280,7 +301,7 @@
         const fb = fallbackEmoji || '🎮';
         if (!iconPath) return fb;
         if (iconPath.endsWith('.svg') || iconPath.endsWith('.png') || iconPath.startsWith('./') || iconPath.startsWith('/')) {
-          return `<img src="${iconPath}" alt="${title}" class="game-icon-img" width="38" height="38" onerror="this.onerror=null; this.parentElement.textContent='${fb}';" />`;
+          return `<img src="${iconPath}" alt="${title}" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='${fb}';" />`;
         }
         return iconPath;
       }
@@ -295,7 +316,7 @@
                 <div class="game-icon">${iconContent}</div>
                 <div>
                   <h2 class="card-title">${g.title}</h2>
-                  <span style="font-size: 11px; color: var(--cyan);">${g.date}</span>
+                  <span class="card-date">${g.date}</span>
                 </div>
                 ${isFeatured ? '<span class="featured-badge">FEATURED</span>' : ''}
               </div>

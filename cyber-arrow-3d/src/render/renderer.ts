@@ -16,7 +16,8 @@ export class RenderPipeline {
 
   constructor(container: HTMLElement, callbacks?: RenderPipelineCallbacks) {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x090a14);
+    this.scene.background = new THREE.Color(0xbae6fd);
+    this.scene.fog = new THREE.Fog(0xbae6fd, 28, 85);
 
     this.renderer = new THREE.WebGLRenderer({
       powerPreference: 'high-performance',

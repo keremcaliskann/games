@@ -10,7 +10,12 @@ export class PlayingState implements GameState {
     this.physicsCallbacks = {
       onHitHazard: (): void => {
         this.ctx.audio.playCrash();
-        this.ctx.cameraRig.triggerShake(0.65);
+        this.ctx.cameraRig.triggerShake(0.75);
+        this.ctx.particles.spawnCrashExplosion(
+          this.ctx.drone.currPos.x,
+          this.ctx.drone.currPos.y,
+          this.ctx.drone.currPos.z,
+        );
         this.ctx.fsm.transitionTo(GameStateId.GameOver);
       },
       onPassScoreSensor: (pairId: number): void => {
@@ -21,6 +26,11 @@ export class PlayingState implements GameState {
           this.ctx.storage.saveHighScore(this.ctx.highScore);
         }
         this.ctx.audio.playScore();
+        this.ctx.particles.spawnScoreBurst(
+          this.ctx.drone.currPos.x + 1.2,
+          this.ctx.drone.currPos.y,
+          0,
+        );
         this.ctx.events.emit('scoreChange', {
           score: this.ctx.score,
           highScore: this.ctx.highScore,
@@ -49,6 +59,12 @@ export class PlayingState implements GameState {
     if (pressed & Action.Flap) {
       this.ctx.drone.flap();
       this.ctx.audio.playFlap();
+      this.ctx.cameraRig.triggerFlapKick();
+      this.ctx.particles.spawnFlapPuff(
+        this.ctx.drone.currPos.x,
+        this.ctx.drone.currPos.y,
+        this.ctx.drone.currPos.z,
+      );
     }
 
     this.ctx.clock.tick(dtSec);

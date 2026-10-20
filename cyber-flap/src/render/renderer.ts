@@ -29,12 +29,14 @@ export class RenderEngine {
     });
 
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.applyQualityTier(initialTier);
     this.renderer.setSize(container.clientWidth, container.clientHeight, false);
     container.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x05020d);
+    this.scene.background = new THREE.Color(0x7dd3fc);
 
     this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
       for (let i = 0; i < entries.length; i++) {

@@ -17,6 +17,16 @@ export class GameLoop {
   private onUpdate: UpdateCallback | null = null;
   private onRender: RenderCallback | null = null;
 
+  private readonly handleFixedStep = (fixedDelta: number): void => {
+    this.onFixedUpdate?.(fixedDelta);
+  };
+
+  private readonly frame = (now: number): void => {
+    if (!this.isRunning) return;
+    this.tick(now);
+    this.animFrameId = requestAnimationFrame(this.frame);
+  };
+
   public setCallbacks(
     onFixedUpdate: FixedUpdateCallback,
     onUpdate: UpdateCallback,
@@ -31,7 +41,7 @@ export class GameLoop {
     if (this.isRunning) return;
     this.isRunning = true;
     this.clock.start();
-    this.scheduleFrame();
+    this.animFrameId = requestAnimationFrame(this.frame);
   }
 
   public stop(): void {
@@ -42,20 +52,8 @@ export class GameLoop {
     }
   }
 
-  private scheduleFrame(): void {
-    this.animFrameId = requestAnimationFrame((now) => {
-      if (!this.isRunning) return;
-      this.tick(now);
-      this.scheduleFrame();
-    });
-  }
-
   private tick(now: number): void {
-    const delta = this.clock.tick(now, (fixedDelta) => {
-      if (this.onFixedUpdate) {
-        this.onFixedUpdate(fixedDelta);
-      }
-    });
+    const delta = this.clock.tick(now, this.handleFixedStep);
 
     if (this.onUpdate) {
       this.onUpdate(delta);

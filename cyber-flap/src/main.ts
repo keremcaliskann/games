@@ -17,6 +17,7 @@ import {
   type GameEvents,
 } from './game/states/state-machine';
 import { ObstacleSpawner } from './game/systems/obstacle-spawner';
+import { ParticleSystem } from './game/systems/particle-system';
 import { GamepadSource } from './input/gamepad';
 import { InputManager } from './input/input-manager';
 import { KeyboardPointerSource } from './input/keyboard-mouse';
@@ -72,6 +73,8 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   renderEngine.scene.add(drone.mesh);
 
   const spawner = new ObstacleSpawner(renderEngine.scene, physics);
+  const particles = new ParticleSystem();
+  renderEngine.scene.add(particles.mesh);
 
   const input = new InputManager([
     new KeyboardPointerSource(appContainer),
@@ -90,6 +93,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     spawner,
     city,
     cameraRig,
+    particles,
     fsm,
     score: 0,
     highScore: storage.loadHighScore(),
@@ -107,6 +111,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     ctx.clock.reset();
     ctx.score = 0;
     ctx.spawner.reset();
+    ctx.particles.reset();
     ctx.drone.reset();
     ctx.drone.flap();
     ctx.audio.playFlap();
@@ -130,6 +135,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
       const emaMs = loop!.getAverageFrameMs();
       quality.update(dtSec, emaMs);
       fsm.update(dtSec);
+      particles.update(dtSec);
       hud.updateDebug(
         dtSec,
         emaMs,
@@ -167,6 +173,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
       hud.dispose();
       input.dispose();
       spawner.dispose();
+      particles.dispose();
       drone.dispose();
       city?.dispose();
       physics.dispose();

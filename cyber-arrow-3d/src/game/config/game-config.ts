@@ -22,19 +22,26 @@ export interface ThemeColors {
 }
 
 export const CYBER_THEMES: Record<string, ThemeColors> = {
+  daylightPop: {
+    name: 'Daylight Pop',
+    blockColor: 0xf8fafc,
+    arrowEmissive: 0x0284c7,
+    highlightEmissive: 0xf59e0b,
+    blockedEmissive: 0xef4444,
+  },
   neonCyan: {
-    name: 'Neon Cyan',
-    blockColor: 0x141b2d,
-    arrowEmissive: 0x00f0ff,
-    highlightEmissive: 0x39ff14,
-    blockedEmissive: 0xff0055,
+    name: 'Daylight Pop',
+    blockColor: 0xf8fafc,
+    arrowEmissive: 0x0284c7,
+    highlightEmissive: 0xf59e0b,
+    blockedEmissive: 0xef4444,
   },
   synthwave: {
-    name: 'Synthwave Sunset',
-    blockColor: 0x24112e,
-    arrowEmissive: 0xff0077,
-    highlightEmissive: 0xffe600,
-    blockedEmissive: 0xff2200,
+    name: 'Candy Pastel',
+    blockColor: 0xe0f2fe,
+    arrowEmissive: 0xec4899,
+    highlightEmissive: 0x10b981,
+    blockedEmissive: 0xef4444,
   },
 };
 

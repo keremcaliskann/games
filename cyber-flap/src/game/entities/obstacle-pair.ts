@@ -13,7 +13,7 @@ export interface SharedObstacleResources {
   capGeo: THREE.BoxGeometry;
   pillarMat: THREE.MeshLambertMaterial;
   cyanCoreMat: THREE.MeshBasicMaterial;
-  magentaCapMat: THREE.MeshBasicMaterial;
+  magentaCapMat: THREE.MeshLambertMaterial;
 }
 
 export function createSharedObstacleResources(): SharedObstacleResources {
@@ -34,18 +34,20 @@ export function createSharedObstacleResources(): SharedObstacleResources {
       GAME_CONFIG.gateDepthM * 1.28,
     ),
     pillarMat: new THREE.MeshLambertMaterial({
-      color: 0x120d2b,
-      emissive: 0x070417,
+      color: 0xf1f5f9,
+      emissive: 0x0f172a,
+      emissiveIntensity: 0.05,
     }),
     cyanCoreMat: new THREE.MeshBasicMaterial({
-      color: 0x00f3ff,
+      color: 0x06b6d4,
       transparent: true,
-      opacity: 0.78,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.92,
       depthWrite: false,
     }),
-    magentaCapMat: new THREE.MeshBasicMaterial({
-      color: 0xff007f,
+    magentaCapMat: new THREE.MeshLambertMaterial({
+      color: 0xef4444,
+      emissive: 0x7f1d1d,
+      emissiveIntensity: 0.15,
     }),
   };
 }
@@ -89,15 +91,21 @@ export class ObstaclePair {
     const halfH = GAME_CONFIG.pillarHeightM * 0.5;
 
     const topPillar = new THREE.Mesh(res.pillarGeo, res.pillarMat);
+    topPillar.castShadow = true;
+    topPillar.receiveShadow = true;
     const topCore = new THREE.Mesh(res.coreGeo, res.cyanCoreMat);
     const topCap = new THREE.Mesh(res.capGeo, res.magentaCapMat);
     topCap.position.set(0, -halfH + 0.21, 0);
+    topCap.castShadow = true;
     this.topGroup.add(topPillar, topCore, topCap);
 
     const bottomPillar = new THREE.Mesh(res.pillarGeo, res.pillarMat);
+    bottomPillar.castShadow = true;
+    bottomPillar.receiveShadow = true;
     const bottomCore = new THREE.Mesh(res.coreGeo, res.cyanCoreMat);
     const bottomCap = new THREE.Mesh(res.capGeo, res.magentaCapMat);
     bottomCap.position.set(0, halfH - 0.21, 0);
+    bottomCap.castShadow = true;
     this.bottomGroup.add(bottomPillar, bottomCore, bottomCap);
 
     this.root.add(this.topGroup, this.bottomGroup);

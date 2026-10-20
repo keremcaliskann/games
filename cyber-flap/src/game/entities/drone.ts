@@ -27,48 +27,66 @@ export class CyberDrone {
     const hullGeo = new THREE.OctahedronGeometry(GAME_CONFIG.droneRadiusM, 1);
     hullGeo.scale(1.35, 0.72, 0.9);
     const hullMat = new THREE.MeshLambertMaterial({
-      color: 0x162238,
-      emissive: 0x051824,
+      color: 0xf8fafc,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.08,
     });
     const hullMesh = new THREE.Mesh(hullGeo, hullMat);
+    hullMesh.castShadow = true;
+
+    const stripeGeo = new THREE.BoxGeometry(0.85, 0.06, 0.28);
+    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x0284c7 });
+    const stripeMesh = new THREE.Mesh(stripeGeo, stripeMat);
+    stripeMesh.position.set(0.05, 0.26, 0);
 
     const visorGeo = new THREE.BoxGeometry(0.55, 0.18, 0.62);
-    const visorMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff });
+    const visorMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
     const visorMesh = new THREE.Mesh(visorGeo, visorMat);
     visorMesh.position.set(0.28, 0.08, 0);
 
     const wingGeo = new THREE.BoxGeometry(0.7, 0.08, 1.35);
     const wingMat = new THREE.MeshLambertMaterial({
-      color: 0x221035,
-      emissive: 0xff007f,
-      emissiveIntensity: 0.45,
+      color: 0xf43f5e,
+      emissive: 0x9f1239,
+      emissiveIntensity: 0.2,
     });
     const wingMesh = new THREE.Mesh(wingGeo, wingMat);
     wingMesh.position.set(-0.08, 0, 0);
+    wingMesh.castShadow = true;
 
-    const thrusterGeo = new THREE.ConeGeometry(0.24, 0.65, 8);
+    const thrusterGeo = new THREE.ConeGeometry(0.26, 0.72, 8);
     thrusterGeo.rotateZ(Math.PI * 0.5);
     const thrusterMat = new THREE.MeshBasicMaterial({
-      color: 0x00f3ff,
+      color: 0x06b6d4,
       transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.88,
       depthWrite: false,
     });
     this.thrusterCore = new THREE.Mesh(thrusterGeo, thrusterMat);
     this.thrusterCore.position.set(-0.72, 0, 0);
 
+    const innerFlameGeo = new THREE.ConeGeometry(0.16, 0.52, 8);
+    innerFlameGeo.rotateZ(Math.PI * 0.5);
+    const innerFlameMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.95,
+      depthWrite: false,
+    });
+    const innerFlame = new THREE.Mesh(innerFlameGeo, innerFlameMat);
+    innerFlame.position.set(0.08, 0, 0);
+    this.thrusterCore.add(innerFlame);
+
     const ringGeo = new THREE.TorusGeometry(0.52, 0.04, 8, 20);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x00f3ff,
+      color: 0x00f0ff,
       transparent: true,
-      opacity: 0.35,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.7,
       depthWrite: false,
     });
     this.haloRing = new THREE.Mesh(ringGeo, ringMat);
 
-    this.mesh.add(hullMesh, visorMesh, wingMesh, this.thrusterCore, this.haloRing);
+    this.mesh.add(hullMesh, stripeMesh, visorMesh, wingMesh, this.thrusterCore, this.haloRing);
 
     const bodyDesc = RAPIER.RigidBodyDesc.kinematicPositionBased().setTranslation(
       GAME_CONFIG.droneStartX,

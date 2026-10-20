@@ -35,8 +35,7 @@ export class CyberCity {
   constructor(ceilingY: number, floorY: number) {
     const boxGeo = new THREE.BoxGeometry(1, 1, 1);
     const buildingMat = new THREE.MeshLambertMaterial({
-      color: 0x0b071e,
-      emissive: 0x050210,
+      color: 0xffffff,
     });
     this.buildingMesh = new THREE.InstancedMesh(boxGeo, buildingMat, BUILDING_COUNT);
     this.buildingMesh.frustumCulled = false;
@@ -45,7 +44,8 @@ export class CyberCity {
     this.neonTrimMesh = new THREE.InstancedMesh(boxGeo, trimMat, BUILDING_COUNT);
     this.neonTrimMesh.frustumCulled = false;
 
-    const palette = [0x00f3ff, 0xff007f, 0x9d00ff, 0x00ff9d];
+    const buildingPalette = [0xbae6fd, 0xfef08a, 0xa7f3d0, 0xfecdd3, 0xe2e8f0];
+    const trimPalette = [0x0284c7, 0xf59e0b, 0xec4899, 0x10b981];
 
     for (let i = 0; i < BUILDING_COUNT; i++) {
       const layer = i % 2; // 0 = mid-ground, 1 = deep background
@@ -64,29 +64,34 @@ export class CyberCity {
       this.buildingD[i] = d;
       this.buildingParallax[i] = layer === 0 ? 0.38 : 0.18;
 
-      _color.setHex(palette[i % palette.length]);
+      _color.setHex(buildingPalette[i % buildingPalette.length]);
+      this.buildingMesh.setColorAt(i, _color);
+
+      _color.setHex(trimPalette[i % trimPalette.length]);
       this.neonTrimMesh.setColorAt(i, _color);
+    }
+    if (this.buildingMesh.instanceColor) {
+      this.buildingMesh.instanceColor.needsUpdate = true;
     }
     if (this.neonTrimMesh.instanceColor) {
       this.neonTrimMesh.instanceColor.needsUpdate = true;
     }
 
-    const rainGeo = new THREE.BoxGeometry(0.035, 1.35, 0.035);
-    const rainMat = new THREE.MeshBasicMaterial({
-      color: 0x00f3ff,
+    const moteGeo = new THREE.BoxGeometry(0.06, 0.45, 0.06);
+    const moteMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.38,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.55,
       depthWrite: false,
     });
-    this.rainMesh = new THREE.InstancedMesh(rainGeo, rainMat, MAX_RAIN_COUNT);
+    this.rainMesh = new THREE.InstancedMesh(moteGeo, moteMat, MAX_RAIN_COUNT);
     this.rainMesh.frustumCulled = false;
 
     for (let i = 0; i < MAX_RAIN_COUNT; i++) {
       this.rainX[i] = ((i * 73) % 44) - 20;
       this.rainY[i] = ((i * 41) % 24) - 12;
       this.rainZ[i] = -2 - ((i * 19) % 18);
-      this.rainSpeed[i] = 16 + (i % 9) * 1.5;
+      this.rainSpeed[i] = 10 + (i % 8) * 1.6;
     }
 
     this.root.add(this.buildingMesh);
@@ -98,38 +103,36 @@ export class CyberCity {
   }
 
   private createBoundaryRails(ceilingY: number, floorY: number): void {
-    const railGeo = new THREE.BoxGeometry(60, 0.28, 1.6);
-    const railMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff });
-    const glowGeo = new THREE.BoxGeometry(60, 0.9, 2.4);
-    const glowMat = new THREE.MeshBasicMaterial({
-      color: 0xff007f,
-      transparent: true,
-      opacity: 0.22,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    });
+    const deckGeo = new THREE.BoxGeometry(60, 0.5, 6);
+    const deckMat = new THREE.MeshLambertMaterial({ color: 0xe2e8f0 });
 
-    const topRail = new THREE.Mesh(railGeo, railMat);
-    topRail.position.set(2, ceilingY + 0.15, 0);
-    topRail.matrixAutoUpdate = false;
-    topRail.updateMatrix();
+    const stripeGeo = new THREE.BoxGeometry(60, 0.1, 0.25);
+    const floorStripeMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });
+    const ceilStripeMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
 
-    const bottomRail = new THREE.Mesh(railGeo, railMat);
-    bottomRail.position.set(2, floorY - 0.15, 0);
-    bottomRail.matrixAutoUpdate = false;
-    bottomRail.updateMatrix();
+    const floorDeck = new THREE.Mesh(deckGeo, deckMat);
+    floorDeck.position.set(2, floorY - 0.25, 0);
+    floorDeck.receiveShadow = true;
+    floorDeck.matrixAutoUpdate = false;
+    floorDeck.updateMatrix();
 
-    const topGlow = new THREE.Mesh(glowGeo, glowMat);
-    topGlow.position.set(2, ceilingY + 0.35, 0);
-    topGlow.matrixAutoUpdate = false;
-    topGlow.updateMatrix();
+    const floorStripe = new THREE.Mesh(stripeGeo, floorStripeMat);
+    floorStripe.position.set(2, floorY + 0.02, 0.3);
+    floorStripe.matrixAutoUpdate = false;
+    floorStripe.updateMatrix();
 
-    const bottomGlow = new THREE.Mesh(glowGeo, glowMat);
-    bottomGlow.position.set(2, floorY - 0.35, 0);
-    bottomGlow.matrixAutoUpdate = false;
-    bottomGlow.updateMatrix();
+    const ceilDeck = new THREE.Mesh(deckGeo, deckMat);
+    ceilDeck.position.set(2, ceilingY + 0.25, 0);
+    ceilDeck.receiveShadow = true;
+    ceilDeck.matrixAutoUpdate = false;
+    ceilDeck.updateMatrix();
 
-    this.root.add(topRail, bottomRail, topGlow, bottomGlow);
+    const ceilStripe = new THREE.Mesh(stripeGeo, ceilStripeMat);
+    ceilStripe.position.set(2, ceilingY - 0.02, 0.3);
+    ceilStripe.matrixAutoUpdate = false;
+    ceilStripe.updateMatrix();
+
+    this.root.add(floorDeck, floorStripe, ceilDeck, ceilStripe);
   }
 
   setRainCount(count: number): void {
@@ -148,16 +151,13 @@ export class CyberCity {
       this.buildingX[i] = x;
     }
 
-    _quat.setFromAxisAngle(_pos.set(0, 0, 1), -0.14);
+    _quat.setFromAxisAngle(_pos.set(0, 0, 1), -0.06);
     for (let i = 0; i < this.activeRainCount; i++) {
-      let rx = this.rainX[i] - scrollSpeedMps * 0.45 * dtSec;
-      let ry = this.rainY[i] - this.rainSpeed[i] * dtSec;
-      if (ry < -12) {
-        ry += 24;
-        rx = ((rx + 22) % 44) - 20;
-      }
+      let rx = this.rainX[i] - (scrollSpeedMps * 0.65 + this.rainSpeed[i]) * dtSec;
+      let ry = this.rainY[i] - Math.sin((rx + i * 2) * 0.4) * 0.6 * dtSec;
       if (rx < -22) {
         rx += 44;
+        ry = ((i * 41) % 24) - 12;
       }
       this.rainX[i] = rx;
       this.rainY[i] = ry;

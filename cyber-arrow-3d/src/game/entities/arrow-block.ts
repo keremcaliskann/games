@@ -47,18 +47,20 @@ export class ArrowBlock {
 
     const theme = CYBER_THEMES.neonCyan;
 
+    // Satin porcelain tactile toy block finish
     this.baseMaterial = new THREE.MeshStandardMaterial({
       color: theme.blockColor,
-      roughness: 0.3,
-      metalness: 0.8,
+      roughness: 0.45,
+      metalness: 0.08,
     });
 
+    // High-saturation colored arrow glyph
     this.arrowMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+      color: theme.arrowEmissive,
       emissive: theme.arrowEmissive,
-      emissiveIntensity: 1.4,
-      roughness: 0.2,
-      metalness: 0.9,
+      emissiveIntensity: 0.65,
+      roughness: 0.35,
+      metalness: 0.1,
     });
 
     this.baseMesh = new THREE.Mesh(boxGeo, this.baseMaterial);
@@ -98,35 +100,51 @@ export class ArrowBlock {
     if (this.state !== 'IDLE') return;
     this.state = 'BONK';
     this.animTimer = 0;
-    this.arrowMaterial.emissive.setHex(CYBER_THEMES.neonCyan.blockedEmissive);
-    this.arrowMaterial.emissiveIntensity = 2.5;
+    const theme = CYBER_THEMES.neonCyan;
+    this.arrowMaterial.color.setHex(theme.blockedEmissive);
+    this.arrowMaterial.emissive.setHex(theme.blockedEmissive);
+    this.arrowMaterial.emissiveIntensity = 2.2;
+    this.baseMaterial.color.setHex(0xfecaca); // Coral warning tint on block
   }
 
   public triggerFly(): void {
     this.state = 'FLYING';
     this.animTimer = 0;
-    this.arrowMaterial.emissive.setHex(0x39ff14);
-    this.arrowMaterial.emissiveIntensity = 3.0;
+    const flyColor = 0x10b981; // Saturated Emerald Mint
+    this.arrowMaterial.color.setHex(flyColor);
+    this.arrowMaterial.emissive.setHex(flyColor);
+    this.arrowMaterial.emissiveIntensity = 2.5;
+    this.baseMaterial.color.setHex(0xd1fae5); // Mint victory tint on block
   }
 
   public setHint(highlight: boolean): void {
     this.isHintHighlighted = highlight;
+    const theme = CYBER_THEMES.neonCyan;
     if (highlight) {
-      this.arrowMaterial.emissive.setHex(CYBER_THEMES.neonCyan.highlightEmissive);
-      this.arrowMaterial.emissiveIntensity = 3.0;
+      this.arrowMaterial.color.setHex(theme.highlightEmissive);
+      this.arrowMaterial.emissive.setHex(theme.highlightEmissive);
+      this.arrowMaterial.emissiveIntensity = 2.2;
+      this.baseMaterial.color.setHex(0xfef3c7); // Warm amber tint on block
     } else {
-      this.arrowMaterial.emissive.setHex(CYBER_THEMES.neonCyan.arrowEmissive);
-      this.arrowMaterial.emissiveIntensity = 1.4;
+      this.arrowMaterial.color.setHex(theme.arrowEmissive);
+      this.arrowMaterial.emissive.setHex(theme.arrowEmissive);
+      this.arrowMaterial.emissiveIntensity = 0.65;
+      this.baseMaterial.color.setHex(theme.blockColor);
     }
   }
 
-  public update(delta: number, onFlyFinished: (block: ArrowBlock) => void): void {
+  /**
+   * Advances block animation without any heap allocations.
+   * Returns true when escape flight finishes and block is cleared.
+   */
+  public update(delta: number): boolean {
     if (this.state === 'BONK') {
       this.animTimer += delta;
       const bonkDuration = 0.22;
       if (this.animTimer >= bonkDuration) {
         this.group.position.copy(this.originPos);
         this.state = 'IDLE';
+        this.baseMaterial.color.setHex(CYBER_THEMES.neonCyan.blockColor);
         this.setHint(this.isHintHighlighted);
       } else {
         // Elastic rebound curve
@@ -134,6 +152,7 @@ export class ArrowBlock {
         const offset = Math.sin(progress * Math.PI) * GAME_CONFIG.bonkDistance;
         this.group.position.copy(this.originPos).addScaledVector(this.dirVector, offset);
       }
+      return false;
     } else if (this.state === 'FLYING') {
       this.animTimer += delta;
       // Fly with continuous acceleration
@@ -144,9 +163,11 @@ export class ArrowBlock {
       if (this.animTimer > 0.45) {
         this.state = 'CLEARED';
         this.group.visible = false;
-        onFlyFinished(this);
+        return true;
       }
+      return false;
     }
+    return false;
   }
 
   public dispose(): void {

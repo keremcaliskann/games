@@ -4,6 +4,7 @@ export class CameraRig {
   readonly camera: THREE.PerspectiveCamera;
   private baseZ = 18;
   private shakeIntensity = 0;
+  private flapFovOffset = 0;
 
   constructor(width: number, height: number) {
     this.camera = new THREE.PerspectiveCamera(50, width / Math.max(1, height), 0.5, 140);
@@ -25,6 +26,10 @@ export class CameraRig {
     this.shakeIntensity = intensity;
   }
 
+  triggerFlapKick(): void {
+    this.flapFovOffset = 1.8;
+  }
+
   update(dtSec: number, targetY: number): void {
     const desiredY = THREE.MathUtils.clamp(targetY * 0.18, -1.8, 1.8);
     this.camera.position.y = THREE.MathUtils.lerp(
@@ -44,6 +49,20 @@ export class CameraRig {
       this.shakeIntensity = 0;
     }
 
+    if (this.flapFovOffset > 0.01) {
+      this.flapFovOffset = THREE.MathUtils.lerp(this.flapFovOffset, 0, Math.min(1, dtSec * 6));
+      this.camera.fov = 50 + this.flapFovOffset;
+      this.camera.updateProjectionMatrix();
+    } else if (this.camera.fov !== 50) {
+      this.camera.fov = 50;
+      this.camera.updateProjectionMatrix();
+    }
+
     this.camera.lookAt(2.0, this.camera.position.y * 0.5, 0);
+
+    // Dynamic rotational roll kick after lookAt
+    if (this.shakeIntensity > 0.005) {
+      this.camera.rotation.z += Math.sin(performance.now() * 0.14) * 0.045 * this.shakeIntensity;
+    }
   }
 }

@@ -17,6 +17,10 @@ export class CameraRig {
   private targetPhi = Math.PI / 3;
   private targetRadius = 18;
 
+  // Trauma screen shake dynamics
+  private trauma = 0;
+  private readonly shakeOffset = new THREE.Vector3();
+
   constructor(container: HTMLElement) {
     const aspect = container.clientWidth / Math.max(1, container.clientHeight);
     this.camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 100);
@@ -28,10 +32,18 @@ export class CameraRig {
     this.camera.updateProjectionMatrix();
   }
 
+  /**
+   * Sets target camera distance; smoothly lerps during frame updates.
+   */
   public setDistance(distance: number): void {
     this.targetRadius = distance;
-    this.radius = distance;
-    this.updateCameraPosition();
+  }
+
+  /**
+   * Adds trauma impulse for tactile screen shake upon bonks or heavy impacts.
+   */
+  public addTrauma(amount = 0.35): void {
+    this.trauma = Math.min(1.0, this.trauma + amount);
   }
 
   public rotateDelta(deltaX: number, deltaY: number): void {
@@ -53,13 +65,26 @@ export class CameraRig {
     this.phi += (this.targetPhi - this.phi) * smoothing;
     this.radius += (this.targetRadius - this.radius) * smoothing;
 
+    // Trauma decay and non-linear quadratic shake
+    if (this.trauma > 0) {
+      this.trauma = Math.max(0, this.trauma - delta * 3.5);
+      const shake = this.trauma * this.trauma * 0.18;
+      this.shakeOffset.set(
+        (Math.random() - 0.5) * 2 * shake,
+        (Math.random() - 0.5) * 2 * shake,
+        (Math.random() - 0.5) * 2 * shake
+      );
+    } else {
+      this.shakeOffset.set(0, 0, 0);
+    }
+
     this.updateCameraPosition();
   }
 
   private updateCameraPosition(): void {
-    const x = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
-    const y = this.radius * Math.cos(this.phi);
-    const z = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
+    const x = this.radius * Math.sin(this.phi) * Math.sin(this.theta) + this.shakeOffset.x;
+    const y = this.radius * Math.cos(this.phi) + this.shakeOffset.y;
+    const z = this.radius * Math.sin(this.phi) * Math.cos(this.theta) + this.shakeOffset.z;
 
     this.camera.position.set(x, y, z);
     this.camera.lookAt(this.target);

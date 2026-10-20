@@ -31,7 +31,7 @@ export class Hud {
         <div class="hud-chip remaining" id="hud-remaining">BLOKLAR: 0</div>
         <div class="hud-chip coins" id="hud-coins" style="cursor: pointer;">
           🪙 <span id="coin-count">0</span>
-          <span style="color: #00f0ff; margin-left: 4px;">[+]</span>
+          <span style="color: #0284c7; font-weight: 800; margin-left: 4px;">[+]</span>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export class Hud {
         <h2 class="modal-title">TEMİZLENDİ! ✨</h2>
         <p class="modal-desc">Seviye ${level} başarıyla tamamlandı. Tüm yön okları boşluğa fırlatıldı.</p>
         <div class="modal-reward">+${coinsEarned} NEON COIN 🪙</div>
-        ${showAdNotice ? '<div style="font-size: 11px; color: #ffaa00; margin-bottom: 12px;">📺 [GEÇİŞ REKLAMI SERGİLENDİ]</div>' : ''}
+        ${showAdNotice ? '<div style="font-size: 11px; color: #d97706; font-weight: 700; margin-bottom: 12px;">📺 [GEÇİŞ REKLAMI SERGİLENDİ]</div>' : ''}
         <button class="hud-btn primary" id="btn-next" style="width: 100%; justify-content: center; padding: 14px;">
           SONRAKİ SEVİYE ➔
         </button>
