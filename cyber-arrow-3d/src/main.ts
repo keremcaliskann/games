@@ -38,10 +38,7 @@ class GameApp {
   private readonly ads: UniversalAdProvider;
   private isFirstRender = true;
 
-  constructor() {
-    // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
-    PlatformBridge.applyDualModeShell();
-
+  constructor(cloudData?: { currentLevel?: number; coins?: number }) {
     this.appEl = document.getElementById('app')!;
     this.hudEl = document.getElementById('hud')!;
     this.ads = UniversalAdProvider.get();
@@ -63,7 +60,7 @@ class GameApp {
     this.pipeline.scene.add(this.particles.points);
 
     // Game Systems & Entities
-    this.economy = new EconomySystem();
+    this.economy = new EconomySystem(cloudData);
     this.grid = new PuzzleGrid();
     this.pipeline.scene.add(this.grid.rootGroup);
 
@@ -226,9 +223,9 @@ class GameApp {
     const finalBonus = rewarded ? Math.floor(baseCoins * multiplier) : baseCoins;
 
     this.economy.advanceLevel();
-    // Add bonus coins
-    for (let i = 0; i < Math.floor(finalBonus / 25); i++) {
-      this.economy.rewardAdWatched();
+    const extraCoins = finalBonus - baseCoins;
+    if (extraCoins > 0) {
+      this.economy.addCoins(extraCoins);
     }
 
     this.loadCurrentLevel();
@@ -256,7 +253,23 @@ class GameApp {
   }
 }
 
+async function bootstrap(): Promise<void> {
+  // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
+  PlatformBridge.applyDualModeShell();
+
+  // YouTube Playables mandatory loadData before any saveData
+  const cloudData = await PlatformBridge.loadData({
+    level: 1,
+    coins: 50,
+  });
+
+  new GameApp({
+    currentLevel: cloudData.level,
+    coins: cloudData.coins,
+  });
+}
+
 // Start game once DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
-  new GameApp();
+  bootstrap();
 });

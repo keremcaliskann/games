@@ -11,8 +11,16 @@ export class EconomySystem {
   private readonly bus = EventBus.get();
   private levelsSinceLastAd = 0;
 
-  constructor() {
+  constructor(cloudData?: Partial<PlayerData>) {
     this.data = StorageManager.load();
+    if (cloudData) {
+      if (cloudData.currentLevel && cloudData.currentLevel > this.data.currentLevel) {
+        this.data.currentLevel = cloudData.currentLevel;
+      }
+      if (cloudData.coins && cloudData.coins > this.data.coins) {
+        this.data.coins = cloudData.coins;
+      }
+    }
   }
 
   public getLevel(): number {
@@ -57,6 +65,13 @@ export class EconomySystem {
   public rewardAdWatched(): void {
     const bonus = 50;
     this.data.coins += bonus;
+    this.save();
+    this.bus.emit('coins_updated', this.data.coins);
+  }
+
+  public addCoins(amount: number): void {
+    if (amount <= 0) return;
+    this.data.coins += amount;
     this.save();
     this.bus.emit('coins_updated', this.data.coins);
   }

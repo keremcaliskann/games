@@ -5,8 +5,37 @@ export type BlockState = 'IDLE' | 'BONK' | 'FLYING' | 'CLEARED';
 
 // Shared geometries to minimize memory and garbage collection
 const boxGeo = new THREE.BoxGeometry(GAME_CONFIG.blockSize, GAME_CONFIG.blockSize, GAME_CONFIG.blockSize);
-const arrowHeadGeo = new THREE.ConeGeometry(0.24, 0.45, 12);
-const arrowShaftGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.35, 8);
+const arrowHeadGeo = new THREE.ConeGeometry(0.20, 0.32, 12);
+const arrowShaftGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.26, 8);
+
+function getLateralNormals(dir: CardinalDirection): THREE.Vector3[] {
+  switch (dir) {
+    case '+X':
+    case '-X':
+      return [
+        new THREE.Vector3(0, 1, 0),
+        new THREE.Vector3(0, -1, 0),
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(0, 0, -1),
+      ];
+    case '+Y':
+    case '-Y':
+      return [
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(0, 0, -1),
+      ];
+    case '+Z':
+    case '-Z':
+      return [
+        new THREE.Vector3(1, 0, 0),
+        new THREE.Vector3(-1, 0, 0),
+        new THREE.Vector3(0, 1, 0),
+        new THREE.Vector3(0, -1, 0),
+      ];
+  }
+}
 
 /**
  * An individual 3D arrow block entity.
@@ -15,7 +44,7 @@ const arrowShaftGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.35, 8);
 export class ArrowBlock {
   public readonly group: THREE.Group;
   public readonly baseMesh: THREE.Mesh;
-  public readonly arrowGroup: THREE.Group;
+  public readonly arrowMeshes: THREE.Mesh[] = [];
   private readonly baseMaterial: THREE.MeshStandardMaterial;
   private readonly arrowMaterial: THREE.MeshStandardMaterial;
 
@@ -54,12 +83,12 @@ export class ArrowBlock {
       metalness: 0.08,
     });
 
-    // High-saturation colored arrow glyph
+    // High-saturation colored arrow glyph with radiant emissive punch
     this.arrowMaterial = new THREE.MeshStandardMaterial({
       color: theme.arrowEmissive,
       emissive: theme.arrowEmissive,
-      emissiveIntensity: 0.65,
-      roughness: 0.35,
+      emissiveIntensity: 1.6,
+      roughness: 0.25,
       metalness: 0.1,
     });
 
@@ -69,17 +98,8 @@ export class ArrowBlock {
     this.baseMesh.userData = { block: this };
     this.group.add(this.baseMesh);
 
-    // Build the directional arrow indicator
-    this.arrowGroup = new THREE.Group();
-    const shaft = new THREE.Mesh(arrowShaftGeo, this.arrowMaterial);
-    const head = new THREE.Mesh(arrowHeadGeo, this.arrowMaterial);
-    shaft.position.y = -0.12;
-    head.position.y = 0.2;
-    this.arrowGroup.add(shaft);
-    this.arrowGroup.add(head);
-
-    this.orientArrow(this.dirVector);
-    this.group.add(this.arrowGroup);
+    // Build the directional arrow indicators (forward 3D arrow + 4 lateral embossed arrows)
+    this.buildArrows();
 
     // Initial position in world space
     const sp = GAME_CONFIG.blockSpacing;
@@ -87,13 +107,54 @@ export class ArrowBlock {
     this.group.position.copy(this.originPos);
   }
 
-  private orientArrow(dir: THREE.Vector3): void {
-    // Default cone points along +Y
+  private buildArrows(): void {
+    // 1. Forward 3D arrow pointing along flight direction
+    const forwardGroup = new THREE.Group();
+    const fShaft = new THREE.Mesh(arrowShaftGeo, this.arrowMaterial);
+    const fHead = new THREE.Mesh(arrowHeadGeo, this.arrowMaterial);
+    fShaft.position.y = -0.10;
+    fHead.position.y = 0.18;
+    fShaft.castShadow = true;
+    fHead.castShadow = true;
+    fShaft.userData = { block: this };
+    fHead.userData = { block: this };
+    forwardGroup.add(fShaft);
+    forwardGroup.add(fHead);
+
     const up = new THREE.Vector3(0, 1, 0);
-    const quat = new THREE.Quaternion().setFromUnitVectors(up, dir);
-    this.arrowGroup.quaternion.copy(quat);
-    // Push the arrow outward along the direction face so it is clearly visible
-    this.arrowGroup.position.copy(dir).multiplyScalar(0.25);
+    const quat = new THREE.Quaternion().setFromUnitVectors(up, this.dirVector);
+    forwardGroup.quaternion.copy(quat);
+    forwardGroup.position.copy(this.dirVector).multiplyScalar(0.42);
+    forwardGroup.scale.set(1.25, 1.25, 1.25);
+    this.arrowMeshes.push(fShaft, fHead);
+    this.group.add(forwardGroup);
+
+    // 2. Embossed arrows on all 4 lateral faces for 360° readability from any camera angle
+    const lateralNormals = getLateralNormals(this.direction);
+    for (let i = 0; i < lateralNormals.length; i++) {
+      const normal = lateralNormals[i];
+      const side = new THREE.Vector3().crossVectors(normal, this.dirVector).normalize();
+
+      const faceGroup = new THREE.Group();
+      const lShaft = new THREE.Mesh(arrowShaftGeo, this.arrowMaterial);
+      const lHead = new THREE.Mesh(arrowHeadGeo, this.arrowMaterial);
+      lShaft.position.y = -0.10;
+      lHead.position.y = 0.18;
+      lShaft.castShadow = true;
+      lHead.castShadow = true;
+      lShaft.userData = { block: this };
+      lHead.userData = { block: this };
+      faceGroup.add(lShaft);
+      faceGroup.add(lHead);
+
+      const basis = new THREE.Matrix4().makeBasis(side, this.dirVector, normal);
+      basis.setPosition(normal.x * 0.51, normal.y * 0.51, normal.z * 0.51);
+      faceGroup.applyMatrix4(basis);
+      faceGroup.scale.set(1.1, 1.1, 0.38);
+
+      this.arrowMeshes.push(lShaft, lHead);
+      this.group.add(faceGroup);
+    }
   }
 
   public triggerBonk(): void {
@@ -128,7 +189,7 @@ export class ArrowBlock {
     } else {
       this.arrowMaterial.color.setHex(theme.arrowEmissive);
       this.arrowMaterial.emissive.setHex(theme.arrowEmissive);
-      this.arrowMaterial.emissiveIntensity = 0.65;
+      this.arrowMaterial.emissiveIntensity = 1.6;
       this.baseMaterial.color.setHex(theme.blockColor);
     }
   }

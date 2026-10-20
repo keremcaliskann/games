@@ -151,11 +151,12 @@ export class CyberHud {
       const adReady = this.isAdReady ? this.isAdReady() : true;
       if (adReady) {
         this.adActionsEl.style.display = 'flex';
+        this.adActionsEl.dataset.hudInteractive = 'true';
         this.adActionsEl.innerHTML = `
-          <button id="cf-ad-revive" type="button" class="cf-ad-btn cf-revive-btn">
+          <button id="cf-ad-revive" type="button" class="cf-ad-btn cf-revive-btn" data-hud-interactive="true">
             🎬 CANLAN & DEVAM ET (+3sn KALKAN)
           </button>
-          <button id="cf-ad-mult" type="button" class="cf-ad-btn cf-mult-btn">
+          <button id="cf-ad-mult" type="button" class="cf-ad-btn cf-mult-btn" data-hud-interactive="true">
             🎬 3x SKOR BONUSU AL (${score * 3} PT)
           </button>
         `;

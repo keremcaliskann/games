@@ -37,6 +37,14 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
   PlatformBridge.applyDualModeShell();
 
+  // YouTube Playables mandatory loadData before any saveData
+  const cloudData = await PlatformBridge.loadData({
+    highScore: 0,
+    totalFlights: 0,
+    bestRingCombo: 0,
+    credits: 0,
+  });
+
   await RAPIER.init();
 
   const ads = UniversalAdProvider.get();
@@ -104,7 +112,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     particles,
     fsm,
     score: 0,
-    highScore: storage.loadHighScore(),
+    highScore: Math.max(storage.loadHighScore(), cloudData.highScore),
   };
 
   fsm.register(new MenuState(ctx));

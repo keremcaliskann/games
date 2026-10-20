@@ -14,6 +14,7 @@ export class PuzzleGrid {
   private readonly bus = EventBus.get();
 
   private activeHintBlock: ArrowBlock | null = null;
+  private isLevelCompleted = false;
 
   public static key(gx: number, gy: number, gz: number): string {
     return `${gx},${gy},${gz}`;
@@ -28,6 +29,7 @@ export class PuzzleGrid {
     this.blocksMap.clear();
     this.blocksList.length = 0;
     this.activeHintBlock = null;
+    this.isLevelCompleted = false;
   }
 
   public addBlock(block: ArrowBlock): void {
@@ -124,6 +126,9 @@ export class PuzzleGrid {
       const b = this.blocksList[i];
       if (b.state === 'IDLE') {
         targets.push(b.baseMesh);
+        for (let j = 0; j < b.arrowMeshes.length; j++) {
+          targets.push(b.arrowMeshes[j]);
+        }
       }
     }
     return targets;
@@ -165,7 +170,8 @@ export class PuzzleGrid {
       if (b.state === 'BONK' || b.state === 'FLYING') {
         const isFlyFinished = b.update(delta);
         if (isFlyFinished) {
-          if (this.getRemainingCount() === 0) {
+          if (!this.isLevelCompleted && this.getRemainingCount() === 0) {
+            this.isLevelCompleted = true;
             this.bus.emit('level_completed', null);
           }
         }

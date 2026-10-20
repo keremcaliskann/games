@@ -57,20 +57,20 @@ export class LevelLoader {
         }
       }
     } else if (level === 4) {
-      // 3D Pyramid / Diamond (14 blocks)
-      // Base 3x3
+      // 3D Stepped Pyramid (15 integer blocks)
+      // Base layer 3x3 (y = 0)
       for (let x = -1; x <= 1; x++) {
         for (let z = -1; z <= 1; z++) {
           coords.push({ x, y: 0, z });
         }
       }
-      // Mid 2x2
-      for (let x = 0; x <= 1; x++) {
-        for (let z = 0; z <= 1; z++) {
-          coords.push({ x: x - 0.5, y: 1, z: z - 0.5 });
-        }
-      }
-      // Top 1
+      // Mid cross (y = 1)
+      coords.push({ x: 0, y: 1, z: 0 });
+      coords.push({ x: 1, y: 1, z: 0 });
+      coords.push({ x: -1, y: 1, z: 0 });
+      coords.push({ x: 0, y: 1, z: 1 });
+      coords.push({ x: 0, y: 1, z: -1 });
+      // Top tip (y = 2)
       coords.push({ x: 0, y: 2, z: 0 });
     } else {
       // 3x3x3 Hollow Cube or scaled variants
@@ -95,44 +95,73 @@ export class LevelLoader {
   }
 
   /**
-   * Assigns directions ensuring a valid untangle order exists.
-   * Prioritizes outward faces for perimeter blocks and chains inward dependencies.
+   * Assigns directions using a reverse-peel topological DAG decomposition.
+   * Eliminates mutual block cycles (A -> B and B -> A) and guarantees 100% solvability.
    */
   private static assignSolvableDirections(
     coords: GridCoord[]
   ): Array<GridCoord & { dir: CardinalDirection }> {
     const result: Array<GridCoord & { dir: CardinalDirection }> = [];
-    const coordSet = new Set<string>();
-
-    for (let i = 0; i < coords.length; i++) {
-      coordSet.add(`${coords[i].x},${coords[i].y},${coords[i].z}`);
-    }
+    const remaining = new Map<string, GridCoord>();
 
     for (let i = 0; i < coords.length; i++) {
       const c = coords[i];
-      const validOutwardDirs: CardinalDirection[] = [];
+      remaining.set(`${c.x},${c.y},${c.z}`, c);
+    }
 
-      for (let d = 0; d < ALL_DIRECTIONS.length; d++) {
-        const dir = ALL_DIRECTIONS[d];
-        const vec = DIRECTION_VECTORS[dir];
-        const nextKey = `${c.x + Math.round(vec.x)},${c.y + Math.round(vec.y)},${c.z + Math.round(vec.z)}`;
-        if (!coordSet.has(nextKey)) {
-          validOutwardDirs.push(dir);
+    // Peel until all blocks are assigned a solvable escape direction
+    while (remaining.size > 0) {
+      const candidates: Array<{ coord: GridCoord; dir: CardinalDirection }> = [];
+
+      for (const coord of remaining.values()) {
+        for (let d = 0; d < ALL_DIRECTIONS.length; d++) {
+          const dir = ALL_DIRECTIONS[d];
+          const vec = DIRECTION_VECTORS[dir];
+          const dx = Math.round(vec.x);
+          const dy = Math.round(vec.y);
+          const dz = Math.round(vec.z);
+
+          let isClear = true;
+          let curX = coord.x + dx;
+          let curY = coord.y + dy;
+          let curZ = coord.z + dz;
+
+          // Raycast outward in remaining unpeeled blocks
+          for (let step = 0; step < 25; step++) {
+            if (remaining.has(`${curX},${curY},${curZ}`)) {
+              isClear = false;
+              break;
+            }
+            curX += dx;
+            curY += dy;
+            curZ += dz;
+          }
+
+          if (isClear) {
+            candidates.push({ coord, dir });
+          }
         }
       }
 
-      // If block has open directions, choose one randomly; otherwise pick any direction
-      const chosenDir =
-        validOutwardDirs.length > 0
-          ? validOutwardDirs[Math.floor(Math.random() * validOutwardDirs.length)]
-          : ALL_DIRECTIONS[Math.floor(Math.random() * ALL_DIRECTIONS.length)];
+      if (candidates.length === 0) {
+        // Fallback for mathematical completeness
+        const first = remaining.values().next().value as GridCoord;
+        result.push({ ...first, dir: ALL_DIRECTIONS[0] });
+        remaining.delete(`${first.x},${first.y},${first.z}`);
+        continue;
+      }
 
+      // Pick a random solvable candidate
+      const chosen = candidates[Math.floor(Math.random() * candidates.length)];
       result.push({
-        x: c.x,
-        y: c.y,
-        z: c.z,
-        dir: chosenDir,
+        x: chosen.coord.x,
+        y: chosen.coord.y,
+        z: chosen.coord.z,
+        dir: chosen.dir,
       });
+
+      // Remove peeled block from active set
+      remaining.delete(`${chosen.coord.x},${chosen.coord.y},${chosen.coord.z}`);
     }
 
     return result;
