@@ -222,43 +222,26 @@ class GameApp {
       return;
     }
 
-    // Smart tap: try to slide in the most beneficial direction (e.g. towards matching gate)
-    const hint = this.board.findHintMove();
-    if (hint && hint.block.id === block.id) {
-      this.handleBlockSwipe(block, hint.dirX, hint.dirY);
-    } else {
-      // Try natural slide directions
-      const tryDirs = [
-        { x: 0, y: -1 },
-        { x: 0, y: 1 },
-        { x: -1, y: 0 },
-        { x: 1, y: 0 },
-      ];
-      for (const d of tryDirs) {
-        const res = this.board.trySlideBlock(block, d.x, d.y);
-        if (res.type !== 'blocked') {
-          if (res.type === 'shredded') {
-            this.sound.playShredCrunch();
-            this.sound.playVoxelPop();
-            this.particles.spawnShredBurst(
-              res.gate.worldPosition,
-              res.gate.intakeDirection,
-              block.color.hex,
-              30
-            );
-          } else {
-            this.sound.playSlide();
-          }
-          this.remainingMoves = Math.max(0, this.remainingMoves - 1);
-          this.updateHud();
-          this.checkLevelStatus();
-          return;
-        }
+    // Smart tap: If this block has an open path directly into its matching gate, slide into it!
+    const tryDirs = [
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+      { x: -1, y: 0 },
+      { x: 1, y: 0 },
+    ];
+
+    for (const d of tryDirs) {
+      const exitGate = this.board.canBlockExitInDirection(block, d.x, d.y);
+      if (exitGate) {
+        this.handleBlockSwipe(block, d.x, d.y);
+        return;
       }
-      // If no valid direction
-      this.sound.playBlocked();
-      this.cameraRig.addTrauma(0.25);
     }
+
+    // Path to matching gate is currently blocked -> Wiggle feedback without wasting moves
+    block.triggerWiggle();
+    this.sound.playBlocked();
+    this.cameraRig.addTrauma(0.15);
   }
 
   private executeHammerOnBlock(block: Block): void {

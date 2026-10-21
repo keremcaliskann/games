@@ -13,15 +13,16 @@ export class InputManager {
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointerNdc = new THREE.Vector2();
 
+  private readonly groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  private readonly startPlaneHit = new THREE.Vector3();
+  private readonly currentPlaneHit = new THREE.Vector3();
+
   private isPointerDown = false;
-  private startScreenX = 0;
-  private startScreenY = 0;
   private lastScreenX = 0;
   private lastScreenY = 0;
 
   private activeBlock: Block | null = null;
   private isSwiped = false;
-  private readonly swipeThreshold = 18;
 
   private callbacks: InputCallbacks = {
     onBlockSwipe: () => {},
@@ -67,8 +68,6 @@ export class InputManager {
     }
 
     this.isPointerDown = true;
-    this.startScreenX = e.clientX;
-    this.startScreenY = e.clientY;
     this.lastScreenX = e.clientX;
     this.lastScreenY = e.clientY;
     this.isSwiped = false;
@@ -88,6 +87,8 @@ export class InputManager {
       const block = hitObj.userData.block as Block | undefined;
       if (block && block.state === 'idle') {
         this.activeBlock = block;
+        // Record world ground position where drag started
+        this.raycaster.ray.intersectPlane(this.groundPlane, this.startPlaneHit);
       }
     }
   }
@@ -101,27 +102,38 @@ export class InputManager {
     this.lastScreenY = e.clientY;
 
     if (this.activeBlock && !this.isSwiped) {
-      const totalDx = e.clientX - this.startScreenX;
-      const totalDy = e.clientY - this.startScreenY;
-      const dist = Math.hypot(totalDx, totalDy);
+      const rect = this.domElement.getBoundingClientRect();
+      const currentNdc = new THREE.Vector2(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        -((e.clientY - rect.top) / rect.height) * 2 + 1
+      );
+      this.raycaster.setFromCamera(currentNdc, this.camera);
+      const hit = this.raycaster.ray.intersectPlane(this.groundPlane, this.currentPlaneHit);
 
-      if (dist >= this.swipeThreshold) {
-        this.isSwiped = true;
-        // Determine primary swipe direction mapped to grid coordinates
-        let dirX = 0;
-        let dirY = 0;
+      if (hit) {
+        const deltaWorldX = this.currentPlaneHit.x - this.startPlaneHit.x;
+        const deltaWorldZ = this.currentPlaneHit.z - this.startPlaneHit.z;
+        const worldDist = Math.hypot(deltaWorldX, deltaWorldZ);
 
-        if (Math.abs(totalDx) > Math.abs(totalDy)) {
-          // Horizontal movement along grid X
-          dirX = totalDx > 0 ? 1 : -1;
-        } else {
-          // Vertical movement along grid Y (screen up -> grid -Y; screen down -> grid +Y)
-          dirY = totalDy > 0 ? 1 : -1;
+        // 0.45m threshold on physical 3D board plane
+        if (worldDist >= 0.45) {
+          this.isSwiped = true;
+          let dirX = 0;
+          let dirY = 0;
+
+          // In world coordinates: Grid X is +X, Grid Y is +Z
+          if (Math.abs(deltaWorldX) > Math.abs(deltaWorldZ)) {
+            dirX = deltaWorldX > 0 ? 1 : -1;
+            dirY = 0;
+          } else {
+            dirX = 0;
+            dirY = deltaWorldZ > 0 ? 1 : -1;
+          }
+
+          const block = this.activeBlock;
+          this.activeBlock = null;
+          this.callbacks.onBlockSwipe(block, dirX, dirY);
         }
-
-        const block = this.activeBlock;
-        this.activeBlock = null;
-        this.callbacks.onBlockSwipe(block, dirX, dirY);
       }
     } else if (!this.activeBlock) {
       // Free drag: orbit camera around floating board

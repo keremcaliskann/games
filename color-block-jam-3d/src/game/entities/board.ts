@@ -99,25 +99,30 @@ export class Board {
       // Check if all next cells are within board boundaries
       let allInside = true;
       let exitSide: GateSide | null = null;
-      let exitCoord = 0;
+      let minExitCoord = Infinity;
+      let maxExitCoord = -Infinity;
 
       for (const c of nextCells) {
         if (c.x < 0) {
           allInside = false;
           exitSide = 'left';
-          exitCoord = c.y;
+          minExitCoord = Math.min(minExitCoord, c.y);
+          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.x >= this.cols) {
           allInside = false;
           exitSide = 'right';
-          exitCoord = c.y;
+          minExitCoord = Math.min(minExitCoord, c.y);
+          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.y < 0) {
           allInside = false;
           exitSide = 'top';
-          exitCoord = c.x;
+          minExitCoord = Math.min(minExitCoord, c.x);
+          maxExitCoord = Math.max(maxExitCoord, c.x);
         } else if (c.y >= this.rows) {
           allInside = false;
           exitSide = 'bottom';
-          exitCoord = c.x;
+          minExitCoord = Math.min(minExitCoord, c.x);
+          maxExitCoord = Math.max(maxExitCoord, c.x);
         }
       }
 
@@ -142,9 +147,9 @@ export class Board {
         }
       } else {
         // Block is attempting to cross the perimeter
-        // Check if an aligned matching gate exists on exitSide
+        // Check if an aligned matching gate exists on exitSide overlapping the block
         if (exitSide) {
-          const gate = this.findGate(exitSide, exitCoord);
+          const gate = this.gates.find((g) => g.matchesBlock(exitSide, minExitCoord, maxExitCoord));
           if (gate && gate.color.id === block.color.id) {
             // MATCH! Block exits board into shredder gate
             steps++;
@@ -217,7 +222,8 @@ export class Board {
     return null;
   }
 
-  private canSimulateShred(block: Block, dirX: number, dirY: number): boolean {
+  public canBlockExitInDirection(block: Block, dirX: number, dirY: number): ShredderGate | null {
+    if (block.state !== 'idle') return null;
     let currentGx = block.gridX;
     let currentGy = block.gridY;
     const maxSteps = Math.max(this.cols, this.rows);
@@ -229,34 +235,56 @@ export class Board {
 
       let allInside = true;
       let exitSide: GateSide | null = null;
-      let exitCoord = 0;
+      let minExitCoord = Infinity;
+      let maxExitCoord = -Infinity;
 
       for (const c of nextCells) {
-        if (c.x < 0) { allInside = false; exitSide = 'left'; exitCoord = c.y; }
-        else if (c.x >= this.cols) { allInside = false; exitSide = 'right'; exitCoord = c.y; }
-        else if (c.y < 0) { allInside = false; exitSide = 'top'; exitCoord = c.x; }
-        else if (c.y >= this.rows) { allInside = false; exitSide = 'bottom'; exitCoord = c.x; }
+        if (c.x < 0) {
+          allInside = false;
+          exitSide = 'left';
+          minExitCoord = Math.min(minExitCoord, c.y);
+          maxExitCoord = Math.max(maxExitCoord, c.y);
+        } else if (c.x >= this.cols) {
+          allInside = false;
+          exitSide = 'right';
+          minExitCoord = Math.min(minExitCoord, c.y);
+          maxExitCoord = Math.max(maxExitCoord, c.y);
+        } else if (c.y < 0) {
+          allInside = false;
+          exitSide = 'top';
+          minExitCoord = Math.min(minExitCoord, c.x);
+          maxExitCoord = Math.max(maxExitCoord, c.x);
+        } else if (c.y >= this.rows) {
+          allInside = false;
+          exitSide = 'bottom';
+          minExitCoord = Math.min(minExitCoord, c.x);
+          maxExitCoord = Math.max(maxExitCoord, c.x);
+        }
       }
 
       if (allInside) {
         for (const c of nextCells) {
           if (this.isCellOccupied(c.x, c.y, block.id)) {
-            return false;
+            return null;
           }
         }
         currentGx = nextGx;
         currentGy = nextGy;
       } else {
         if (exitSide) {
-          const gate = this.findGate(exitSide, exitCoord);
+          const gate = this.gates.find((g) => g.matchesBlock(exitSide, minExitCoord, maxExitCoord));
           if (gate && gate.color.id === block.color.id) {
-            return true;
+            return gate;
           }
         }
-        return false;
+        return null;
       }
     }
-    return false;
+    return null;
+  }
+
+  private canSimulateShred(block: Block, dirX: number, dirY: number): boolean {
+    return this.canBlockExitInDirection(block, dirX, dirY) !== null;
   }
 
   public getRaycastTargets(): THREE.Object3D[] {

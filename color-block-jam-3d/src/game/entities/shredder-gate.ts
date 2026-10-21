@@ -96,6 +96,13 @@ export class ShredderGate {
     );
   }
 
+  public matchesBlock(side: GateSide, minCoord: number, maxCoord: number): boolean {
+    if (this.side !== side) return false;
+    const gateMin = this.cellIndex;
+    const gateMax = this.cellIndex + this.spanCells - 1;
+    return maxCoord >= gateMin && minCoord <= gateMax;
+  }
+
   public update(dt: number): void {
     // Continuous rotation of steel shredder rollers
     this.roller1.rotation.x += this.rollerRotationSpeed * dt;

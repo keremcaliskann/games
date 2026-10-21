@@ -66,9 +66,9 @@ export class LevelGenerator {
       rows: 5,
       parMoves: 8,
       gates: [
-        { side: 'top', color: BLOCK_COLORS.red, cellIndex: 2, spanCells: 1 },
-        { side: 'bottom', color: BLOCK_COLORS.blue, cellIndex: 1, spanCells: 1 },
-        { side: 'right', color: BLOCK_COLORS.yellow, cellIndex: 3, spanCells: 1 },
+        { side: 'top', color: BLOCK_COLORS.red, cellIndex: 2, spanCells: 2 },
+        { side: 'bottom', color: BLOCK_COLORS.blue, cellIndex: 1, spanCells: 2 },
+        { side: 'right', color: BLOCK_COLORS.yellow, cellIndex: 2, spanCells: 2 },
       ],
       blocks: [
         // Red block: directly aligned with top red gate! 1 swipe to shred!
@@ -91,10 +91,10 @@ export class LevelGenerator {
       rows: 5,
       parMoves: 12,
       gates: [
-        { side: 'top', color: BLOCK_COLORS.blue, cellIndex: 1, spanCells: 1 },
-        { side: 'bottom', color: BLOCK_COLORS.green, cellIndex: 3, spanCells: 1 },
-        { side: 'left', color: BLOCK_COLORS.red, cellIndex: 2, spanCells: 1 },
-        { side: 'right', color: BLOCK_COLORS.yellow, cellIndex: 2, spanCells: 1 },
+        { side: 'top', color: BLOCK_COLORS.blue, cellIndex: 1, spanCells: 2 },
+        { side: 'bottom', color: BLOCK_COLORS.green, cellIndex: 2, spanCells: 2 },
+        { side: 'left', color: BLOCK_COLORS.red, cellIndex: 2, spanCells: 2 },
+        { side: 'right', color: BLOCK_COLORS.yellow, cellIndex: 0, spanCells: 2 },
       ],
       blocks: [
         { id: 'b_red_1', color: BLOCK_COLORS.red, shapeCells: SHAPES['2x1'], gridX: 2, gridY: 2 },
@@ -116,11 +116,11 @@ export class LevelGenerator {
       rows: 6,
       parMoves: 16,
       gates: [
-        { side: 'top', color: BLOCK_COLORS.red, cellIndex: 1, spanCells: 1 },
-        { side: 'top', color: BLOCK_COLORS.purple, cellIndex: 4, spanCells: 1 },
-        { side: 'bottom', color: BLOCK_COLORS.blue, cellIndex: 2, spanCells: 1 },
-        { side: 'left', color: BLOCK_COLORS.green, cellIndex: 3, spanCells: 1 },
-        { side: 'right', color: BLOCK_COLORS.orange, cellIndex: 2, spanCells: 1 },
+        { side: 'top', color: BLOCK_COLORS.red, cellIndex: 1, spanCells: 2 },
+        { side: 'top', color: BLOCK_COLORS.purple, cellIndex: 4, spanCells: 2 },
+        { side: 'bottom', color: BLOCK_COLORS.blue, cellIndex: 2, spanCells: 2 },
+        { side: 'left', color: BLOCK_COLORS.green, cellIndex: 3, spanCells: 2 },
+        { side: 'right', color: BLOCK_COLORS.orange, cellIndex: 2, spanCells: 2 },
       ],
       blocks: [
         { id: 'b_red_1', color: BLOCK_COLORS.red, shapeCells: SHAPES['1x2'], gridX: 1, gridY: 1 },
@@ -155,17 +155,17 @@ export class LevelGenerator {
     ];
     const levelColors = allColors.slice(0, colorCount);
 
-    // Setup 4 to 6 perimeter gates
+    // Setup 4 to 6 perimeter gates with double span for generous entry
     const gates: LevelData['gates'] = [
-      { side: 'top', color: levelColors[0], cellIndex: 1, spanCells: 1 },
-      { side: 'top', color: levelColors[1], cellIndex: cols - 2, spanCells: 1 },
-      { side: 'bottom', color: levelColors[2 % colorCount], cellIndex: 2, spanCells: 1 },
-      { side: 'left', color: levelColors[3 % colorCount], cellIndex: 1, spanCells: 1 },
-      { side: 'right', color: levelColors[(colorCount - 1) % colorCount], cellIndex: rows - 2, spanCells: 1 },
+      { side: 'top', color: levelColors[0], cellIndex: 1, spanCells: 2 },
+      { side: 'top', color: levelColors[1], cellIndex: Math.max(3, cols - 3), spanCells: 2 },
+      { side: 'bottom', color: levelColors[2 % colorCount], cellIndex: 1, spanCells: 2 },
+      { side: 'left', color: levelColors[3 % colorCount], cellIndex: 1, spanCells: 2 },
+      { side: 'right', color: levelColors[(colorCount - 1) % colorCount], cellIndex: Math.max(2, rows - 3), spanCells: 2 },
     ];
 
     if (cols >= 7) {
-      gates.push({ side: 'bottom', color: levelColors[4 % colorCount], cellIndex: 5, spanCells: 1 });
+      gates.push({ side: 'bottom', color: levelColors[4 % colorCount], cellIndex: 4, spanCells: 2 });
     }
 
     const occupied = new Set<string>();

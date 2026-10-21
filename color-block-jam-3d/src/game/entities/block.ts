@@ -37,6 +37,11 @@ export class Block {
   // Squash and stretch scale
   private currentScale = new THREE.Vector3(1, 1, 1);
 
+  // Tactile wiggle shake on blocked tap
+  private isWiggling = false;
+  private wiggleTimer = 0;
+  private readonly wiggleDuration = 0.22;
+
   constructor(
     id: string,
     color: ColorDef,
@@ -127,7 +132,25 @@ export class Block {
     this.shredDirection.copy(direction);
   }
 
+  public triggerWiggle(): void {
+    if (this.state !== 'idle') return;
+    this.isWiggling = true;
+    this.wiggleTimer = 0;
+  }
+
   public update(dt: number): void {
+    if (this.isWiggling) {
+      this.wiggleTimer += dt;
+      if (this.wiggleTimer >= this.wiggleDuration) {
+        this.isWiggling = false;
+        this.group.rotation.y = 0;
+      } else {
+        const p = this.wiggleTimer / this.wiggleDuration;
+        const angle = Math.sin(p * Math.PI * 4) * 0.12;
+        this.group.rotation.y = angle;
+      }
+    }
+
     if (this.state === 'sliding') {
       this.slideProgress += dt / this.slideDuration;
       if (this.slideProgress >= 1.0) {
