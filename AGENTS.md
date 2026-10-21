@@ -111,3 +111,9 @@ A task is complete only when:
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |
 | `skills/games-portal-catalog` | skill | Central arcade portal index management |
+| `skills/zip` | slash_command | `/zip` — Multi-platform ZIP packaging (Yandex, CrazyGames, YouTube, Poki) |
+| `skills/audit` | slash_command | `/audit` — Typecheck, build, 60 FPS, and defensive gameplay audit |
+| `skills/trend` | slash_command | `/trend` — 90-day market scan and ideas backlog re-scoring |
+| `skills/studio` | slash_command | `/studio` — Autonomous 3-Phase Studio Squad for #1 backlog game |
+| `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
+| `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |
