@@ -1,53 +1,54 @@
 ---
 trigger: glob
 globs: "**/src/render/**/*.ts, **/src/ui/**/*.ts, **/index.html"
-description: "Mandatory daylight lighting, sunlit environment, vibrant toy-like palettes, and prohibition of dark voids/dark mode."
+description: "Stylized Toony Soft Daylight Art Direction: warm sun key, soft sky fill, warm biscuit/cream board foundations, tactile candy blocks, zero overexposure/hospital white, and zero dark voids."
 ---
 
-# 32-daylight-and-lighting.md — Daylight Lighting & Sunlit Visual Theme
+# 32-daylight-and-lighting.md — Stylized Toony Soft Daylight Art Direction
 
-> **CORE PRINCIPLE:** Revenue-maximized HTML5 3D games on YouTube Playables, Poki, CrazyGames, and Yandex require **immediate visual cheerfulness, high clarity under outdoor sunlight, and irresistible toy-like tactile vibrancy**.
-> Dark voids, gloomy navy rooms, black grids, and muddy shadows degrade retention and CTR.
-> **Defaulting to dark mode or pitch-black backgrounds is STRICTLY FORBIDDEN across all projects.**
-
----
-
-## 1. Zero-Tolerance for Dark Voids
-
-Unless a project's `DESIGN.md` explicitly specifies a horror, underground cave, or neon noir setting with user approval, all games **MUST** be designed in a **sunlit daylight environment**.
-
-### Prohibited Patterns
-- ❌ Setting `scene.background` to `#000000`, `#0f172a`, `#0b1120`, `#111827`, `#050814`, or any dark navy/black tone.
-- ❌ Dark ground bounce in `HemisphereLight` (e.g., `0x1e293b`, `0x0f172a`). This turns all shadowed 3D faces into black mud.
-- ❌ Pitch black floor grids, dark metal chassis, or black boundary pillars.
-- ❌ Dark mode HUD overlays that obscure the bright 3D world with heavy black tinting.
+> **CORE PRINCIPLE:** Revenue-maximized HTML5 3D casual games (YouTube Playables, Poki, CrazyGames, Yandex) require **warm, inviting, soft-lit daylight environments with tactile toy-like charm (inspired by Nintendo / Supercell: Animal Crossing, Mario Wonder, Clash Mini)**.
+> Visual extremes ruin retention:
+> 1. **Dark Voids:** Pitch-black backgrounds and muddy shadows feel cheap, gloomy, and hostile.
+> 2. **Hospital White:** Blown-out 100% white plaster, overexposed direct lights (>2.0), and glaring reflections cause eye fatigue and destroy depth perception.
+> 
+> **Standard:** Light, bright, and cheerful, but **gentle, warm, soft, and toony**.
 
 ---
 
-## 2. Daylight Sky & Environment Standards
+## 1. The Three Sins of WebGL Lighting
+
+| Sin | Symptom | Correction |
+|---|---|---|
+| **The Dark Void** | `#000000` / `#0f172a` background, dark ground bounce, black floor grids | Soft pastel daylight sky (`#cfe8f7`), warm ground bounce (`0xf5e6ca`), light board |
+| **The Hospital Room** | Blown-out `#ffffff` surfaces, sun light > 2.0, exposure > 1.2 | Sun light `1.2–1.35`, exposure `1.0`, warm biscuit/cream foundations (`0xfcf8ee`) |
+| **The Plastic Glare** | `roughness < 0.25`, blinding white specular spots on entities | Matte toy / vinyl finish: `roughness: 0.45–0.55`, `metalness: 0.04` |
+
+---
+
+## 2. Daylight Sky & Atmosphere Presets
 
 ### 2.1 Scene Background
-Always set `scene.background` to a bright, cheerful, high-key sky or studio pastel tone:
+Always set `scene.background` to a gentle, soft-tone pastel daylight sky:
 ```ts
-// Approved Daylight Presets:
-this.scene.background = new THREE.Color(0xbae6fd); // Vibrant Sky Blue (Default)
+// Approved Stylized Daylight Sky Presets:
+this.scene.background = new THREE.Color(0xcfe8f7); // Soft Pastel Cerulean (Default)
 // Or:
-this.scene.background = new THREE.Color(0xe0f2fe); // Soft Summer Sky
-this.scene.background = new THREE.Color(0xf0fdf4); // Clean Mint Daylight
-this.scene.background = new THREE.Color(0xf8fafc); // Clean High-Key Studio Porcelain
+this.scene.background = new THREE.Color(0xdbeefd); // Soft Baby Blue
+this.scene.background = new THREE.Color(0xf0fdf4); // Gentle Sage Mint
+this.scene.background = new THREE.Color(0xfef9c3); // Golden Morning Warmth
 ```
 
-### 2.2 Scene Fog
-If fog is enabled for depth, its color must match `scene.background` exactly:
+### 2.2 Atmospheric Depth Fog
+Always match fog color exactly to `scene.background` to blend horizon smoothly:
 ```ts
-this.scene.fog = new THREE.FogExp2(0xbae6fd, 0.012);
+this.scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);
 ```
 
 ---
 
-## 3. Daylight 3-Point Illumination
+## 3. Balanced 3-Point Light Ratios & Tone Mapping
 
-Proper 3D daylight requires three distinct light sources: direct sunlight, sky-and-ground bounce, and a soft rim fill.
+Casual 3D games achieve the soft toony look through **calibrated light ratios** with color temperature contrast (warm key sun vs. cool sky fill vs. warm ground bounce):
 
 ```ts
 export class LightingSetup {
@@ -56,18 +57,18 @@ export class LightingSetup {
     dirLight: THREE.DirectionalLight;
     rimLight: THREE.DirectionalLight;
   } {
-    // 1. Hemisphere Light (Crisp Sky Blue + Warm Daylight Bounce)
-    // CRITICAL: Ground color MUST be bright (warm sand, sunlit concrete, or pastel cream).
+    // 1. Hemisphere Light (Soft Sky Blue + Warm Biscuit Ground Bounce)
+    // CRITICAL: Ground color is a warm biscuit/sand tone to gently lift shadow faces without blowout.
     const hemiLight = new THREE.HemisphereLight(
-      0xffffff, // Sky color (pure crisp daylight)
-      0xfef08a, // Ground bounce (warm sunlight reflection)
-      1.5       // High intensity ensures zero muddy/black unlit faces
+      0xdbeefd, // Soft cool sky daylight
+      0xf5e6ca, // Warm sand / biscuit ground bounce
+      0.9       // Balanced intensity (never > 1.1)
     );
     hemiLight.position.set(0, 30, 0);
     scene.add(hemiLight);
 
-    // 2. Main Sun Directional Light (Warm high-contrast sunlight with soft PCF shadows)
-    const dirLight = new THREE.DirectionalLight(0xfffbeb, 2.4);
+    // 2. Main Sun Directional Light (Warm Golden Sunlight with Soft PCF Shadows)
+    const dirLight = new THREE.DirectionalLight(0xfff6e5, 1.25);
     dirLight.position.set(16, 28, 18);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;
@@ -79,11 +80,12 @@ export class LightingSetup {
     dirLight.shadow.camera.right = d;
     dirLight.shadow.camera.top = d;
     dirLight.shadow.camera.bottom = -d;
-    dirLight.shadow.bias = -0.0004;
+    dirLight.shadow.bias = -0.0003;
+    dirLight.shadow.normalBias = 0.02;
     scene.add(dirLight);
 
-    // 3. Sky Rim / Fill Light (Soft sky-tinted fill from opposite angle)
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
+    // 3. Subtle Sky Rim / Fill Light (Soft cool contour from opposite sun angle)
+    const rimLight = new THREE.DirectionalLight(0xbae6fd, 0.5);
     rimLight.position.set(-18, 16, -18);
     scene.add(rimLight);
 
@@ -95,53 +97,57 @@ export class LightingSetup {
 ### 3.1 Renderer Tone Mapping
 ```ts
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.25; // Bright, punchy daylight exposure
+renderer.toneMappingExposure = 1.0; // Clean, natural exposure baseline (never blown-out)
 ```
 
 ---
 
-## 4. Materials, Grids & Environment Palettes
+## 4. Materials, Figure-Ground Hierarchy & Toony Aesthetics
 
-### 4.1 Boards, Floors & Grids
-- **Base Platform:** Frosted porcelain, warm ivory, or clean light birch wood (`0xf8fafc`, `0xf1f5f9`, `0xfef3c7`).
-- **Tiles:** Light alternating checkerboard pattern:
-  - Tile A: `#ffffff` (Cloud White)
-  - Tile B: `#f0f9ff` (Soft Ice Sky) or `#f8fafc` (Slate 50)
-  - Tile Borders/Grout: Soft grey `#e2e8f0` (never black lines).
+To make gameplay clear and visually satisfying, use clear **Figure-Ground Separation**: the background board must feel warm, grounding, and quiet, allowing colorful interactive entities to pop like candy toys.
 
-### 4.2 Environmental Props & Obstacles
-- Shredders, gates, boundary frames, and pillars must be painted in clean matte white (`0xf8fafc`), light silver (`0xe2e8f0`), or cheerful accent tones. Never raw black metal.
+### 4.1 Board, Floor & Grid (Ground)
+Never use stark `#ffffff` plaster. Use warm, calming, tactile toy-board materials:
+- **Base Floating Slab:** Warm biscuit / cream (`0xfcf8ee` or `0xf7f2e7`).
+- **Chamfered Outer Rim:** Warm sand / toasted oatmeal (`0xede3cd` or `0xe8dcbf`).
+- **Tiles (Alternating Warm Checkerboard):**
+  - **Tile A:** Warm buttermilk cream (`0xfdfbf7`).
+  - **Tile B:** Soft morning linen / pale sand (`0xf3ede0`).
+  - **Tile Grout / Spacers:** Warm soft biscuit (`0xddd3be`).
 
-### 4.3 Interactive Entities
-Use high-saturation, tactile candy/toy colors:
-- **Red:** Crimson Berry (`#ef4444`, accent `#f87171`)
-- **Blue:** Azure Pop (`#0284c7`, accent `#38bdf8`)
-- **Yellow:** Sunshine Amber (`#f59e0b`, accent `#fbbf24`)
-- **Green:** Emerald Mint (`#10b981`, accent `#34d399`)
-- **Purple:** Royal Grape (`#8b5cf6`, accent `#a78bfa`)
-- Glossiness: `roughness: 0.18`, `metalness: 0.05` for a tactile plastic feel that catches crisp specular sun glints.
+### 4.2 Interactive Entities (Figure)
+Tactile candy/vinyl toy finish (like matte LEGO or Pop Vinyl figurines):
+- **Surface Finish:** `roughness: 0.45–0.52`, `metalness: 0.04`. Soft diffused highlights instead of blinding glare.
+- **Toony Color Palette:**
+  - **Red:** Strawberry Candy (`0xf43f5e`, accent `0xfb7185`)
+  - **Blue:** Vibrant Toy Cyan (`0x0ea5e9`, accent `0x7dd3fc`)
+  - **Green:** Crisp Mint Apple (`0x10b981`, accent `0x6ee7b7`)
+  - **Yellow:** Sunny Amber (`0xf59e0b`, accent `0xfde68a`)
+  - **Purple:** Grape Soda (`0xa855f7`, accent `0xd8b4fe`)
+  - **Orange:** Sweet Tangerine (`0xf97316`, accent `0xfba365`)
 
----
-
-## 5. Light & Modern HUD Styling
-
-HUD overlays must feel light, premium, and clean, matching the bright 3D stage:
-- **Chips & Badges:** Frosted white glass cards:
-  ```css
-  background: rgba(255, 255, 255, 0.92);
-  color: #0f172a;
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(12px);
-  ```
-- **Text:** Dark slate `#0f172a` or `#1e293b` for ultra-crisp legibility under bright sunlight.
-- **Top / Bottom Bars:** Transparent or soft white gradient (`linear-gradient(180deg, rgba(255,255,255,0.85) 0%, transparent 100%)`).
+### 4.3 Environmental Machinery & Props (Toy Mechanics)
+- **Chassis Body:** Soft warm cream / porcelain toy casing (`0xfaf5ea`), giving props physical weight.
+- **Portals / Trim:** Color-matched accent bar matching the target gate/block color.
+- **Rollers:** Soft toony steel (`0xdbe3ea`, `roughness: 0.28`, `metalness: 0.65`).
+- **Intake / Guide Slits:** Soft slate graphite (`0x475569`, never pitch black).
 
 ---
 
-## 6. Pre-Flight Audit Rule
+## 5. Clean, Frosted Glass HUD Styling
 
-Before committing any game:
-1. Verify `scene.background` is $\ge \text{0xbae6fd}$ or light pastel (never dark).
-2. Verify `HemisphereLight` ground color is $\ge \text{0xd0d0d0}$ (warm daylight bounce).
-3. Verify board/grid meshes do not use dark grey/black materials.
+HUD overlays should feel light, modern, and tactile:
+- **Cards & Chips:** Frosted white glass cards (`background: rgba(255, 255, 255, 0.92); border: 1px solid rgba(226, 232, 240, 0.9); box-shadow: 0 4px 14px rgba(0,0,0,0.06);`).
+- **Typography:** Dark slate (`#0f172a` / `#1e293b`) for effortless legibility under daylight.
+- **Header Gradient:** Soft subtle fade (`linear-gradient(180deg, rgba(255,255,255,0.85) 0%, transparent 100%)`).
+
+---
+
+## 6. Pre-Flight Visual Audit Checklist
+
+Before committing or releasing any game:
+1. [ ] **No Dark Voids:** `scene.background` is $\ge \text{0xcfe8f7}$ soft pastel daylight.
+2. [ ] **No Hospital Glare:** Sun light intensity $\le 1.4$, hemisphere intensity $\le 1.0$, tone mapping exposure $= 1.0$.
+3. [ ] **Figure-Ground Separation:** Board and floor use warm biscuit/cream tones (`0xfcf8ee`), never stark `#ffffff`.
+4. [ ] **Tactile Matte Finish:** Entity materials use `roughness: 0.45–0.55` (no blown-out specular highlights).
+5. [ ] **Warm Ground Bounce:** Hemisphere light ground color is warm biscuit/sand (`0xf5e6ca`).

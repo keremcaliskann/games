@@ -32,8 +32,8 @@ export class PrefabFactory {
     const blockMat = this.getMaterial(`block_${color.id}`, () => {
       return new THREE.MeshStandardMaterial({
         color: color.hex,
-        roughness: 0.18,
-        metalness: 0.08,
+        roughness: 0.48, // Tactile matte vinyl / toy finish
+        metalness: 0.04,
         flatShading: false,
       });
     }) as THREE.MeshStandardMaterial;
@@ -41,8 +41,8 @@ export class PrefabFactory {
     const accentMat = this.getMaterial(`block_accent_${color.id}`, () => {
       return new THREE.MeshStandardMaterial({
         color: color.accentHex,
-        roughness: 0.25,
-        metalness: 0.1,
+        roughness: 0.44,
+        metalness: 0.04,
       });
     }) as THREE.MeshStandardMaterial;
 
@@ -118,20 +118,20 @@ export class PrefabFactory {
     const gateHeight = 1.6;
     const gateDepth = 1.1;
 
-    // Crisp light-silver/white painted chassis for bright daylight pop
+    // Charming warm cream toy casing for shredder chassis
     const steelMat = this.getMaterial('gate_steel', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xf8fafc,
-        roughness: 0.25,
-        metalness: 0.12,
+        color: 0xfaf5ea, // Warm cream toy casing
+        roughness: 0.38,
+        metalness: 0.05,
       });
     });
 
     const rollerMat = this.getMaterial('gate_roller', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xe2e8f0,
-        roughness: 0.18,
-        metalness: 0.85,
+        color: 0xdbe3ea, // Soft toony steel rollers
+        roughness: 0.28,
+        metalness: 0.65,
       });
     });
 
@@ -139,8 +139,8 @@ export class PrefabFactory {
       return new THREE.MeshStandardMaterial({
         color: color.hex,
         emissive: color.hex,
-        emissiveIntensity: 1.6,
-        roughness: 0.2,
+        emissiveIntensity: 0.85, // Gentle accent light
+        roughness: 0.35,
       });
     }) as THREE.MeshStandardMaterial;
 
@@ -223,36 +223,36 @@ export class PrefabFactory {
     const depth = rows * cs;
     const thickness = 0.35;
 
-    // Platform Base Frame (Bright porcelain floating island)
+    // Platform Base Frame (Warm biscuit / cream toy board foundation)
     const baseMat = this.getMaterial('board_base', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xf1f5f9,
-        roughness: 0.35,
-        metalness: 0.05,
+        color: 0xfcf8ee, // Warm biscuit cream
+        roughness: 0.45,
+        metalness: 0.02,
       });
     });
 
     const rimMat = this.getMaterial('board_rim', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xe2e8f0,
-        roughness: 0.3,
-        metalness: 0.1,
+        color: 0xede3cd, // Warm sand chamfer
+        roughness: 0.42,
+        metalness: 0.04,
       });
     });
 
     const tileMatDark = this.getMaterial('tile_dark', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xf0f9ff, // Soft cheerful pastel cyan
-        roughness: 0.35,
-        metalness: 0.05,
+        color: 0xf3ede0, // Soft morning linen / pale oatmeal
+        roughness: 0.45,
+        metalness: 0.02,
       });
     });
 
     const tileMatLight = this.getMaterial('tile_light', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0xffffff, // Pure crisp cloud white
-        roughness: 0.35,
-        metalness: 0.05,
+        color: 0xfdfbf7, // Warm buttermilk cream
+        roughness: 0.45,
+        metalness: 0.02,
       });
     });
 
