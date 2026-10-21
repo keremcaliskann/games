@@ -16,6 +16,8 @@ export class InputManager {
   private isPointerDown = false;
   private startScreenX = 0;
   private startScreenY = 0;
+  private lastScreenX = 0;
+  private lastScreenY = 0;
 
   private activeBlock: Block | null = null;
   private isSwiped = false;
@@ -66,6 +68,8 @@ export class InputManager {
     this.isPointerDown = true;
     this.startScreenX = e.clientX;
     this.startScreenY = e.clientY;
+    this.lastScreenX = e.clientX;
+    this.lastScreenY = e.clientY;
     this.isSwiped = false;
     this.activeBlock = null;
 
@@ -95,29 +99,51 @@ export class InputManager {
       const deltaY = e.clientY - this.startScreenY;
       const dist = Math.hypot(deltaX, deltaY);
 
-      // 20px threshold for instant, responsive swipe detection
+      // 20px threshold for responsive swipe detection
       if (dist >= 20) {
         this.isSwiped = true;
+
+        // Camera-relative swipe projection:
+        // Reads camera orientation on the ground XZ plane so screen swipes match player view
+        this.camera.updateMatrixWorld();
+        const m = this.camera.matrixWorld.elements;
+        const camRightX = m[0];
+        const camRightZ = m[2];
+        const camForwardX = -m[8];
+        const camForwardZ = -m[10];
+
+        // Screen coordinates: +deltaX is Screen Right, -deltaY is Screen Up (forward into scene)
+        const screenUp = -deltaY;
+        const worldVecX = deltaX * camRightX + screenUp * camForwardX;
+        const worldVecZ = deltaX * camRightZ + screenUp * camForwardZ;
+
+        // Project world vector onto cardinal grid axes:
+        // Grid +X is World +X (1, 0)
+        // Grid -X is World -X (-1, 0)
+        // Grid +Y is World +Z (0, 1)
+        // Grid -Y is World -Z (0, -1)
         let dirX = 0;
         let dirY = 0;
 
-        // Front-facing top-down perspective (theta = 0):
-        // Screen Right (+X) -> Grid +X (1, 0)
-        // Screen Left (-X)  -> Grid -X (-1, 0)
-        // Screen Up (-Y)    -> Grid -Y (0, -1) [Towards Top Gate]
-        // Screen Down (+Y)  -> Grid +Y (0, 1)  [Towards Bottom Gate]
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          dirX = deltaX > 0 ? 1 : -1;
+        if (Math.abs(worldVecX) > Math.abs(worldVecZ)) {
+          dirX = worldVecX > 0 ? 1 : -1;
           dirY = 0;
         } else {
           dirX = 0;
-          dirY = deltaY > 0 ? 1 : -1;
+          dirY = worldVecZ > 0 ? 1 : -1;
         }
 
         const block = this.activeBlock;
         this.activeBlock = null;
         this.callbacks.onBlockSwipe(block, dirX, dirY);
       }
+    } else if (!this.activeBlock) {
+      // Free drag on empty space / board: rotate camera smoothly around 3D stage
+      const dx = e.clientX - this.lastScreenX;
+      const dy = e.clientY - this.lastScreenY;
+      this.lastScreenX = e.clientX;
+      this.lastScreenY = e.clientY;
+      this.callbacks.onOrbitDelta(dx, dy);
     }
   }
 
