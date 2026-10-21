@@ -5,37 +5,8 @@ export type BlockState = 'IDLE' | 'BONK' | 'FLYING' | 'CLEARED';
 
 // Shared geometries to minimize memory and garbage collection
 const boxGeo = new THREE.BoxGeometry(GAME_CONFIG.blockSize, GAME_CONFIG.blockSize, GAME_CONFIG.blockSize);
-const arrowHeadGeo = new THREE.ConeGeometry(0.20, 0.32, 12);
-const arrowShaftGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.26, 8);
-
-function getLateralNormals(dir: CardinalDirection): THREE.Vector3[] {
-  switch (dir) {
-    case '+X':
-    case '-X':
-      return [
-        new THREE.Vector3(0, 1, 0),
-        new THREE.Vector3(0, -1, 0),
-        new THREE.Vector3(0, 0, 1),
-        new THREE.Vector3(0, 0, -1),
-      ];
-    case '+Y':
-    case '-Y':
-      return [
-        new THREE.Vector3(1, 0, 0),
-        new THREE.Vector3(-1, 0, 0),
-        new THREE.Vector3(0, 0, 1),
-        new THREE.Vector3(0, 0, -1),
-      ];
-    case '+Z':
-    case '-Z':
-      return [
-        new THREE.Vector3(1, 0, 0),
-        new THREE.Vector3(-1, 0, 0),
-        new THREE.Vector3(0, 1, 0),
-        new THREE.Vector3(0, -1, 0),
-      ];
-  }
-}
+const arrowHeadGeo = new THREE.ConeGeometry(0.24, 0.36, 12);
+const arrowShaftGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.30, 8);
 
 /**
  * An individual 3D arrow block entity.
@@ -109,12 +80,12 @@ export class ArrowBlock {
   }
 
   private buildArrows(): void {
-    // 1. Forward 3D arrow pointing along flight direction
+    // Single forward 3D arrow pointing along flight direction
     const forwardGroup = new THREE.Group();
     const fShaft = new THREE.Mesh(arrowShaftGeo, this.arrowMaterial);
     const fHead = new THREE.Mesh(arrowHeadGeo, this.arrowMaterial);
-    fShaft.position.y = -0.10;
-    fHead.position.y = 0.18;
+    fShaft.position.y = -0.08;
+    fHead.position.y = 0.20;
     fShaft.castShadow = true;
     fHead.castShadow = true;
     fShaft.userData = { block: this };
@@ -125,37 +96,10 @@ export class ArrowBlock {
     const up = new THREE.Vector3(0, 1, 0);
     const quat = new THREE.Quaternion().setFromUnitVectors(up, this.dirVector);
     forwardGroup.quaternion.copy(quat);
-    forwardGroup.position.copy(this.dirVector).multiplyScalar(0.42);
-    forwardGroup.scale.set(1.25, 1.25, 1.25);
+    forwardGroup.position.copy(this.dirVector).multiplyScalar(0.48);
+    forwardGroup.scale.set(1.4, 1.4, 1.4);
     this.arrowMeshes.push(fShaft, fHead);
     this.group.add(forwardGroup);
-
-    // 2. Embossed arrows on all 4 lateral faces for 360° readability from any camera angle
-    const lateralNormals = getLateralNormals(this.direction);
-    for (let i = 0; i < lateralNormals.length; i++) {
-      const normal = lateralNormals[i];
-      const side = new THREE.Vector3().crossVectors(normal, this.dirVector).normalize();
-
-      const faceGroup = new THREE.Group();
-      const lShaft = new THREE.Mesh(arrowShaftGeo, this.arrowMaterial);
-      const lHead = new THREE.Mesh(arrowHeadGeo, this.arrowMaterial);
-      lShaft.position.y = -0.10;
-      lHead.position.y = 0.18;
-      lShaft.castShadow = true;
-      lHead.castShadow = true;
-      lShaft.userData = { block: this };
-      lHead.userData = { block: this };
-      faceGroup.add(lShaft);
-      faceGroup.add(lHead);
-
-      const basis = new THREE.Matrix4().makeBasis(side, this.dirVector, normal);
-      basis.setPosition(normal.x * 0.51, normal.y * 0.51, normal.z * 0.51);
-      faceGroup.applyMatrix4(basis);
-      faceGroup.scale.set(1.1, 1.1, 0.38);
-
-      this.arrowMeshes.push(lShaft, lHead);
-      this.group.add(faceGroup);
-    }
   }
 
   public triggerBonk(): void {

@@ -12,22 +12,12 @@ export class PuzzleGrid {
   private readonly blocksMap = new Map<string, ArrowBlock>();
   private readonly blocksList: ArrowBlock[] = [];
   private readonly bus = EventBus.get();
-  private readonly pedestalMesh: THREE.Mesh;
 
   private activeHintBlock: ArrowBlock | null = null;
   private isLevelCompleted = false;
 
   constructor() {
-    const floorGeo = new THREE.CylinderGeometry(7.5, 8.2, 0.5, 32);
-    const floorMat = new THREE.MeshStandardMaterial({
-      color: 0xfcf8ee, // Warm biscuit pedestal
-      roughness: 0.55,
-      metalness: 0.02,
-    });
-    this.pedestalMesh = new THREE.Mesh(floorGeo, floorMat);
-    this.pedestalMesh.position.set(0, -3.5, 0);
-    this.pedestalMesh.receiveShadow = true;
-    this.rootGroup.add(this.pedestalMesh);
+    // 3D puzzle floats cleanly in space without ground obstruction for 360° inspection
   }
 
   public static key(gx: number, gy: number, gz: number): string {
@@ -75,7 +65,6 @@ export class PuzzleGrid {
     const midZ = (minZ + maxZ) / 2;
 
     this.rootGroup.position.set(-midX, -midY, -midZ);
-    this.pedestalMesh.position.set(midX, minY - 1.6, midZ);
   }
 
   /**
@@ -214,7 +203,5 @@ export class PuzzleGrid {
 
   public dispose(): void {
     this.clear();
-    (this.pedestalMesh.geometry as THREE.BufferGeometry).dispose();
-    (this.pedestalMesh.material as THREE.Material).dispose();
   }
 }

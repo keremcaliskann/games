@@ -4,7 +4,6 @@ export class CameraRig {
   readonly camera: THREE.PerspectiveCamera;
   private baseZ = 18;
   private shakeIntensity = 0;
-  private flapFovOffset = 0;
 
   constructor(width: number, height: number) {
     this.camera = new THREE.PerspectiveCamera(50, width / Math.max(1, height), 0.5, 140);
@@ -27,15 +26,16 @@ export class CameraRig {
   }
 
   triggerFlapKick(): void {
-    this.flapFovOffset = 1.8;
+    // No-op: Removed jarring FOV warp on routine flaps to maintain a stable, comfortable view
   }
 
   update(dtSec: number, targetY: number): void {
-    const desiredY = THREE.MathUtils.clamp(targetY * 0.18, -1.8, 1.8);
+    // Calmer, gentler vertical camera follow to prevent jarring jerks on flap
+    const desiredY = THREE.MathUtils.clamp(targetY * 0.12, -1.2, 1.2);
     this.camera.position.y = THREE.MathUtils.lerp(
       this.camera.position.y,
       desiredY,
-      Math.min(1, dtSec * 6),
+      Math.min(1, dtSec * 4),
     );
 
     if (this.shakeIntensity > 0.005) {
@@ -49,18 +49,9 @@ export class CameraRig {
       this.shakeIntensity = 0;
     }
 
-    if (this.flapFovOffset > 0.01) {
-      this.flapFovOffset = THREE.MathUtils.lerp(this.flapFovOffset, 0, Math.min(1, dtSec * 6));
-      this.camera.fov = 50 + this.flapFovOffset;
-      this.camera.updateProjectionMatrix();
-    } else if (this.camera.fov !== 50) {
-      this.camera.fov = 50;
-      this.camera.updateProjectionMatrix();
-    }
+    this.camera.lookAt(2.0, this.camera.position.y * 0.35, 0);
 
-    this.camera.lookAt(2.0, this.camera.position.y * 0.5, 0);
-
-    // Dynamic rotational roll kick after lookAt
+    // Dynamic rotational roll kick only on genuine crash / impact shakes
     if (this.shakeIntensity > 0.005) {
       this.camera.rotation.z += Math.sin(performance.now() * 0.14) * 0.045 * this.shakeIntensity;
     }

@@ -71,16 +71,27 @@ export class Board {
   }
 
   public getRemainingCount(): number {
-    return this.blocks.filter((b) => b.state !== 'shredded').length;
+    return this.blocks.filter(
+      (b) => b.state !== 'shredded' && b.state !== 'sliding_to_gate' && b.state !== 'shredding'
+    ).length;
   }
 
   public getActiveBlocks(): Block[] {
-    return this.blocks.filter((b) => b.state !== 'shredded');
+    return this.blocks.filter(
+      (b) => b.state !== 'shredded' && b.state !== 'sliding_to_gate' && b.state !== 'shredding'
+    );
   }
 
   public isCellOccupied(x: number, y: number, ignoreBlockId?: string): boolean {
     for (const b of this.blocks) {
-      if (b.state === 'shredded' || b.id === ignoreBlockId) continue;
+      if (
+        b.state === 'shredded' ||
+        b.state === 'sliding_to_gate' ||
+        b.state === 'shredding' ||
+        b.id === ignoreBlockId
+      ) {
+        continue;
+      }
       for (const cell of b.getOccupiedCells()) {
         if (cell.x === x && cell.y === y) return true;
       }
