@@ -104,7 +104,7 @@ export class CyberCity {
 
   private createBoundaryRails(ceilingY: number, floorY: number): void {
     const deckGeo = new THREE.BoxGeometry(60, 0.5, 6);
-    const deckMat = new THREE.MeshLambertMaterial({ color: 0xe2e8f0 });
+    const deckMat = new THREE.MeshLambertMaterial({ color: 0xfcf8ee });
 
     const stripeGeo = new THREE.BoxGeometry(60, 0.1, 0.25);
     const floorStripeMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24 });

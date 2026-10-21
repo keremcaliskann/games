@@ -114,6 +114,8 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     fsm,
     score: 0,
     highScore: Math.max(storage.loadHighScore(), cloudData.highScore),
+    hasShield: false,
+    hasSlowMo: false,
   };
 
   fsm.register(new MenuState(ctx));
@@ -121,13 +123,33 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   fsm.register(new PausedState(ctx));
   fsm.register(new GameOverState(ctx));
 
-  const hud = new CyberHud(hudContainer, events, input);
+  const hud = new CyberHud(hudContainer, events, input, audio);
   hud.isAdReady = () => ads.isRewardedReady();
+
+  // Hook 1: Pre-Flight Boosters in Menu
+  hud.onShieldBoosterRequested = async () => {
+    const success = await ads.showRewarded('booster_shield');
+    if (success) {
+      ctx.hasShield = true;
+      hud.setBoosterActive('shield');
+      ctx.audio.playScore();
+    }
+  };
+
+  hud.onSlowMoBoosterRequested = async () => {
+    const success = await ads.showRewarded('booster_slowmo');
+    if (success) {
+      ctx.hasSlowMo = true;
+      hud.setBoosterActive('slowmo');
+      ctx.audio.playScore();
+    }
+  };
 
   // Hook 2: Near-Miss Revive on crash
   hud.onReviveRequested = async () => {
     const success = await ads.showRewarded('revive_shield');
     if (success) {
+      ctx.hasShield = true;
       ctx.drone.currPos.set(0, 0, 0);
       ctx.drone.prevPos.set(0, 0, 0);
       ctx.drone.velocityY = 0;
@@ -139,11 +161,11 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     }
   };
 
-  // Hook 3: Score Multiplier Bar on game over
-  hud.onMultiplierRequested = async () => {
+  // Hook 3: Score Multiplier Bar on game over with oscillating needle
+  hud.onMultiplierRequested = async (multiplier: number) => {
     const success = await ads.showRewarded('score_multiplier');
     if (success) {
-      ctx.score *= 3;
+      ctx.score = Math.floor(ctx.score * multiplier);
       if (ctx.score > ctx.highScore) {
         ctx.highScore = ctx.score;
         ctx.storage.saveHighScore(ctx.highScore);
@@ -157,8 +179,11 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
   fsm.transitionTo(GameStateId.Menu);
 
   const handleRestart = (): void => {
+    void ads.showInterstitial('restart_click');
     ctx.clock.reset();
     ctx.score = 0;
+    ctx.hasShield = false;
+    ctx.hasSlowMo = false;
     ctx.spawner.reset();
     ctx.particles.reset();
     ctx.drone.reset();
@@ -190,8 +215,7 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
         bestRingCombo: 0,
         credits: score,
       });
-      // Trigger interstitial at natural game over breakpoint
-      void ads.showInterstitial('flight_gameover');
+      // NOTE: Interstitial call removed to allow clean, unobstructed access to Revive modal
     }
   });
 

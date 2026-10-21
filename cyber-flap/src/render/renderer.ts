@@ -29,6 +29,8 @@ export class RenderEngine {
     });
 
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
     this.applyQualityTier(initialTier);
@@ -36,7 +38,8 @@ export class RenderEngine {
     container.appendChild(this.renderer.domElement);
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0x7dd3fc);
+    this.scene.background = new THREE.Color(0xcfe8f7);
+    this.scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);
 
     this.resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
       for (let i = 0; i < entries.length; i++) {

@@ -83,6 +83,15 @@ export class SynthAudio {
     this.isMuted = muted;
   }
 
+  toggleMute(): boolean {
+    this.isMuted = !this.isMuted;
+    return this.isMuted;
+  }
+
+  isAudioMuted(): boolean {
+    return this.isMuted;
+  }
+
   dispose(): void {
     if (this.ctx) {
       void this.ctx.close();

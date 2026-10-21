@@ -73,15 +73,16 @@ export class ObstacleSpawner {
     this.nextSpawnTimerSec = 0.35;
   }
 
-  getScrollSpeedMps(score: number): number {
-    return Math.min(
+  getScrollSpeedMps(score: number, hasSlowMo = false): number {
+    const rawSpeed = Math.min(
       GAME_CONFIG.maxScrollSpeedMps,
       GAME_CONFIG.baseScrollSpeedMps + score * GAME_CONFIG.speedIncreasePerScoreMps,
     );
+    return hasSlowMo && score < 10 ? rawSpeed * 0.7 : rawSpeed;
   }
 
-  fixedUpdate(dtSec: number, elapsedSec: number, score: number): void {
-    const scrollSpeed = this.getScrollSpeedMps(score);
+  fixedUpdate(dtSec: number, elapsedSec: number, score: number, hasSlowMo = false): void {
+    const scrollSpeed = this.getScrollSpeedMps(score, hasSlowMo);
     this.nextSpawnTimerSec -= dtSec;
 
     if (this.nextSpawnTimerSec <= 0) {

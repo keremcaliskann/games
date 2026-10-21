@@ -11,6 +11,17 @@ export class PlayingState implements GameState {
       onHitHazard: (): void => {
         // Idempotency latch: Ignore subsequent collisions if already transitioned
         if (this.ctx.fsm.getCurrentId() !== GameStateId.Playing) return;
+        if (this.ctx.hasShield) {
+          this.ctx.hasShield = false;
+          this.ctx.cameraRig.triggerShake(0.35);
+          this.ctx.audio.playScore();
+          this.ctx.particles.spawnFlapPuff(
+            this.ctx.drone.currPos.x,
+            this.ctx.drone.currPos.y,
+            this.ctx.drone.currPos.z,
+          );
+          return;
+        }
         this.ctx.audio.playCrash();
         this.ctx.cameraRig.triggerShake(0.75);
         this.ctx.particles.spawnCrashExplosion(
@@ -71,12 +82,17 @@ export class PlayingState implements GameState {
 
     this.ctx.clock.tick(dtSec);
     this.ctx.drone.fixedUpdate(dtSec);
-    this.ctx.spawner.fixedUpdate(dtSec, this.ctx.clock.elapsedSec, this.ctx.score);
+    this.ctx.spawner.fixedUpdate(
+      dtSec,
+      this.ctx.clock.elapsedSec,
+      this.ctx.score,
+      this.ctx.hasSlowMo,
+    );
     this.ctx.physics.step(this.physicsCallbacks);
   }
 
   update(dtSec: number): void {
-    const scrollSpeed = this.ctx.spawner.getScrollSpeedMps(this.ctx.score);
+    const scrollSpeed = this.ctx.spawner.getScrollSpeedMps(this.ctx.score, this.ctx.hasSlowMo);
     this.ctx.drone.updateVisuals(dtSec);
     this.ctx.city.update(dtSec, scrollSpeed);
     this.ctx.cameraRig.update(dtSec, this.ctx.drone.mesh.position.y);

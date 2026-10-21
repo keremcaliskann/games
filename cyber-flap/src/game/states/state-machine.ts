@@ -76,4 +76,6 @@ export interface GameContext {
   readonly fsm: StateMachine;
   score: number;
   highScore: number;
+  hasShield: boolean;
+  hasSlowMo: boolean;
 }

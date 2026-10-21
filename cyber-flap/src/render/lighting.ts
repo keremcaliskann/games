@@ -1,16 +1,16 @@
 import * as THREE from 'three';
 
 export function setupCyberLighting(scene: THREE.Scene): THREE.DirectionalLight {
-  // Horizon blending fog matching sky
-  scene.fog = new THREE.Fog(0x7dd3fc, 30, 95);
+  // Horizon blending fog matching daylight sky
+  scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);
 
   // Sky fill + warm ground bounce (no muddy or dark faces)
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xfde68a, 1.3);
+  const hemiLight = new THREE.HemisphereLight(0xdbeefd, 0xf5e6ca, 0.9);
   hemiLight.position.set(0, 24, 0);
   scene.add(hemiLight);
 
-  // Warm crisp sun casting soft contact shadows
-  const sunLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
+  // Warm golden sun key casting soft shadows
+  const sunLight = new THREE.DirectionalLight(0xfff6e5, 1.25);
   sunLight.position.set(12, 22, 14);
   sunLight.castShadow = true;
   sunLight.shadow.mapSize.width = 1024;
@@ -23,6 +23,11 @@ export function setupCyberLighting(scene: THREE.Scene): THREE.DirectionalLight {
   sunLight.shadow.camera.bottom = -12;
   sunLight.shadow.bias = -0.0005;
   scene.add(sunLight);
+
+  // Subtle sky rim light for soft contouring
+  const rimLight = new THREE.DirectionalLight(0xbae6fd, 0.5);
+  rimLight.position.set(-18, 16, -18);
+  scene.add(rimLight);
 
   return sunLight;
 }
