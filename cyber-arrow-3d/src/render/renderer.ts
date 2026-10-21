@@ -16,8 +16,8 @@ export class RenderPipeline {
 
   constructor(container: HTMLElement, callbacks?: RenderPipelineCallbacks) {
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xbae6fd);
-    this.scene.fog = new THREE.Fog(0xbae6fd, 28, 85);
+    this.scene.background = new THREE.Color(0xcfe8f7);
+    this.scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);
 
     this.renderer = new THREE.WebGLRenderer({
       powerPreference: 'high-performance',
@@ -30,6 +30,8 @@ export class RenderPipeline {
     this.renderer.setSize(container.clientWidth, container.clientHeight, false);
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 1.0;
 
     container.appendChild(this.renderer.domElement);
 

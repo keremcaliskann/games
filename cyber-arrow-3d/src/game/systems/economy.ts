@@ -1,6 +1,18 @@
-import { StorageManager, PlayerData } from '../../platform/storage';
+import { PlatformBridge } from '../../platform/sdk';
 import { GAME_CONFIG } from '../config/game-config';
 import { EventBus } from '../../core/events';
+
+export interface PlayerData {
+  currentLevel: number;
+  coins: number;
+  completedLevels: number;
+}
+
+const DEFAULT_PLAYER_DATA: PlayerData = {
+  currentLevel: 1,
+  coins: 50,
+  completedLevels: 0,
+};
 
 /**
  * Economy and monetization coordinator.
@@ -12,12 +24,12 @@ export class EconomySystem {
   private levelsSinceLastAd = 0;
 
   constructor(cloudData?: Partial<PlayerData>) {
-    this.data = StorageManager.load();
+    this.data = { ...DEFAULT_PLAYER_DATA };
     if (cloudData) {
       if (cloudData.currentLevel && cloudData.currentLevel > this.data.currentLevel) {
         this.data.currentLevel = cloudData.currentLevel;
       }
-      if (cloudData.coins && cloudData.coins > this.data.coins) {
+      if (cloudData.coins !== undefined && cloudData.coins > this.data.coins) {
         this.data.coins = cloudData.coins;
       }
     }
@@ -77,6 +89,9 @@ export class EconomySystem {
   }
 
   private save(): void {
-    StorageManager.save(this.data);
+    PlatformBridge.saveData({
+      level: this.data.currentLevel,
+      coins: this.data.coins,
+    });
   }
 }

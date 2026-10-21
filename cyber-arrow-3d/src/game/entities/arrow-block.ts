@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CardinalDirection, DIRECTION_VECTORS, CYBER_THEMES, GAME_CONFIG } from '../config/game-config';
+import { CardinalDirection, DIRECTION_VECTORS, DIRECTION_COLORS, GAME_CONFIG } from '../config/game-config';
 
 export type BlockState = 'IDLE' | 'BONK' | 'FLYING' | 'CLEARED';
 
@@ -47,6 +47,7 @@ export class ArrowBlock {
   public readonly arrowMeshes: THREE.Mesh[] = [];
   private readonly baseMaterial: THREE.MeshStandardMaterial;
   private readonly arrowMaterial: THREE.MeshStandardMaterial;
+  private readonly defaultBlockColor: number;
 
   public state: BlockState = 'IDLE';
 
@@ -74,22 +75,22 @@ export class ArrowBlock {
     this.group = new THREE.Group();
     this.group.userData = { block: this };
 
-    const theme = CYBER_THEMES.neonCyan;
+    this.defaultBlockColor = DIRECTION_COLORS[direction];
 
-    // Satin porcelain tactile toy block finish
+    // Soft matte toy finish with cardinal direction color
     this.baseMaterial = new THREE.MeshStandardMaterial({
-      color: theme.blockColor,
-      roughness: 0.45,
-      metalness: 0.08,
+      color: this.defaultBlockColor,
+      roughness: 0.48,
+      metalness: 0.04,
     });
 
-    // High-saturation colored arrow glyph with radiant emissive punch
+    // Warm cream embossed arrow glyph
     this.arrowMaterial = new THREE.MeshStandardMaterial({
-      color: theme.arrowEmissive,
-      emissive: theme.arrowEmissive,
-      emissiveIntensity: 1.6,
-      roughness: 0.25,
-      metalness: 0.1,
+      color: 0xfcf8ee,
+      emissive: 0xfff8e7,
+      emissiveIntensity: 0.25,
+      roughness: 0.35,
+      metalness: 0.02,
     });
 
     this.baseMesh = new THREE.Mesh(boxGeo, this.baseMaterial);
@@ -161,10 +162,9 @@ export class ArrowBlock {
     if (this.state !== 'IDLE') return;
     this.state = 'BONK';
     this.animTimer = 0;
-    const theme = CYBER_THEMES.neonCyan;
-    this.arrowMaterial.color.setHex(theme.blockedEmissive);
-    this.arrowMaterial.emissive.setHex(theme.blockedEmissive);
-    this.arrowMaterial.emissiveIntensity = 2.2;
+    this.arrowMaterial.color.setHex(0xef4444);
+    this.arrowMaterial.emissive.setHex(0xef4444);
+    this.arrowMaterial.emissiveIntensity = 1.8;
     this.baseMaterial.color.setHex(0xfecaca); // Coral warning tint on block
   }
 
@@ -174,23 +174,22 @@ export class ArrowBlock {
     const flyColor = 0x10b981; // Saturated Emerald Mint
     this.arrowMaterial.color.setHex(flyColor);
     this.arrowMaterial.emissive.setHex(flyColor);
-    this.arrowMaterial.emissiveIntensity = 2.5;
+    this.arrowMaterial.emissiveIntensity = 2.0;
     this.baseMaterial.color.setHex(0xd1fae5); // Mint victory tint on block
   }
 
   public setHint(highlight: boolean): void {
     this.isHintHighlighted = highlight;
-    const theme = CYBER_THEMES.neonCyan;
     if (highlight) {
-      this.arrowMaterial.color.setHex(theme.highlightEmissive);
-      this.arrowMaterial.emissive.setHex(theme.highlightEmissive);
-      this.arrowMaterial.emissiveIntensity = 2.2;
+      this.arrowMaterial.color.setHex(0xf59e0b);
+      this.arrowMaterial.emissive.setHex(0xf59e0b);
+      this.arrowMaterial.emissiveIntensity = 1.8;
       this.baseMaterial.color.setHex(0xfef3c7); // Warm amber tint on block
     } else {
-      this.arrowMaterial.color.setHex(theme.arrowEmissive);
-      this.arrowMaterial.emissive.setHex(theme.arrowEmissive);
-      this.arrowMaterial.emissiveIntensity = 1.6;
-      this.baseMaterial.color.setHex(theme.blockColor);
+      this.arrowMaterial.color.setHex(0xfcf8ee);
+      this.arrowMaterial.emissive.setHex(0xfff8e7);
+      this.arrowMaterial.emissiveIntensity = 0.25;
+      this.baseMaterial.color.setHex(this.defaultBlockColor);
     }
   }
 
@@ -205,7 +204,7 @@ export class ArrowBlock {
       if (this.animTimer >= bonkDuration) {
         this.group.position.copy(this.originPos);
         this.state = 'IDLE';
-        this.baseMaterial.color.setHex(CYBER_THEMES.neonCyan.blockColor);
+        this.baseMaterial.color.setHex(this.defaultBlockColor);
         this.setHint(this.isHintHighlighted);
       } else {
         // Elastic rebound curve

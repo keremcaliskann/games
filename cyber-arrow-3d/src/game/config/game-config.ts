@@ -13,6 +13,19 @@ export const DIRECTION_VECTORS: Record<CardinalDirection, THREE.Vector3> = {
 
 export const ALL_DIRECTIONS: CardinalDirection[] = ['+X', '-X', '+Y', '-Y', '+Z', '-Z'];
 
+export const DIRECTION_COLORS: Record<CardinalDirection, number> = {
+  '+Y': 0xf97316, // Up: Coral Orange
+  '-Y': 0x14b8a6, // Down: Teal
+  '-X': 0x38bdf8, // Left: Sky Blue
+  '+X': 0xfbbf24, // Right: Sunny Gold
+  '-Z': 0x10b981, // In: Mint
+  '+Z': 0xa855f7, // Out: Lavender
+};
+
+export function calculateMoveBudget(totalBlocks: number): number {
+  return totalBlocks + Math.max(3, Math.ceil(totalBlocks * 0.35));
+}
+
 export interface ThemeColors {
   name: string;
   blockColor: number;

@@ -12,9 +12,23 @@ export class PuzzleGrid {
   private readonly blocksMap = new Map<string, ArrowBlock>();
   private readonly blocksList: ArrowBlock[] = [];
   private readonly bus = EventBus.get();
+  private readonly pedestalMesh: THREE.Mesh;
 
   private activeHintBlock: ArrowBlock | null = null;
   private isLevelCompleted = false;
+
+  constructor() {
+    const floorGeo = new THREE.CylinderGeometry(7.5, 8.2, 0.5, 32);
+    const floorMat = new THREE.MeshStandardMaterial({
+      color: 0xfcf8ee, // Warm biscuit pedestal
+      roughness: 0.55,
+      metalness: 0.02,
+    });
+    this.pedestalMesh = new THREE.Mesh(floorGeo, floorMat);
+    this.pedestalMesh.position.set(0, -3.5, 0);
+    this.pedestalMesh.receiveShadow = true;
+    this.rootGroup.add(this.pedestalMesh);
+  }
 
   public static key(gx: number, gy: number, gz: number): string {
     return `${gx},${gy},${gz}`;
@@ -61,6 +75,7 @@ export class PuzzleGrid {
     const midZ = (minZ + maxZ) / 2;
 
     this.rootGroup.position.set(-midX, -midY, -midZ);
+    this.pedestalMesh.position.set(midX, minY - 1.6, midZ);
   }
 
   /**
@@ -120,6 +135,24 @@ export class PuzzleGrid {
     }
   }
 
+  /**
+   * Immediately destroys a single targeted block regardless of path obstruction.
+   * Consumed by Hook 1 Hammer booster.
+   */
+  public hammerDestroyBlock(block: ArrowBlock): void {
+    if (block.state !== 'IDLE') return;
+
+    if (this.activeHintBlock === block) {
+      block.setHint(false);
+      this.activeHintBlock = null;
+    }
+
+    const k = PuzzleGrid.key(block.gx, block.gy, block.gz);
+    this.blocksMap.delete(k);
+    block.triggerFly();
+    this.bus.emit('block_cleared', block);
+  }
+
   public getRaycastTargets(): THREE.Object3D[] {
     const targets: THREE.Object3D[] = [];
     for (let i = 0; i < this.blocksList.length; i++) {
@@ -177,5 +210,11 @@ export class PuzzleGrid {
         }
       }
     }
+  }
+
+  public dispose(): void {
+    this.clear();
+    (this.pedestalMesh.geometry as THREE.BufferGeometry).dispose();
+    (this.pedestalMesh.material as THREE.Material).dispose();
   }
 }

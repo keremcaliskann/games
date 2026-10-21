@@ -3,6 +3,7 @@ import { EventBus } from '../core/events';
 export interface HudCallbacks {
   onHintClick: () => void;
   onResetClick: () => void;
+  onHammerClick: () => void;
   onSoundToggle: () => boolean;
   onNextLevel: () => void;
   onWatchAd: () => void;
@@ -18,9 +19,11 @@ export interface HudCallbacks {
 export class Hud {
   private readonly bus = EventBus.get();
   private levelEl!: HTMLElement;
+  private movesEl!: HTMLElement;
   private remainingEl!: HTMLElement;
   private coinsEl!: HTMLElement;
   private soundBtn!: HTMLElement;
+  private hammerBtn!: HTMLElement;
   private hintBtn!: HTMLElement;
 
   constructor(private readonly container: HTMLElement, private readonly callbacks: HudCallbacks) {
@@ -32,6 +35,7 @@ export class Hud {
     this.container.innerHTML = `
       <div class="hud-header">
         <div class="hud-chip level" id="hud-level">LVL 1</div>
+        <div class="hud-chip moves" id="hud-moves">HAMLE: 0</div>
         <div class="hud-chip remaining" id="hud-remaining">BLOKLAR: 0</div>
         <div class="hud-chip coins" id="hud-coins" data-hud-interactive="true" style="cursor: pointer;" title="Ücretsiz Coin Kazan">
           🪙 <span id="coin-count">0</span>
@@ -42,18 +46,25 @@ export class Hud {
       <div class="hud-footer">
         <button class="hud-btn" id="btn-sound" data-hud-interactive="true">🔊 SES</button>
         <button class="hud-btn" id="btn-reset" data-hud-interactive="true">🔄 YENİDEN</button>
+        <button class="hud-btn" id="btn-hammer" data-hud-interactive="true">🔨 ÇEKİÇ <span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 4px; border-radius:4px; margin-left:4px;">🎬 FREE</span></button>
         <button class="hud-btn primary" id="btn-hint" data-hud-interactive="true">💡 İPUCU (20🪙)</button>
       </div>
     `;
 
     this.levelEl = this.container.querySelector('#hud-level')!;
+    this.movesEl = this.container.querySelector('#hud-moves')!;
     this.remainingEl = this.container.querySelector('#hud-remaining')!;
     this.coinsEl = this.container.querySelector('#coin-count')!;
     this.soundBtn = this.container.querySelector('#btn-sound')!;
+    this.hammerBtn = this.container.querySelector('#btn-hammer')!;
     this.hintBtn = this.container.querySelector('#btn-hint')!;
 
     this.hintBtn.addEventListener('click', () => {
       this.callbacks.onHintClick();
+    });
+
+    this.hammerBtn.addEventListener('click', () => {
+      this.callbacks.onHammerClick();
     });
 
     this.container.querySelector('#btn-reset')!.addEventListener('click', () => {
@@ -100,6 +111,24 @@ export class Hud {
       this.hintBtn.innerHTML = `💡 İPUCU (20🪙)`;
       this.hintBtn.style.opacity = '1';
       this.hintBtn.style.pointerEvents = 'auto';
+    }
+  }
+
+  public setMoves(moves: number): void {
+    this.movesEl.textContent = `HAMLE: ${moves}`;
+  }
+
+  public setHammerActive(active: boolean): void {
+    if (active) {
+      this.hammerBtn.style.background = '#f59e0b';
+      this.hammerBtn.style.color = '#000000';
+      this.hammerBtn.style.borderColor = '#d97706';
+      this.hammerBtn.innerHTML = '🔨 BLOK SEÇ';
+    } else {
+      this.hammerBtn.style.background = '';
+      this.hammerBtn.style.color = '';
+      this.hammerBtn.style.borderColor = '';
+      this.hammerBtn.innerHTML = `🔨 ÇEKİÇ <span style="font-size:10px; background:#f59e0b; color:#000; padding:2px 4px; border-radius:4px; margin-left:4px;">🎬 FREE</span>`;
     }
   }
 
@@ -194,15 +223,18 @@ export class Hud {
   public showNearMissRevive(remainingBlocks: number, onRevive: () => void, onQuit: () => void): void {
     const modal = document.createElement('div');
     modal.className = 'modal-overlay';
+    const adReady = this.callbacks.isAdReady ? this.callbacks.isAdReady() : true;
+
     modal.innerHTML = `
       <div class="modal-card" style="text-align: center;">
         <span style="font-size: 11px; letter-spacing: 2px; color: #ec4899; font-weight: 800;">ÇOK YAKLAŞTIN!</span>
-        <h2 class="modal-title" style="margin: 6px 0 10px; color: #f43f5e;">SON ${remainingBlocks} BLOK KALDI! ⚠️</h2>
-        <p class="modal-desc">Kısa bir video izleyerek oyunu kaybetmeden devam edin ve 1 blok otomatik çözülsün!</p>
+        <h2 class="modal-title" style="margin: 6px 0 10px; color: #f43f5e;">HAMLEN BİTTİ! ⚠️</h2>
+        <p class="modal-desc">Kalan <strong>${remainingBlocks}</strong> blok var. Kısa bir video izleyerek +5 ekstra hamle kazan ve oyuna devam et!</p>
         
-        <button class="hud-btn primary" id="btn-revive" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-weight: 800; background: #10b981;">
-          🎬 İZLE & DEVAM ET (+OTO ÇÖZÜM)
-        </button>
+        ${adReady ? `
+        <button class="hud-btn primary" id="btn-revive" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 14px; margin-bottom: 8px; font-weight: 800; background: #10b981; color: #ffffff;">
+          🎬 İZLE & +5 HAMLE AL
+        </button>` : ''}
         <button class="hud-btn" id="btn-quit" data-hud-interactive="true" style="width: 100%; justify-content: center; padding: 10px; background: transparent; border: none; color: #94a3b8;">
           Pes Et ve Yeniden Başlat
         </button>
@@ -211,10 +243,12 @@ export class Hud {
 
     document.body.appendChild(modal);
 
-    modal.querySelector('#btn-revive')!.addEventListener('click', () => {
-      modal.remove();
-      onRevive();
-    });
+    if (adReady) {
+      modal.querySelector('#btn-revive')!.addEventListener('click', () => {
+        modal.remove();
+        onRevive();
+      });
+    }
 
     modal.querySelector('#btn-quit')!.addEventListener('click', () => {
       modal.remove();

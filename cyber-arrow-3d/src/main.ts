@@ -15,7 +15,7 @@ import { Hud } from './ui/hud';
 import { ShellController } from './ui/shell-controller';
 import { PlatformBridge } from './platform/sdk';
 import { UniversalAdProvider } from './platform/ads';
-import { GAME_CONFIG } from './game/config/game-config';
+import { GAME_CONFIG, calculateMoveBudget } from './game/config/game-config';
 
 const _ORIGIN = new THREE.Vector3(0, 0, 0);
 
@@ -37,6 +37,10 @@ class GameApp {
   private readonly shell: ShellController;
   private readonly ads: UniversalAdProvider;
   private isFirstRender = true;
+
+  private movesRemaining = 0;
+  private isGameOver = false;
+  private isHammerActive = false;
 
   constructor(cloudData?: { currentLevel?: number; coins?: number }) {
     this.appEl = document.getElementById('app')!;
@@ -78,6 +82,7 @@ class GameApp {
     this.hud = new Hud(this.hudEl, {
       onHintClick: () => this.handleHint(),
       onResetClick: () => this.loadCurrentLevel(),
+      onHammerClick: () => this.handleHammerClick(),
       onSoundToggle: () => this.sound.toggleMute(),
       onNextLevel: () => this.handleNextLevel(),
       onWatchAd: () => this.handleRewardCoinsAd(),
@@ -112,6 +117,7 @@ class GameApp {
     });
 
     this.bus.on('level_completed', () => {
+      this.isGameOver = true;
       this.sound.playLevelVictory();
       this.particles.spawnCelebration(_ORIGIN);
       const currentLevel = this.economy.getLevel();
@@ -169,19 +175,79 @@ class GameApp {
     const lvl = this.economy.getLevel();
     LevelLoader.loadLevel(lvl, this.grid);
     this.updateCameraDistance();
+    this.isGameOver = false;
+    this.isHammerActive = false;
+    this.hud.setHammerActive(false);
+    this.movesRemaining = calculateMoveBudget(this.grid.getRemainingCount());
     this.hud.updateHeader(lvl, this.grid.getRemainingCount(), this.economy.getCoins());
+    this.hud.setMoves(this.movesRemaining);
   }
 
   private handleTap(raycaster: THREE.Raycaster): void {
+    if (this.isGameOver) return;
+
     const targets = this.grid.getRaycastTargets();
     const hits = raycaster.intersectObjects(targets, false);
 
     if (hits.length > 0) {
       const hitObj = hits[0].object;
       const block = hitObj.userData.block as ArrowBlock | undefined;
-      if (block) {
-        this.grid.tryTapBlock(block);
+      if (!block || block.state !== 'IDLE') return;
+
+      if (this.isHammerActive) {
+        this.isHammerActive = false;
+        this.hud.setHammerActive(false);
+        this.grid.hammerDestroyBlock(block);
+        return;
       }
+
+      this.movesRemaining--;
+      this.hud.setMoves(this.movesRemaining);
+
+      this.grid.tryTapBlock(block);
+
+      if (this.movesRemaining <= 0 && this.grid.getRemainingCount() > 0) {
+        this.isGameOver = true;
+        setTimeout(() => {
+          if (this.grid.getRemainingCount() > 0) {
+            this.hud.showNearMissRevive(
+              this.grid.getRemainingCount(),
+              () => this.handleReviveMoves(),
+              () => this.loadCurrentLevel()
+            );
+          }
+        }, 350);
+      }
+    }
+  }
+
+  // Hook 2: Near-Miss Revive (+5 Moves via Rewarded Ad)
+  private async handleReviveMoves(): Promise<void> {
+    const rewarded = await this.ads.showRewarded('revive_moves');
+    if (rewarded) {
+      this.movesRemaining += 5;
+      this.hud.setMoves(this.movesRemaining);
+      this.isGameOver = false;
+      this.sound.playFlyAway();
+    } else {
+      this.loadCurrentLevel();
+    }
+  }
+
+  // Hook 1: Hammer Booster (Tap-to-Clear Single Block via Rewarded Ad)
+  private async handleHammerClick(): Promise<void> {
+    if (this.isGameOver) return;
+    if (this.isHammerActive) {
+      this.isHammerActive = false;
+      this.hud.setHammerActive(false);
+      return;
+    }
+
+    const rewarded = await this.ads.showRewarded('booster_hammer');
+    if (rewarded) {
+      this.isHammerActive = true;
+      this.hud.setHammerActive(true);
+      this.sound.playFlyAway();
     }
   }
 
