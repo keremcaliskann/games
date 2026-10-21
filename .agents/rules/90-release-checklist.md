@@ -59,3 +59,11 @@ Run through this verification checklist before preparing a production build or r
 - [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 5 MB`.
 - [ ] Compound Procedural 3D Prefabs used (no raw primitive placeholders), with `ASSETS_NEEDED.md` generated if optional `.glb` overrides apply.
 
+## 9. Multi-Platform Export Packages (`npm run export:all`)
+- [ ] `npm run export:all` (or platform-specific `npm run export:<platform>`) executes cleanly and generates verified `.zip` packages under `release/`:
+  - `<game>-youtube.zip`: Strict zero-external-network CSP, `<script src="https://www.youtube.com/game_api/v1"></script>`.
+  - `<game>-yandex.zip`: Bundles `<script src="https://yandex.ru/games/sdk/v2"></script>`.
+  - `<game>-crazygames.zip`: Bundles `<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>`.
+  - `<game>-poki.zip`: Bundles `<script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>`.
+- [ ] All generated packages verified `< 5 MB` with `index.html` at archive root ready for direct console upload.
+
