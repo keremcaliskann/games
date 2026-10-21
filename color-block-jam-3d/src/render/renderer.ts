@@ -16,8 +16,9 @@ export class RenderPipeline {
     this.callbacks = callbacks;
     this.scene = new THREE.Scene();
 
-    // Soft sky gradient / bright sunlit daylight background
-    this.scene.background = new THREE.Color(0x0f172a);
+    // Vibrant sunlit daylight sky background & matching depth fog
+    this.scene.background = new THREE.Color(0xbae6fd);
+    this.scene.fog = new THREE.FogExp2(0xbae6fd, 0.012);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -30,7 +31,7 @@ export class RenderPipeline {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.15;
+    this.renderer.toneMappingExposure = 1.25;
 
     this.container.appendChild(this.renderer.domElement);
 

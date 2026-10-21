@@ -139,7 +139,7 @@ export class Hud {
         align-items: center;
         justify-content: space-between;
         padding: 14px 18px;
-        background: linear-gradient(180deg, rgba(11, 17, 32, 0.85) 0%, transparent 100%);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 100%);
         pointer-events: auto;
         z-index: 50;
       }
@@ -152,32 +152,33 @@ export class Hud {
         display: flex;
         align-items: center;
         gap: 6px;
-        background: rgba(15, 23, 42, 0.85);
-        border: 1px solid rgba(56, 189, 248, 0.25);
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(226, 232, 240, 0.9);
         border-radius: 20px;
         padding: 6px 12px;
         backdrop-filter: blur(8px);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
       }
       .chip-label {
         font-size: 10px;
         font-weight: 800;
         letter-spacing: 1px;
-        color: #94a3b8;
+        color: #64748b;
       }
       .chip-val {
         font-size: 14px;
         font-weight: 800;
-        color: #fff;
+        color: #0f172a;
       }
       .hud-moves-pill {
         display: flex;
         align-items: center;
         gap: 6px;
         background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 2px solid #38bdf8;
+        border: 2px solid #bae6fd;
         border-radius: 24px;
         padding: 6px 16px;
-        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
       }
       .moves-icon { font-size: 16px; }
       .moves-val { font-size: 18px; font-weight: 900; color: #fff; }
@@ -186,18 +187,20 @@ export class Hud {
       .hud-icon-btn {
         width: 36px; height: 36px;
         border-radius: 50%;
-        background: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-        color: #fff;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(203, 213, 225, 0.9);
+        color: #0f172a;
         display: flex;
         align-items: center;
         justify-content: center;
         font-size: 16px;
         cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         transition: all 0.15s ease;
       }
       .hud-icon-btn:hover {
-        background: rgba(56, 189, 248, 0.25);
+        background: #f0f9ff;
+        border-color: #38bdf8;
         transform: scale(1.08);
       }
 
@@ -244,29 +247,29 @@ export class Hud {
         display: flex;
         align-items: center;
         gap: 12px;
-        background: rgba(11, 17, 32, 0.9);
-        border: 1px solid rgba(56, 189, 248, 0.25);
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid rgba(226, 232, 240, 0.9);
         border-radius: 36px;
         padding: 8px 16px;
         backdrop-filter: blur(12px);
         pointer-events: auto;
         z-index: 50;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
       }
       .booster-chip {
         display: flex;
         align-items: center;
         gap: 8px;
-        background: rgba(30, 41, 59, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
         border-radius: 24px;
         padding: 6px 14px;
-        color: #fff;
+        color: #0f172a;
         cursor: pointer;
         transition: all 0.15s ease;
       }
       .booster-chip:hover {
-        background: rgba(56, 189, 248, 0.2);
+        background: #f0f9ff;
         border-color: #38bdf8;
         transform: translateY(-2px);
       }
@@ -289,26 +292,27 @@ export class Hud {
         font-size: 11px;
         font-weight: 800;
         letter-spacing: 0.5px;
+        color: #0f172a;
       }
       .booster-badge {
         font-size: 9px;
         font-weight: 800;
-        background: rgba(245, 158, 11, 0.2);
-        color: #f59e0b;
+        background: rgba(245, 158, 11, 0.15);
+        color: #d97706;
         padding: 1px 6px;
         border-radius: 6px;
       }
       .booster-badge-ad {
-        background: rgba(16, 185, 129, 0.2);
-        color: #10b981;
+        background: rgba(16, 185, 129, 0.15);
+        color: #059669;
       }
 
       /* Modals */
       .hud-modal-container {
         position: absolute;
         inset: 0;
-        background: rgba(3, 7, 18, 0.88);
-        backdrop-filter: blur(10px);
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(8px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -316,29 +320,31 @@ export class Hud {
         z-index: 100;
       }
       .hud-card {
-        background: #0f172a;
-        border: 2px solid #38bdf8;
+        background: #ffffff;
+        border: 2px solid #bae6fd;
         border-radius: 20px;
         padding: 32px 28px;
         width: 90%;
         max-width: 420px;
         text-align: center;
-        box-shadow: 0 0 50px rgba(14, 165, 233, 0.35);
+        box-shadow: 0 20px 50px rgba(14, 165, 233, 0.18);
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 16px;
+        color: #0f172a;
       }
       .hud-card-title {
         margin: 0;
         font-size: 26px;
         font-weight: 900;
         letter-spacing: 2px;
+        color: #0f172a;
       }
       .hud-card-subtitle {
         margin: 0;
         font-size: 13px;
-        color: #94a3b8;
+        color: #64748b;
       }
 
       /* Multiplier Needle Bar (Hook 3) */

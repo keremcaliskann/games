@@ -10,7 +10,7 @@
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
 - **Platform Boundary:** Game logic is platform-agnostic. Platform differences (`ytgame`, `YaGames`, `CrazyGames`, `PokiSDK`, `MockAdProvider`) reside exclusively within `src/platform/`.
 - **Layering Order:** `core` ← `render` / `physics` / `input` / `platform` ← `game` ← `ui`. Sublayers must never import upper layers.
-- **Visual Theme & Asset Strategy:** Default to **vibrant colors, sunlit daylight environments**, and **Compound Procedural 3D Prefabs + Hot-Swap `.glb` support (`ASSETS_NEEDED.md`)** unless a dark theme is explicitly requested.
+- **Visual Theme & Asset Strategy:** **STRICT ZERO TOLERANCE FOR DARK VOIDS/DARK THEMES.** All games must default to **sunlit daylight environments (sky `0xbae6fd`, warm sun light, bright ground bounce, clean light grids)** and **Compound Procedural 3D Prefabs + Hot-Swap `.glb` support (`ASSETS_NEEDED.md`)**. Setting dark backgrounds (`#000`, `#0f172a`, `#0b1120`, `#111827`) or black floor grids is strictly forbidden unless dark theme is explicitly requested by user.
 
 ## 2. Language & Communication
 
@@ -90,6 +90,7 @@ A task is complete only when:
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
 | `rules/25-defensive-gameplay-and-hardening.md` | model_decision | Defensive programming, HUD pointer isolation, state idempotency, procedural feasibility, SDK invariants |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
+| `rules/32-daylight-and-lighting.md` | glob | Triggered when editing `**/src/render/**`, `**/src/ui/**`, `**/index.html` (Daylight lighting & zero dark voids) |
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
 | `rules/40-rapier-physics.md` | glob | Triggered when editing `**/src/physics/**` |
 | `rules/50-input-abstraction.md` | glob | Triggered when editing `**/src/input/**`, `**/src/ui/**` |

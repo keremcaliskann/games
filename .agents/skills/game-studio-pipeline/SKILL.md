@@ -65,7 +65,7 @@ Audit the completed build across **4 Mandatory Filters**:
 - [ ] Does the game play effortlessly with one hand in both 9:16 portrait and 16:9 landscape?
 
 ### Filter B: Art Direction, Compound Prefabs & ASMR Juice
-- [ ] Is the environment bright, sunlit, and vibrant?
+- [ ] Is the environment bright, sunlit, and vibrant? (STRICT: scene.background >= 0xbae6fd or pastel daylight, warm Hemisphere ground bounce >= 0xd0d0d0, zero dark voids, zero black floor grids).
 - [ ] Are entities multi-part Compound Procedural Prefabs (no raw placeholder boxes) with ASSETS_NEEDED.md documented?
 - [ ] Are particle bursts, squash-and-stretch, and Web Audio ASMR feedback satisfying?
 

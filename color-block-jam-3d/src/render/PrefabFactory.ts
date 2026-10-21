@@ -118,19 +118,19 @@ export class PrefabFactory {
     const gateHeight = 1.6;
     const gateDepth = 1.1;
 
-    // Dark metallic chassis
+    // Crisp light-silver/white painted chassis for bright daylight pop
     const steelMat = this.getMaterial('gate_steel', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x1e293b,
-        roughness: 0.35,
-        metalness: 0.75,
+        color: 0xf8fafc,
+        roughness: 0.25,
+        metalness: 0.12,
       });
     });
 
     const rollerMat = this.getMaterial('gate_roller', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x94a3b8,
-        roughness: 0.2,
+        color: 0xe2e8f0,
+        roughness: 0.18,
         metalness: 0.85,
       });
     });
@@ -139,7 +139,7 @@ export class PrefabFactory {
       return new THREE.MeshStandardMaterial({
         color: color.hex,
         emissive: color.hex,
-        emissiveIntensity: 0.8,
+        emissiveIntensity: 1.6,
         roughness: 0.2,
       });
     }) as THREE.MeshStandardMaterial;
@@ -200,7 +200,7 @@ export class PrefabFactory {
 
     // 5. Intake Guide Slit
     const slitMat = this.getMaterial('gate_intake_slit', () => {
-      return new THREE.MeshBasicMaterial({ color: 0x050814 });
+      return new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.4 });
     });
     const slitGeo = new THREE.BoxGeometry(gateWidth - 0.7, 0.8, 0.15);
     const slit = new THREE.Mesh(slitGeo, slitMat);
@@ -223,36 +223,36 @@ export class PrefabFactory {
     const depth = rows * cs;
     const thickness = 0.35;
 
-    // Platform Base Frame (High tech cyber floating island)
+    // Platform Base Frame (Bright porcelain floating island)
     const baseMat = this.getMaterial('board_base', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x0d1527,
-        roughness: 0.3,
-        metalness: 0.6,
+        color: 0xf1f5f9,
+        roughness: 0.35,
+        metalness: 0.05,
       });
     });
 
     const rimMat = this.getMaterial('board_rim', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x1e293b,
-        roughness: 0.25,
-        metalness: 0.7,
+        color: 0xe2e8f0,
+        roughness: 0.3,
+        metalness: 0.1,
       });
     });
 
     const tileMatDark = this.getMaterial('tile_dark', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x111c33,
-        roughness: 0.4,
-        metalness: 0.2,
+        color: 0xf0f9ff, // Soft cheerful pastel cyan
+        roughness: 0.35,
+        metalness: 0.05,
       });
     });
 
     const tileMatLight = this.getMaterial('tile_light', () => {
       return new THREE.MeshStandardMaterial({
-        color: 0x162444,
-        roughness: 0.4,
-        metalness: 0.2,
+        color: 0xffffff, // Pure crisp cloud white
+        roughness: 0.35,
+        metalness: 0.05,
       });
     });
 

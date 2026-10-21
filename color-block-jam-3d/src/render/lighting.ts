@@ -6,14 +6,15 @@ export class LightingSetup {
     dirLight: THREE.DirectionalLight;
     rimLight: THREE.DirectionalLight;
   } {
-    // 1. Hemisphere Light (Soft Sky / Warm Daylight Bounce)
-    const hemiLight = new THREE.HemisphereLight(0xdbeafe, 0x1e293b, 1.4);
+    // 1. Hemisphere Light (Crisp Pure Sky + Warm Daylight Bounce)
+    // Ground bounce color MUST be warm/light so shadowed faces never turn black/muddy
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xfef08a, 1.55);
     hemiLight.position.set(0, 30, 0);
     scene.add(hemiLight);
 
     // 2. Main Sun Directional Light (Warm high-contrast daylight with soft shadows)
-    const dirLight = new THREE.DirectionalLight(0xfffbeb, 2.2);
-    dirLight.position.set(16, 26, 18);
+    const dirLight = new THREE.DirectionalLight(0xfffbeb, 2.5);
+    dirLight.position.set(16, 28, 18);
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 2048;
     dirLight.shadow.mapSize.height = 2048;
@@ -28,8 +29,8 @@ export class LightingSetup {
     scene.add(dirLight);
 
     // 3. Subtle Rim / Secondary Light (Fill light preventing dark undersides)
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.85);
-    rimLight.position.set(-18, 14, -18);
+    const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.1);
+    rimLight.position.set(-18, 16, -18);
     scene.add(rimLight);
 
     return { hemiLight, dirLight, rimLight };
