@@ -1,5 +1,18 @@
 [
   {
+    "id": "color-block-jam-3d",
+    "title": "COLOR BLOCK JAM 3D // SHREDDER ESCAPE",
+    "description": "Tactile 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with satisfying ASMR voxel bursts!",
+    "path": "./color-block-jam-3d/",
+    "tags": ["3D Puzzle", "Spatial Jam", "Shredder Escape", "ASMR", "Casual"],
+    "date": "2026-10-21",
+    "icon": "./color-block-jam-3d/icon.svg",
+    "iconEmoji": "🧩",
+    "featured": true,
+    "themeColor": "#0ea5e9",
+    "accentGradient": "linear-gradient(135deg, #38bdf8, #0284c7)"
+  },
+  {
     "id": "cyber-arrow-3d",
     "title": "CYBER ARROW 3D",
     "description": "Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.",
@@ -8,7 +21,7 @@
     "date": "2026-10-20",
     "icon": "./cyber-arrow-3d/icon.svg",
     "iconEmoji": "🎯",
-    "featured": true,
+    "featured": false,
     "themeColor": "#6366f1",
     "accentGradient": "linear-gradient(135deg, #818cf8, #4f46e5)"
   },

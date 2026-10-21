@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>COLOR BLOCK JAM 3D // Shredder Escape</title>
+
+    <!-- YouTube Playables SDK (Mandatory first script) -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+
+    <!-- Mobile & PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+
+    <!-- OpenGraph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="COLOR BLOCK JAM 3D // Shredder Escape" />
+    <meta property="og:description" content="Vibrant 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with tactile ASMR voxel bursts!" />
+    <meta property="og:url" content="https://keremcaliskann.github.io/games/color-block-jam-3d/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="COLOR BLOCK JAM 3D // Shredder Escape" />
+    <meta name="twitter:description" content="Vibrant 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with tactile ASMR voxel bursts!" />
+
+    <style>
+      :root {
+        --color-primary: #0284c7;
+        --color-accent: #38bdf8;
+        --color-amber: #f59e0b;
+        --color-emerald: #10b981;
+        --color-rose: #f43f5e;
+        --dark-bg: #0b1120;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--dark-bg);
+        overscroll-behavior: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #fff;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: none;
+      }
+
+      /* Dual-Mode Shell: Auto-collapse sidebars in YouTube Playables & external portals */
+      body.embed-fullscreen-mode .shell-sidebar-left,
+      body.embed-fullscreen-mode .shell-sidebar-right,
+      body.embed-fullscreen-mode .fullscreen-ad-banner {
+        display: none !important;
+      }
+      body.embed-fullscreen-mode .shell-stage {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+      }
+
+      .arcade-shell {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background: var(--dark-bg);
+        color: #fff;
+        position: relative;
+      }
+
+      /* Left Sidebar Navigation */
+      .shell-sidebar-left {
+        width: 260px;
+        min-width: 260px;
+        background: rgba(13, 16, 28, 0.96);
+        border-right: 1px solid rgba(56, 189, 248, 0.2);
+        display: flex;
+        flex-direction: column;
+        padding: 18px 14px;
+        gap: 16px;
+        z-index: 20;
+      }
+      .shell-brand {
+        margin-bottom: 2px;
+      }
+      .shell-brand-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        color: inherit;
+      }
+      .shell-brand-badge {
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid var(--color-accent);
+        color: var(--color-accent);
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 6px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .shell-brand-title {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        background: linear-gradient(135deg, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .shell-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .shell-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        color: #e2e8f0;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s ease;
+      }
+      .shell-btn:hover {
+        background: rgba(56, 189, 248, 0.18);
+        border-color: var(--color-accent);
+        color: #fff;
+        transform: translateY(-1px);
+      }
+      .shell-btn .btn-icon {
+        font-size: 15px;
+      }
+      .shell-other-games {
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .shell-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin: 0;
+      }
+      .other-games-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 240px;
+        overflow-y: auto;
+      }
+      .other-game-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        text-decoration: none;
+        color: #cbd5e1;
+        transition: all 0.15s ease;
+      }
+      .other-game-item:hover {
+        background: rgba(56, 189, 248, 0.12);
+        border-color: rgba(56, 189, 248, 0.4);
+        color: #fff;
+      }
+      .other-game-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        object-fit: cover;
+      }
+      .other-game-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .other-game-title {
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .other-game-tag {
+        font-size: 10px;
+        color: var(--color-accent);
+      }
+
+      /* Center Stage */
+      .shell-stage {
+        flex: 1 1 auto;
+        min-width: 0;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        background: #000;
+        display: flex;
+        flex-direction: column;
+      }
+      .game-canvas-container {
+        position: absolute;
+        inset: 0;
+        touch-action: none;
+      }
+      .game-canvas-container canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .game-hud-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Fullscreen Sticky Banner */
+      .fullscreen-ad-banner {
+        display: none;
+      }
+      :fullscreen .fullscreen-ad-banner,
+      .arcade-shell:fullscreen .fullscreen-ad-banner {
+        display: flex !important;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 54px;
+        background: rgba(11, 17, 32, 0.95);
+        border-top: 1px solid rgba(56, 189, 248, 0.4);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+      }
+      :fullscreen .game-canvas-container {
+        bottom: 54px;
+      }
+      .fullscreen-ad-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .ad-tag {
+        background: var(--color-amber);
+        color: #000;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 3px 6px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+      }
+      .ad-placeholder-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #94a3b8;
+        letter-spacing: 1px;
+      }
+
+      /* Right Ad Rail */
+      .shell-sidebar-right {
+        width: 320px;
+        min-width: 320px;
+        background: rgba(13, 16, 28, 0.96);
+        border-left: 1px solid rgba(56, 189, 248, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 10px;
+        z-index: 20;
+      }
+      .ad-rail-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .ad-header-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #64748b;
+      }
+      .ad-banner-slot {
+        width: 300px;
+        height: 600px;
+        background: linear-gradient(180deg, #1e293b, #0f172a);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .ad-mock-creative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        z-index: 2;
+      }
+      .ad-mock-glow {
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent);
+        top: 20%;
+        pointer-events: none;
+      }
+      .ad-mock-brand {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin: 0;
+        color: #fff;
+      }
+      .ad-mock-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
+        max-width: 220px;
+      }
+      .ad-mock-cta {
+        margin-top: 10px;
+        background: linear-gradient(135deg, var(--color-accent), var(--color-primary));
+        color: #fff;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+      }
+
+      /* Responsive Collapse */
+      @media (max-width: 1024px) {
+        .shell-sidebar-right {
+          display: none;
+        }
+      }
+      @media (max-width: 768px) {
+        .arcade-shell {
+          flex-direction: column;
+        }
+        .shell-sidebar-left {
+          width: 100%;
+          min-width: 100%;
+          height: auto;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          border-right: none;
+          border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+        }
+        .shell-other-games {
+          display: none;
+        }
+        .shell-nav {
+          flex-direction: row;
+          gap: 6px;
+        }
+        .shell-btn {
+          padding: 6px 10px;
+          font-size: 11px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="arcade-shell" class="arcade-shell">
+      <!-- Left Navigation Rail -->
+      <aside class="shell-sidebar shell-sidebar-left">
+        <div class="shell-brand">
+          <a href="../" class="shell-brand-link">
+            <span class="shell-brand-badge">ARCADE</span>
+            <span class="shell-brand-title">3D GAMES</span>
+          </a>
+        </div>
+
+        <nav class="shell-nav">
+          <a href="../" class="shell-btn shell-btn-portal" title="Return to Central Arcade Portal">
+            <span class="btn-icon">←</span> Portala Dön
+          </a>
+          <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
+            <span class="btn-icon">🔄</span> Yeniden Başlat
+          </button>
+          <button id="shell-fullscreen-btn" class="shell-btn shell-btn-fullscreen" type="button">
+            <span class="btn-icon">⛶</span> Tam Ekran
+          </button>
+        </nav>
+
+        <section class="shell-other-games">
+          <h3 class="shell-section-title">Diğer Oyunlar</h3>
+          <div id="shell-other-games-list" class="other-games-list">
+            <!-- Hydrated dynamically from ../games.json -->
+          </div>
+        </section>
+      </aside>
+
+      <!-- Center Game Viewport Stage -->
+      <main id="shell-stage" class="shell-stage">
+        <div id="app" class="game-canvas-container"></div>
+        <div id="hud" class="game-hud-overlay"></div>
+
+        <!-- Sticky banner displayed during Fullscreen mode -->
+        <div id="fullscreen-ad-banner" class="fullscreen-ad-banner" aria-label="Sponsor Banner">
+          <div class="fullscreen-ad-content">
+            <span class="ad-tag">SPONSOR</span>
+            <span class="ad-placeholder-text">HTML5 3D ARCADE // 60 FPS WEBGL EXPERIENCE</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Advertising Rail -->
+      <aside class="shell-sidebar shell-sidebar-right">
+        <div class="ad-rail-wrapper">
+          <span class="ad-header-tag">SPONSOR // REKLAM</span>
+          <div id="ad-banner-desktop" class="ad-banner-slot banner-300x600">
+            <div class="ad-mock-creative">
+              <div class="ad-mock-glow"></div>
+              <p class="ad-mock-brand">COLOR JAM 3D</p>
+              <p class="ad-mock-desc">Vibrant 3D polyomino shredder puzzle</p>
+              <div class="ad-mock-cta">ŞİMDİ OYNA</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

@@ -43,6 +43,13 @@ jobs:
           npm run build
           cd ..
 
+      - name: Build color-block-jam-3d
+        run: |
+          cd color-block-jam-3d
+          npm install
+          npm run build
+          cd ..
+
       - name: Assemble Arcade Portal Site
         run: |
           mkdir -p _site
@@ -52,6 +59,8 @@ jobs:
           cp -r cyber-flap/dist/* _site/cyber-flap/
           mkdir -p _site/cyber-arrow-3d
           cp -r cyber-arrow-3d/dist/* _site/cyber-arrow-3d/
+          mkdir -p _site/color-block-jam-3d
+          cp -r color-block-jam-3d/dist/* _site/color-block-jam-3d/
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
