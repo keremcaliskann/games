@@ -71,6 +71,9 @@ export class InputManager {
     this.lastScreenX = e.clientX;
     this.lastScreenY = e.clientY;
     this.isSwiped = false;
+    if (this.activeBlock) {
+      this.activeBlock.setGrabbed(false);
+    }
     this.activeBlock = null;
 
     // Raycast to check if player touched a block
@@ -87,6 +90,7 @@ export class InputManager {
       const block = hitObj.userData.block as Block | undefined;
       if (block && block.state === 'idle') {
         this.activeBlock = block;
+        this.activeBlock.setGrabbed(true);
       }
     }
   }
@@ -134,6 +138,7 @@ export class InputManager {
         }
 
         const block = this.activeBlock;
+        block.setGrabbed(false);
         this.activeBlock = null;
         this.callbacks.onBlockSwipe(block, dirX, dirY);
       }
@@ -151,10 +156,13 @@ export class InputManager {
     if (!this.isPointerDown) return;
     this.isPointerDown = false;
 
-    if (this.activeBlock && !this.isSwiped) {
+    if (this.activeBlock) {
       const block = this.activeBlock;
+      block.setGrabbed(false);
       this.activeBlock = null;
-      this.callbacks.onBlockTap(block);
+      if (!this.isSwiped) {
+        this.callbacks.onBlockTap(block);
+      }
     }
     this.activeBlock = null;
   }

@@ -42,6 +42,10 @@ export class Block {
   private wiggleTimer = 0;
   private readonly wiggleDuration = 0.22;
 
+  // Tactile grab elevation feedback
+  private isGrabbed = false;
+  private currentElevation = 0;
+
   constructor(
     id: string,
     color: ColorDef,
@@ -114,6 +118,7 @@ export class Block {
     boardCols: number,
     boardRows: number
   ): void {
+    this.isGrabbed = false;
     this.gridX = newGx;
     this.gridY = newGy;
     this.slideStartWorldPos.copy(this.group.position);
@@ -126,6 +131,7 @@ export class Block {
     gateWorldPos: THREE.Vector3,
     direction: THREE.Vector3
   ): void {
+    this.isGrabbed = false;
     this.state = 'sliding_to_gate';
     this.slideStartWorldPos.copy(this.group.position);
     this.targetWorldPos.copy(gateWorldPos);
@@ -141,11 +147,17 @@ export class Block {
     gateWorldPos: THREE.Vector3,
     direction: THREE.Vector3
   ): void {
+    this.isGrabbed = false;
     this.state = 'shredding';
     this.shredProgress = 0;
     this.slideStartWorldPos.copy(this.group.position);
     this.shredTargetPos.copy(gateWorldPos);
     this.shredDirection.copy(direction);
+  }
+
+  public setGrabbed(grabbed: boolean): void {
+    if (this.state !== 'idle' && grabbed) return;
+    this.isGrabbed = grabbed;
   }
 
   public triggerWiggle(): void {
@@ -167,11 +179,28 @@ export class Block {
       }
     }
 
-    if (this.state === 'sliding') {
+    if (this.state === 'idle') {
+      const targetElevation = this.isGrabbed ? 0.12 : 0.0;
+      this.currentElevation = THREE.MathUtils.lerp(
+        this.currentElevation,
+        targetElevation,
+        Math.min(1.0, dt * 24)
+      );
+      this.group.position.set(
+        this.targetWorldPos.x,
+        this.targetWorldPos.y + this.currentElevation,
+        this.targetWorldPos.z
+      );
+
+      const targetScale = this.isGrabbed ? 1.04 : 1.0;
+      const s = THREE.MathUtils.lerp(this.group.scale.x, targetScale, Math.min(1.0, dt * 24));
+      this.group.scale.set(s, s, s);
+    } else if (this.state === 'sliding') {
       this.slideProgress += dt / this.slideDuration;
       if (this.slideProgress >= 1.0) {
         this.slideProgress = 1.0;
         this.state = 'idle';
+        this.currentElevation = 0;
         this.group.position.copy(this.targetWorldPos);
         this.currentScale.set(1, 1, 1);
         this.group.scale.copy(this.currentScale);

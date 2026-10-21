@@ -9,8 +9,8 @@ export type SlideOutcome =
   | { type: 'blocked' };
 
 export class Board {
-  public readonly cols: number;
-  public readonly rows: number;
+  public cols: number;
+  public rows: number;
 
   public readonly rootGroup = new THREE.Group();
   public readonly blocksGroup = new THREE.Group();
@@ -30,8 +30,22 @@ export class Board {
     this.buildPlatform();
   }
 
+  public setDimensions(cols: number, rows: number): void {
+    if (this.cols === cols && this.rows === rows && this.platformMesh) {
+      return;
+    }
+    this.cols = cols;
+    this.rows = rows;
+    this.buildPlatform();
+  }
+
   public buildPlatform(): void {
     if (this.platformMesh) {
+      this.platformMesh.traverse((child) => {
+        if ((child as THREE.Mesh).geometry) {
+          (child as THREE.Mesh).geometry.dispose();
+        }
+      });
       this.rootGroup.remove(this.platformMesh);
     }
     this.platformMesh = PrefabFactory.createBoardPlatform(this.cols, this.rows);
