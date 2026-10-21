@@ -1,0 +1,18 @@
+{
+  "name": "Screw Jam 3D // Hyper Unbolt",
+  "short_name": "ScrewJam3D",
+  "description": "Unbolt colorful 3D acrylic plates, match screws into color toolboxes, and enjoy relaxing ASMR pin jam puzzles!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#cfe8f7",
+  "theme_color": "#38bdf8",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

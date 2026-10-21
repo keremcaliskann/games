@@ -1,5 +1,18 @@
 [
   {
+    "id": "screw-jam-3d",
+    "title": "SCREW JAM 3D // HYPER UNBOLT",
+    "description": "Tactile 3D pin-unscrew ASMR puzzle! Unbolt colorful translucent acrylic plates, match screws into 3-slot color toolboxes, and manage the buffer dock under warm daylight.",
+    "path": "./screw-jam-3d/",
+    "tags": ["3D Puzzle", "Pin Unscrew", "ASMR Jam", "Spatial Logic", "Casual"],
+    "date": "2026-10-21",
+    "icon": "./screw-jam-3d/icon.svg",
+    "iconEmoji": "🔩",
+    "featured": true,
+    "themeColor": "#38bdf8",
+    "accentGradient": "linear-gradient(135deg, #facc15, #f59e0b)"
+  },
+  {
     "id": "color-block-jam-3d",
     "title": "COLOR BLOCK JAM 3D // SHREDDER ESCAPE",
     "description": "Tactile 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with satisfying ASMR voxel bursts!",

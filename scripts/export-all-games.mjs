@@ -10,7 +10,7 @@ const workspaceRoot = path.resolve(__dirname, '..');
 const platformArg = process.argv[2] || 'all'; // all | yandex | crazygames | youtube | poki
 const gameArg = process.argv[3] || 'all'; // all | color-block-jam-3d | cyber-arrow-3d | cyber-flap
 
-const games = ['color-block-jam-3d', 'cyber-arrow-3d', 'cyber-flap'].filter((g) => {
+const games = ['color-block-jam-3d', 'cyber-arrow-3d', 'cyber-flap', 'screw-jam-3d'].filter((g) => {
   if (gameArg !== 'all' && g !== gameArg) return false;
   return fs.existsSync(path.join(workspaceRoot, g, 'scripts', 'export-platforms.mjs'));
 });
