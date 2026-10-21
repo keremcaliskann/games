@@ -8,11 +8,9 @@ description: >-
 
 # /studio — Autonomous Game Studio Pipeline
 
-Pulls the highest-priority concept from `backlog/ideas-backlog.json` and runs the autonomous 3-Phase Studio Squad:
+This is the direct short slash command for `game-studio-pipeline`. It executes the exact autonomous 3-Phase Studio Squad protocol defined in [15-game-studio-pipeline.md](file:///c:/Users/kerem/Desktop/Games/.agents/rules/15-game-studio-pipeline.md) and [SKILL.md](file:///c:/Users/kerem/Desktop/Games/.agents/skills/game-studio-pipeline/SKILL.md):
 
-1. **Phase 1: Game Designer**
-   Drafts architecture, camera rig, procedural generation rules, and 3 mandatory rewarded ad hooks.
-2. **Phase 2: Implementer**
-   Scaffolds the Vite + Three.js + Rapier.js project, creates game loop, input abstraction, and procedural prefabs (`ASSETS_NEEDED.md`).
-3. **Phase 3: Game Director & QA Critic**
-   Evaluates against the 4-Filter Critique (Camera ergonomics, Toony Soft Daylight, Revenue hooks, 60 FPS budget), verifies build, updates portal catalog, and pushes to Git repository.
+1. **Queue Intake:** Pulls the #1 ranked `ready` blueprint from `backlog/ideas-backlog.json`.
+2. **Phase 1: Game Designer:** Drafts `<game-name>/DESIGN.md`, 2-second hook, solvable math, and 3 mandatory rewarded ad hooks.
+3. **Phase 2: Implementer:** Builds complete Vite + Three.js + Rapier.js project, platform bridges (`src/platform/`), compound procedural prefabs, Soft Daylight visuals, and ASMR audio.
+4. **Phase 3: Game Director & QA Critic:** Evaluates against the 4-Filter Critique, runs preflight verification, updates portal catalog, and commits & pushes to Git.
