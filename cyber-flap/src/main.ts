@@ -36,6 +36,7 @@ import { ShellController } from './ui/shell-controller';
 async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): Promise<void> {
   // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
   PlatformBridge.applyDualModeShell();
+  await PlatformBridge.initPlatform();
 
   // YouTube Playables mandatory loadData before any saveData
   const cloudData = await PlatformBridge.loadData({
@@ -175,6 +176,12 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
 
   // Track state transitions for score reporting & interstitial cadence
   events.on('stateChange', ({ state, score, highScore }) => {
+    if (state === GameStateId.Playing) {
+      PlatformBridge.gameplayStart();
+    } else if (state === GameStateId.GameOver || state === GameStateId.Menu) {
+      PlatformBridge.gameplayStop();
+    }
+
     if (state === GameStateId.GameOver) {
       PlatformBridge.sendScore(score);
       void PlatformBridge.saveData({

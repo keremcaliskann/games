@@ -122,6 +122,7 @@ class GameApp {
       });
 
       // Show Victory screen with Oscillating Multiplier Hook
+      PlatformBridge.gameplayStop();
       this.hud.showVictory(currentLevel, GAME_CONFIG.coinsPerLevel);
     });
 
@@ -164,6 +165,7 @@ class GameApp {
   }
 
   private loadCurrentLevel(): void {
+    PlatformBridge.gameplayStart();
     const lvl = this.economy.getLevel();
     LevelLoader.loadLevel(lvl, this.grid);
     this.updateCameraDistance();
@@ -256,6 +258,7 @@ class GameApp {
 async function bootstrap(): Promise<void> {
   // 1. Dual-Mode Shell: Auto-collapse in YouTube Playables / Yandex / CrazyGames / Poki
   PlatformBridge.applyDualModeShell();
+  await PlatformBridge.initPlatform();
 
   // YouTube Playables mandatory loadData before any saveData
   const cloudData = await PlatformBridge.loadData({

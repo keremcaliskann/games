@@ -153,6 +153,7 @@ class GameApp {
     this.isLevelTransitioning = false;
     this.hud.resetLatches();
     this.hud.setHammerActive(false);
+    PlatformBridge.gameplayStart();
 
     const lvl = this.economy.getLevel();
     this.currentLevelData = LevelGenerator.generateLevel(lvl);
@@ -263,6 +264,7 @@ class GameApp {
     if (remaining === 0) {
       // Level Victory!
       this.isLevelTransitioning = true;
+      PlatformBridge.gameplayStop();
       this.sound.playVictory();
       this.particles.spawnCelebration(_ORIGIN);
 
@@ -276,6 +278,7 @@ class GameApp {
     }
 
     if (this.remainingMoves <= 0) {
+      PlatformBridge.gameplayStop();
       // Out of moves! Check Near-Miss Revive Hook
       if (remaining <= GAME_CONFIG.nearMissThreshold) {
         // Hook 2: Near-Miss Revive Modal
@@ -416,6 +419,7 @@ class GameApp {
 // Bootstrap
 async function bootstrap(): Promise<void> {
   PlatformBridge.applyDualModeShell();
+  await PlatformBridge.initPlatform();
 
   // Cloud save pre-flight (loadData must precede saveData)
   const defaultSave: SaveDataPayload = {

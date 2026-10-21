@@ -39,6 +39,71 @@ export class PlatformBridge {
     }
   }
 
+  public static async initPlatform(): Promise<void> {
+    const w = window as any;
+
+    // Strict zero-external-network CSP invariant for YouTube Playables
+    if (w.ytgame?.IN_PLAYABLES_ENV) {
+      return;
+    }
+
+    const host = window.location.hostname;
+    const search = window.location.search;
+    const isYandex = host.includes('yandex') || search.includes('portal=yandex');
+    const isCrazy = host.includes('crazygames') || search.includes('portal=crazygames');
+
+    // 1. Dynamic script loader for Yandex Games if running on Yandex portal
+    if (isYandex && !w.YaGames && !document.getElementById('yandex-sdk-script')) {
+      await new Promise<void>((resolve) => {
+        const script = document.createElement('script');
+        script.id = 'yandex-sdk-script';
+        script.src = 'https://yandex.ru/games/sdk/v2';
+        script.onload = () => resolve();
+        script.onerror = () => resolve();
+        document.head.appendChild(script);
+      });
+    }
+
+    // 2. Dynamic script loader for CrazyGames if running on CrazyGames portal
+    if (isCrazy && !w.CrazyGames && !document.getElementById('crazygames-sdk-script')) {
+      await new Promise<void>((resolve) => {
+        const script = document.createElement('script');
+        script.id = 'crazygames-sdk-script';
+        script.src = 'https://sdk.crazygames.com/crazygames-sdk-v3.js';
+        script.onload = () => resolve();
+        script.onerror = () => resolve();
+        document.head.appendChild(script);
+      });
+    }
+
+    // 3. Auto-initialize Yandex Games SDK if YaGames global is present
+    if (w.YaGames && !w.ysdk) {
+      try {
+        const ysdk = await w.YaGames.init();
+        w.ysdk = ysdk;
+        ysdk.features?.LoadingAPI?.ready?.();
+      } catch {}
+    }
+  }
+
+  public static gameplayStart(): void {
+    const w = window as any;
+    if (w.CrazyGames?.SDK?.game?.gameplayStart) {
+      try {
+        w.CrazyGames.SDK.game.gameplayStart();
+      } catch {}
+    }
+  }
+
+  public static gameplayStop(): void {
+    const w = window as any;
+    if (w.CrazyGames?.SDK?.game?.gameplayStop) {
+      try {
+        w.CrazyGames.SDK.game.gameplayStop();
+      } catch {}
+    }
+  }
+
   public static signalFirstFrameReady(): void {
     if (this.isFirstFrameSent) return;
     this.isFirstFrameSent = true;
