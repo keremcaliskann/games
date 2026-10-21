@@ -1,5 +1,175 @@
 [
   {
+    "id": "hexa-sort-3d",
+    "title": "HEXA SORT 3D // CASCADE STACK",
+    "category": "3d-sort-stack",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 95,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-20",
+    "lastValidatedAt": "2026-10-21",
+    "validationNote": "Holds Rank #1. Unrivaled 12+ min average session retention across hybrid-casual market. Upgraded score to 95 (+2 pts) due to sustained low-friction ASMR domino cascade engagement.",
+    "coreLoop": "Drag 3D hexagonal tile stacks from the bottom tray onto a floating honeycomb grid. Adjacent stacks with matching top colors automatically flip and cascade onto each other; reaching 10 matching tiles triggers an explosive popping ASMR clear.",
+    "solvableMathSpec": "Smart tray generator biases spawned stack colors toward existing top colors on the board when occupancy exceeds 65%, guaranteeing fluid cascade chains without unwinnable deadlocks.",
+    "cameraErgonomics": "Elevated orbital view tilted at 45° over a floating honeycomb island with zero ground clutter. Responsive dynamic FOV scaling for 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Stack Hammer (Instantly clears any single hex cell stack via Rewarded Ad or Coins)",
+        "Swap Hand (Rerolls the 3 draggable hex stacks in the tray via Rewarded Ad)",
+        "Move Stack (Relocates an existing stack on the board to any open cell via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When no empty hex cells remain on the honeycomb, trigger 'No Space Left! Watch Ad to Clear 3 Random Stacks & Continue'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge on Level Complete screen for multiplied Coin payouts."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Beveled 6-sided Cylinder/Extrude hex tiles with embossed top symbols and spring-physics arc flip animations.",
+      "optionalUserGlb": "None required (100% geometric hex tiles with daylight soft matte finish)"
+    }
+  },
+  {
+    "id": "goods-sort-3d",
+    "title": "GOODS SORT 3D // SHELF TIDY MASTER",
+    "category": "3d-sort-stack",
+    "status": "ready",
+    "rank": 2,
+    "revenueScore": 94,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 17
+    },
+    "createdAt": "2026-10-21",
+    "lastValidatedAt": "2026-10-21",
+    "validationNote": "Newly added Tier-S breakout candidate (94/100). Capitalizes on top-grossing shelf organization / closet sort craze ($10M+/mo niche). Highest booster & timer fail-offer conversion in casual puzzles.",
+    "coreLoop": "Examine a multi-tiered sunlit 3D wooden shelf cabinet. Tap and move front-row 3D goods (soda cans, snack boxes, toy jars) between shelf slots to create trios of 3 matching items; matched trios vanish with an ASMR pop, uncovering hidden rear-row items.",
+    "solvableMathSpec": "Reverse shelf-stocking solver: all items are placed in triplets from back-to-front in guaranteed clearing sequences so every level has at least one deadlock-free resolution.",
+    "cameraErgonomics": "Frontal isometric view with soft vertical drag parallax. Shelves automatically fit 9:16 portrait without horizontal truncation and center-frame in 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Tidy Wand (Instantly selects and merges 1 matching trio of items anywhere on the shelves via Rewarded Ad)",
+        "Shelf Expander (Adds an extra temporary holding shelf compartment via Rewarded Ad)",
+        "Shuffle Restock (Rearranges all front-row items for new matching opportunities via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When shelf timer expires or all shelf slots jam with 1–2 trios remaining, prompt 'Shelves Full! Watch Ad for +30s & Free Tidy Wand'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge on Level Complete screen."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural + Optional GLB",
+      "proceduralPrefabs": "Compound procedural 3D goods: LatheGeometry soda cans with glossy labels, ExtrudeGeometry cereal boxes with colorful face decals, and rounded jar cylinders.",
+      "optionalUserGlb": "public/models/goods_cart.glb (Optional <2k tris stylized shopping basket)"
+    }
+  },
+  {
+    "id": "physics-drop-merge-3d",
+    "title": "DROP MERGE 3D // SPHERE SUIKA",
+    "category": "physics-merge-drop",
+    "status": "ready",
+    "rank": 3,
+    "revenueScore": 93,
+    "scoreBreakdown": {
+      "rewardedAdScore": 31,
+      "retentionScore": 24,
+      "ergonomicsScore": 20,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-21",
+    "lastValidatedAt": "2026-10-21",
+    "validationNote": "Newly added Tier-S breakout candidate (93/100). Expands studio portfolio into the viral 3D physics-drop genre. Flawless 1-finger portrait ergonomics and high watch-time on YouTube Playables.",
+    "coreLoop": "Aim and drop color-coded bouncy 3D spheres into a floating translucent acrylic cylinder. When two identical spheres collide, they merge with a satisfying squish into a larger, higher-tier sphere; chain merges to reach the giant Tier-11 Golden Core.",
+    "solvableMathSpec": "Deterministic Tier progression (1 to 11) with calibrated sphere radii and Rapier rigid-body mass ratios; drop preview RNG is pseudo-randomly biased to prevent early container overflow.",
+    "cameraErgonomics": "Sleek high-angle perspective looking down into a translucent cylindrical jar. Smooth dynamic camera pullback as sphere stack height increases; zero occlusion in 9:16 and 16:9.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Pop Shake (Applies a localized Rapier physics impulse to shake and settle wedged spheres via Rewarded Ad)",
+        "Bomb Sphere (Drops an explosive sphere that vaporizes colliding lower-tier clutter via Rewarded Ad)",
+        "Evolution Beam (Instantly upgrades next dropped sphere by +1 tier via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When spheres breach the top danger line for 3 continuous seconds, trigger 'Overflow Warning! Watch Ad to Vaporize Top 3 Spheres & Keep Multiplier'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar on High Score / Milestone screen."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Glossy Icosahedron/SphereGeometry balls with pastel candy daylight materials and squash/stretch physics springs. Translucent double-walled cylinder.",
+      "optionalUserGlb": "None required (100% clean procedural WebGL physics)"
+    }
+  },
+  {
+    "id": "conveyor-marble-sort-3d",
+    "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
+    "category": "3d-sort-stack",
+    "status": "ready",
+    "rank": 4,
+    "revenueScore": 92,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 24,
+      "ergonomicsScore": 18,
+      "webglFeasibilityScore": 17
+    },
+    "createdAt": "2026-10-20",
+    "lastValidatedAt": "2026-10-21",
+    "validationNote": "Score adjusted up to 92 (+2 pts) following Loom Games' $125M+ Pixel Flow breakout and industry-wide surge in conveyor-loop mechanics. Strong dock-slot and belt expansion monetization.",
+    "coreLoop": "Tap color-coded 3D dispenser boxes to release marbles onto a looping 3D conveyor belt so they roll into matching collector crates without overflowing the belt capacity.",
+    "solvableMathSpec": "Deterministic crate queue matches exact dispenser marble counts on the board.",
+    "cameraErgonomics": "Tilted 3D overview of the floating conveyor loop with unobstructed rotation and responsive 9:16 portrait framing.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Belt Expansion (+5 conveyor capacity via Rewarded Ad)",
+        "Magnet Crate (Instantly vacuums matching marbles from dispensers via Rewarded Ad)",
+        "Undo Jam (Returns jammed marbles from buffer via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When conveyor buffer overflows, prompt 'Conveyor Jammed! Watch Ad to Clear Buffer & Continue'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Glossy metallic/glass spheres, segmented animated conveyor track, and multi-part dispenser boxes.",
+      "optionalUserGlb": "public/models/collector_crate.glb (Optional <1.5k tris crate mesh)"
+    }
+  },
+  {
+    "id": "bus-escape-jam-3d",
+    "title": "BUS ESCAPE 3D // PASSENGER JAM",
+    "category": "3d-spatial-jam",
+    "status": "ready",
+    "rank": 5,
+    "revenueScore": 89,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 22,
+      "ergonomicsScore": 17,
+      "webglFeasibilityScore": 17
+    },
+    "createdAt": "2026-10-20",
+    "lastValidatedAt": "2026-10-21",
+    "validationNote": "Score adjusted up to 89 (+1 pt). Proven top-10 hybrid-casual traffic & queue sorting hit. VIP parking bay and passenger shuffle boosters monetize heavily.",
+    "coreLoop": "Tap angled 3D buses/vans in a congested lot to drive them into limited loading bays, where color-matched passengers waiting in a conga line rapidly board until the bus departs.",
+    "solvableMathSpec": "Reverse-parked vehicle grid paired with passenger queue chunks matching reachable outer vehicles.",
+    "cameraErgonomics": "High-angle 3D camera with unobstructed sightlines across the floating lot and passenger queue.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "VIP Parking Bay (Unlocks extra loading slot via Rewarded Ad)",
+        "Sort Passengers (Reorders front of passenger queue to match parked buses via Rewarded Ad)",
+        "Helicopter Lift (Extracts any blocked bus directly to VIP bay via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When all loading bays are full and queue mismatches, offer 'Bays Full! Watch Ad to Unlock VIP Bay & Clear 1 Bus'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar."
+    },
+    "assetSpec": {
+      "complexity": "Tier-2 Hybrid (Procedural Prefab + Optional GLB Upgrade)",
+      "proceduralPrefabs": "Multi-part hierarchical THREE.Group buses/vans (rounded chassis, roof rack, windshield, 4 wheels, headlights) and stylized capsule-pawn passengers.",
+      "optionalUserGlb": "public/models/bus_4slot.glb, public/models/bus_8slot.glb (Optional low-poly vehicle models)"
+    }
+  },
+  {
     "id": "color-block-jam-3d",
     "title": "COLOR BLOCK JAM 3D // SHREDDER ESCAPE",
     "category": "3d-spatial-jam",
@@ -65,108 +235,6 @@
       "complexity": "Tier-1 Compound Procedural",
       "proceduralPrefabs": "LatheGeometry threaded bolts with cross-head slots, beveled translucent ExtrudeGeometry plates, and 3D hinged toolboxes.",
       "optionalUserGlb": "public/models/screwdriver_tool.glb (Optional <1k tris animated unbolting tool)"
-    }
-  },
-  {
-    "id": "hexa-sort-3d",
-    "title": "HEXA SORT 3D // CASCADE STACK",
-    "category": "3d-sort-stack",
-    "status": "ready",
-    "rank": 1,
-    "revenueScore": 93,
-    "scoreBreakdown": {
-      "rewardedAdScore": 32,
-      "retentionScore": 25,
-      "ergonomicsScore": 19,
-      "webglFeasibilityScore": 17
-    },
-    "createdAt": "2026-10-20",
-    "lastValidatedAt": "2026-10-20",
-    "validationNote": "Dominant ASMR sorting & stacking loop with exceptional 12+ minute average session duration and rapid pitch-ramped domino tile flips.",
-    "coreLoop": "Drag 3D hexagonal tile stacks from the bottom tray onto a floating honeycomb grid. Adjacent stacks with matching top colors automatically flip and cascade onto each other; reaching 10 matching tiles triggers a popping ASMR clear.",
-    "solvableMathSpec": "Smart tray generator biases spawned stack colors toward existing top colors on the board when board occupancy exceeds 65%, ensuring smooth cascade chains.",
-    "cameraErgonomics": "Clean top-down / tilted orbital view over a floating honeycomb island with zero bottom/side visual clutter. Seamless one-thumb drag in 9:16 portrait.",
-    "revenueHooks": {
-      "inLevelBoosters": [
-        "Stack Hammer (Clears any single hex cell stack via Rewarded Ad or Coins)",
-        "Swap Hand (Refreshes the 3 draggable hex stacks in the tray via Rewarded Ad)",
-        "Move Stack (Relocates an existing stack on the board via Rewarded Ad)"
-      ],
-      "nearMissRevive": "When no empty hex cells remain on the honeycomb, offer 'No Space Left! Watch Ad to Clear 3 Random Stacks'.",
-      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar at level goal completion."
-    },
-    "assetSpec": {
-      "complexity": "Tier-1 Compound Procedural",
-      "proceduralPrefabs": "Beveled 6-sided Cylinder/Extrude hex tiles with embossed top icons and spring-physics arc flip animations.",
-      "optionalUserGlb": "None required (100% geometric hex tiles)"
-    }
-  },
-  {
-    "id": "conveyor-marble-sort-3d",
-    "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
-    "category": "3d-sort-stack",
-    "status": "ready",
-    "rank": 3,
-    "revenueScore": 90,
-    "scoreBreakdown": {
-      "rewardedAdScore": 32,
-      "retentionScore": 23,
-      "ergonomicsScore": 18,
-      "webglFeasibilityScore": 17
-    },
-    "createdAt": "2026-10-20",
-    "lastValidatedAt": "2026-10-20",
-    "validationNote": "2026 breakout conveyor-belt sorting mechanic (inspired by Pixel Flow / Marble Sort). High visual motion and strong dock-slot monetization.",
-    "coreLoop": "Tap color-coded 3D dispenser boxes to release marbles onto a looping 3D conveyor belt so they roll into matching collector crates without overflowing the belt capacity.",
-    "solvableMathSpec": "Deterministic crate queue matches exact dispenser marble counts on the board.",
-    "cameraErgonomics": "Tilted 3D overview of the floating conveyor loop with unobstructed rotation and responsive 9:16 portrait framing.",
-    "revenueHooks": {
-      "inLevelBoosters": [
-        "Belt Expansion (+5 conveyor capacity via Rewarded Ad)",
-        "Magnet Crate (Instantly vacuums matching marbles from dispensers via Rewarded Ad)",
-        "Undo Jam (Returns jammed marbles from buffer via Rewarded Ad)"
-      ],
-      "nearMissRevive": "When conveyor buffer overflows, prompt 'Conveyor Jammed! Watch Ad to Clear Buffer & Continue'.",
-      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar."
-    },
-    "assetSpec": {
-      "complexity": "Tier-1 Compound Procedural",
-      "proceduralPrefabs": "Glossy metallic/glass spheres, segmented animated conveyor track, and multi-part dispenser boxes.",
-      "optionalUserGlb": "public/models/collector_crate.glb (Optional <1.5k tris crate mesh)"
-    }
-  },
-  {
-    "id": "bus-escape-jam-3d",
-    "title": "BUS ESCAPE 3D // PASSENGER JAM",
-    "category": "3d-spatial-jam",
-    "status": "ready",
-    "rank": 4,
-    "revenueScore": 88,
-    "scoreBreakdown": {
-      "rewardedAdScore": 33,
-      "retentionScore": 22,
-      "ergonomicsScore": 17,
-      "webglFeasibilityScore": 16
-    },
-    "createdAt": "2026-10-20",
-    "lastValidatedAt": "2026-10-20",
-    "validationNote": "Proven top-10 hybrid-casual traffic & queue sorting hit. VIP parking slot and passenger shuffle boosters monetize heavily.",
-    "coreLoop": "Tap angled 3D buses/vans in a congested lot to drive them into limited loading bays, where color-matched passengers waiting in a conga line rapidly board until the bus departs.",
-    "solvableMathSpec": "Reverse-parked vehicle grid paired with passenger queue chunks matching reachable outer vehicles.",
-    "cameraErgonomics": "High-angle 3D camera with unobstructed sightlines across the floating lot and passenger queue.",
-    "revenueHooks": {
-      "inLevelBoosters": [
-        "VIP Parking Bay (Unlocks extra loading slot via Rewarded Ad)",
-        "Sort Passengers (Reorders front of passenger queue to match parked buses via Rewarded Ad)",
-        "Helicopter Lift (Extracts any blocked bus directly to VIP bay via Rewarded Ad)"
-      ],
-      "nearMissRevive": "When all loading bays are full and queue mismatches, offer 'Bays Full! Watch Ad to Unlock VIP Bay & Clear 1 Bus'.",
-      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar."
-    },
-    "assetSpec": {
-      "complexity": "Tier-2 Hybrid (Procedural Prefab + Optional GLB Upgrade)",
-      "proceduralPrefabs": "Multi-part hierarchical THREE.Group buses/vans (rounded chassis, roof rack, windshield, 4 wheels, headlights) and stylized capsule-pawn passengers.",
-      "optionalUserGlb": "public/models/bus_4slot.glb, public/models/bus_8slot.glb (Optional low-poly vehicle models)"
     }
   },
   {
