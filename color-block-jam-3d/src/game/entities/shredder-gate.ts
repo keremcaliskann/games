@@ -100,7 +100,8 @@ export class ShredderGate {
     if (this.side !== side) return false;
     const gateMin = this.cellIndex;
     const gateMax = this.cellIndex + this.spanCells - 1;
-    return maxCoord >= gateMin && minCoord <= gateMax;
+    // Entire block must fit inside gate opening to enter rollers
+    return minCoord >= gateMin && maxCoord <= gateMax;
   }
 
   public update(dt: number): void {

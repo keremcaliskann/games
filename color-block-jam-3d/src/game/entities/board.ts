@@ -99,30 +99,20 @@ export class Board {
       // Check if all next cells are within board boundaries
       let allInside = true;
       let exitSide: GateSide | null = null;
-      let minExitCoord = Infinity;
-      let maxExitCoord = -Infinity;
 
       for (const c of nextCells) {
         if (c.x < 0) {
           allInside = false;
           exitSide = 'left';
-          minExitCoord = Math.min(minExitCoord, c.y);
-          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.x >= this.cols) {
           allInside = false;
           exitSide = 'right';
-          minExitCoord = Math.min(minExitCoord, c.y);
-          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.y < 0) {
           allInside = false;
           exitSide = 'top';
-          minExitCoord = Math.min(minExitCoord, c.x);
-          maxExitCoord = Math.max(maxExitCoord, c.x);
         } else if (c.y >= this.rows) {
           allInside = false;
           exitSide = 'bottom';
-          minExitCoord = Math.min(minExitCoord, c.x);
-          maxExitCoord = Math.max(maxExitCoord, c.x);
         }
       }
 
@@ -149,12 +139,26 @@ export class Board {
         // Block is attempting to cross the perimeter
         // Check if an aligned matching gate exists on exitSide overlapping the block
         if (exitSide) {
+          let minExitCoord = Infinity;
+          let maxExitCoord = -Infinity;
+
+          if (exitSide === 'top' || exitSide === 'bottom') {
+            for (const c of nextCells) {
+              minExitCoord = Math.min(minExitCoord, c.x);
+              maxExitCoord = Math.max(maxExitCoord, c.x);
+            }
+          } else {
+            for (const c of nextCells) {
+              minExitCoord = Math.min(minExitCoord, c.y);
+              maxExitCoord = Math.max(maxExitCoord, c.y);
+            }
+          }
+
           const gate = this.gates.find((g) => g.matchesBlock(exitSide, minExitCoord, maxExitCoord));
           if (gate && gate.color.id === block.color.id) {
-            // MATCH! Block exits board into shredder gate
+            // MATCH! Block slides smoothly from board directly into shredder gate
             steps++;
-            block.startSlideTo(currentGx, currentGy, this.cols, this.rows);
-            block.startShred(gate.worldPosition, gate.intakeDirection);
+            block.startSlideIntoGate(gate.worldPosition, gate.intakeDirection);
             gate.pulseSuccess();
             return { type: 'shredded', gate, steps };
           }
@@ -235,30 +239,20 @@ export class Board {
 
       let allInside = true;
       let exitSide: GateSide | null = null;
-      let minExitCoord = Infinity;
-      let maxExitCoord = -Infinity;
 
       for (const c of nextCells) {
         if (c.x < 0) {
           allInside = false;
           exitSide = 'left';
-          minExitCoord = Math.min(minExitCoord, c.y);
-          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.x >= this.cols) {
           allInside = false;
           exitSide = 'right';
-          minExitCoord = Math.min(minExitCoord, c.y);
-          maxExitCoord = Math.max(maxExitCoord, c.y);
         } else if (c.y < 0) {
           allInside = false;
           exitSide = 'top';
-          minExitCoord = Math.min(minExitCoord, c.x);
-          maxExitCoord = Math.max(maxExitCoord, c.x);
         } else if (c.y >= this.rows) {
           allInside = false;
           exitSide = 'bottom';
-          minExitCoord = Math.min(minExitCoord, c.x);
-          maxExitCoord = Math.max(maxExitCoord, c.x);
         }
       }
 
@@ -272,6 +266,21 @@ export class Board {
         currentGy = nextGy;
       } else {
         if (exitSide) {
+          let minExitCoord = Infinity;
+          let maxExitCoord = -Infinity;
+
+          if (exitSide === 'top' || exitSide === 'bottom') {
+            for (const c of nextCells) {
+              minExitCoord = Math.min(minExitCoord, c.x);
+              maxExitCoord = Math.max(maxExitCoord, c.x);
+            }
+          } else {
+            for (const c of nextCells) {
+              minExitCoord = Math.min(minExitCoord, c.y);
+              maxExitCoord = Math.max(maxExitCoord, c.y);
+            }
+          }
+
           const gate = this.gates.find((g) => g.matchesBlock(exitSide, minExitCoord, maxExitCoord));
           if (gate && gate.color.id === block.color.id) {
             return gate;

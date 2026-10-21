@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { ColorDef, GAME_CONFIG } from '../config/game-config';
 import { PrefabFactory } from '../../render/PrefabFactory';
 
-export type BlockState = 'idle' | 'sliding' | 'shredding' | 'shredded';
+export type BlockState = 'idle' | 'sliding' | 'sliding_to_gate' | 'shredding' | 'shredded';
 
 export interface GridCell {
   x: number;
@@ -30,7 +30,7 @@ export class Block {
 
   // Shred animation
   private shredProgress = 0;
-  private shredDuration = 0.32;
+  private shredDuration = 0.28;
   private shredTargetPos = new THREE.Vector3();
   private shredDirection = new THREE.Vector3();
 
@@ -122,12 +122,28 @@ export class Block {
     this.state = 'sliding';
   }
 
+  public startSlideIntoGate(
+    gateWorldPos: THREE.Vector3,
+    direction: THREE.Vector3
+  ): void {
+    this.state = 'sliding_to_gate';
+    this.slideStartWorldPos.copy(this.group.position);
+    this.targetWorldPos.copy(gateWorldPos);
+    this.shredTargetPos.copy(gateWorldPos);
+    this.shredDirection.copy(direction);
+    this.slideProgress = 0;
+
+    const dist = this.group.position.distanceTo(gateWorldPos);
+    this.slideDuration = Math.max(0.12, Math.min(0.25, dist * 0.035));
+  }
+
   public startShred(
     gateWorldPos: THREE.Vector3,
     direction: THREE.Vector3
   ): void {
     this.state = 'shredding';
     this.shredProgress = 0;
+    this.slideStartWorldPos.copy(this.group.position);
     this.shredTargetPos.copy(gateWorldPos);
     this.shredDirection.copy(direction);
   }
@@ -170,12 +186,26 @@ export class Block {
         this.currentScale.set(1.0 + squash * 0.3, 1.0 - squash * 0.5, 1.0 + squash * 0.3);
         this.group.scale.copy(this.currentScale);
       }
+    } else if (this.state === 'sliding_to_gate') {
+      this.slideProgress += dt / this.slideDuration;
+      if (this.slideProgress >= 1.0) {
+        this.slideProgress = 1.0;
+        this.state = 'shredding';
+        this.shredProgress = 0;
+        this.slideStartWorldPos.copy(this.targetWorldPos);
+      } else {
+        const t = this.slideProgress;
+        const ease = 1 - (1 - t) * (1 - t);
+        this.group.position.lerpVectors(this.slideStartWorldPos, this.targetWorldPos, ease);
+      }
     } else if (this.state === 'shredding') {
       this.shredProgress += dt / this.shredDuration;
       const t = Math.min(1.0, this.shredProgress);
 
-      // Pull into gate center while shrinking to 0
-      this.group.position.lerp(this.shredTargetPos, t);
+      // Smooth pull into gate mouth while shrinking
+      this.group.position.lerpVectors(this.slideStartWorldPos, this.shredTargetPos, t);
+      this.group.position.addScaledVector(this.shredDirection, t * 0.4);
+
       const s = Math.max(0, 1.0 - t * t);
       this.group.scale.set(s, s * 0.8, s);
 

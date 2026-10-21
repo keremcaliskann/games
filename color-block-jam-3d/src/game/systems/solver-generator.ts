@@ -107,7 +107,7 @@ export class LevelGenerator {
   }
 
   /**
-   * Level 3: Tactile polyomino L-shape and 2x2 blocks.
+   * Level 3: Tactile polyomino 2x2 and 2x1 blocks with clear sequential solution.
    */
   private static getLevel3(): LevelData {
     return {
@@ -119,16 +119,16 @@ export class LevelGenerator {
         { side: 'top', color: BLOCK_COLORS.red, cellIndex: 1, spanCells: 2 },
         { side: 'top', color: BLOCK_COLORS.purple, cellIndex: 4, spanCells: 2 },
         { side: 'bottom', color: BLOCK_COLORS.blue, cellIndex: 2, spanCells: 2 },
-        { side: 'left', color: BLOCK_COLORS.green, cellIndex: 3, spanCells: 2 },
+        { side: 'left', color: BLOCK_COLORS.green, cellIndex: 2, spanCells: 2 },
         { side: 'right', color: BLOCK_COLORS.orange, cellIndex: 2, spanCells: 2 },
       ],
       blocks: [
         { id: 'b_red_1', color: BLOCK_COLORS.red, shapeCells: SHAPES['1x2'], gridX: 1, gridY: 1 },
-        { id: 'b_purple_1', color: BLOCK_COLORS.purple, shapeCells: SHAPES['2x1'], gridX: 4, gridY: 2 },
-        { id: 'b_blue_1', color: BLOCK_COLORS.blue, shapeCells: SHAPES['2x2'], gridX: 2, gridY: 3 },
-        { id: 'b_green_1', color: BLOCK_COLORS.green, shapeCells: SHAPES['1x3'], gridX: 1, gridY: 5 },
+        { id: 'b_purple_1', color: BLOCK_COLORS.purple, shapeCells: SHAPES['2x1'], gridX: 4, gridY: 1 },
         { id: 'b_orange_1', color: BLOCK_COLORS.orange, shapeCells: SHAPES['1x1'], gridX: 3, gridY: 2 },
-        { id: 'b_red_2', color: BLOCK_COLORS.red, shapeCells: SHAPES['1x1'], gridX: 0, gridY: 2 },
+        { id: 'b_green_1', color: BLOCK_COLORS.green, shapeCells: SHAPES['2x1'], gridX: 1, gridY: 2 },
+        { id: 'b_blue_1', color: BLOCK_COLORS.blue, shapeCells: SHAPES['2x2'], gridX: 2, gridY: 3 },
+        { id: 'b_red_2', color: BLOCK_COLORS.red, shapeCells: SHAPES['1x1'], gridX: 0, gridY: 4 },
       ],
     };
   }
@@ -172,7 +172,8 @@ export class LevelGenerator {
     const posKey = (x: number, y: number) => `${x},${y}`;
 
     const blocks: LevelData['blocks'] = [];
-    const shapeKeys = ['1x1', '1x2', '2x1', '1x1', '1x3', '2x2'];
+    // Only use shapes compatible with 2-cell gate span
+    const shapeKeys = ['1x1', '1x2', '2x1', '1x1', '2x2'];
 
     // Inward Injection from Gates
     for (let i = 0; i < blockCount; i++) {
@@ -224,20 +225,31 @@ export class LevelGenerator {
         }
       }
 
-      // Fallback: place in any remaining free slot if straight inward path was full
+      // Fallback: search for any gate matching this color with an open slot on its inward axis
       if (!placed) {
-        for (let ry = 0; ry < rows && !placed; ry++) {
-          for (let rx = 0; rx < cols && !placed; rx++) {
-            if (!occupied.has(posKey(rx, ry))) {
-              occupied.add(posKey(rx, ry));
-              blocks.push({
-                id: `b_${gate.color.id}_${i}`,
-                color: gate.color,
-                shapeCells: SHAPES['1x1'],
-                gridX: rx,
-                gridY: ry,
-              });
-              placed = true;
+        for (const g of gates) {
+          if (g.color.id === gate.color.id && !placed) {
+            let altX = 0, altY = 0, altDx = 0, altDy = 0;
+            if (g.side === 'top') { altDx = 0; altDy = 1; altX = g.cellIndex; }
+            else if (g.side === 'bottom') { altDx = 0; altDy = -1; altX = g.cellIndex; altY = rows - 1; }
+            else if (g.side === 'left') { altDx = 1; altDy = 0; altY = g.cellIndex; }
+            else if (g.side === 'right') { altDx = -1; altDy = 0; altX = cols - 1; altY = g.cellIndex; }
+
+            for (let s = 0; s < Math.max(cols, rows) - 1; s++) {
+              const cx = altX + altDx * s;
+              const cy = altY + altDy * s;
+              if (cx >= 0 && cx < cols && cy >= 0 && cy < rows && !occupied.has(posKey(cx, cy))) {
+                occupied.add(posKey(cx, cy));
+                blocks.push({
+                  id: `b_${g.color.id}_${i}`,
+                  color: g.color,
+                  shapeCells: SHAPES['1x1'],
+                  gridX: cx,
+                  gridY: cy,
+                });
+                placed = true;
+                break;
+              }
             }
           }
         }

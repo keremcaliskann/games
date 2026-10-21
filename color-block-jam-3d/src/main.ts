@@ -189,16 +189,19 @@ class GameApp {
 
     if (outcome.type === 'shredded') {
       this.remainingMoves = Math.max(0, this.remainingMoves - 1);
-      this.sound.playShredCrunch();
-      this.sound.playVoxelPop();
+      this.sound.playSlide();
 
-      // Spawn 3D flying voxels burst
-      this.particles.spawnShredBurst(
-        outcome.gate.worldPosition,
-        outcome.gate.intakeDirection,
-        block.color.hex,
-        32
-      );
+      // Delay voxel crunch until block slides into gate rollers
+      setTimeout(() => {
+        this.sound.playShredCrunch();
+        this.sound.playVoxelPop();
+        this.particles.spawnShredBurst(
+          outcome.gate.worldPosition,
+          outcome.gate.intakeDirection,
+          block.color.hex,
+          32
+        );
+      }, 140);
 
       this.updateHud();
       this.checkLevelStatus();

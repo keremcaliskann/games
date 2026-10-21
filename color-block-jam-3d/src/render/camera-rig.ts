@@ -4,9 +4,9 @@ export class CameraRig {
   public readonly camera: THREE.PerspectiveCamera;
   private readonly target = new THREE.Vector3(0, 0, 0);
 
-  // Spherical coordinates for smooth orbit
-  private currentSpherical = new THREE.Spherical(20, Math.PI / 3.4, Math.PI / 4);
-  private targetSpherical = new THREE.Spherical(20, Math.PI / 3.4, Math.PI / 4);
+  // Spherical coordinates for smooth orbit (theta = 0 aligns Grid X with Screen X and Grid Y with Screen Y)
+  private currentSpherical = new THREE.Spherical(20, Math.PI / 3.4, 0);
+  private targetSpherical = new THREE.Spherical(20, Math.PI / 3.4, 0);
 
   private baseDistance = 20;
   private trauma = 0;
@@ -61,15 +61,8 @@ export class CameraRig {
     }
   }
 
-  public rotateDelta(deltaX: number, deltaY: number): void {
-    const speed = 0.006;
-    this.targetSpherical.theta -= deltaX * speed;
-    this.targetSpherical.phi -= deltaY * speed;
-
-    // Clamp vertical inclination so player cannot flip upside down or view straight from top
-    const minPhi = Math.PI / 6; // 30 deg from vertical
-    const maxPhi = Math.PI / 2.3; // 78 deg from vertical (keeps board visible from above)
-    this.targetSpherical.phi = Math.max(minPhi, Math.min(maxPhi, this.targetSpherical.phi));
+  public rotateDelta(_deltaX: number, _deltaY: number): void {
+    // Camera is fixed to top-angled perspective (theta = 0) to guarantee 1:1 screen-to-grid mapping
   }
 
   public addTrauma(amount: number): void {
