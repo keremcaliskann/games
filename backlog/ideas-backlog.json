@@ -13,8 +13,8 @@
       "webglFeasibilityScore": 18
     },
     "createdAt": "2026-10-20",
-    "lastValidatedAt": "2026-10-21",
-    "validationNote": "Holds Rank #1. Unrivaled 12+ min average session retention across hybrid-casual market. Upgraded score to 95 (+2 pts) due to sustained low-friction ASMR domino cascade engagement.",
+    "lastValidatedAt": "2026-10-22",
+    "validationNote": "Confirmed Rank #1. Unrivaled 12+ min average session retention across YouTube Playables and mobile charts. Top-grossing ASMR domino cascade engagement.",
     "coreLoop": "Drag 3D hexagonal tile stacks from the bottom tray onto a floating honeycomb grid. Adjacent stacks with matching top colors automatically flip and cascade onto each other; reaching 10 matching tiles triggers an explosive popping ASMR clear.",
     "solvableMathSpec": "Smart tray generator biases spawned stack colors toward existing top colors on the board when occupancy exceeds 65%, guaranteeing fluid cascade chains without unwinnable deadlocks.",
     "cameraErgonomics": "Elevated orbital view tilted at 45° over a floating honeycomb island with zero ground clutter. Responsive dynamic FOV scaling for 9:16 portrait and 16:9 landscape.",
