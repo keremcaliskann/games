@@ -67,6 +67,11 @@ export class PrefabFactory {
     });
 
     const group = new THREE.Group();
+    // Orient bolt inner assembly along +Z so the cross-head faces the camera (+Z)
+    // and the shaft penetrates into the plate hole (-Z)
+    const inner = new THREE.Group();
+    inner.rotation.x = Math.PI / 2;
+
     const headMesh = new THREE.Mesh(headGeo, headMat);
     headMesh.castShadow = true;
     headMesh.receiveShadow = true;
@@ -84,10 +89,11 @@ export class PrefabFactory {
     slot2.rotation.y = Math.PI / 2;
     slot2.position.y = headMesh.position.y + 0.05;
 
-    group.add(shaftMesh);
-    group.add(headMesh);
-    group.add(slot1);
-    group.add(slot2);
+    inner.add(shaftMesh);
+    inner.add(headMesh);
+    inner.add(slot1);
+    inner.add(slot2);
+    group.add(inner);
 
     return { group, headMesh, shaftMesh, slot1, slot2 };
   }

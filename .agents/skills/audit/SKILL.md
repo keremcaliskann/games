@@ -8,12 +8,14 @@ description: >-
 
 # /audit — Full Workspace Quality & Gameplay Audit
 
-Conducts an automated health check across all active games in the workspace (`color-block-jam-3d`, `cyber-arrow-3d`, `cyber-flap`).
+Conducts an automated health check across all active games registered in root `games.json` (`hexa-sort-3d`, `screw-jam-3d`, `color-block-jam-3d`, `cyber-arrow-3d`, `cyber-flap`).
 
 ## Audit Steps
 
 1. **Static Analysis & Types:**
-   Run `npm run typecheck` across all games:
+   Read `games.json` at the workspace root and run `npm run typecheck` across every game directory:
+   - `npm --prefix hexa-sort-3d run typecheck`
+   - `npm --prefix screw-jam-3d run typecheck`
    - `npm --prefix color-block-jam-3d run typecheck`
    - `npm --prefix cyber-arrow-3d run typecheck`
    - `npm --prefix cyber-flap run typecheck`

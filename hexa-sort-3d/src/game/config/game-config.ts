@@ -15,6 +15,11 @@ export const HEX_COLORS: HexColorDef[] = [
   { id: 'rose', name: 'Rose', hex: 0xf43f5e, css: '#f43f5e', darkHex: 0xbe123c },
 ];
 
+/** Local Y of the center of the tile at `index` inside a stack (tile pivots are centered). */
+export function tileLocalY(index: number): number {
+  return (index + 0.5) * GAME_CONFIG.hex.height;
+}
+
 export const GAME_CONFIG = {
   hex: {
     radius: 0.95,
@@ -24,6 +29,8 @@ export const GAME_CONFIG = {
   },
   board: {
     baseY: 0,
+    stackBaseY: 0.12, // top surface of a cell plateau; stacks rest here
+    boardRadius: 2,
     foundationColor: 0xfcf8ee,
     cellBorderColor: 0xe2d9c8,
     hoverColor: 0xfef08a,

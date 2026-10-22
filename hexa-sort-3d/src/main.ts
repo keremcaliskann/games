@@ -94,7 +94,8 @@ class HexaSortApp {
     );
     this.input.setCallbacks(
       (cell) => this.handleStackPlaced(cell),
-      (cell) => this.handleHammerUsed(cell)
+      (cell) => this.handleHammerUsed(cell),
+      () => this.hud.setBoosterModeBanner('normal')
     );
 
     // 7. HUD & Shell
@@ -283,12 +284,14 @@ class HexaSortApp {
     if (this.economy.hammers > 0) {
       this.economy.hammers--;
       this.input.mode = 'hammer';
+      this.hud.setBoosterModeBanner('hammer');
       this.updateHud();
     } else {
       // Prompt rewarded ad for hammer
       this.ads.showRewarded('booster_hammer').then((rewarded) => {
         if (rewarded) {
           this.input.mode = 'hammer';
+          this.hud.setBoosterModeBanner('hammer');
         }
       });
     }
@@ -327,11 +330,13 @@ class HexaSortApp {
     if (this.economy.moves > 0) {
       this.economy.moves--;
       this.input.mode = 'move_stack';
+      this.hud.setBoosterModeBanner('move_stack');
       this.updateHud();
     } else {
       this.ads.showRewarded('booster_move').then((rewarded) => {
         if (rewarded) {
           this.input.mode = 'move_stack';
+          this.hud.setBoosterModeBanner('move_stack');
         }
       });
     }

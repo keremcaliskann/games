@@ -56,6 +56,7 @@ export class ShellController {
 
   private async loadOtherGames(): Promise<void> {
     if (!this.otherGamesList) return;
+    if (document.documentElement.classList.contains('yt-embed-mode')) return;
 
     try {
       const res = await fetch('../games.json');

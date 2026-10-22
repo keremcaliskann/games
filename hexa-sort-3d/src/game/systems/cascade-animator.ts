@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { HexCell, HexGrid } from '../entities/hex-grid';
 import { TileItem } from '../entities/tile-stack';
-import { GAME_CONFIG, HexColorDef } from '../config/game-config';
+import { GAME_CONFIG, HexColorDef, tileLocalY } from '../config/game-config';
 import { SoundController } from '../../core/audio';
 
 interface FlyingTile {
@@ -36,7 +36,12 @@ export class CascadeAnimator {
   // Particle pool for combo pops
   private readonly particles: Particle[] = [];
   private readonly particleGeo = new THREE.BoxGeometry(0.12, 0.12, 0.12);
+  private readonly particleMaterials = new Map<number, THREE.MeshStandardMaterial>();
   private readonly particleGroup = new THREE.Group();
+
+  // Deterministic step timer (replaces setTimeout so pause/resume stays synced)
+  private pendingStepTimer = 0;
+  private pendingFocusCells: HexCell[] | null = null;
 
   // Callbacks
   private onComboClearCallback: (color: HexColorDef, count: number, points: number) => void = () => {};
@@ -58,7 +63,7 @@ export class CascadeAnimator {
   }
 
   public get isBusy(): boolean {
-    return this.isCascading || this.flyingTiles.length > 0;
+    return this.isCascading || this.flyingTiles.length > 0 || this.pendingFocusCells !== null;
   }
 
   /**
@@ -67,6 +72,8 @@ export class CascadeAnimator {
   public evaluateCascades(placedCell: HexCell): void {
     this.isCascading = true;
     this.comboChain = 0;
+    this.pendingFocusCells = null;
+    this.pendingStepTimer = 0;
     this.stepCascade([placedCell]);
   }
 
@@ -128,8 +135,8 @@ export class CascadeAnimator {
 
     this.comboChain++;
 
-    const baseStartY = donor.worldY + donor.stack.size * GAME_CONFIG.hex.height;
-    const baseTargetY = target.worldY + target.stack.size * GAME_CONFIG.hex.height;
+    const baseStartY = donor.worldY + GAME_CONFIG.board.stackBaseY + tileLocalY(donor.stack.size);
+    const baseTargetY = target.worldY + GAME_CONFIG.board.stackBaseY + tileLocalY(target.stack.size);
 
     for (let i = 0; i < tilesToMove.length; i++) {
       const item = tilesToMove[i];
@@ -189,9 +196,8 @@ export class CascadeAnimator {
     }
 
     // After combo pop, check if newly exposed top tile triggers further cascades
-    setTimeout(() => {
-      this.stepCascade([cell, ...this.grid.getNeighbors(cell)]);
-    }, 160);
+    this.pendingFocusCells = [cell, ...this.grid.getNeighbors(cell)];
+    this.pendingStepTimer = 0.16;
   }
 
   /**
@@ -216,12 +222,21 @@ export class CascadeAnimator {
     this.evaluateCascades(cell);
   }
 
+  private getParticleMaterial(colorHex: number): THREE.MeshStandardMaterial {
+    let mat = this.particleMaterials.get(colorHex);
+    if (!mat) {
+      mat = new THREE.MeshStandardMaterial({
+        color: colorHex,
+        roughness: 0.45,
+        metalness: 0.1,
+      });
+      this.particleMaterials.set(colorHex, mat);
+    }
+    return mat;
+  }
+
   private spawnVoxelBurst(center: THREE.Vector3, colorHex: number, count: number): void {
-    const mat = new THREE.MeshStandardMaterial({
-      color: colorHex,
-      roughness: 0.45,
-      metalness: 0.1,
-    });
+    const mat = this.getParticleMaterial(colorHex);
 
     for (let i = 0; i < count; i++) {
       const mesh = new THREE.Mesh(this.particleGeo, mat);
@@ -251,6 +266,16 @@ export class CascadeAnimator {
   }
 
   public update(dt: number): void {
+    // 0. Process pending deterministic cascade step timer
+    if (this.pendingFocusCells && this.flyingTiles.length === 0) {
+      this.pendingStepTimer -= dt;
+      if (this.pendingStepTimer <= 0) {
+        const nextFocus = this.pendingFocusCells;
+        this.pendingFocusCells = null;
+        this.stepCascade(nextFocus);
+      }
+    }
+
     // 1. Update flying arc tiles
     if (this.flyingTiles.length > 0) {
       for (let i = this.flyingTiles.length - 1; i >= 0; i--) {
@@ -279,11 +304,10 @@ export class CascadeAnimator {
         }
       }
 
-      // If all flying tiles in this batch landed, continue next cascade step
+      // If all flying tiles in this batch landed, schedule next cascade step
       if (this.flyingTiles.length === 0) {
-        setTimeout(() => {
-          this.stepCascade(this.grid.getOccupiedCells());
-        }, 80);
+        this.pendingFocusCells = this.grid.getOccupiedCells();
+        this.pendingStepTimer = 0.08;
       }
     }
 
@@ -295,7 +319,6 @@ export class CascadeAnimator {
 
         if (p.life >= p.maxLife) {
           this.particleGroup.remove(p.mesh);
-          p.mesh.geometry.dispose();
           this.particles.splice(i, 1);
         } else {
           p.vel.y -= 14 * dt; // gravity
@@ -320,6 +343,8 @@ export class CascadeAnimator {
       this.particleGroup.remove(p.mesh);
     }
     this.particles.length = 0;
+    this.pendingFocusCells = null;
+    this.pendingStepTimer = 0;
     this.isCascading = false;
   }
 }

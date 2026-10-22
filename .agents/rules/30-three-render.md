@@ -24,13 +24,13 @@ description: "Three.js renderer, scenes, materials, lighting, shadows, asset loa
 - Share material instances across objects; avoid calling `material.clone()`.
 - Mobile defaults: Prefer `MeshLambertMaterial` or `MeshBasicMaterial` paired with baked lighting/ambient occlusion. Use `MeshStandardMaterial` or custom `ShaderMaterial` only when justified.
 - Lighting: 1 directional sun light + hemisphere/ambient fill. Avoid multiple dynamic point lights.
-- Shadows: 1 directional light with shadow map size 1024–2048. Fit `shadow.camera` frustum tightly to the playable volume. In static environments, set `renderer.shadowMap.autoUpdate = false` and trigger updates on demand via `needsUpdate = true`. Use `PCFShadowMap`.
+- Shadows: 1 directional light with shadow map size 1024–2048. Fit `shadow.camera` frustum tightly to the playable volume. In static environments, set `renderer.shadowMap.autoUpdate = false` and trigger updates on demand via `needsUpdate = true`. Use `PCFSoftShadowMap` (or `PCFShadowMap` on low-tier mobile).
 
-## Art Direction, Vibrant Colors & Bright Environments
-- **Bright & Vibrant by Default:** Unless a dark/noir/cyberpunk theme is explicitly requested for a specific game, all games must use **bright, sunlit, well-lit environments** and **vibrant, high-saturation color palettes**.
-- **Scene Background & Fog:** Prefer cheerful daylight skies, soft pastel gradients, or clean light backgrounds (e.g., `#7dd3fc`, `#e0f2fe`, `#fef3c7`, `#f8fafc`) rather than pitch-black or dark navy voids. Match `scene.fog` to `scene.background` for smooth horizon blending.
-- **Daylight Illumination:** Pair a warm `DirectionalLight` (intensity `1.8–2.5`, color `#fffbeb`) with a bright `HemisphereLight` (sky `#ffffff`, ground bounce `#e2e8f0` or warm sand `#fde68a`, intensity `1.0–1.4`) so shadowed faces never look muddy or black.
-- **High-Contrast Playability:** Use distinct, saturated colors for interactive elements, obstacles, collectibles, and player characters so they pop immediately on mobile screens under outdoor ambient light.
+## Art Direction, Vibrant Colors & Stylized Toony Soft Daylight
+- **Stylized Toony Soft Daylight by Default (`32-daylight-and-lighting.md`):** All games must adhere to the **Stylized Toony Soft Daylight** aesthetic — zero pitch-black voids (`#000`, `#0f172a`) and zero overexposed "Hospital White" blowout (`#ffffff` background + high sun intensity).
+- **Scene Background & Fog:** Use soft pastel sky (`0xcfe8f7`) or warm morning cream (`0xf5efe6`) with warm biscuit/sandstone board foundations (`0xfcf8ee`). Match `scene.fog` to `scene.background` for smooth horizon blending.
+- **Balanced Daylight Illumination:** Pair a warm golden `DirectionalLight` (intensity `1.20–1.30`, color `0xfff6e5`, never `> 1.35`) with a soft `HemisphereLight` (sky `0xcfe8f7`, ground bounce `0xfcf8ee` or `0xe2e8f0`, intensity `0.70–0.85`) and `ACESFilmicToneMapping` (`toneMappingExposure = 0.95–1.0`) so highlights never clip to blinding white and shadows remain soft and readable.
+- **High-Contrast Playability:** Use distinct, saturated toy/vinyl colors (`roughness: 0.45–0.55`, `metalness: 0.05–0.10`) for interactive elements, obstacles, collectibles, and player characters so they pop cleanly against the warm cream board.
 
 ## Color Management
 - Color textures (diffuse/albedo, emissive): set `texture.colorSpace = THREE.SRGBColorSpace`.

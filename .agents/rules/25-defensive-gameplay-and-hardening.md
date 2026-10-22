@@ -1,3 +1,8 @@
+---
+trigger: model_decision
+description: "Defensive programming, HUD pointer isolation, state idempotency, procedural feasibility, and SDK lifecycle invariants."
+---
+
 # 25-defensive-gameplay-and-hardening.md — Defensive Game Architecture & Bug Safeguards
 
 > This rule is active when authoring or modifying core gameplay, procedural generators, UI overlays, input systems, and platform lifecycles.

@@ -81,6 +81,7 @@ export class ShellController {
 
   private async loadOtherGames(): Promise<void> {
     if (!this.otherGamesContainer) return;
+    if (document.documentElement.classList.contains('yt-embed-mode')) return;
 
     let catalog: GameCatalogItem[] | null = null;
 

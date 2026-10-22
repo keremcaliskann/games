@@ -27,58 +27,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - name: Build cyber-flap
-        run: |
-          cd cyber-flap
-          npm install
-          npm run build
-          cd ..
-
-      - name: Build cyber-arrow-3d
-        run: |
-          cd cyber-arrow-3d
-          npm install
-          npm run build
-          cd ..
-
-      - name: Build color-block-jam-3d
-        run: |
-          cd color-block-jam-3d
-          npm install
-          npm run build
-          cd ..
-
-      - name: Build screw-jam-3d
-        run: |
-          cd screw-jam-3d
-          npm install
-          npm run build
-          cd ..
-
-      - name: Build hexa-sort-3d
-        run: |
-          cd hexa-sort-3d
-          npm install
-          npm run build
-          cd ..
-
-      - name: Assemble Arcade Portal Site
+      - name: Build All Registered Games & Assemble Portal Site
         run: |
           mkdir -p _site
           cp index.html _site/
           cp games.json _site/
-          mkdir -p _site/cyber-flap
-          cp -r cyber-flap/dist/* _site/cyber-flap/
-          mkdir -p _site/cyber-arrow-3d
-          cp -r cyber-arrow-3d/dist/* _site/cyber-arrow-3d/
-          mkdir -p _site/color-block-jam-3d
-          cp -r color-block-jam-3d/dist/* _site/color-block-jam-3d/
-          mkdir -p _site/screw-jam-3d
-          cp -r screw-jam-3d/dist/* _site/screw-jam-3d/
-          mkdir -p _site/hexa-sort-3d
-          cp -r hexa-sort-3d/dist/* _site/hexa-sort-3d/
+          node -e '
+            const fs = require("fs");
+            const { execSync } = require("child_process");
+            const games = JSON.parse(fs.readFileSync("games.json", "utf8"));
+            for (const g of games) {
+              console.log("=== Building " + g.id + " ===");
+              execSync("npm install --no-audit --no-fund && npm run build", { cwd: g.id, stdio: "inherit" });
+              fs.mkdirSync("_site/" + g.id, { recursive: true });
+              fs.cpSync(g.id + "/dist", "_site/" + g.id, { recursive: true });
+            }
+          '
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3

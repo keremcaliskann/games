@@ -21,6 +21,7 @@ export class Hud {
   private moveBtn: HTMLButtonElement;
 
   private modalContainer: HTMLElement;
+  private modeBannerEl: HTMLElement;
   private needleAnimId: number | null = null;
   private isMuted = false;
 
@@ -113,6 +114,17 @@ export class Hud {
         </button>
       </div>
 
+      <!-- Active Booster Mode Banner -->
+      <div id="hud-mode-banner" style="
+        position: absolute; top: 58px; left: 50%; transform: translateX(-50%);
+        display: none; align-items: center; gap: 10px;
+        background: rgba(254, 243, 199, 0.96); backdrop-filter: blur(8px);
+        border: 2px solid #f59e0b; border-radius: 999px;
+        padding: 6px 16px; font-weight: 800; font-size: 12px; color: #92400e;
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.25); z-index: 60;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      "></div>
+
       <!-- Fullscreen Modal Container -->
       <div id="hud-modal-container" style="
         position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
@@ -129,6 +141,7 @@ export class Hud {
     this.swapBtn = this.container.querySelector('#btn-booster-swap')!;
     this.moveBtn = this.container.querySelector('#btn-booster-move')!;
     this.modalContainer = this.container.querySelector('#hud-modal-container')!;
+    this.modeBannerEl = this.container.querySelector('#hud-mode-banner')!;
 
     this.wireListeners();
   }
@@ -164,13 +177,36 @@ export class Hud {
   }
 
   public updateBoosterLabels(hammers: number, swaps: number, moves: number): void {
+    const adReady = this.callbacks.isAdReady();
     const hammerCost = this.container.querySelector('#label-hammer-cost');
     const swapCost = this.container.querySelector('#label-swap-cost');
     const moveCost = this.container.querySelector('#label-move-cost');
 
-    if (hammerCost) hammerCost.textContent = hammers > 0 ? `Adet: ${hammers}` : `🎬 REKLAM`;
-    if (swapCost) swapCost.textContent = swaps > 0 ? `Adet: ${swaps}` : `🎬 REKLAM`;
-    if (moveCost) moveCost.textContent = moves > 0 ? `Adet: ${moves}` : `🎬 REKLAM`;
+    if (hammerCost) hammerCost.textContent = hammers > 0 ? `Adet: ${hammers}` : adReady ? `🎬 REKLAM` : `REKLAM YOK`;
+    if (swapCost) swapCost.textContent = swaps > 0 ? `Adet: ${swaps}` : adReady ? `🎬 REKLAM` : `REKLAM YOK`;
+    if (moveCost) moveCost.textContent = moves > 0 ? `Adet: ${moves}` : adReady ? `🎬 REKLAM` : `REKLAM YOK`;
+
+    const applyAdState = (btn: HTMLButtonElement, count: number) => {
+      const enabled = count > 0 || adReady;
+      btn.style.opacity = enabled ? '1' : '0.35';
+      btn.style.pointerEvents = enabled ? 'auto' : 'none';
+    };
+    applyAdState(this.hammerBtn, hammers);
+    applyAdState(this.swapBtn, swaps);
+    applyAdState(this.moveBtn, moves);
+  }
+
+  public setBoosterModeBanner(mode: 'normal' | 'hammer' | 'move_stack'): void {
+    if (mode === 'normal') {
+      this.modeBannerEl.style.display = 'none';
+      this.modeBannerEl.innerHTML = '';
+      return;
+    }
+    this.modeBannerEl.style.display = 'flex';
+    this.modeBannerEl.textContent =
+      mode === 'hammer'
+        ? '🔨 ÇEKİÇ AKTİF: Kırmak istediğin yığına dokun!'
+        : '🖐️ TAŞIMA AKTİF: Taşımak istediğin yığını seç ve sürükle!';
   }
 
   public setSoundMuted(muted: boolean): void {

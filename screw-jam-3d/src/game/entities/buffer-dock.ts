@@ -72,6 +72,7 @@ export class BufferDock {
   }
 
   public getSlotWorldPosition(index: number): THREE.Vector3 {
+    this.group.updateMatrixWorld(true);
     const startX = -((this.capacity - 1) / 2) * this.slotSpacing;
     const local = new THREE.Vector3(startX + index * this.slotSpacing, 0.28, 0);
     return local.applyMatrix4(this.group.matrixWorld);
@@ -81,7 +82,6 @@ export class BufferDock {
     const freeIdx = this.getFreeSlotIndex();
     if (freeIdx === -1) return -1;
     this.slots[freeIdx] = screw;
-    screw.state = 'parked';
     return freeIdx;
   }
 

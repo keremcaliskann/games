@@ -34,12 +34,12 @@ Before recommending any new package:
   - Every project must include `.github/workflows/deploy.yml` configured to build and deploy `dist/` to GitHub Pages automatically.
   - When development and verification pass, deploy the build so that the live game becomes immediately playable at `https://keremcaliskann.github.io/games/<game-name>/`.
 
-## Git Repositories & Push Workflow
-- **Independent Project Repositories:** Each game project in this workspace operates as its own self-contained Git repository (`git init`).
+## Git Monorepo & Push Workflow
+- **Unified Monorepo Architecture:** All game projects reside as independent subdirectories (`<game-name>/` with their own `package.json` and `vite.config.ts`) inside the single root Git monorepo (`https://github.com/keremcaliskann/games.git`), deployed together via the root `.github/workflows/deploy.yml` pipeline.
 - **Atomic Commits:** Make clean, logical, atomic commits using English Conventional Commits:
-  - Format: `feat: <description>`, `fix: <description>`, `perf: <description>`, `refactor: <description>`, `chore: <description>`.
+  - Format: `feat(<game>): <description>`, `fix(<game>): <description>`, `perf: <description>`, `refactor: <description>`, `chore: <description>`.
 - **Push Policy:**
-  - Once a feature or bugfix reaches a verified, stable milestone (passes `npm run typecheck`, `npm run build`, and testing), commit the changes and push to the project's remote repository.
+  - Once a feature or bugfix reaches a verified, stable milestone (passes `npm run typecheck`, `npm run build`, and testing), commit the changes and push to `origin/main` in the root repository.
   - Never push broken or unverified code.
 - **Safety & Destructive Commands:**
   - Never run `git push --force`, `git reset --hard`, or interactive rebases without explicit user command.

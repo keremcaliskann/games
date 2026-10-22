@@ -42,18 +42,20 @@ export class Screw {
    * Starts unscrewing spin and flight trajectory to target
    */
   public startUnscrewAndFly(targetWorldPos: THREE.Vector3, onComplete: () => void): void {
-    if (this.state !== 'idle') return;
-    this.state = 'unscrewing';
+    if (this.state !== 'idle' && this.state !== 'parked') return;
+    const fromParked = this.state === 'parked';
+    this.state = fromParked ? 'flying' : 'unscrewing';
     this.onCompleteCallback = onComplete;
     this.animTimer = 0;
-    this.animDuration = 0.42;
+    this.animDuration = fromParked ? 0.32 : 0.42;
 
     this.startPos.copy(this.group.position);
     this.targetPos.copy(targetWorldPos);
 
-    // Arc midpoint elevated outwards along normal
+    // Arc midpoint elevated outwards toward camera (+Z) and upward (+Y)
     this.midPos.copy(this.startPos).lerp(targetWorldPos, 0.5);
-    this.midPos.y += 2.0;
+    this.midPos.y += 1.6;
+    this.midPos.z += 1.2;
   }
 
   public update(dt: number): void {
@@ -61,14 +63,14 @@ export class Screw {
       this.animTimer += dt;
       const t = Math.min(1.0, this.animTimer / this.animDuration);
 
-      if (t < 0.25) {
-        // Unscrewing spiral lift
+      if (this.state === 'unscrewing' && t < 0.25) {
+        // Unscrewing spiral extraction along +Z out of plate hole
         const liftT = t / 0.25;
-        this.group.rotation.y += dt * 36;
-        this.group.position.y = this.startPos.y + liftT * (GAME_CONFIG.screwShaftLength * 1.2);
+        this.group.rotation.z -= dt * 36;
+        this.group.position.z = this.startPos.z + liftT * (GAME_CONFIG.screwShaftLength * 1.1);
       } else {
         // Quadratic bezier arc to destination
-        const flyT = (t - 0.25) / 0.75;
+        const flyT = this.state === 'unscrewing' ? (t - 0.25) / 0.75 : t;
         const ease = flyT * (2 - flyT); // ease-out quad
 
         const p0 = this.startPos;
@@ -82,11 +84,12 @@ export class Screw {
         this.group.position.z = omt * omt * p0.z + 2 * omt * ease * p1.z + ease * ease * p2.z;
 
         // Smooth spin
-        this.group.rotation.y += dt * 18;
+        this.group.rotation.z -= dt * 18;
       }
 
       if (t >= 1.0) {
         this.group.position.copy(this.targetPos);
+        this.group.rotation.set(0, 0, 0);
         const cb = this.onCompleteCallback;
         this.onCompleteCallback = null;
         cb?.();
@@ -96,22 +99,28 @@ export class Screw {
 
   public triggerWiggle(): void {
     if (this.state !== 'idle') return;
-    const startY = this.group.position.y;
+    const startX = this.group.position.x;
     let elapsed = 0;
     const interval = setInterval(() => {
       elapsed += 0.03;
-      this.group.position.y = startY + Math.sin(elapsed * 40) * 0.08;
+      this.group.position.x = startX + Math.sin(elapsed * 45) * 0.09;
       if (elapsed > 0.18) {
         clearInterval(interval);
-        this.group.position.y = startY;
+        this.group.position.x = startX;
       }
     }, 30);
   }
 
   public dispose(): void {
+    // Do NOT dispose shared geometries from PrefabFactory; only dispose per-instance materials
     this.group.traverse((c) => {
-      if ((c as THREE.Mesh).geometry) {
-        (c as THREE.Mesh).geometry.dispose();
+      const mat = (c as THREE.Mesh).material;
+      if (mat) {
+        if (Array.isArray(mat)) {
+          mat.forEach((m) => m.dispose());
+        } else {
+          mat.dispose();
+        }
       }
     });
   }

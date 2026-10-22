@@ -55,7 +55,7 @@
 | Native directories (`android/`, `ios/`) | Do not edit manually; use `npx cap sync` |
 | Destructive commands (`rm -rf`, `git reset --hard`, `git push --force`) | Strictly forbidden without explicit command |
 | Keystores, `.env`, secret keys | Never read or commit |
-| **Git Repositories & Push** | **Each game project has its own Git repo.** When tasks reach a verified, stable state (build/tests pass), commit (Conventional Commits in English) and push to the project's remote repo. |
+| **Git Monorepo & Push** | **Unified Git monorepo (`keremcaliskann/games`) hosting independent `<game-name>/` packages.** When tasks reach a verified, stable state (build/tests pass), commit (Conventional Commits in English) and push to `origin/main`. |
 | **GitHub Pages Deployment** | **Automated upon task completion.** Every project must deploy to `https://keremcaliskann.github.io/games/<game-name>/`. Requires `base: './'` in `vite.config.ts` and automated deployment setup. |
 
 ## 5. Token & Context Discipline

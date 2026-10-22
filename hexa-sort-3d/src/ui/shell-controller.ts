@@ -56,6 +56,7 @@ export class ShellController {
 
   private async loadOtherGames(): Promise<void> {
     if (!this.otherGamesList) return;
+    if (document.documentElement.classList.contains('yt-embed-mode')) return;
 
     try {
       const res = await fetch('../games.json');
@@ -66,7 +67,7 @@ export class ShellController {
       this.otherGamesList.innerHTML = other
         .map(
           (g: any) => `
-            <a href="${g.path}" class="shell-game-card">
+            <a href="../${g.id}/" class="shell-game-card">
               <span class="game-icon">${g.iconEmoji || '🎮'}</span>
               <div class="game-info">
                 <span class="game-title">${g.title}</span>

@@ -8,7 +8,7 @@ import { GameLoop } from './core/game-loop';
 import { InputManager } from './input/input-manager';
 import { Hud } from './ui/hud';
 import { ShellController } from './ui/shell-controller';
-import { PlatformBridge } from './platform/sdk';
+import { PlatformBridge, SaveDataPayload } from './platform/sdk';
 import { UniversalAdProvider } from './platform/ads';
 import { GAME_CONFIG, ColorDef } from './game/config/game-config';
 import { EconomySystem } from './game/systems/economy';
@@ -46,7 +46,7 @@ class ScrewJamApp {
   private isFirstRender = true;
   private isLevelTransitioning = false;
 
-  constructor() {
+  constructor(cloudData?: Partial<SaveDataPayload>) {
     this.appEl = document.getElementById('app')!;
     this.hudEl = document.getElementById('hud')!;
 
@@ -55,7 +55,7 @@ class ScrewJamApp {
     this.ads.initialize();
 
     this.sound = new SoundController();
-    this.economy = new EconomySystem();
+    this.economy = new EconomySystem(cloudData);
     this.cameraRig = new CameraRig(this.appEl);
 
     this.pipeline = new RenderPipeline(this.appEl, {
@@ -271,17 +271,18 @@ class ScrewJamApp {
     );
 
     if (matchingBox) {
-      const targetPos = matchingBox.getNextSocketWorldPosition();
+      const targetPos = matchingBox.reserveSocketWorldPosition();
       if (targetPos) {
         this.sound.playUnscrew();
         this.particles.spawnUnscrewSparks(screw.group.position, screw.color.hex, 16);
+        this.onScrewExtracted(screw);
 
         screw.startUnscrewAndFly(targetPos, () => {
           this.sound.playSocketSnap();
           const isFull = matchingBox.addScrew(screw);
           screw.state = 'cleared';
           screw.group.visible = false;
-          this.onScrewExtracted(screw);
+          this.checkLevelStatus();
 
           if (isFull) {
             this.handleBoxCompleted(matchingBox);
@@ -298,10 +299,13 @@ class ScrewJamApp {
       this.bufferDock.parkScrew(screw);
       this.sound.playUnscrew();
       this.particles.spawnUnscrewSparks(screw.group.position, screw.color.hex, 14);
+      this.onScrewExtracted(screw);
 
       screw.startUnscrewAndFly(slotPos, () => {
         this.sound.playSocketSnap();
-        this.onScrewExtracted(screw);
+        screw.state = 'parked';
+        // Check if a matching toolbox opened while this screw was in flight
+        this.flushMatchingParkedScrews();
       });
       return;
     }
@@ -320,7 +324,7 @@ class ScrewJamApp {
   }
 
   private onScrewExtracted(screw: Screw): void {
-    // Release holding plates
+    // Release holding plates immediately when bolt is extracted from its hole
     for (const plate of this.plates) {
       const justDetached = plate.removeHoldingScrew(screw.id);
       if (justDetached) {
@@ -328,8 +332,6 @@ class ScrewJamApp {
         this.particles.spawnUnscrewSparks(plate.group.position, plate.color.hex, 24);
       }
     }
-
-    this.checkLevelStatus();
   }
 
   private handleBoxCompleted(box: Toolbox): void {
@@ -359,8 +361,9 @@ class ScrewJamApp {
       if (box.isFull()) continue;
       const parked = this.bufferDock.getParkedScrewsOfColor(box.color.id);
       for (const screw of parked) {
+        if (screw.state !== 'parked') continue;
         if (box.isFull()) break;
-        const targetPos = box.getNextSocketWorldPosition();
+        const targetPos = box.reserveSocketWorldPosition();
         if (targetPos) {
           this.bufferDock.removeScrew(screw);
           screw.startUnscrewAndFly(targetPos, () => {
@@ -368,6 +371,7 @@ class ScrewJamApp {
             const isFull = box.addScrew(screw);
             screw.state = 'cleared';
             screw.group.visible = false;
+            this.checkLevelStatus();
             if (isFull) {
               this.handleBoxCompleted(box);
             }
@@ -378,10 +382,10 @@ class ScrewJamApp {
   }
 
   private checkLevelStatus(): void {
+    if (this.isLevelTransitioning) return;
     const remainingScrews = this.screws.filter((s) => s.state !== 'cleared').length;
-    const remainingPlates = this.plates.filter((p) => !p.isDropped).length;
 
-    if (remainingScrews === 0 || remainingPlates === 0) {
+    if (remainingScrews === 0) {
       // VICTORY!
       this.isLevelTransitioning = true;
       PlatformBridge.gameplayStop();
@@ -430,11 +434,24 @@ class ScrewJamApp {
   private async handleShatterAd(): Promise<void> {
     const success = await this.ads.showRewarded('booster_shatter');
     if (success) {
-      const activePlate = this.plates.find((p) => !p.isFalling);
-      if (activePlate) {
-        activePlate.startFalling();
+      const openBox = this.activeToolboxes.find((b) => !b.isFull());
+      const targetPlate =
+        (openBox && this.plates.find((p) => !p.isFalling && p.color.id === openBox.color.id)) ||
+        this.plates.find((p) => !p.isFalling);
+
+      if (targetPlate) {
+        const heldIds = Array.from(targetPlate.holdingScrewIds);
+        targetPlate.holdingScrewIds.clear();
+        targetPlate.startFalling();
         this.sound.playPlateDrop();
-        this.particles.spawnCelebration(activePlate.group.position, 45);
+        this.particles.spawnCelebration(targetPlate.group.position, 45);
+
+        for (const sid of heldIds) {
+          const s = this.screws.find((sc) => sc.id === sid && sc.state === 'idle');
+          if (s) {
+            this.processScrewUnbolt(s);
+          }
+        }
       }
     }
   }
@@ -443,15 +460,17 @@ class ScrewJamApp {
   private async handleReviveAd(): Promise<void> {
     const success = await this.ads.showRewarded('near_miss_revive');
     if (success) {
+      // Unlock extra buffer slots and magnet-complete the active open toolbox so no screw count is ever orphaned
       this.bufferDock.unlockExtraSlot();
-      // Clear 2 non-matching screws from buffer dock
-      let cleared = 0;
-      for (const s of [...this.bufferDock.slots]) {
-        if (s && cleared < 2) {
-          this.bufferDock.removeScrew(s);
-          s.state = 'cleared';
-          s.group.visible = false;
-          cleared++;
+      this.bufferDock.unlockExtraSlot();
+      const openBox = this.activeToolboxes.find((b) => !b.isFull());
+      if (openBox) {
+        const matchingScrews = this.screws.filter(
+          (s) => s.color.id === openBox.color.id && s.state === 'idle'
+        );
+        for (const s of matchingScrews) {
+          if (openBox.isFull()) break;
+          this.processScrewUnbolt(s);
         }
       }
       this.sound.playBoxComplete();
@@ -484,7 +503,19 @@ class ScrewJamApp {
   }
 }
 
-// Bootstrap application on DOM ready
+// Bootstrap application with mandatory cloud save pre-flight
+async function bootstrap(): Promise<void> {
+  PlatformBridge.applyDualModeShell();
+  await PlatformBridge.initPlatform();
+  const cloudData = await PlatformBridge.loadData({
+    level: 1,
+    coins: GAME_CONFIG.initialCoins,
+    magnets: 1,
+    extraSlots: 0,
+  });
+  new ScrewJamApp(cloudData);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  new ScrewJamApp();
+  void bootstrap();
 });

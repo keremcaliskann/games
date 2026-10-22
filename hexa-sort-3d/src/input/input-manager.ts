@@ -22,6 +22,9 @@ export class InputManager {
 
   // Active Drag State
   private isPointerDown = false;
+  private isOrbiting = false;
+  private lastPointerX = 0;
+  private lastPointerY = 0;
   private draggedStack: TileStack | null = null;
   private originSlot: TraySlot | null = null;
   private originCell: HexCell | null = null;
@@ -33,6 +36,7 @@ export class InputManager {
   // Callbacks
   private onStackPlacedCallback: (cell: HexCell) => void = () => {};
   private onHammerUsedCallback: (cell: HexCell) => void = () => {};
+  private onModeResetCallback: () => void = () => {};
 
   constructor(
     domElement: HTMLElement,
@@ -52,10 +56,12 @@ export class InputManager {
 
   public setCallbacks(
     onStackPlaced: (cell: HexCell) => void,
-    onHammerUsed: (cell: HexCell) => void
+    onHammerUsed: (cell: HexCell) => void,
+    onModeReset: () => void = () => {}
   ): void {
     this.onStackPlacedCallback = onStackPlaced;
     this.onHammerUsedCallback = onHammerUsed;
+    this.onModeResetCallback = onModeReset;
   }
 
   private bindEvents(): void {
@@ -82,6 +88,9 @@ export class InputManager {
     }
 
     this.isPointerDown = true;
+    this.isOrbiting = false;
+    this.lastPointerX = e.clientX;
+    this.lastPointerY = e.clientY;
     this.updatePointer(e.clientX, e.clientY);
 
     if (this.raycaster.ray.intersectPlane(this.groundPlane, this.planeIntersect)) {
@@ -93,21 +102,31 @@ export class InputManager {
         const target = this.grid.findSnapTarget(hitX, hitZ, 1.2);
         if (target && !target.stack.isEmpty()) {
           this.mode = 'normal';
+          this.onModeResetCallback();
           this.onHammerUsedCallback(target);
         }
         return;
       }
 
-      // 2. Move Stack Mode: tap cell to pick up stack
+      // 2. Move Stack Mode: tap cell to pick up stack into a temporary carrier stack
       if (this.mode === 'move_stack') {
         const target = this.grid.findSnapTarget(hitX, hitZ, 1.2);
         if (target && !target.stack.isEmpty()) {
           this.mode = 'normal';
+          this.onModeResetCallback();
           this.originCell = target;
-          this.draggedStack = target.stack;
-          // Temporarily detach stack from cell
-          target.cellGroup.remove(target.stack.group);
-          this.draggedStack.group.position.set(hitX, 1.2, hitZ);
+
+          const tempStack = new TileStack();
+          while (!target.stack.isEmpty()) {
+            const item = target.stack.tiles.shift()!;
+            target.stack.group.remove(item.mesh);
+            tempStack.pushTile(item.color, item.mesh);
+          }
+          target.stack.updateCountBadge();
+
+          this.grid.group.add(tempStack.group);
+          tempStack.group.position.set(hitX, 1.25, hitZ);
+          this.draggedStack = tempStack;
           this.domElement.style.cursor = 'grabbing';
         }
         return;
@@ -123,7 +142,11 @@ export class InputManager {
         // Elevate slightly for tactile grab feedback
         this.draggedStack.group.position.set(hitX, 1.2, hitZ);
         this.domElement.style.cursor = 'grabbing';
+        return;
       }
+
+      // 4. Empty space drag -> gentle camera parallax orbit
+      this.isOrbiting = true;
     }
   };
 
@@ -159,12 +182,19 @@ export class InputManager {
           }
         }
       }
+    } else if (this.isPointerDown && this.isOrbiting) {
+      const dx = e.clientX - this.lastPointerX;
+      const dy = e.clientY - this.lastPointerY;
+      this.lastPointerX = e.clientX;
+      this.lastPointerY = e.clientY;
+      this.cameraRig.nudgeParallax(dx, dy);
     }
   };
 
   private onPointerUp = (): void => {
     if (!this.isPointerDown) return;
     this.isPointerDown = false;
+    this.isOrbiting = false;
     this.domElement.style.cursor = 'default';
 
     if (this.draggedStack) {
@@ -172,7 +202,7 @@ export class InputManager {
 
       // Rule: Can drop on empty cell, or on occupied cell if top colors match!
       let validDrop = false;
-      if (snap) {
+      if (snap && snap !== this.originCell) {
         if (snap.stack.isEmpty()) {
           validDrop = true;
         } else {
@@ -185,19 +215,11 @@ export class InputManager {
       }
 
       if (validDrop && snap) {
-        // Successful Drop!
-        if (snap.stack.isEmpty()) {
-          // Transfer entire dragged stack to cell
-          while (!this.draggedStack.isEmpty()) {
-            const item = this.draggedStack.tiles.shift()!;
-            snap.stack.pushTile(item.color, item.mesh);
-          }
-        } else {
-          // Merge onto existing stack
-          while (!this.draggedStack.isEmpty()) {
-            const item = this.draggedStack.tiles.shift()!;
-            snap.stack.pushTile(item.color, item.mesh);
-          }
+        // Successful Drop! Transfer entire dragged stack to target cell
+        while (!this.draggedStack.isEmpty()) {
+          const item = this.draggedStack.tiles.shift()!;
+          this.draggedStack.group.remove(item.mesh);
+          snap.stack.pushTile(item.color, item.mesh);
         }
 
         this.draggedStack.clear();
@@ -217,13 +239,13 @@ export class InputManager {
           this.draggedStack.group.position.copy(this.originSlot.worldPos);
           this.originSlot = null;
         } else if (this.originCell) {
-          this.originCell.stack = this.draggedStack;
-          this.originCell.stack.group.position.set(
-            this.originCell.worldX,
-            this.originCell.worldY + 0.12,
-            this.originCell.worldZ
-          );
-          this.originCell.cellGroup.add(this.originCell.stack.group);
+          while (!this.draggedStack.isEmpty()) {
+            const item = this.draggedStack.tiles.shift()!;
+            this.draggedStack.group.remove(item.mesh);
+            this.originCell.stack.pushTile(item.color, item.mesh);
+          }
+          this.draggedStack.clear();
+          this.draggedStack.group.parent?.remove(this.draggedStack.group);
           this.originCell = null;
         }
 

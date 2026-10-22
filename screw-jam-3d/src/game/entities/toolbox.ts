@@ -8,6 +8,7 @@ export class Toolbox {
   public readonly color: ColorDef;
   public readonly capacity = GAME_CONFIG.toolboxCapacity;
   public readonly screws: Screw[] = [];
+  private reservedCount = 0;
 
   public readonly group: THREE.Group;
   public readonly bodyMesh: THREE.Mesh;
@@ -28,18 +29,32 @@ export class Toolbox {
     this.socketRings = socketRings;
 
     this.group.position.copy(position);
+    this.group.updateMatrixWorld(true);
   }
 
-  public getNextSocketWorldPosition(): THREE.Vector3 | null {
-    if (this.screws.length >= this.capacity) return null;
-    const idx = this.screws.length;
+  /**
+   * Reserves a socket immediately when a screw begins flying toward this box
+   * so multiple concurrent flights never collide on the same socket index.
+   */
+  public reserveSocketWorldPosition(): THREE.Vector3 | null {
+    if (this.reservedCount >= this.capacity) return null;
+    const idx = this.reservedCount++;
+    this.group.updateMatrixWorld(true);
     const local = new THREE.Vector3(this.socketOffsets[idx], 0.22, 0);
     return local.applyMatrix4(this.group.matrixWorld);
   }
 
   public addScrew(screw: Screw): boolean {
     if (this.screws.length >= this.capacity) return false;
+    const idx = this.screws.length;
     this.screws.push(screw);
+
+    // Visually tint socket ring to show the bolt seated inside the toolbox
+    if (this.socketRings[idx]) {
+      (this.socketRings[idx].material as THREE.MeshStandardMaterial).color.setHex(this.color.hex);
+      this.socketRings[idx].scale.set(1.1, 1.8, 1.1);
+    }
+
     if (this.screws.length === this.capacity) {
       this.isCompleted = true;
       return true; // Box full!
@@ -48,7 +63,7 @@ export class Toolbox {
   }
 
   public isFull(): boolean {
-    return this.screws.length >= this.capacity;
+    return this.reservedCount >= this.capacity;
   }
 
   public startSlideAway(): void {

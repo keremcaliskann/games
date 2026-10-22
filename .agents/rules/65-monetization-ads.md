@@ -46,43 +46,43 @@ export interface IAdProvider {
 ## 3. Ad Availability & Disabled State Invariant (Mandatory)
 
 > [!IMPORTANT]
-> **Reklama Erişim Yoksa Butonlar Kapalı Olmalıdır:**
-> Eğer oyuncunun internet bağlantısı yoksa (`!navigator.onLine`), reklam engelleyici tespit edilmişse veya platform reklam envanteri boş döndüyse (`isRewardedReady() === false`), reklama bağımlı tüm butonlar ve rozetler **otomatik olarak devre dışı bırakılmalı (disabled/grayed out) veya gizlenmelidir**.
+> **Disable or Hide Ad Buttons When Ads Are Unavailable:**
+> If the player is offline (`!navigator.onLine`), an ad blocker is active, or the platform ad inventory returns empty (`isRewardedReady() === false`), all ad-dependent buttons and badges **must be automatically disabled (grayed out) or hidden**.
 
-### Uygulama Kuralları:
-1. **`isRewardedReady(): boolean` Kontrolü:**
-   - Reklam butonları oluşturulurken ve açılır pencereler (modallar) gösterilirken mutlaka `ads.isRewardedReady()` sorgulanmalıdır.
-2. **Görsel Durum (UI Disabled State):**
-   - **Gizleme (Hide):** Alternatif eylem olan yerlerde (örneğin Bölüm Sonu ekranında sadece standart "Geç" butonu kalır, 3x Çarpan butonu gizlenir).
-   - **Devre Dışı Bırakma (Disable):** Buton görünür kalacaksa `opacity: 0.35; pointer-events: none; cursor: not-allowed;` stili uygulanmalı ve `🎬 REKLAM YOK` etiketi gösterilmelidir.
-3. **Oyuncu Aldatılmamalıdır:** Tıklandığında hiçbir şey yapmayacak veya hata verecek hiçbir reklam butonu aktif halde tutulamaz.
-
----
-
-## 4. UI ve Tasarım Standartları (3 Zorunlu Kanca)
-
-Her oyunda 3 gelir kancası şu görsel ve işlevsel standartlara uymalıdır:
-
-### Hook 1: In-Level Rescue Booster (Oyun İçi Kurtarıcı Güçlendirici)
-* **Tasarım:** Alt çubukta veya coin yanındaki butonlarda `[🎬 FREE]` ya da `[+🎬]` etiketi.
-* **Tıklama:** Tıklandığında anında ödüllü reklam başlatılır, başarıyla tamamlandığında güçlendirici (Çekiç, İpucu, Kalkan) hemen uygulanır.
-
-### Hook 2: Near-Miss Revive Modal (Kıl Payı Canlanma)
-* **Tasarım:** Kaybetme anında açılan yüksek kontrastlı uyarı kartı (`ÇOK YAKLAŞTIN!`).
-* **Buton Stili:** Parlayan zümrüt yeşili degrade (`linear-gradient(135deg, #10b981, #059669)`), üzerinde `🎬 İZLE & DEVAM ET (+KALKAN/+HAMLE)`.
-* **Ad Unavailable:** Reklam yoksa doğrudan normal Game Over ekranına geçilir.
-
-### Hook 3: Victory Multiplier Needle Bar (Bölüm Sonu Çarpan İbresi)
-* **Tasarım:** Bölüm bittiğinde 1.5x - 5x arasında gidip gelen osilasyonlu ibre (`#f59e0b` amber renk).
-* **Buton Stili:** Altın/amber degrade (`linear-gradient(135deg, #f59e0b, #d97706)` ile `#000` metin).
-* **Ad Unavailable:** Reklam yoksa çarpan kutusu gizlenir, oyuncuya sadece temel coin ödülü sunulur.
+### Implementation Rules:
+1. **`isRewardedReady(): boolean` Check:**
+   - Always query `ads.isRewardedReady()` when rendering ad buttons and before displaying rewarded modals.
+2. **Visual Disabled State:**
+   - **Hide:** Where an alternative action exists (e.g., on the Level Complete screen, keep only the standard "Claim / Next" button and hide the 3x Multiplier button).
+   - **Disable:** If an in-level booster button remains visible with `count === 0` and no ad available, apply `opacity: 0.35; pointer-events: none; cursor: not-allowed;` and display a `🎬 NO AD` / `🎬 REKLAM YOK` label.
+3. **Never Mislead the Player:** Never leave an ad button clickable if clicking it will fail silently or do nothing.
 
 ---
 
-## 5. Simülasyon Reklam Modalı Tasarım Standardı (Mock Ad Overlay)
+## 4. UI & Design Standards (3 Mandatory Revenue Hooks)
 
-GitHub Pages ve yerel test ortamında açılan simülasyon modalı standart bir arayüze sahip olmalıdır:
-* **Arka Plan:** `rgba(3, 7, 18, 0.95)` koyu cam efekti (`backdrop-filter: blur(8px)`).
-* **Başlık:** Küçük cyan takip yazısı: `YOUTUBE PLAYABLES REWARD REEL // SPONSOR`.
-* **Geri Sayım:** Ortada 2 saniyelik sayaç (`2s` -> `1s` -> `TAMAMLANDI!`).
-* **Buton:** 2 saniye dolana kadar devre dışı (`LÜTFEN BEKLEYİN...`), süre bitince yeşil aktif (`ÖDÜLÜ AL & DEVAM ET`).
+Every game must implement all 3 rewarded revenue hooks adhering to these visual and functional standards:
+
+### Hook 1: In-Level Rescue Booster
+* **Design:** Bottom bar or header booster buttons with a clear `[🎬 FREE]` or `[🎬 REKLAM]` badge when stock is `0`.
+* **Action:** Clicking triggers a rewarded ad immediately; upon completion, the booster (Hammer, Hint, Shield, Extra Slot, Swap, Move) is granted or activated immediately.
+
+### Hook 2: Near-Miss Revive Modal
+* **Design:** High-contrast alert card (`SO CLOSE!` / `ÇOK YAKLAŞTIN!`) shown when the player runs out of moves, fills the buffer dock, or crashes near a milestone.
+* **Button Style:** Glowing emerald green gradient (`linear-gradient(135deg, #10b981, #059669)`), labeled `🎬 WATCH & CONTINUE (+SHIELD / +MOVES / +SLOTS)`.
+* **Ad Unavailable:** If `isRewardedReady() === false`, bypass or hide the revive button and offer standard retry.
+
+### Hook 3: Victory Multiplier Needle Bar
+* **Design:** Oscillating needle bar (`1.5x -> 2x -> 3x -> 5x -> 3x -> 2x -> 1.5x`) shown on the Level Complete / Victory modal.
+* **Button Style:** Golden/amber gradient (`linear-gradient(135deg, #f59e0b, #d97706)`), dynamically updating the reward amount as the needle moves.
+* **Ad Unavailable:** If `isRewardedReady() === false`, hide the multiplier claim button and present only the base coin reward.
+
+---
+
+## 5. Mock Ad Overlay Design Standard (`MockAdProvider`)
+
+When running on GitHub Pages or local dev preview, the simulated ad overlay must follow a consistent layout:
+* **Backdrop:** `rgba(3, 7, 18, 0.95)` frosted dark glass (`backdrop-filter: blur(8px)`).
+* **Header:** Small cyan tracking badge: `YOUTUBE PLAYABLES REWARD REEL // SPONSOR`.
+* **Countdown:** Centered 2-second timer (`2s` -> `1s` -> `COMPLETED!`).
+* **Button:** Disabled during countdown (`PLEASE WAIT...`), turning emerald green when finished (`CLAIM REWARD & CONTINUE`).
