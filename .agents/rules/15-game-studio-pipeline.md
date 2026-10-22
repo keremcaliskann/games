@@ -5,24 +5,41 @@ description: "2-stage Producer-Consumer pipeline, token-optimized 3-Phase Studio
 
 # Game Studio Pipeline & Critique Policy
 
-## 1. Decoupled 2-Stage Studio Architecture (Producer – Consumer)
+## 1. Decoupled 3-Automation, Dual-Queue Studio Architecture
 
-To maximize token efficiency, isolate market research from engineering context, and maintain a prioritized backlog of high-revenue game blueprints, the studio operates as **two decoupled automations** bridged by `backlog/ideas-backlog.json`:
+To protect the user's daytime working quota (`10:00–18:00`) across 5-hour token reset cycles while separating strategic planning (`Argon 4 High`) from hands-on execution, the studio operates as **three decoupled automations** bridged by **two prioritized queues**:
+1. **`backlog/ideas-backlog.json`** — New Game Blueprint Queue (populated by Trend Scout).
+2. **`backlog/studio-todo.json`** — Existing Games Bugfix, Mechanical Upgrade & Polish Queue (populated by Game Director QA Architect).
 
 ```
 +-----------------------------------------------------------------------------------------+
-| AUTOMATION 1: TREND & REVENUE SCOUT (Producer)                                          |
-| - Scans last 90 days of YouTube Playables, Hybrid-Casual mobile, and web portal hits    |
-| - Re-validates & re-ranks existing 'ready' backlog items using 100-pt Revenue Matrix    |
-| - Outputs Dual Reports: 1) Short Chat Summary  2) backlog/LATEST_TREND_REPORT.md        |
+| AUTOMATION 1: TREND & GENRE SCOUT (Producer A — Every 3 Days at 18:00, Argon 4 High)    |
+| - Scans YouTube Playables, CrazyGames, Poki & mobile hits across diverse high-retention |
+|   genres: Fake-Multiplayer .io Arenas (Hole.io style), Casual FPS/Shooters, 3D Physics  |
+|   Demolition, and Voxel/Minecraft-style Sandbox Action (not just repetitive puzzles!)   |
+| - Adds 3+ mutually distinct game concepts per run & re-ranks backlog/ideas-backlog.json |
+| - Outputs a concise <= 6-line Turkish summary + updates backlog/LATEST_TREND_REPORT.md  |
 +-----------------------------------------------------------------------------------------+
                                            │
                                            ▼ (backlog/ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
-| AUTOMATION 2: 3-PHASE STUDIO BUILDER & PUBLISHER (Consumer)                             |
-| - Pulls #1 highest revenueScore 'ready' blueprint from backlog/ideas-backlog.json       |
-| - Executes Phase 1 (DESIGN.md) -> Phase 2 (Implementation) -> Phase 3 (Director Audit)  |
-| - Marks blueprint 'completed', updates portal, and pushes live to GitHub Pages          |
+| AUTOMATION 2: GAME DIRECTOR QA ARCHITECT (Producer B — Every 2 Days at 18:05, Argon High)|
+| - Deep-audits all active games in games.json for bugs, softlocks, mechanical depth,     |
+|   AI bot behavior, visual juice, and performance                                        |
+| - Populates and re-ranks backlog/studio-todo.json by priority (P0 > P1 > P2)            |
+| - Outputs a concise <= 6-line Turkish summary of newly queued tasks                     |
++-----------------------------------------------------------------------------------------+
+                                           │
+                                           ▼ (backlog/studio-todo.json + ideas-backlog.json)
++-----------------------------------------------------------------------------------------+
+| AUTOMATION 3: STUDIO EXECUTOR (Consumer — Nightly at 23:00 & 04:00)                     |
+| - Reads BOTH backlog/studio-todo.json and backlog/ideas-backlog.json:                   |
+|   1) Urgent Override: If any 'P0' bug exists in studio-todo.json, fixes it first        |
+|   2) 23:00 Slot (or New Game Turn): Pulls Rank #1 'ready' game from ideas-backlog.json  |
+|      and builds/publishes it end-to-end via the 3-Phase Studio Squad                    |
+|   3) 04:00 Slot (or Polish Turn): Pulls top 2-3 'ready' tasks from studio-todo.json,    |
+|      implements mechanical/visual upgrades across existing games, verifies & deploys    |
+| - Outputs a concise <= 6-line Turkish post-run report after every execution             |
 +-----------------------------------------------------------------------------------------+
 ```
 

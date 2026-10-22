@@ -34,11 +34,113 @@
     }
   },
   {
+    "id": "hole-city-io-3d",
+    "title": "HOLE SWALLOW 3D // CITY ARENA .IO",
+    "category": "io-fake-multiplayer",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 97,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 25,
+      "ergonomicsScore": 20,
+      "webglFeasibilityScore": 17
+    },
+    "createdAt": "2026-10-22",
+    "lastValidatedAt": "2026-10-22",
+    "validationNote": "Rank #1 YouTube Playables & web portal juggernaut (Hole.io benchmark). Fake-multiplayer .io arena with live bot leaderboard delivers massive play counts and repeat sessions.",
+    "coreLoop": "Drag to steer a growing 3D black hole across a sunlit miniature city arena against 7 AI rival holes with realistic player tags. Swallow props, trees, cars, and buildings that fit inside your radius to grow larger, eat smaller rival holes, and top the live leaderboard before the 90-second round ends.",
+    "solvableMathSpec": "Deterministic prop density tiers (Tier 1 hydrants/cones -> Tier 2 cars/trees -> Tier 3 shops -> Tier 4 skyscrapers) ensure continuous growth curve; AI bots dynamically scale speed so player can always catch up.",
+    "cameraErgonomics": "High-angle top-down perspective that smoothly zooms out as the player's hole radius expands, preserving full 9:16 portrait and 16:9 landscape visibility.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Size Boost (+25% starting hole radius via Rewarded Ad)",
+        "Gravity Magnet (Pulls nearby city props into your hole for 12s via Rewarded Ad)",
+        "Speed Turbo (+35% movement speed for 15s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When eaten by a larger rival bot or when timer hits 0 at Rank #2/#3, prompt 'So Close to #1! Watch Ad for +25s Overtime & Instant Size Surge'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle bar on Arena Victory screen for bonus Coins & Skin unlocks."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural + Instanced City Props",
+      "proceduralPrefabs": "Multi-ring glowing abyss ring with stencil/depth sinkhole illusion, compound procedural cars, streetlamps, trees, and pastel city buildings.",
+      "optionalUserGlb": "public/models/city_car.glb (Optional low-poly vehicle mesh)"
+    }
+  },
+  {
+    "id": "voxel-craft-smash-3d",
+    "title": "VOXEL SMASH 3D // BLOCK MINER & TURRET",
+    "category": "voxel-sandbox-action",
+    "status": "ready",
+    "rank": 2,
+    "revenueScore": 95,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-22",
+    "lastValidatedAt": "2026-10-22",
+    "validationNote": "Rank #2 high-engagement Minecraft-style voxel destruction & defense hit. InstancedMesh voxel chunks run at locked 60 FPS with explosive physics showers.",
+    "coreLoop": "Aim and fire a rapid-fire pickaxe/cannon at towering 3D Minecraft-style voxel structures and advancing voxel golems. Shattered blocks rain down as physics loot cubes that vacuum into your base to upgrade fire rate, multi-shot, and explosive TNT barrels.",
+    "solvableMathSpec": "Wave-based voxel structures with calculated HP-to-DPS ratios so every wave is clearable with skill or a single TNT/Mega-Drill booster.",
+    "cameraErgonomics": "Elevated first/third-person turret view with 1-finger drag-to-aim and auto-fire; unobstructed sightlines in both 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "TNT Mega-Barrage (Rains 5 explosive TNT blocks onto the voxel fortress via Rewarded Ad)",
+        "Double Cannon (Doubles fire rate & projectile size for 20s via Rewarded Ad)",
+        "Loot Magnet (Doubles voxel cube gold value for the wave via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When a giant Voxel Boss reaches the base wall, prompt 'Base Breached! Watch Ad to Detonate Nuke & Knock Back Boss'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle bar on Wave Complete screen."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Instanced Voxel Procedural",
+      "proceduralPrefabs": "Three.js InstancedMesh voxel castles, trees, chests, TNT crates, and multi-part voxel golems in sunlit daylight palette.",
+      "optionalUserGlb": "None required (100% authentic blocky voxel geometry)"
+    }
+  },
+  {
+    "id": "ragdoll-cannon-blitz-3d",
+    "title": "CANNON BLITZ 3D // PHYSICS DEMOLITION",
+    "category": "casual-fps-physics",
+    "status": "ready",
+    "rank": 3,
+    "revenueScore": 94,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-22",
+    "lastValidatedAt": "2026-10-22",
+    "validationNote": "Rank #3 3D physics shooter & demolition hit. Combines 1-tap FPS/cannon aiming with Rapier.js rigid-body tower collapse and red explosive barrels.",
+    "coreLoop": "Tap to aim and fire physics cannonballs from first-person perspective at precarious 3D block towers, red explosive barrels, and target dummies resting on floating sunlit islands. Trigger chain-reaction collapses to topple every target into the sea within your ammo budget.",
+    "solvableMathSpec": "Each fortress layout has structural weak-point pillars and explosive barrels positioned so a direct hit collapses 100% of targets within par ammo.",
+    "cameraErgonomics": "Crisp first-person cannon view with parabolic trajectory arc preview and dynamic impact zoom; zero foreground obstruction.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Cluster Bomb Shot (Splits into 5 explosive warheads mid-air via Rewarded Ad)",
+        "+3 Extra Cannonballs (Adds +3 ammo immediately via Rewarded Ad)",
+        "Laser Sight & Giant Ball (3x mass & radius mega-shot via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When ammo reaches 0 with 1–2 targets still standing, prompt 'Out of Ammo! Watch Ad for +2 Explosive Shots & Finish Them!'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle bar on Level Complete screen."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural + Rapier Physics",
+      "proceduralPrefabs": "Beveled stone/wood physics beams, red hazard barrels with white stripes, articulated target dummies, and stylized cannon barrel.",
+      "optionalUserGlb": "public/models/cannon.glb (Optional <1.5k tris stylized cannon)"
+    }
+  },
+  {
     "id": "goods-sort-3d",
     "title": "GOODS SORT 3D // SHELF TIDY MASTER",
     "category": "3d-sort-stack",
     "status": "ready",
-    "rank": 1,
+    "rank": 4,
     "revenueScore": 94,
     "scoreBreakdown": {
       "rewardedAdScore": 34,
@@ -72,7 +174,7 @@
     "title": "DROP MERGE 3D // SPHERE SUIKA",
     "category": "physics-merge-drop",
     "status": "ready",
-    "rank": 2,
+    "rank": 5,
     "revenueScore": 93,
     "scoreBreakdown": {
       "rewardedAdScore": 31,
@@ -106,7 +208,7 @@
     "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
     "category": "3d-sort-stack",
     "status": "ready",
-    "rank": 3,
+    "rank": 6,
     "revenueScore": 92,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -140,7 +242,7 @@
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "category": "3d-spatial-jam",
     "status": "ready",
-    "rank": 4,
+    "rank": 7,
     "revenueScore": 89,
     "scoreBreakdown": {
       "rewardedAdScore": 33,

@@ -5,7 +5,7 @@
 
 ## 1. Project & Workspace Architecture
 
-- **Scope:** This workspace hosts multiple independent HTML5 3D game projects and a central `backlog/ideas-backlog.json` queue. Each game lives in its own dedicated subdirectory.
+- **Scope:** This workspace hosts multiple independent HTML5 3D game projects and two central studio queues: `backlog/ideas-backlog.json` (new game blueprints across `.io`, 3D physics, casual FPS, and voxel genres) and `backlog/studio-todo.json` (prioritized bugfixes and mechanical/visual upgrades for existing games). Each game lives in its own dedicated subdirectory.
 - **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 5 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
 - **Platform Boundary:** Game logic is platform-agnostic. Platform differences (`ytgame`, `YaGames`, `CrazyGames`, `PokiSDK`, `MockAdProvider`) reside exclusively within `src/platform/`.
@@ -102,8 +102,9 @@ A task is complete only when:
 | `rules/70-token-context.md` | model_decision | Large file reads, token economy |
 | `rules/80-dependencies-and-git.md` | model_decision | Package additions, Git repos, commit & push |
 | `rules/90-release-checklist.md` | manual | Triggered exclusively via `@90-release-checklist` |
-| `skills/yt-playable-trend-scout` | skill | 90-day market scan, 100-pt Revenue Matrix, backlog re-validation & Dual Reporting |
-| `skills/game-studio-pipeline` | skill | Pulls #1 backlog game & executes 3-Phase Studio Squad (Designer -> Implementer -> Critic) |
+| `skills/yt-playable-trend-scout` | skill | 90-day market scan (3+ diverse genres: `.io`, FPS/physics, voxel), 100-pt Matrix & concise report |
+| `skills/game-director-qa-architect` | skill | Audits all active games, populates/prioritizes `backlog/studio-todo.json` (`P0 > P1 > P2`) & concise report |
+| `skills/game-studio-pipeline` | skill | Dual-Queue Executor (`studio-todo.json` + `ideas-backlog.json`) & 3-Phase Studio Squad |
 | `skills/asset-integrator` | skill | Integrates user-supplied `.glb` 3D models/textures into `PrefabFactory` (`ASSETS_NEEDED.md`) |
 | `skills/html5-game-development` | skill | Core 3D game development workflow |
 | `skills/game-performance-audit` | skill | FPS drops, jank, memory audits |

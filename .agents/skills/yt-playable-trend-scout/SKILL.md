@@ -17,14 +17,18 @@ This skill operates the **Producer** stage of the autonomous game studio pipelin
 1. Read `games.json` at workspace root to identify already released games (never propose duplicate mechanics).
 2. Read `backlog/ideas-backlog.json` to load all existing `ready`, `in_progress`, and `completed` blueprints.
 
-### Step 2: 90-Day Market & Trend Scan
-Use `search_web` to analyze the **last 3 months (90 days)** across:
-- **YouTube Playables** trending & featured HTML5 3D puzzle/arcade titles.
-- **App Store / Google Play Top Grossing & Top Free Hybrid-Casual** charts (3D Screw/Bolt Jam, Hexa Sort, Block/Bus Escape, Triple Match 3D, Suika/Physics Merge, ASMR Slice/Clean).
-- **Yandex Games / CrazyGames / Poki** top monetizing web hits.
+### Step 2: 90-Day Market & High-Play-Count Genre Scan (Mandatory Diversity)
+Use `search_web` to analyze the **last 3 months (90 days)** across **YouTube Playables**, **CrazyGames**, **Poki**, and **Yandex Games**.
+- **CRITICAL GENRE PRIORITY & DIVERSITY RULE:**
+  - Do **NOT** over-index on repetitive sorting/jam puzzles. On YouTube Playables and web portals, **action, physics, and simulated multiplayer genres** drive significantly higher play counts, session lengths, and ad impressions:
+    1. **`io-fake-multiplayer` (Hole.io / Paper.io / Bumper.io style):** Fast 60–90s arena rounds against AI bots with realistic player names, live leaderboards, and size/territory growth.
+    2. **`casual-fps-physics` (Simple 1-Tap FPS / Cannon / Archer / Ragdoll Destruction):** Satisfying projectile physics, red explosive barrels, destructible block towers, and wave defense.
+    3. **`voxel-sandbox-action` (Minecraft-style Block Smash / Craft / Turret Defense):** High-FPS `InstancedMesh` voxel worlds with block shattering, loot vacuuming, and rapid upgrades.
+    4. **`physics-merge-drop` / `arcade-skill-runner` / `3d-spatial-jam`:** High-retention physics and spatial games.
+  - **Minimum Batch & Diversity Invariant:** Every single scan **must discover and add at least 3 new game concepts**, and **each of the 3 concepts must belong to a DIFFERENT category** so `backlog/ideas-backlog.json` always stays full and genre-diverse.
 
-### Step 3: 100-Point YouTube Playables Revenue Matrix
-Classify each candidate into a primary revenue category (`3d-spatial-jam`, `3d-sort-stack`, `physics-merge-drop`, `asmr-slice-clean`, `arcade-skill-runner`) and score across 4 pillars:
+### Step 3: 100-Point YouTube Playables Revenue & Engagement Matrix
+Classify each candidate into its primary category (`io-fake-multiplayer`, `casual-fps-physics`, `voxel-sandbox-action`, `physics-merge-drop`, `arcade-skill-runner`, `3d-spatial-jam`, `3d-sort-stack`) and score across 4 pillars:
 
 | Pillar | Max Points | Scoring Criteria |
 |---|---|---|
