@@ -13,19 +13,19 @@ This skill operates the **Producer** stage of the autonomous game studio pipelin
 
 ## 1. Execution Workflow (5 Steps)
 
-### Step 1: Inspect Active Portfolio & Existing Queue
-1. Read `games.json` at workspace root to identify already released games (never propose duplicate mechanics).
-2. Read `backlog/ideas-backlog.json` to load all existing `ready`, `in_progress`, and `completed` blueprints.
+### Step 1: Read Scout Directives, Active Portfolio & Existing Queue
+1. **Read `backlog/scout-directives.json` (MANDATORY):**
+   - Load user-configured `priorityGenres`, `excludedGenres`, `customInstructions`, `targetPlatforms`, and `batchSize` (default: 3).
+   - All market research and candidate generation must strictly align with the user's active directives in this file.
+2. Read `games.json` at workspace root to identify already released games (never propose duplicate mechanics).
+3. Read `backlog/ideas-backlog.json` to load all existing `ready`, `in_progress`, and `completed` blueprints.
 
-### Step 2: 90-Day Market & High-Play-Count Genre Scan (Mandatory Diversity)
-Use `search_web` to analyze the **last 3 months (90 days)** across **YouTube Playables**, **CrazyGames**, **Poki**, and **Yandex Games**.
-- **CRITICAL GENRE PRIORITY & DIVERSITY RULE:**
-  - Do **NOT** over-index on repetitive sorting/jam puzzles. On YouTube Playables and web portals, **action, physics, and simulated multiplayer genres** drive significantly higher play counts, session lengths, and ad impressions:
-    1. **`io-fake-multiplayer` (Hole.io / Paper.io / Bumper.io style):** Fast 60–90s arena rounds against AI bots with realistic player names, live leaderboards, and size/territory growth.
-    2. **`casual-fps-physics` (Simple 1-Tap FPS / Cannon / Archer / Ragdoll Destruction):** Satisfying projectile physics, red explosive barrels, destructible block towers, and wave defense.
-    3. **`voxel-sandbox-action` (Minecraft-style Block Smash / Craft / Turret Defense):** High-FPS `InstancedMesh` voxel worlds with block shattering, loot vacuuming, and rapid upgrades.
-    4. **`physics-merge-drop` / `arcade-skill-runner` / `3d-spatial-jam`:** High-retention physics and spatial games.
-  - **Minimum Batch & Diversity Invariant:** Every single scan **must discover and add at least 3 new game concepts**, and **each of the 3 concepts must belong to a DIFFERENT category** so `backlog/ideas-backlog.json` always stays full and genre-diverse.
+### Step 2: 90-Day Market & Genre Scan (Driven by `scout-directives.json`)
+Use `search_web` to analyze the **last 3 months (90 days)** across the platforms specified in `scout-directives.json` (`YouTube Playables`, `CrazyGames`, `Poki`, `Yandex Games`):
+- Prioritize categories according to `priorityGenres` and their weights in `scout-directives.json`.
+- Strictly filter out anything listed under `excludedGenres`.
+- Comply with `customInstructions`.
+- **Batch & Diversity Invariant:** Every scan must discover and add at least `batchSize` (3) new concepts, with **each concept coming from a DIFFERENT genre** so `backlog/ideas-backlog.json` maintains continuous variety.
 
 ### Step 3: 100-Point YouTube Playables Revenue & Engagement Matrix
 Classify each candidate into its primary category (`io-fake-multiplayer`, `casual-fps-physics`, `voxel-sandbox-action`, `physics-merge-drop`, `arcade-skill-runner`, `3d-spatial-jam`, `3d-sort-stack`) and score across 4 pillars:
