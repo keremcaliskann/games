@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="#bae6fd" />
+    </linearGradient>
+
+    <!-- Warm Golden Ambient Radial -->
+    <radialGradient id="sunGlow" cx="30%" cy="20%" r="70%">
+      <stop offset="0%" stop-color="#fef3c7" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Hexagon Tile Gradients -->
+    <!-- Amber / Gold Top Tile -->
+    <linearGradient id="hexAmber" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="hexAmberSide" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Coral Orange Middle Tile -->
+    <linearGradient id="hexCoral" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+    <linearGradient id="hexCoralSide" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea580c" />
+      <stop offset="100%" stop-color="#c2410c" />
+    </linearGradient>
+
+    <!-- Teal Cyan Bottom Tile -->
+    <linearGradient id="hexTeal" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="hexTealSide" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0891b2" />
+      <stop offset="100%" stop-color="#0e7490" />
+    </linearGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="tileShadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.18" />
+    </filter>
+  </defs>
+
+  <!-- Rounded App Icon Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <rect width="512" height="512" rx="112" fill="url(#sunGlow)" />
+
+  <!-- Base Honeycomb Grid Outline Rings -->
+  <g stroke="#94a3b8" stroke-width="4" stroke-opacity="0.3" fill="none">
+    <polygon points="130,220 180,190 230,220 230,280 180,310 130,280" />
+    <polygon points="282,220 332,190 382,220 382,280 332,310 282,280" />
+    <polygon points="206,340 256,310 306,340 306,400 256,430 206,400" />
+  </g>
+
+  <!-- Main 3D Hexagon Tile Stack (Centered) -->
+  <g filter="url(#tileShadow)">
+    <!-- Bottom Tile (Teal) -->
+    <!-- Sides -->
+    <path d="M 176,330 L 256,376 L 336,330 L 336,366 L 256,412 L 176,366 Z" fill="url(#hexTealSide)" />
+    <!-- Top Face -->
+    <polygon points="256,290 336,330 336,346 256,376 176,346 176,330" fill="url(#hexTeal)" />
+
+    <!-- Middle Tile (Coral) -->
+    <!-- Sides -->
+    <path d="M 176,260 L 256,306 L 336,260 L 336,296 L 256,342 L 176,296 Z" fill="url(#hexCoralSide)" />
+    <!-- Top Face -->
+    <polygon points="256,220 336,260 336,276 256,306 176,276 176,260" fill="url(#hexCoral)" />
+
+    <!-- Top Tile (Amber) -->
+    <!-- Sides -->
+    <path d="M 176,190 L 256,236 L 336,190 L 336,226 L 256,272 L 176,226 Z" fill="url(#hexAmberSide)" />
+    <!-- Top Face -->
+    <polygon points="256,140 336,186 336,202 256,238 176,202 176,186" fill="url(#hexAmber)" />
+
+    <!-- Embossed Star / Sparkle Icon on Top Tile -->
+    <path d="M 256,168 L 263,184 L 279,189 L 263,194 L 256,210 L 249,194 L 233,189 L 249,184 Z" fill="#ffffff" fill-opacity="0.9" />
+  </g>
+
+  <!-- Cascade Domino Arc Flight (Mini Flying Hex Tile) -->
+  <g transform="translate(340, 140) rotate(-18) scale(0.65)" filter="url(#tileShadow)">
+    <path d="M 176,190 L 256,236 L 336,190 L 336,210 L 256,256 L 176,210 Z" fill="url(#hexAmberSide)" />
+    <polygon points="256,150 336,190 256,236 176,190" fill="url(#hexAmber)" />
+  </g>
+
+  <!-- Sparkle Particle Accents -->
+  <circle cx="160" cy="150" r="8" fill="#f59e0b" fill-opacity="0.8" />
+  <circle cx="370" cy="270" r="6" fill="#06b6d4" fill-opacity="0.8" />
+  <circle cx="140" cy="340" r="5" fill="#f97316" fill-opacity="0.8" />
+</svg>

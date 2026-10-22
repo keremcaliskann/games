@@ -57,6 +57,13 @@ jobs:
           npm run build
           cd ..
 
+      - name: Build hexa-sort-3d
+        run: |
+          cd hexa-sort-3d
+          npm install
+          npm run build
+          cd ..
+
       - name: Assemble Arcade Portal Site
         run: |
           mkdir -p _site
@@ -70,6 +77,8 @@ jobs:
           cp -r color-block-jam-3d/dist/* _site/color-block-jam-3d/
           mkdir -p _site/screw-jam-3d
           cp -r screw-jam-3d/dist/* _site/screw-jam-3d/
+          mkdir -p _site/hexa-sort-3d
+          cp -r hexa-sort-3d/dist/* _site/hexa-sort-3d/
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3

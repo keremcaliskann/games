@@ -1,5 +1,18 @@
 [
   {
+    "id": "hexa-sort-3d",
+    "title": "HEXA SORT 3D // CASCADE STACK",
+    "description": "Tactile 3D hexagonal tile sorting ASMR puzzle! Stack, match colors, and trigger satisfying domino cascade clears on a floating honeycomb grid under warm daylight.",
+    "path": "./hexa-sort-3d/",
+    "tags": ["3D Puzzle", "Hexa Sort", "ASMR Cascade", "Spatial Logic", "Casual"],
+    "date": "2026-10-22",
+    "icon": "./hexa-sort-3d/icon.svg",
+    "iconEmoji": "🔷",
+    "featured": true,
+    "themeColor": "#f59e0b",
+    "accentGradient": "linear-gradient(135deg, #f59e0b, #f97316)"
+  },
+  {
     "id": "screw-jam-3d",
     "title": "SCREW JAM 3D // HYPER UNBOLT",
     "description": "Tactile 3D pin-unscrew ASMR puzzle! Unbolt colorful translucent acrylic plates, match screws into 3-slot color toolboxes, and manage the buffer dock under warm daylight.",
