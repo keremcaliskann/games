@@ -1,5 +1,18 @@
 [
   {
+    "id": "voxel-craft-smash-3d",
+    "title": "VOXEL SMASH 3D // BLOCK MINER & TURRET",
+    "description": "Tactile 3D voxel fortress destruction ASMR! Demolish procedural castles, chain-react TNT powder kegs, fend off marching golems, and vacuum glowing loot cubes.",
+    "path": "./voxel-craft-smash-3d/",
+    "tags": ["Voxel Sandbox", "ASMR Destruction", "Turret Defense", "Instanced Mesh", "60 FPS"],
+    "date": "2026-10-25",
+    "icon": "./voxel-craft-smash-3d/icon.svg",
+    "iconEmoji": "🧱",
+    "featured": true,
+    "themeColor": "#f97316",
+    "accentGradient": "linear-gradient(135deg, #f97316, #eab308)"
+  },
+  {
     "id": "hole-city-io-3d",
     "title": "HOLE SWALLOW 3D // CITY ARENA .IO",
     "description": "Steer a hungry 3D black hole across a miniature sunlit city. Swallow props, cars, and skyscrapers, eliminate rival bots, and top the live 8-player leaderboard!",

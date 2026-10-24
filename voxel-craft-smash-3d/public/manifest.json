@@ -1,0 +1,18 @@
+{
+  "name": "VOXEL SMASH 3D // BLOCK MINER & TURRET",
+  "short_name": "VoxelSmash3D",
+  "description": "Aim and fire rapid cannonballs at towering Minecraft-style voxel castles, detonate TNT, and collect cascading physics loot cubes!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#cfe8f7",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
