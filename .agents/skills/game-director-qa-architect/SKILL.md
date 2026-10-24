@@ -2,7 +2,7 @@
 name: game-director-qa-architect
 description: Inspects all active games in the workspace as a Senior Game Director & Lead QA Architect, identifies bugs, mechanical upgrades, and visual polish tasks, prioritizes them in backlog/studio-todo.json, and outputs a concise Turkish post-run report.
 metadata:
-  icon:verified
+  icon: verified
 ---
 
 # Game Director QA & To-Do Architect (`game-director-qa-architect`)
