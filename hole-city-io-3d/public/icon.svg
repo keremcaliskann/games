@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd" />
+      <stop offset="60%" stop-color="#e0f2fe" />
+      <stop offset="100%" stop-color="#f5eedb" />
+    </linearGradient>
+    <radialGradient id="holeGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#020617" />
+      <stop offset="65%" stop-color="#0f172a" />
+      <stop offset="90%" stop-color="#1e1b4b" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </radialGradient>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <linearGradient id="bldgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="carGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0f172a" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="112" fill="url(#skyGrad)" />
+
+  <!-- Road Grid & Biscuit Sidewalk -->
+  <rect x="36" y="220" width="440" height="256" rx="48" fill="#f5eedb" stroke="#e2d7c3" stroke-width="6" />
+  <path d="M70 260 L442 260" stroke="#cbd5e1" stroke-width="12" stroke-dasharray="24 16" />
+
+  <!-- The Black Hole (Vortex) -->
+  <g transform="translate(256, 350) scale(1, 0.52)" filter="url(#shadow)">
+    <!-- Outer Neon Gravity Rim -->
+    <circle cx="0" cy="0" r="185" fill="none" stroke="url(#ringGrad)" stroke-width="18" opacity="0.9" />
+    <circle cx="0" cy="0" r="172" fill="url(#holeGrad)" />
+    <!-- Spiral Suction Rings -->
+    <ellipse cx="0" cy="0" rx="130" ry="110" fill="none" stroke="#38bdf8" stroke-width="5" opacity="0.45" stroke-dasharray="30 15" />
+    <ellipse cx="0" cy="0" rx="80" ry="65" fill="none" stroke="#a855f7" stroke-width="4" opacity="0.6" stroke-dasharray="20 10" />
+    <circle cx="0" cy="0" r="40" fill="#020617" />
+  </g>
+
+  <!-- Swallowed Props Falling in Dynamic Arc -->
+  <!-- Falling Skyscraper (Tilted entering hole) -->
+  <g transform="translate(230, 250) rotate(18) scale(0.85)">
+    <rect x="-35" y="-140" width="70" height="140" rx="10" fill="url(#bldgGrad)" />
+    <!-- Windows -->
+    <rect x="-24" y="-125" width="16" height="22" rx="3" fill="#fef08a" opacity="0.9" />
+    <rect x="8" y="-125" width="16" height="22" rx="3" fill="#fef08a" opacity="0.9" />
+    <rect x="-24" y="-90" width="16" height="22" rx="3" fill="#ffffff" opacity="0.8" />
+    <rect x="8" y="-90" width="16" height="22" rx="3" fill="#ffffff" opacity="0.8" />
+    <rect x="-24" y="-55" width="16" height="22" rx="3" fill="#fef08a" opacity="0.9" />
+    <rect x="8" y="-55" width="16" height="22" rx="3" fill="#ffffff" opacity="0.8" />
+  </g>
+
+  <!-- Tilted Sports Car into Vortex -->
+  <g transform="translate(340, 310) rotate(-28) scale(0.7)">
+    <rect x="-50" y="-22" width="100" height="44" rx="12" fill="url(#carGrad)" />
+    <!-- Cabin -->
+    <rect x="-22" y="-42" width="54" height="24" rx="8" fill="#0f172a" />
+    <circle cx="-30" cy="22" r="14" fill="#1e293b" stroke="#94a3b8" stroke-width="4" />
+    <circle cx="30" cy="22" r="14" fill="#1e293b" stroke="#94a3b8" stroke-width="4" />
+    <!-- Headlight beam -->
+    <path d="M48 -10 L90 -22 L85 8 Z" fill="#fef08a" opacity="0.75" />
+  </g>
+
+  <!-- Tilted Tree (Left) -->
+  <g transform="translate(150, 310) rotate(22) scale(0.75)">
+    <rect x="-8" y="10" width="16" height="30" rx="4" fill="#78350f" />
+    <circle cx="0" cy="-10" r="32" fill="#22c55e" />
+    <circle cx="-12" cy="-22" r="24" fill="#16a34a" />
+    <circle cx="14" cy="-20" r="22" fill="#4ade80" />
+  </g>
+
+  <!-- Traffic Cone (Center) -->
+  <g transform="translate(265, 335) rotate(-12) scale(0.65)">
+    <path d="M-18 20 L18 20 L6 -25 L-6 -25 Z" fill="#f97316" />
+    <rect x="-24" y="18" width="48" height="8" rx="2" fill="#ea580c" />
+    <path d="M-11 5 L11 5 L9 -8 L-9 -8 Z" fill="#ffffff" />
+  </g>
+
+  <!-- Badge Top Banner -->
+  <g transform="translate(256, 75)">
+    <rect x="-180" y="-36" width="360" height="72" rx="36" fill="#0f172a" stroke="url(#ringGrad)" stroke-width="6" />
+    <text x="0" y="12" fill="#f8fafc" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="30" text-anchor="middle" letter-spacing="2">
+      HOLE SWALLOW 3D
+    </text>
+  </g>
+
+  <!-- Live Rank #1 Badge -->
+  <g transform="translate(410, 150)">
+    <circle cx="0" cy="0" r="38" fill="#f59e0b" stroke="#ffffff" stroke-width="5" filter="url(#shadow)" />
+    <text x="0" y="10" fill="#ffffff" font-family="system-ui, sans-serif" font-weight="900" font-size="28" text-anchor="middle">#1</text>
+  </g>
+</svg>

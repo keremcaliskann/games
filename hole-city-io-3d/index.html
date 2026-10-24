@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>HOLE SWALLOW 3D // City Arena .IO</title>
+
+    <!-- YouTube Playables SDK (Mandatory first script) -->
+    <script src="https://www.youtube.com/game_api/v1"></script>
+
+    <!-- Mobile & PWA -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#06b6d4" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+
+    <!-- OpenGraph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="HOLE SWALLOW 3D // City Arena .IO" />
+    <meta property="og:description" content="Steer a growing 3D black hole, swallow city props & buildings, and climb the live leaderboard before time runs out!" />
+    <meta property="og:url" content="https://keremcaliskann.github.io/games/hole-city-io-3d/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HOLE SWALLOW 3D // City Arena .IO" />
+    <meta name="twitter:description" content="Steer a growing 3D black hole, swallow city props & buildings, and climb the live leaderboard before time runs out!" />
+
+    <style>
+      :root {
+        --color-primary: #06b6d4;
+        --color-accent: #8b5cf6;
+        --color-pink: #ec4899;
+        --color-gold: #f59e0b;
+        --color-emerald: #10b981;
+        --bg-stage: #cfe8f7;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--bg-stage);
+        overscroll-behavior: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: none;
+      }
+
+      /* Dual-Mode Shell: Auto-collapse sidebars in YouTube Playables & external portals */
+      body.embed-fullscreen-mode .shell-sidebar-left,
+      body.embed-fullscreen-mode .shell-sidebar-right,
+      body.embed-fullscreen-mode .fullscreen-ad-banner {
+        display: none !important;
+      }
+      body.embed-fullscreen-mode .arcade-shell {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* 3-Column Desktop Arcade Shell */
+      .arcade-shell {
+        display: grid;
+        grid-template-columns: 260px 1fr 320px;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden;
+        background: #0b0f19;
+      }
+
+      /* Left Navigation Rail */
+      .shell-sidebar-left {
+        width: 260px;
+        background: rgba(15, 23, 42, 0.95);
+        border-right: 1px solid rgba(6, 182, 212, 0.25);
+        display: flex;
+        flex-direction: column;
+        padding: 18px 14px;
+        gap: 16px;
+        overflow-y: auto;
+        z-index: 20;
+      }
+      .shell-brand-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+      }
+      .shell-brand-badge {
+        background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        color: #fff;
+        font-weight: 900;
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        padding: 4px 8px;
+        border-radius: 6px;
+      }
+      .shell-brand-title {
+        color: #f8fafc;
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+      .shell-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .shell-btn {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        color: #cbd5e1;
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(148, 163, 184, 0.15);
+        cursor: pointer;
+        transition: all 0.15s ease;
+      }
+      .shell-btn:hover {
+        background: rgba(6, 182, 212, 0.15);
+        color: #fff;
+        border-color: var(--color-primary);
+      }
+      .shell-section-title {
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: #64748b;
+        text-transform: uppercase;
+        margin: 8px 0 6px 4px;
+      }
+      .other-games-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .shell-game-card {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 8px;
+        text-decoration: none;
+        color: #e2e8f0;
+      }
+      .shell-game-card:hover {
+        background: rgba(6, 182, 212, 0.12);
+        border-color: rgba(6, 182, 212, 0.3);
+      }
+      .shell-game-card .game-icon {
+        font-size: 18px;
+      }
+      .shell-game-card .game-title {
+        font-size: 12px;
+        font-weight: 700;
+        display: block;
+      }
+      .shell-game-card .game-tag {
+        font-size: 10px;
+        color: #94a3b8;
+      }
+
+      /* Center Stage */
+      .shell-stage {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-stage);
+        overflow: hidden;
+      }
+      .game-canvas-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .game-hud-overlay {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Right Ad Rail */
+      .shell-sidebar-right {
+        width: 320px;
+        background: rgba(15, 23, 42, 0.95);
+        border-left: 1px solid rgba(6, 182, 212, 0.25);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 10px;
+        z-index: 20;
+      }
+      .ad-rail-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      .ad-header-tag {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 1.5px;
+        color: #64748b;
+      }
+      .ad-banner-slot {
+        width: 300px;
+        height: 600px;
+        background: linear-gradient(180deg, #1e293b, #0f172a);
+        border: 1px solid rgba(6, 182, 212, 0.25);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .ad-mock-creative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        z-index: 2;
+      }
+      .ad-mock-brand {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin: 0;
+        color: #fff;
+      }
+      .ad-mock-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        margin: 0;
+        max-width: 220px;
+      }
+      .ad-mock-cta {
+        margin-top: 10px;
+        background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        color: #fff;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-weight: 800;
+        font-size: 13px;
+        letter-spacing: 1px;
+      }
+
+      /* Fullscreen Sticky Banner */
+      .fullscreen-ad-banner {
+        display: none;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50px;
+        background: rgba(15, 23, 42, 0.95);
+        border-top: 1px solid rgba(6, 182, 212, 0.3);
+        z-index: 40;
+        align-items: center;
+        justify-content: center;
+      }
+      :fullscreen .fullscreen-ad-banner {
+        display: flex;
+      }
+      .fullscreen-ad-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #fff;
+      }
+      .ad-tag {
+        background: var(--color-primary);
+        color: #000;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 3px 6px;
+        border-radius: 4px;
+      }
+      .ad-placeholder-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: #94a3b8;
+      }
+
+      /* Responsive Collapse for Small Screens */
+      @media (max-width: 900px) {
+        .arcade-shell {
+          grid-template-columns: 1fr;
+        }
+        .shell-sidebar-left,
+        .shell-sidebar-right {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="arcade-shell" class="arcade-shell">
+      <!-- Left Navigation Rail -->
+      <aside class="shell-sidebar shell-sidebar-left">
+        <div class="shell-brand">
+          <a href="../" class="shell-brand-link">
+            <span class="shell-brand-badge">ARCADE</span>
+            <span class="shell-brand-title">3D GAMES</span>
+          </a>
+        </div>
+
+        <nav class="shell-nav">
+          <a href="../" class="shell-btn shell-btn-portal" title="Return to Central Arcade Portal">
+            <span class="btn-icon">←</span> Portala Dön
+          </a>
+          <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
+            <span class="btn-icon">🔄</span> Yeniden Başlat
+          </button>
+          <button id="shell-fullscreen-btn" class="shell-btn shell-btn-fullscreen" type="button">
+            <span class="btn-icon">⛶</span> Tam Ekran
+          </button>
+        </nav>
+
+        <section class="shell-other-games">
+          <h3 class="shell-section-title">Diğer Oyunlar</h3>
+          <div id="shell-other-games-list" class="other-games-list"></div>
+        </section>
+      </aside>
+
+      <!-- Center Game Viewport Stage -->
+      <main id="shell-stage" class="shell-stage">
+        <div id="app" class="game-canvas-container"></div>
+        <div id="hud" class="game-hud-overlay"></div>
+
+        <!-- Sticky banner displayed during Fullscreen mode -->
+        <div id="fullscreen-ad-banner" class="fullscreen-ad-banner" aria-label="Sponsor Banner">
+          <div class="fullscreen-ad-content">
+            <span class="ad-tag">SPONSOR</span>
+            <span class="ad-placeholder-text">HOLE SWALLOW 3D // ARENA BATTLE</span>
+          </div>
+        </div>
+      </main>
+
+      <!-- Right Advertising Rail -->
+      <aside class="shell-sidebar shell-sidebar-right">
+        <div class="ad-rail-wrapper">
+          <span class="ad-header-tag">SPONSOR // REKLAM</span>
+          <div id="ad-banner-desktop" class="ad-banner-slot banner-300x600">
+            <div class="ad-mock-creative">
+              <p class="ad-mock-brand">HOLE SWALLOW 3D</p>
+              <p class="ad-mock-desc">Steer your hole, swallow cars and skyscrapers, and conquer the leaderboard</p>
+              <div class="ad-mock-cta">ŞİMDİ OYNA</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

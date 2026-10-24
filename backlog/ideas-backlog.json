@@ -37,8 +37,8 @@
     "id": "hole-city-io-3d",
     "title": "HOLE SWALLOW 3D // CITY ARENA .IO",
     "category": "io-fake-multiplayer",
-    "status": "ready",
-    "rank": 1,
+    "status": "completed",
+    "rank": null,
     "revenueScore": 97,
     "scoreBreakdown": {
       "rewardedAdScore": 35,
@@ -72,7 +72,7 @@
     "title": "VOXEL SMASH 3D // BLOCK MINER & TURRET",
     "category": "voxel-sandbox-action",
     "status": "ready",
-    "rank": 2,
+    "rank": 1,
     "revenueScore": 95,
     "scoreBreakdown": {
       "rewardedAdScore": 34,

@@ -1,0 +1,18 @@
+{
+  "name": "HOLE SWALLOW 3D // CITY ARENA .IO",
+  "short_name": "HoleSwallow3D",
+  "description": "Vibrant 3D fake-multiplayer .io city arena. Steer a growing black hole, swallow props & buildings, and climb the live leaderboard before time runs out!",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#cfe8f7",
+  "theme_color": "#06b6d4",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

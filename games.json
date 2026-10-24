@@ -1,5 +1,18 @@
 [
   {
+    "id": "hole-city-io-3d",
+    "title": "HOLE SWALLOW 3D // CITY ARENA .IO",
+    "description": "Steer a hungry 3D black hole across a miniature sunlit city. Swallow props, cars, and skyscrapers, eliminate rival bots, and top the live 8-player leaderboard!",
+    "path": "./hole-city-io-3d/",
+    "tags": [".io Arena", "Fake Multiplayer", "3D Physics", "Casual Action", "60 FPS"],
+    "date": "2026-10-24",
+    "icon": "./hole-city-io-3d/icon.svg",
+    "iconEmoji": "🕳️",
+    "featured": true,
+    "themeColor": "#06b6d4",
+    "accentGradient": "linear-gradient(135deg, #06b6d4, #8b5cf6)"
+  },
+  {
     "id": "hexa-sort-3d",
     "title": "HEXA SORT 3D // CASCADE STACK",
     "description": "Tactile 3D hexagonal tile sorting ASMR puzzle! Stack, match colors, and trigger satisfying domino cascade clears on a floating honeycomb grid under warm daylight.",
