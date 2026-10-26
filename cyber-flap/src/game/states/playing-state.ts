@@ -33,7 +33,11 @@ export class PlayingState implements GameState {
       },
       onPassScoreSensor: (pairId: number): void => {
         if (!this.ctx.spawner.tryConsumeScoreSensor(pairId)) return;
-        this.ctx.score++;
+        const isBoostRing = pairId % 3 === 0;
+        this.ctx.score += isBoostRing ? 3 : 1;
+        if (isBoostRing) {
+          this.ctx.hasShield = true;
+        }
         if (this.ctx.score > this.ctx.highScore) {
           this.ctx.highScore = this.ctx.score;
           this.ctx.storage.saveHighScore(this.ctx.highScore);

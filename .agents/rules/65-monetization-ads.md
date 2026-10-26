@@ -84,5 +84,12 @@ Every game must implement all 3 rewarded revenue hooks adhering to these visual 
 When running on GitHub Pages or local dev preview, the simulated ad overlay must follow a consistent layout:
 * **Backdrop:** `rgba(3, 7, 18, 0.95)` frosted dark glass (`backdrop-filter: blur(8px)`).
 * **Header:** Small cyan tracking badge: `YOUTUBE PLAYABLES REWARD REEL // SPONSOR`.
-* **Countdown:** Centered 2-second timer (`2s` -> `1s` -> `COMPLETED!`).
-* **Button:** Disabled during countdown (`PLEASE WAIT...`), turning emerald green when finished (`CLAIM REWARD & CONTINUE`).
+* **Countdown:** Centered 2-second timer (`2s` -> `1s` -> `TAMAMLANDI! ✓`).
+* **Button:** Disabled during countdown (`LÜTFEN BEKLEYİN...`), turning emerald green when finished (`ÖDÜLÜ AL & DEVAM ET`).
+
+---
+
+## 6. Shared Core Synchronization (`shared/platform/ads.ts` & `scripts/sync-shared-core.mjs`)
+
+- `shared/platform/ads.ts` is the **Single Source of Truth** for `IAdProvider` and `UniversalAdProvider` across all games.
+- Never write divergent `ads.ts` implementations per game; always execute `node scripts/sync-shared-core.mjs` to synchronize the canonical ad provider and `body.ads-unavailable` disabled-state rules across all games.

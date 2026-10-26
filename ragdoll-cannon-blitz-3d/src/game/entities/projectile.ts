@@ -66,7 +66,8 @@ export class ProjectileManager {
     const body = this.physics.world.createRigidBody(bodyDesc);
     const colliderDesc = RAPIER.ColliderDesc.ball(radius)
       .setRestitution(0.4)
-      .setFriction(0.6);
+      .setFriction(0.6)
+      .setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
 
     this.physics.world.createCollider(colliderDesc, body);
     this.physics.registerMeta(body.handle, { type: 'projectile', id: type });

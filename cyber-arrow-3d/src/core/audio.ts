@@ -19,7 +19,7 @@ export class SoundController {
     return this.ctx;
   }
 
-  public playFlyAway(): void {
+  public playFlyAway(streak = 1): void {
     if (this.isMuted) return;
     const ctx = this.ensureContext();
     if (!ctx) return;
@@ -27,10 +27,11 @@ export class SoundController {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
+    const pitchMult = 1 + Math.min(Math.max(0, streak - 1), 8) * 0.08;
     osc.type = 'sine';
     const now = ctx.currentTime;
-    osc.frequency.setValueAtTime(320, now);
-    osc.frequency.exponentialRampToValueAtTime(780, now + 0.18);
+    osc.frequency.setValueAtTime(320 * pitchMult, now);
+    osc.frequency.exponentialRampToValueAtTime(780 * pitchMult, now + 0.18);
 
     gain.gain.setValueAtTime(0.18, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);

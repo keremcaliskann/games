@@ -15,6 +15,7 @@ export class Plate {
   private velocityY = 0;
   private rotSpeedX = 0;
   private rotSpeedZ = 0;
+  private occludeShakeTimer = 0;
 
   constructor(
     id: string,
@@ -58,7 +59,19 @@ export class Plate {
     this.rotSpeedZ = (Math.random() - 0.5) * 4.0;
   }
 
+  public triggerOcclusionShake(): void {
+    if (this.isFalling || this.isDropped) return;
+    this.occludeShakeTimer = 0.35;
+  }
+
   public update(dt: number): void {
+    if (this.occludeShakeTimer > 0) {
+      this.occludeShakeTimer = Math.max(0, this.occludeShakeTimer - dt);
+      this.mesh.position.x = Math.sin(this.occludeShakeTimer * 50) * 0.08;
+    } else if (this.mesh.position.x !== 0) {
+      this.mesh.position.x = 0;
+    }
+
     if (!this.isFalling || this.isDropped) return;
 
     // Gravity drop

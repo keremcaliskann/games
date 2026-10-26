@@ -246,19 +246,43 @@ class ScrewJamApp {
   private handleTap(raycaster: THREE.Raycaster): void {
     if (this.isLevelTransitioning) return;
 
-    // Raycast against all interactive screw meshes
-    const meshes: THREE.Mesh[] = [];
+    // Raycast against all interactive screw meshes and active plates
+    const meshes: THREE.Object3D[] = [];
     for (const s of this.screws) {
       if (s.state === 'idle') {
         meshes.push(s.headMesh, s.shaftMesh);
+      }
+    }
+    for (const p of this.plates) {
+      if (!p.isFalling && !p.isDropped) {
+        meshes.push(p.mesh);
       }
     }
 
     const hits = raycaster.intersectObjects(meshes, false);
     if (hits.length === 0) return;
 
-    const hitMesh = hits[0].object as THREE.Mesh;
-    const screw = hitMesh.userData?.screw as Screw;
+    const firstHit = hits[0].object as THREE.Mesh;
+    const hitPlate = firstHit.userData?.plate as Plate | undefined;
+    if (hitPlate) {
+      // Check if an idle screw head was right behind the obstructing plate
+      const occludedScrewHit = hits.find((h) => Boolean(h.object.userData?.screw));
+      const occludedScrew = occludedScrewHit?.object.userData?.screw as Screw | undefined;
+      if (occludedScrew && !hitPlate.holdingScrewIds.has(occludedScrew.id)) {
+        hitPlate.triggerOcclusionShake();
+        this.sound.playBlocked();
+        this.cameraRig.addTrauma(0.2);
+        return;
+      }
+      if (occludedScrew && hitPlate.holdingScrewIds.has(occludedScrew.id)) {
+        this.processScrewUnbolt(occludedScrew);
+        return;
+      }
+      hitPlate.triggerOcclusionShake();
+      return;
+    }
+
+    const screw = firstHit.userData?.screw as Screw;
     if (!screw || screw.state !== 'idle') return;
 
     this.processScrewUnbolt(screw);

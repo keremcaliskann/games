@@ -24,7 +24,9 @@ export class InputManager {
         target.closest('.hud-btn') ||
         target.closest('.booster-btn') ||
         target.closest('.modal-card') ||
-        target.closest('.arcade-sidebar')
+        target.closest('.modal-overlay') ||
+        target.closest('.shell-sidebar') ||
+        target.closest('[data-hud-interactive]')
       ) {
         return;
       }

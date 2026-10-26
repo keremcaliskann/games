@@ -161,6 +161,7 @@ class CannonBlitzApp {
 
   public async bootstrap(): Promise<void> {
     await PlatformBridge.initPlatform();
+    await this.ads.initialize();
     await this.economy.init();
     await RAPIER.init();
 

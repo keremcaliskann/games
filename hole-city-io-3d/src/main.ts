@@ -39,6 +39,7 @@ class HoleCityApp {
   private playerHole!: Hole;
   private bots: Hole[] = [];
   private props: Prop[] = [];
+  private readonly allHolesBuffer: Hole[] = [];
   private botAi = new BotAISystem();
   private leaderboard = new LeaderboardSystem();
 
@@ -243,14 +244,10 @@ class HoleCityApp {
       bot.reset(Math.cos(angle) * dist, Math.sin(angle) * dist);
     });
 
-    // Reset all props
-    const half = GAME_CONFIG.arenaSize / 2 - 8;
-    this.props.forEach((prop) => {
-      prop.reset(
-        prop.position.x || (Math.random() - 0.5) * half * 2,
-        prop.position.z || (Math.random() - 0.5) * half * 2
-      );
-    });
+    // Reset all props to their initial city coordinates
+    for (let i = 0; i < this.props.length; i++) {
+      this.props[i].reset();
+    }
 
     this.hud.updateTimer(this.matchTimeRemaining);
     this.hud.updateScore(0);
@@ -331,7 +328,12 @@ class HoleCityApp {
   }
 
   private updateSuctionPhysics(dt: number): void {
-    const allHoles = [this.playerHole, ...this.bots.filter((b) => b.isAlive)];
+    this.allHolesBuffer.length = 0;
+    if (this.playerHole.isAlive) this.allHolesBuffer.push(this.playerHole);
+    for (let i = 0; i < this.bots.length; i++) {
+      if (this.bots[i].isAlive) this.allHolesBuffer.push(this.bots[i]);
+    }
+    const allHoles = this.allHolesBuffer;
 
     for (const prop of this.props) {
       if (prop.state === 'swallowing') {
@@ -371,7 +373,12 @@ class HoleCityApp {
   }
 
   private updateHoleCollisions(): void {
-    const allHoles = [this.playerHole, ...this.bots];
+    this.allHolesBuffer.length = 0;
+    if (this.playerHole.isAlive) this.allHolesBuffer.push(this.playerHole);
+    for (let i = 0; i < this.bots.length; i++) {
+      if (this.bots[i].isAlive) this.allHolesBuffer.push(this.bots[i]);
+    }
+    const allHoles = this.allHolesBuffer;
 
     for (let i = 0; i < allHoles.length; i++) {
       const a = allHoles[i];

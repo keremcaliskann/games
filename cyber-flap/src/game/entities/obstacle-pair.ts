@@ -11,9 +11,11 @@ export interface SharedObstacleResources {
   pillarGeo: THREE.BoxGeometry;
   coreGeo: THREE.BoxGeometry;
   capGeo: THREE.BoxGeometry;
+  ringGeo: THREE.TorusGeometry;
   pillarMat: THREE.MeshLambertMaterial;
   cyanCoreMat: THREE.MeshBasicMaterial;
   magentaCapMat: THREE.MeshLambertMaterial;
+  ringMat: THREE.MeshLambertMaterial;
 }
 
 export function createSharedObstacleResources(): SharedObstacleResources {
@@ -33,6 +35,7 @@ export function createSharedObstacleResources(): SharedObstacleResources {
       0.42,
       GAME_CONFIG.gateDepthM * 1.28,
     ),
+    ringGeo: new THREE.TorusGeometry(0.95, 0.12, 8, 20),
     pillarMat: new THREE.MeshLambertMaterial({
       color: 0xf1f5f9,
       emissive: 0x0f172a,
@@ -49,6 +52,11 @@ export function createSharedObstacleResources(): SharedObstacleResources {
       emissive: 0x7f1d1d,
       emissiveIntensity: 0.15,
     }),
+    ringMat: new THREE.MeshLambertMaterial({
+      color: 0xf59e0b,
+      emissive: 0xd97706,
+      emissiveIntensity: 0.35,
+    }),
   };
 }
 
@@ -56,15 +64,18 @@ export function disposeSharedObstacleResources(res: SharedObstacleResources): vo
   res.pillarGeo.dispose();
   res.coreGeo.dispose();
   res.capGeo.dispose();
+  res.ringGeo.dispose();
   res.pillarMat.dispose();
   res.cyanCoreMat.dispose();
   res.magentaCapMat.dispose();
+  res.ringMat.dispose();
 }
 
 export class ObstaclePair {
   readonly root = new THREE.Group();
   private readonly topGroup = new THREE.Group();
   private readonly bottomGroup = new THREE.Group();
+  private readonly boostRingMesh: THREE.Mesh;
 
   private readonly topBody: RAPIER.RigidBody;
   private readonly bottomBody: RAPIER.RigidBody;
@@ -108,7 +119,11 @@ export class ObstaclePair {
     bottomCap.castShadow = true;
     this.bottomGroup.add(bottomPillar, bottomCore, bottomCap);
 
-    this.root.add(this.topGroup, this.bottomGroup);
+    this.boostRingMesh = new THREE.Mesh(res.ringGeo, res.ringMat);
+    this.boostRingMesh.rotation.y = Math.PI * 0.5;
+    this.boostRingMesh.visible = pairId % 3 === 0;
+
+    this.root.add(this.topGroup, this.bottomGroup, this.boostRingMesh);
     this.root.visible = false;
 
     const halfW = GAME_CONFIG.gateWidthM * 0.5;
@@ -164,6 +179,7 @@ export class ObstaclePair {
     const offset = gapHeightM * 0.5 + GAME_CONFIG.pillarHeightM * 0.5;
     this.topGroup.position.set(0, offset, 0);
     this.bottomGroup.position.set(0, -offset, 0);
+    this.boostRingMesh.visible = this.pairId % 3 === 0;
 
     this.syncPhysicsImmediate(x, centerY, offset);
     this.root.position.copy(this.currPos);
@@ -189,6 +205,9 @@ export class ObstaclePair {
         this.oscillateAmpM;
 
     this.currPos.set(nextX, nextY, 0);
+    if (this.boostRingMesh.visible) {
+      this.boostRingMesh.rotation.z += dtSec * 3.5;
+    }
 
     const offset = this.gapHeightM * 0.5 + GAME_CONFIG.pillarHeightM * 0.5;
     this.topBody.setNextKinematicTranslation({ x: nextX, y: nextY + offset, z: 0 });

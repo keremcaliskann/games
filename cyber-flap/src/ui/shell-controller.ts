@@ -1,76 +1,116 @@
+/**
+ * Standardized Dual-Mode Arcade Shell Controller (Single Source of Truth across all Arcade 3D games).
+ * - Automatically collapses sidebars in embedded portals (YouTube Playables, Yandex, CrazyGames, Poki, ?embed=1).
+ * - Observes #app with ResizeObserver so canvas & camera aspect ratio never stretch when sidebars toggle.
+ * - Wires #shell-restart-btn, #shell-fullscreen-btn, arcade:restart custom event, and ../games.json cross-discovery.
+ */
+
 export interface ShellControllerOptions {
   currentGameId: string;
   onRestart: () => void;
+  onResize?: (width: number, height: number) => void;
 }
 
-interface GameCatalogItem {
-  id: string;
-  title: string;
-  description?: string;
-  icon?: string;
-  iconEmoji?: string;
-  tags?: string[];
+export type ShellOptions = ShellControllerOptions;
+
+export function applyDualModeShell(): boolean {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return false;
+  const w = window as any;
+  const isEmbedded = Boolean(
+    w.ytgame?.IN_PLAYABLES_ENV ||
+      w.YaGames ||
+      w.CrazyGames?.SDK ||
+      w.PokiSDK ||
+      new URLSearchParams(window.location.search).get('embed') === '1'
+  );
+  if (isEmbedded) {
+    document.documentElement.classList.add('yt-embed-mode');
+    document.body?.classList.add('embed-fullscreen-mode');
+  }
+  return isEmbedded;
 }
 
-/**
- * Standardized Arcade Shell Controller.
- * Manages sidebar actions:
- * - Return to portal (../)
- * - Restart game session
- * - Fullscreen toggle with ad banner preservation
- * - Dynamic discovery list from ../games.json
- */
 export class ShellController {
-  private readonly restartBtn: HTMLButtonElement | null;
-  private readonly fullscreenBtn: HTMLButtonElement | null;
-  private readonly shellEl: HTMLElement | null;
-  private readonly otherGamesContainer: HTMLElement | null;
+  private readonly options: ShellControllerOptions;
+  private readonly restartBtn: HTMLElement | null;
+  private readonly fullscreenBtn: HTMLElement | null;
+  private readonly otherGamesList: HTMLElement | null;
+  private resizeObserver: ResizeObserver | null = null;
+  private lastRestartTimestamp = 0;
+  private lastObservedWidth = 0;
+  private lastObservedHeight = 0;
 
-  private readonly onFullscreenChangeBound = (): void => {
-    this.updateFullscreenButton();
-  };
+  private readonly onFullscreenChangeBound = () => this.handleFullscreenChange();
+  private readonly onArcadeRestartBound = () => this.triggerRestart();
 
-  private readonly onRestartClickBound = (): void => {
-    this.options.onRestart();
-    window.dispatchEvent(new CustomEvent('arcade:restart'));
-  };
+  constructor(options: ShellControllerOptions) {
+    this.options = options;
+    applyDualModeShell();
 
-  private readonly onFullscreenClickBound = async (): Promise<void> => {
-    await this.toggleFullscreen();
-  };
+    this.restartBtn = document.getElementById('shell-restart-btn');
+    this.fullscreenBtn = document.getElementById('shell-fullscreen-btn');
+    this.otherGamesList = document.getElementById('shell-other-games-list');
 
-  constructor(private readonly options: ShellControllerOptions) {
-    this.restartBtn = document.getElementById('shell-restart-btn') as HTMLButtonElement | null;
-    this.fullscreenBtn = document.getElementById('shell-fullscreen-btn') as HTMLButtonElement | null;
-    this.shellEl = document.getElementById('arcade-shell');
-    this.otherGamesContainer = document.getElementById('shell-other-games-list');
+    this.init();
+  }
 
-    this.bindEvents();
+  private init(): void {
+    window.addEventListener('arcade:restart', this.onArcadeRestartBound);
+
+    if (this.restartBtn) {
+      this.restartBtn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('arcade:restart'));
+      });
+    }
+
+    if (this.fullscreenBtn) {
+      this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
+      document.addEventListener('fullscreenchange', this.onFullscreenChangeBound);
+    }
+
+    this.setupResizeObserver();
     void this.loadOtherGames();
   }
 
-  private bindEvents(): void {
-    this.restartBtn?.addEventListener('click', this.onRestartClickBound);
-    this.fullscreenBtn?.addEventListener('click', this.onFullscreenClickBound);
-    document.addEventListener('fullscreenchange', this.onFullscreenChangeBound);
+  private triggerRestart(): void {
+    const now = performance.now();
+    if (now - this.lastRestartTimestamp < 80) return;
+    this.lastRestartTimestamp = now;
+    this.options.onRestart();
   }
 
-  private async toggleFullscreen(): Promise<void> {
-    try {
-      if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else {
-        const target = this.shellEl || document.documentElement;
-        if (target.requestFullscreen) {
-          await target.requestFullscreen();
+  private setupResizeObserver(): void {
+    const appEl = document.getElementById('app');
+    if (!appEl || typeof ResizeObserver === 'undefined') return;
+
+    this.resizeObserver = new ResizeObserver((entries) => {
+      for (let i = 0; i < entries.length; i++) {
+        const rect = entries[i].contentRect;
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+        if (w > 0 && h > 0 && (w !== this.lastObservedWidth || h !== this.lastObservedHeight)) {
+          this.lastObservedWidth = w;
+          this.lastObservedHeight = h;
+          if (this.options.onResize) {
+            this.options.onResize(w, h);
+          }
+          window.dispatchEvent(new Event('resize'));
         }
       }
-    } catch (err: unknown) {
-      console.warn('Fullscreen request failed:', err);
+    });
+    this.resizeObserver.observe(appEl);
+  }
+
+  private toggleFullscreen(): void {
+    const shell = document.getElementById('arcade-shell') || document.documentElement;
+    if (!document.fullscreenElement) {
+      shell.requestFullscreen?.().catch(() => {});
+    } else {
+      document.exitFullscreen?.().catch(() => {});
     }
   }
 
-  private updateFullscreenButton(): void {
+  private handleFullscreenChange(): void {
     if (!this.fullscreenBtn) return;
     if (document.fullscreenElement) {
       this.fullscreenBtn.innerHTML = '<span class="btn-icon">⛷</span> Tam Ekrandan Çık';
@@ -80,81 +120,41 @@ export class ShellController {
   }
 
   private async loadOtherGames(): Promise<void> {
-    if (!this.otherGamesContainer) return;
-    if (document.documentElement.classList.contains('yt-embed-mode')) return;
-
-    let catalog: GameCatalogItem[] | null = null;
-
-    try {
-      const res = await fetch('../games.json');
-      if (res.ok) {
-        catalog = (await res.json()) as GameCatalogItem[];
-      }
-    } catch {
-      // Cascading fallback
-    }
-
-    if (!catalog || !Array.isArray(catalog)) {
-      try {
-        const res = await fetch('/games.json');
-        if (res.ok) {
-          catalog = (await res.json()) as GameCatalogItem[];
-        }
-      } catch {
-        // Cascading fallback
-      }
-    }
-
-    if (!catalog || !Array.isArray(catalog)) {
-      catalog = [
-        {
-          id: 'cyber-flap',
-          title: 'CYBER FLAP // 2099',
-          icon: '../cyber-flap/icon.svg',
-          tags: ['3D Sky Runner', '60 FPS'],
-        },
-        {
-          id: 'cyber-arrow-3d',
-          title: 'CYBER ARROW 3D',
-          icon: '../cyber-arrow-3d/icon.svg',
-          tags: ['3D Puzzle', 'Spatial Logic'],
-        },
-      ];
-    }
-
-    const otherGames = catalog.filter((g) => g.id !== this.options.currentGameId);
-    if (otherGames.length === 0) {
-      this.otherGamesContainer.innerHTML = '<div class="other-games-empty">Başka oyun bulunamadı</div>';
+    if (!this.otherGamesList) return;
+    if (
+      document.body.classList.contains('embed-fullscreen-mode') ||
+      document.documentElement.classList.contains('yt-embed-mode')
+    ) {
       return;
     }
 
-    this.otherGamesContainer.innerHTML = otherGames
-      .map((g) => {
-        let iconUrl = `../${g.id}/icon.svg`;
-        if (g.icon) {
-          if (g.icon.startsWith('./')) {
-            iconUrl = `../${g.icon.slice(2)}`;
-          } else if (g.icon.startsWith('../') || g.icon.startsWith('http')) {
-            iconUrl = g.icon;
-          }
-        }
-        const tag = g.tags?.[0] || '3D HTML5';
-        return `
-          <a href="../${g.id}/" class="other-game-item" title="${g.title}">
-            <img src="${iconUrl}" class="other-game-icon" alt="" onerror="this.style.display='none'" />
-            <div class="other-game-meta">
-              <span class="other-game-title">${g.title}</span>
-              <span class="other-game-tag">${tag}</span>
-            </div>
-          </a>
-        `;
-      })
-      .join('');
+    try {
+      const res = await fetch('../games.json');
+      if (!res.ok) return;
+      const catalog = await res.json();
+      const others = catalog.filter((g: { id: string }) => g.id !== this.options.currentGameId);
+
+      this.otherGamesList.innerHTML = others
+        .map(
+          (g: any) => `
+        <a href="../${g.id}/" class="other-game-item shell-game-card">
+          <img src="../${g.id}/icon.svg" class="other-game-icon" alt="" onerror="this.style.display='none'" />
+          <div class="other-game-meta game-info">
+            <span class="other-game-title game-title">${g.title}</span>
+            <span class="other-game-tag game-tag">${g.tags?.[0] || '3D HTML5'}</span>
+          </div>
+        </a>
+      `
+        )
+        .join('');
+    } catch {
+      // Graceful silent fallback in offline or standalone preview
+    }
   }
 
   public dispose(): void {
-    this.restartBtn?.removeEventListener('click', this.onRestartClickBound);
-    this.fullscreenBtn?.removeEventListener('click', this.onFullscreenClickBound);
+    window.removeEventListener('arcade:restart', this.onArcadeRestartBound);
     document.removeEventListener('fullscreenchange', this.onFullscreenChangeBound);
+    this.resizeObserver?.disconnect();
   }
 }

@@ -311,6 +311,409 @@
         }
       }
     </style>
+      <style id="shared-arcade-shell-css">
+/* ==========================================================================
+   SHARED ARCADE 3-COLUMN SHELL & DUAL-MODE VIEWPORT CSS
+   Single Source of Truth across all HTML5 3D Arcade Games
+   ========================================================================== */
+
+body.embed-fullscreen-mode .shell-sidebar-left,
+body.embed-fullscreen-mode .shell-sidebar-right,
+body.embed-fullscreen-mode .fullscreen-ad-banner,
+html.yt-embed-mode .shell-sidebar-left,
+html.yt-embed-mode .shell-sidebar-right,
+html.yt-embed-mode .fullscreen-ad-banner {
+  display: none !important;
+}
+
+body.embed-fullscreen-mode .shell-stage,
+html.yt-embed-mode .shell-stage {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+}
+
+/* Automatic Disabled State When Ads Are Unavailable (Offline / AdBlocker / No Inventory) */
+body.ads-unavailable .booster-btn,
+body.ads-unavailable .hud-booster-btn,
+body.ads-unavailable [data-ad-hook="booster"] {
+  opacity: 0.35 !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+body.ads-unavailable .btn-revive,
+body.ads-unavailable .btn-multiplier,
+body.ads-unavailable [data-ad-hook="revive"],
+body.ads-unavailable [data-ad-hook="multiplier"] {
+  display: none !important;
+}
+
+.arcade-shell {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #cfe8f7;
+  color: #fff;
+  position: relative;
+}
+
+/* Left Sidebar Navigation */
+.shell-sidebar-left {
+  width: 260px;
+  min-width: 260px;
+  background: rgba(13, 16, 28, 0.96);
+  border-right: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  flex-direction: column;
+  padding: 18px 14px;
+  gap: 16px;
+  z-index: 50;
+}
+
+.shell-brand {
+  margin-bottom: 2px;
+}
+
+.shell-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.shell-brand-badge {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.shell-brand-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  background: linear-gradient(135deg, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.shell-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.shell-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #e2e8f0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.shell-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.shell-btn .btn-icon {
+  font-size: 15px;
+}
+
+.shell-other-games {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.shell-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.other-games-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.other-game-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #cbd5e1;
+  transition: all 0.15s ease;
+}
+
+.other-game-item:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #fff;
+}
+
+.other-game-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.other-game-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.other-game-title {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.other-game-tag {
+  font-size: 10px;
+  color: #38bdf8;
+}
+
+/* Center Stage */
+.shell-stage {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: #cfe8f7;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-canvas-container {
+  position: absolute;
+  inset: 0;
+  touch-action: none;
+}
+
+.game-canvas-container canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.game-hud-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Fullscreen Sticky Banner */
+.fullscreen-ad-banner {
+  display: none;
+}
+
+:fullscreen .fullscreen-ad-banner,
+.arcade-shell:fullscreen .fullscreen-ad-banner {
+  display: flex !important;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 54px;
+  background: rgba(11, 17, 32, 0.95);
+  border-top: 1px solid rgba(56, 189, 248, 0.4);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+
+:fullscreen .game-canvas-container {
+  bottom: 54px;
+}
+
+.fullscreen-ad-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ad-tag {
+  background: #f59e0b;
+  color: #000;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 6px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.ad-placeholder-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 1px;
+}
+
+/* Right Ad Rail */
+.shell-sidebar-right {
+  width: 320px;
+  min-width: 320px;
+  background: rgba(13, 16, 28, 0.96);
+  border-left: 1px solid rgba(56, 189, 248, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 10px;
+  z-index: 50;
+}
+
+.ad-rail-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ad-header-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #64748b;
+}
+
+.ad-banner-slot {
+  width: 300px;
+  height: 600px;
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ad-mock-creative {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  z-index: 2;
+}
+
+.ad-mock-glow {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent);
+  top: 20%;
+  pointer-events: none;
+}
+
+.ad-mock-brand {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #fff;
+}
+
+.ad-mock-desc {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 220px;
+}
+
+.ad-mock-cta {
+  margin-top: 10px;
+  background: linear-gradient(135deg, #38bdf8, #0284c7);
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+}
+
+/* Responsive Collapse */
+@media (max-width: 1024px) {
+  .shell-sidebar-right {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .arcade-shell {
+    flex-direction: column;
+  }
+  .shell-sidebar-left {
+    width: 100%;
+    min-width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-right: none;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  }
+  .shell-other-games {
+    display: none;
+  }
+  .shell-nav {
+    flex-direction: row;
+    gap: 6px;
+  }
+  .shell-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
+
+    </style>
   </head>
   <body>
     <div id="arcade-shell" class="arcade-shell">

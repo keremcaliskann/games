@@ -19,6 +19,7 @@ export class ShredderGate {
   public readonly worldPosition = new THREE.Vector3();
   public readonly intakeDirection = new THREE.Vector3(); // Direction pointing outwards
   private rollerRotationSpeed = 8.0;
+  private highlightTimer = 0;
 
   constructor(
     id: string,
@@ -108,9 +109,22 @@ export class ShredderGate {
     // Continuous rotation of steel shredder rollers
     this.roller1.rotation.x += this.rollerRotationSpeed * dt;
     this.roller2.rotation.x -= this.rollerRotationSpeed * dt;
+
+    if (this.highlightTimer > 0) {
+      this.highlightTimer = Math.max(0, this.highlightTimer - dt);
+      const s = 1 + Math.sin(this.highlightTimer * Math.PI * 6) * 0.08;
+      this.group.scale.setScalar(s);
+    } else if (this.group.scale.x !== 1) {
+      this.group.scale.setScalar(1);
+    }
+  }
+
+  public pulseHighlight(): void {
+    this.highlightTimer = 0.55;
   }
 
   public pulseSuccess(): void {
+    this.highlightTimer = 0.55;
     // Temporarily speed up rollers upon shredding a block
     this.rollerRotationSpeed = 26.0;
     setTimeout(() => {

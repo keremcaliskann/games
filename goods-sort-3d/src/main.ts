@@ -131,6 +131,7 @@ class GoodsSortApp {
 
   public async bootstrap(): Promise<void> {
     await PlatformBridge.initPlatform();
+    await this.ads.initialize();
     await this.economy.init();
 
     this.cabinet = new Cabinet(this.scene, GAME_CONFIG.cabinet.tiers, GAME_CONFIG.cabinet.cols);
@@ -184,21 +185,24 @@ class GoodsSortApp {
     }
 
     this.sound.resetCombo();
+    this.input?.clearSelection();
     PlatformBridge.gameReady();
   }
 
   private checkMatches(): void {
-    const hadMatch = this.matcher.checkMatches(() => {
-      // Check Victory Condition
-      if (this.cabinet.getAllItems().length === 0 && this.state === GameState.PLAYING) {
-        this.state = GameState.LEVEL_WON;
-        this.sound.playVictory();
-        this.hud.showVictoryModal(GAME_CONFIG.coinsPerClear);
-      }
-    });
+    let anyMatched = false;
+    while (this.matcher.checkMatches()) {
+      anyMatched = true;
+    }
 
-    if (!hadMatch) {
+    if (!anyMatched) {
       this.sound.resetCombo();
+    }
+
+    if (this.cabinet.getAllItems().length === 0 && this.state === GameState.PLAYING) {
+      this.state = GameState.LEVEL_WON;
+      this.sound.playVictory();
+      this.hud.showVictoryModal(GAME_CONFIG.coinsPerClear);
     }
   }
 
@@ -206,6 +210,7 @@ class GoodsSortApp {
   private async activateBoosterWand(): Promise<void> {
     const rewarded = await this.ads.showRewarded('booster_wand');
     if (rewarded) {
+      this.input.clearSelection();
       this.matcher.executeMagicWand();
       this.checkMatches();
     }
@@ -224,7 +229,9 @@ class GoodsSortApp {
   private async activateBoosterShuffle(): Promise<void> {
     const rewarded = await this.ads.showRewarded('booster_shuffle');
     if (rewarded) {
+      this.input.clearSelection();
       this.matcher.executeShuffle();
+      this.checkMatches();
     }
   }
 

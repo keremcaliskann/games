@@ -43,7 +43,8 @@ export class MergeSystem {
     const body = this.physics.world.createRigidBody(bodyDesc);
     const colliderDesc = RAPIER.ColliderDesc.ball(radius)
       .setRestitution(0.38)
-      .setFriction(0.45);
+      .setFriction(0.45)
+      .setActiveEvents(RAPIER.ActiveEvents.COLLISION_EVENTS);
 
     this.physics.world.createCollider(colliderDesc, body);
 
@@ -172,6 +173,7 @@ export class MergeSystem {
   public getHighestY(): number {
     let highest = 0;
     for (const s of this.spheres) {
+      if (s.age < 0.9 || s.isMerging) continue;
       const y = s.body.translation().y + s.def.radius;
       if (y > highest) {
         highest = y;

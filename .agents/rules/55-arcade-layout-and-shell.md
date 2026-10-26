@@ -327,3 +327,11 @@ Every game repository must include `public/icon.svg`:
      ? `<img src="${g.icon}" class="game-icon-svg" alt="${g.title}" />`
      : `<span class="game-icon-emoji">${g.icon || '🎮'}</span>`;
    ```
+
+---
+
+## 7. Shared Core Synchronization (`shared/ui/` & `scripts/sync-shared-core.mjs`)
+
+To prevent UI drift across games:
+- `shared/ui/shell-controller.ts` and `shared/ui/arcade-shell.css` serve as the **Single Source of Truth** for all games.
+- Never write ad-hoc shell controllers per game; always run `node scripts/sync-shared-core.mjs` to propagate the canonical shell controller and 3-column `#arcade-shell` HTML/CSS to all games.

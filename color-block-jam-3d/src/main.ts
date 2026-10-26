@@ -99,10 +99,6 @@ class GameApp {
       onRestart: () => this.loadCurrentLevel(),
     });
 
-    window.addEventListener('arcade:restart', () => {
-      this.loadCurrentLevel();
-    });
-
     // Platform Lifecycle & Audio Sync
     PlatformBridge.initLifecycle({
       onPause: () => this.loop.stop(),
@@ -186,6 +182,7 @@ class GameApp {
       return;
     }
 
+    this.board.highlightMatchingGates(block.color.id);
     const outcome = this.board.trySlideBlock(block, dirX, dirY);
 
     if (outcome.type === 'shredded') {
@@ -225,6 +222,8 @@ class GameApp {
       this.executeHammerOnBlock(block);
       return;
     }
+
+    this.board.highlightMatchingGates(block.color.id);
 
     // Smart tap: If this block has an open path directly into its matching gate, slide into it!
     const tryDirs = [

@@ -197,8 +197,6 @@ async function bootstrap(appContainer: HTMLElement, hudContainer: HTMLElement): 
     onRestart: handleRestart,
   });
 
-  window.addEventListener('arcade:restart', handleRestart);
-
   // Track state transitions for score reporting & interstitial cadence
   events.on('stateChange', ({ state, score, highScore }) => {
     if (state === GameStateId.Playing) {

@@ -14,6 +14,7 @@ export interface HudCallbacks {
 export class Hud {
   private levelEl: HTMLElement;
   private quotaEl: HTMLElement;
+  private feverEl: HTMLElement;
   private coinsEl: HTMLElement;
   private soundBtn: HTMLButtonElement;
   private hammerBtn: HTMLButtonElement;
@@ -47,6 +48,13 @@ export class Hud {
             padding: 6px 14px; font-weight: 800; font-size: 13px; color: #0284c7;
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
           ">🎯 0 / 20</div>
+
+          <div id="hud-fever-chip" style="
+            display: none; background: rgba(245, 158, 11, 0.95); backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 20px;
+            padding: 6px 12px; font-weight: 900; font-size: 12px; color: #0f172a;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+          ">🔥 FEVER 2x</div>
 
           <button id="hud-sound-btn" data-hud-interactive="true" style="
             background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px);
@@ -135,6 +143,7 @@ export class Hud {
 
     this.levelEl = this.container.querySelector('#hud-level-chip')!;
     this.quotaEl = this.container.querySelector('#hud-quota-chip')!;
+    this.feverEl = this.container.querySelector('#hud-fever-chip')!;
     this.coinsEl = this.container.querySelector('#hud-coins-chip')!;
     this.soundBtn = this.container.querySelector('#hud-sound-btn')!;
     this.hammerBtn = this.container.querySelector('#btn-booster-hammer')!;
@@ -174,6 +183,18 @@ export class Hud {
     this.levelEl.textContent = `SEVİYE ${level}`;
     this.quotaEl.textContent = `🎯 ${cleared} / ${target}`;
     this.coinsEl.textContent = `🪙 ${coins}`;
+  }
+
+  public updateFever(feverProgress: number, isFever: boolean): void {
+    if (isFever) {
+      this.feverEl.style.display = 'inline-flex';
+      this.feverEl.textContent = '🔥 FEVER 2x!';
+    } else if (feverProgress >= 0.3) {
+      this.feverEl.style.display = 'inline-flex';
+      this.feverEl.textContent = `⚡ COMBO ${Math.round(feverProgress * 100)}%`;
+    } else {
+      this.feverEl.style.display = 'none';
+    }
   }
 
   public updateBoosterLabels(hammers: number, swaps: number, moves: number): void {

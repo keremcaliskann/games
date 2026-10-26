@@ -39,6 +39,7 @@ class GameApp {
   private isFirstRender = true;
 
   private movesRemaining = 0;
+  private streakCount = 0;
   private isGameOver = false;
   private isHammerActive = false;
 
@@ -97,18 +98,18 @@ class GameApp {
       onRestart: () => this.loadCurrentLevel(),
     });
 
-    window.addEventListener('arcade:restart', () => {
-      this.loadCurrentLevel();
-    });
-
     // Wire Event Bus listeners
     this.bus.on('block_cleared', (block: ArrowBlock) => {
-      this.sound.playFlyAway();
+      this.streakCount++;
+      this.sound.playFlyAway(this.streakCount);
       this.particles.spawnBurst(block.group.position, 24);
       this.hud.setRemaining(this.grid.getRemainingCount());
+      this.hud.setStreak(this.streakCount);
     });
 
     this.bus.on('block_blocked', (block: ArrowBlock) => {
+      this.streakCount = 0;
+      this.hud.setStreak(0);
       this.sound.playBlocked();
       this.cameraRig.addTrauma(0.35);
       if (block) {
@@ -177,6 +178,8 @@ class GameApp {
     this.updateCameraDistance();
     this.isGameOver = false;
     this.isHammerActive = false;
+    this.streakCount = 0;
+    this.hud.setStreak(0);
     this.hud.setHammerActive(false);
     this.movesRemaining = calculateMoveBudget(this.grid.getRemainingCount());
     this.hud.updateHeader(lvl, this.grid.getRemainingCount(), this.economy.getCoins());

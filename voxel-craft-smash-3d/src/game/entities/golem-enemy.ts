@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { PrefabFactory } from '../../render/PrefabFactory';
 
+const _UNIT_SCALE = new THREE.Vector3(1, 1, 1);
+
 export class GolemEnemy {
   public readonly group: THREE.Group;
   private leftArm: THREE.Mesh;
@@ -53,7 +55,7 @@ export class GolemEnemy {
     this.rightArm.rotation.x = -Math.sin(this.walkTime) * 0.45;
 
     // Recover squish scale
-    this.group.scale.lerp(new THREE.Vector3(1, 1, 1), dt * 8.0);
+    this.group.scale.lerp(_UNIT_SCALE, dt * 8.0);
 
     // Reached perimeter line?
     if (this.group.position.z >= targetZ - 1.5) {

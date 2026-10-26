@@ -137,6 +137,7 @@ class DropMergeApp {
 
   public async bootstrap(): Promise<void> {
     await PlatformBridge.initPlatform();
+    await this.ads.initialize();
     await this.economy.init();
     await RAPIER.init();
 
@@ -307,8 +308,9 @@ class DropMergeApp {
     this.hud.setDangerAlert(isDanger);
 
     if (isDanger && this.state === GameState.PLAYING) {
+      const prevSec = Math.floor(this.dangerTimer);
       this.dangerTimer += dt;
-      if (Math.floor(this.dangerTimer * 2) % 2 === 0) {
+      if (Math.floor(this.dangerTimer) > prevSec) {
         this.sound.playDangerWarning();
       }
 

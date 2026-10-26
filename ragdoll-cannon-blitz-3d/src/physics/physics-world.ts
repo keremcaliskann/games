@@ -29,15 +29,28 @@ export class PhysicsWorld {
     this.bodyMetadata.delete(bodyHandle);
   }
 
+  private readonly contactPairsBuffer: [number, number][] = [];
+  private readonly tempDir = new THREE.Vector3();
+
   public step(onCollision?: (h1: number, h2: number) => void): void {
     this.world.step(this.eventQueue);
 
     if (onCollision) {
-      this.eventQueue.drainCollisionEvents((h1, h2, started) => {
+      this.contactPairsBuffer.length = 0;
+      this.eventQueue.drainCollisionEvents((cHandle1, cHandle2, started) => {
         if (started) {
-          onCollision(h1, h2);
+          const b1 = this.world.getCollider(cHandle1)?.parent()?.handle;
+          const b2 = this.world.getCollider(cHandle2)?.parent()?.handle;
+          if (b1 !== undefined && b2 !== undefined) {
+            this.contactPairsBuffer.push([b1, b2]);
+          }
         }
       });
+
+      for (let i = 0; i < this.contactPairsBuffer.length; i++) {
+        const pair = this.contactPairsBuffer[i];
+        onCollision(pair[0], pair[1]);
+      }
     }
   }
 
@@ -48,7 +61,7 @@ export class PhysicsWorld {
     upwardBias: number = 0.35
   ): { handle: number; distance: number }[] {
     const affected: { handle: number; distance: number }[] = [];
-    const dir = new THREE.Vector3();
+    const dir = this.tempDir;
 
     this.world.forEachRigidBody((body) => {
       if (body.isFixed()) return;

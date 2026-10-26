@@ -103,6 +103,14 @@ export class Board {
     return this.gates.find((g) => g.matchesCell(side, cellCoord));
   }
 
+  public highlightMatchingGates(colorId: string): void {
+    for (let i = 0; i < this.gates.length; i++) {
+      if (this.gates[i].color.id === colorId) {
+        this.gates[i].pulseHighlight();
+      }
+    }
+  }
+
   /**
    * Tests sliding a block along (dirX, dirY).
    * Slides maximum possible distance along board or directly into a matching perimeter shredder gate.

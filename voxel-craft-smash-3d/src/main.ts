@@ -320,7 +320,10 @@ class VoxelSmashApp {
 
       // 5. Check Wave Victory (All blocks & golems destroyed)
       const blocksRemaining = this.voxelWorld.activeBlockCount;
-      const golemsRemaining = this.golems.filter((g) => g.isAlive).length;
+      let golemsRemaining = 0;
+      for (let i = 0; i < this.golems.length; i++) {
+        if (this.golems[i].isAlive) golemsRemaining++;
+      }
 
       this.hud.updateStats(
         this.turret.hp,
@@ -387,10 +390,8 @@ class VoxelSmashApp {
     this.hud.showVictoryModal(this.currentWave, baseReward, {
       onClaimMultiplier: async (multiplier) => {
         const success = await this.ads.showRewarded('victory_multiplier');
-        if (success) {
-          const bonus = Math.floor(baseReward * (multiplier - 1));
-          this.economy.addCoins(bonus);
-        }
+        const total = success ? Math.floor(baseReward * multiplier) : baseReward;
+        this.economy.addCoins(total);
         this.advanceNextWave();
       },
       onClaimBase: () => {

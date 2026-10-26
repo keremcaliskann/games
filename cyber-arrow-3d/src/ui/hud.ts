@@ -21,6 +21,7 @@ export class Hud {
   private levelEl!: HTMLElement;
   private movesEl!: HTMLElement;
   private remainingEl!: HTMLElement;
+  private streakEl!: HTMLElement;
   private coinsEl!: HTMLElement;
   private soundBtn!: HTMLElement;
   private hammerBtn!: HTMLElement;
@@ -37,6 +38,7 @@ export class Hud {
         <div class="hud-chip level" id="hud-level">LVL 1</div>
         <div class="hud-chip moves" id="hud-moves">HAMLE: 0</div>
         <div class="hud-chip remaining" id="hud-remaining">BLOKLAR: 0</div>
+        <div class="hud-chip" id="hud-streak" style="display: none; background: rgba(245, 158, 11, 0.95); color: #0f172a; font-weight: 900;">🔥 2x</div>
         <div class="hud-chip coins" id="hud-coins" data-hud-interactive="true" style="cursor: pointer;" title="Ücretsiz Coin Kazan">
           🪙 <span id="coin-count">0</span>
           <span style="color: #0284c7; font-weight: 800; margin-left: 4px;">[+🎬]</span>
@@ -54,6 +56,7 @@ export class Hud {
     this.levelEl = this.container.querySelector('#hud-level')!;
     this.movesEl = this.container.querySelector('#hud-moves')!;
     this.remainingEl = this.container.querySelector('#hud-remaining')!;
+    this.streakEl = this.container.querySelector('#hud-streak')!;
     this.coinsEl = this.container.querySelector('#coin-count')!;
     this.soundBtn = this.container.querySelector('#btn-sound')!;
     this.hammerBtn = this.container.querySelector('#btn-hammer')!;
@@ -134,6 +137,15 @@ export class Hud {
 
   public setRemaining(remaining: number): void {
     this.remainingEl.textContent = `KALAN: ${remaining}`;
+  }
+
+  public setStreak(streak: number): void {
+    if (streak >= 2) {
+      this.streakEl.style.display = 'inline-flex';
+      this.streakEl.textContent = `🔥 ${streak}x SERİ`;
+    } else {
+      this.streakEl.style.display = 'none';
+    }
   }
 
   public setCoins(coins: number): void {

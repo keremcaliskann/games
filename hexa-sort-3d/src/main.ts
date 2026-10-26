@@ -35,6 +35,8 @@ class HexaSortApp {
 
   private isFirstRender = true;
   private isLevelTransitioning = false;
+  private feverMeter = 0;
+  private feverTimer = 0;
 
   constructor() {
     this.appEl = document.getElementById('app')!;
@@ -165,6 +167,9 @@ class HexaSortApp {
 
   private loadLevel(levelNum: number): void {
     this.isLevelTransitioning = false;
+    this.feverMeter = 0;
+    this.feverTimer = 0;
+    this.hud.updateFever(0, false);
     this.grid.clear();
     this.tray.clear();
     this.cascade.clear();
@@ -222,8 +227,14 @@ class HexaSortApp {
   }
 
   private handleComboClear(_color: HexColorDef, count: number, points: number): void {
-    this.economy.addClearedTiles(count, points);
+    this.feverMeter = Math.min(1, this.feverMeter + 0.4);
+    if (this.feverMeter >= 1) {
+      this.feverTimer = 5.0;
+    }
+    const mult = this.feverTimer > 0 ? 2 : 1;
+    this.economy.addClearedTiles(count * mult, points * mult);
     this.cameraRig.addTrauma(0.35);
+    this.hud.updateFever(this.feverMeter, this.feverTimer > 0);
     this.updateHud();
 
     if (this.economy.isLevelComplete() && !this.isLevelTransitioning) {
@@ -395,6 +406,18 @@ class HexaSortApp {
   }
 
   private update(dt: number): void {
+    if (this.feverTimer > 0) {
+      this.feverTimer = Math.max(0, this.feverTimer - dt);
+      if (this.feverTimer === 0) {
+        this.feverMeter = 0;
+        this.hud.updateFever(0, false);
+      }
+    } else if (this.feverMeter > 0) {
+      this.feverMeter = Math.max(0, this.feverMeter - dt * 0.18);
+      if (this.feverMeter < 0.3) {
+        this.hud.updateFever(this.feverMeter, false);
+      }
+    }
     this.cameraRig.update(dt);
     this.cascade.update(dt);
   }

@@ -62,32 +62,36 @@ export class SortMatcher {
   }
 
   public executeMagicWand(): boolean {
-    // Find any 3 items with identical typeId in the cabinet
-    const items = this.cabinet.getAllItems().filter((i) => i.layer === 0);
-    const groups = new Map<string, GoodsItem[]>();
+    // Prefer 3 matching front items (layer 0), fallback to all items in cabinet
+    for (const onlyFront of [true, false]) {
+      const items = onlyFront
+        ? this.cabinet.getAllItems().filter((i) => i.layer === 0)
+        : this.cabinet.getAllItems();
+      const groups = new Map<string, GoodsItem[]>();
 
-    for (const item of items) {
-      if (!groups.has(item.typeId)) {
-        groups.set(item.typeId, []);
-      }
-      groups.get(item.typeId)!.push(item);
-    }
-
-    for (const [typeId, trio] of groups) {
-      if (trio.length >= 3) {
-        const selectedTrio = trio.slice(0, 3);
-        const centerPos = selectedTrio[0].mesh.position.clone();
-        this.audio.playWand();
-        this.particles.spawnPopBurst(centerPos, [0xf43f5e, 0x8b5cf6, 0x38bdf8]);
-
-        for (const item of selectedTrio) {
-          const t = item.tier;
-          const c = item.col;
-          this.cabinet.removeItem(item);
-          this.cabinet.uncoverRearItems(t, c);
+      for (const item of items) {
+        if (!groups.has(item.typeId)) {
+          groups.set(item.typeId, []);
         }
-        void typeId;
-        return true;
+        groups.get(item.typeId)!.push(item);
+      }
+
+      for (const [typeId, trio] of groups) {
+        if (trio.length >= 3) {
+          const selectedTrio = trio.slice(0, 3);
+          const centerPos = selectedTrio[0].mesh.position.clone();
+          this.audio.playWand();
+          this.particles.spawnPopBurst(centerPos, [0xf43f5e, 0x8b5cf6, 0x38bdf8]);
+
+          for (const item of selectedTrio) {
+            const t = item.tier;
+            const c = item.col;
+            this.cabinet.removeItem(item);
+            this.cabinet.uncoverRearItems(t, c);
+          }
+          void typeId;
+          return true;
+        }
       }
     }
 

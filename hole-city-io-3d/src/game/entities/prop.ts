@@ -7,6 +7,9 @@ export class Prop {
   public readonly tier: number;
   public readonly radius: number;
   public readonly points: number;
+  public readonly initialX: number;
+  public readonly initialZ: number;
+  public readonly initialRotY: number;
 
   public state: 'idle' | 'swallowing' | 'consumed' = 'idle';
   private targetHolePos = new THREE.Vector3();
@@ -21,6 +24,9 @@ export class Prop {
     this.tier = prefab.tier;
     this.radius = prefab.radius;
     this.points = prefab.points;
+    this.initialX = x;
+    this.initialZ = z;
+    this.initialRotY = rotationY;
 
     this.group.position.set(x, 0, z);
     this.group.rotation.y = rotationY;
@@ -70,10 +76,10 @@ export class Prop {
     }
   }
 
-  public reset(x: number, z: number): void {
+  public reset(x = this.initialX, z = this.initialZ): void {
     this.state = 'idle';
     this.group.position.set(x, 0, z);
-    this.group.rotation.set(0, Math.random() * Math.PI * 2, 0);
+    this.group.rotation.set(0, this.initialRotY, 0);
     this.group.scale.setScalar(this.initialScale);
     this.group.visible = true;
   }

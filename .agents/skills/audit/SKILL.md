@@ -12,7 +12,10 @@ Conducts an automated health check across all active games dynamically registere
 
 ## Audit Steps
 
-1. **Static Analysis & Types:**
+1. **Shared UI & Monetization Core Sync:**
+   Run `node scripts/sync-shared-core.mjs` from the workspace root to verify and synchronize `shared/platform/ads.ts`, `shared/ui/shell-controller.ts`, and `shared/ui/arcade-shell.css` across all games.
+
+2. **Static Analysis & Types:**
    Read `games.json` at the workspace root and run `npm run typecheck --silent` across every registered game directory.
 
 2. **Production Bundle & Budget Check:**

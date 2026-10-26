@@ -7,6 +7,7 @@ export class SphereItem {
   public readonly def: TierVisualDef;
   public isMerging = false;
   public isBomb: boolean;
+  public age = 0;
 
   private squashTimer = 0;
 
@@ -34,6 +35,7 @@ export class SphereItem {
   }
 
   public update(dt: number): void {
+    this.age += dt;
     const pos = this.body.translation();
     const rot = this.body.rotation();
 
