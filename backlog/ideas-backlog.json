@@ -173,8 +173,8 @@
     "id": "physics-drop-merge-3d",
     "title": "DROP MERGE 3D // SPHERE SUIKA",
     "category": "physics-merge-drop",
-    "status": "ready",
-    "rank": 1,
+    "status": "completed",
+    "rank": null,
     "revenueScore": 93,
     "scoreBreakdown": {
       "rewardedAdScore": 31,
@@ -183,8 +183,8 @@
       "webglFeasibilityScore": 18
     },
     "createdAt": "2026-10-21",
-    "lastValidatedAt": "2026-10-21",
-    "validationNote": "Newly added Tier-S breakout candidate (93/100). Expands studio portfolio into the viral 3D physics-drop genre. Flawless 1-finger portrait ergonomics and high watch-time on YouTube Playables.",
+    "lastValidatedAt": "2026-10-26",
+    "validationNote": "Successfully built and deployed with 3-Phase Studio Squad. 60 FPS Rapier.js physics, daylight art direction, ASMR audio, and 3 rewarded ad hooks.",
     "coreLoop": "Aim and drop color-coded bouncy 3D spheres into a floating translucent acrylic cylinder. When two identical spheres collide, they merge with a satisfying squish into a larger, higher-tier sphere; chain merges to reach the giant Tier-11 Golden Core.",
     "solvableMathSpec": "Deterministic Tier progression (1 to 11) with calibrated sphere radii and Rapier rigid-body mass ratios; drop preview RNG is pseudo-randomly biased to prevent early container overflow.",
     "cameraErgonomics": "Sleek high-angle perspective looking down into a translucent cylindrical jar. Smooth dynamic camera pullback as sphere stack height increases; zero occlusion in 9:16 and 16:9.",
@@ -208,7 +208,7 @@
     "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
     "category": "3d-sort-stack",
     "status": "ready",
-    "rank": 2,
+    "rank": 1,
     "revenueScore": 92,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -242,7 +242,7 @@
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "category": "3d-spatial-jam",
     "status": "ready",
-    "rank": 3,
+    "rank": 2,
     "revenueScore": 89,
     "scoreBreakdown": {
       "rewardedAdScore": 33,

@@ -1,5 +1,18 @@
 [
   {
+    "id": "physics-drop-merge-3d",
+    "title": "DROP MERGE 3D // SPHERE SUIKA",
+    "description": "Bouncy 3D physics fruit merge puzzle! Aim and drop juicy spheres into the translucent jar, merge identical pairs, and chain reactions to unlock the Giant Golden Sun Core.",
+    "path": "./physics-drop-merge-3d/",
+    "tags": ["3D Physics", "Suika Merge", "Rapier.js", "Casual ASMR", "60 FPS"],
+    "date": "2026-10-26",
+    "icon": "./physics-drop-merge-3d/icon.svg",
+    "iconEmoji": "🍉",
+    "featured": true,
+    "themeColor": "#22c55e",
+    "accentGradient": "linear-gradient(135deg, #22c55e, #16a34a)"
+  },
+  {
     "id": "goods-sort-3d",
     "title": "GOODS SORT 3D // SHELF TIDY MASTER",
     "description": "Tactile 3D shelf organization and match-3 puzzle! Sort colorful soda cans, snack boxes, and jam jars into matching compartments to trigger satisfying ASMR pops.",

@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Sky Background Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="60%" stop-color="#bae6fd" />
+      <stop offset="100%" stop-color="#cfe8f7" />
+    </linearGradient>
+
+    <!-- Watermelon Green Gradient -->
+    <linearGradient id="melonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e" />
+      <stop offset="40%" stop-color="#16a34a" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+
+    <!-- Cherry Red Gradient -->
+    <linearGradient id="cherryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f87171" />
+      <stop offset="40%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#b91c1c" />
+    </linearGradient>
+
+    <!-- Orange Gradient -->
+    <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ea580c" />
+    </linearGradient>
+
+    <!-- Golden Sun Core Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb" />
+      <stop offset="30%" stop-color="#fef08a" />
+      <stop offset="70%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+
+    <!-- Acrylic Jar Gradient -->
+    <linearGradient id="jarGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+      <stop offset="20%" stop-color="#e0f2fe" stop-opacity="0.25" />
+      <stop offset="80%" stop-color="#e0f2fe" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.7" />
+    </linearGradient>
+
+    <!-- Glow Radial -->
+    <radialGradient id="mergeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#fef08a" />
+      <stop offset="70%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect width="512" height="512" rx="108" fill="url(#skyGrad)" />
+
+  <!-- Acrylic Cylinder Jar Silhouette -->
+  <g filter="url(#shadow)">
+    <!-- Jar Base Pedestal -->
+    <ellipse cx="256" cy="450" rx="190" ry="32" fill="#94a3b8" opacity="0.4" />
+    <path d="M76 160 L76 430 Q76 460 256 460 Q436 460 436 430 L436 160" fill="url(#jarGrad)" stroke="#ffffff" stroke-width="4" />
+    <!-- Danger Dashed Ring -->
+    <line x1="86" y1="180" x2="426" y2="180" stroke="#ef4444" stroke-width="3" stroke-dasharray="10 8" opacity="0.85" />
+  </g>
+
+  <!-- Merge Sparkle Glow -->
+  <circle cx="256" cy="310" r="140" fill="url(#mergeGlow)" opacity="0.8" />
+
+  <!-- Giant Hero Watermelon Sphere (Bottom Center) -->
+  <g transform="translate(256, 340)" filter="url(#shadow)">
+    <circle cx="0" cy="0" r="105" fill="url(#melonGrad)" stroke="#14532d" stroke-width="3" />
+    <!-- Watermelon Dark Green Stripes -->
+    <path d="M-80 -40 Q-40 20 -70 80" stroke="#14532d" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6" />
+    <path d="M-25 -95 Q-15 0 -25 95" stroke="#14532d" stroke-width="14" stroke-linecap="round" fill="none" opacity="0.6" />
+    <path d="M35 -85 Q50 0 35 85" stroke="#14532d" stroke-width="12" stroke-linecap="round" fill="none" opacity="0.6" />
+    <path d="M85 -45 Q90 10 75 60" stroke="#14532d" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.6" />
+    <!-- Cute Happy Eyes & Smile -->
+    <ellipse cx="-32" cy="-15" rx="8" ry="12" fill="#0f172a" />
+    <circle cx="-35" cy="-19" r="3" fill="#ffffff" />
+    <ellipse cx="32" cy="-15" rx="8" ry="12" fill="#0f172a" />
+    <circle cx="29" cy="-19" r="3" fill="#ffffff" />
+    <!-- Blush -->
+    <ellipse cx="-44" cy="5" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
+    <ellipse cx="44" cy="5" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
+    <!-- Smile -->
+    <path d="M-18 10 Q0 28 18 10" stroke="#0f172a" stroke-width="4" stroke-linecap="round" fill="none" />
+  </g>
+
+  <!-- Bouncing Orange Sphere (Left) -->
+  <g transform="translate(130, 240)" filter="url(#shadow)">
+    <circle cx="0" cy="0" r="52" fill="url(#orangeGrad)" stroke="#c2410c" stroke-width="2.5" />
+    <ellipse cx="-16" cy="-8" rx="5" ry="7" fill="#0f172a" />
+    <circle cx="-18" cy="-10" r="2" fill="#ffffff" />
+    <ellipse cx="16" cy="-8" rx="5" ry="7" fill="#0f172a" />
+    <circle cx="14" cy="-10" r="2" fill="#ffffff" />
+    <path d="M-10 6 Q0 18 10 6" stroke="#0f172a" stroke-width="3" stroke-linecap="round" fill="none" />
+    <!-- Stem leaf -->
+    <ellipse cx="0" cy="-54" rx="8" ry="4" fill="#22c55e" transform="rotate(-20 0 -54)" />
+  </g>
+
+  <!-- Dropping Cherry Sphere (Top Right) -->
+  <g transform="translate(350, 190)" filter="url(#shadow)">
+    <!-- Motion lines -->
+    <line x1="0" y1="-35" x2="0" y2="-65" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+    <circle cx="0" cy="0" r="38" fill="url(#cherryGrad)" stroke="#991b1b" stroke-width="2" />
+    <ellipse cx="-11" cy="-5" rx="4" ry="6" fill="#0f172a" />
+    <ellipse cx="11" cy="-5" rx="4" ry="6" fill="#0f172a" />
+    <path d="M-7 7 Q0 15 7 7" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    <!-- Stem -->
+    <path d="M0 -38 Q12 -58 20 -62" stroke="#15803d" stroke-width="3" fill="none" stroke-linecap="round" />
+  </g>
+
+  <!-- Sparkle Stars -->
+  <g fill="#fef08a" stroke="#ca8a04" stroke-width="1.5">
+    <path d="M256 120 L260 134 L274 136 L262 144 L265 158 L256 150 L247 158 L250 144 L238 136 L252 134 Z" />
+    <path d="M120 140 L122 148 L130 149 L123 154 L125 162 L120 157 L115 162 L117 154 L110 149 L118 148 Z" />
+    <path d="M390 120 L392 128 L400 129 L393 134 L395 142 L390 137 L385 142 L387 134 L380 129 L388 128 Z" />
+  </g>
+</svg>
