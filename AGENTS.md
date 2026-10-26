@@ -15,6 +15,7 @@
 ## 2. Language & Communication
 
 - **User Communication:** Turkish (chat, proposals, planning summaries, and status updates).
+- **Communication Protocol (ASD-STE100 / Aviation Maintenance Standard):** Pure technical brevity, maximum 20 words per sentence, imperative voice, zero conversational padding/fluff. Status updates & bug fixes follow the Aircraft Maintenance Log format (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / VERIFICATION`).
 - **Code & Documentation:** English (all code, identifiers, types, comments, docstrings, commit messages, and `.md` documentation files).
 - **Comment Principle:** Comments explain **"why"**, not "what".
 

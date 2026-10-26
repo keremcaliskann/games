@@ -27,8 +27,17 @@ Never load into context: `node_modules/`, `dist/`, `android/`, `ios/`, `*.glb`, 
 - Keep Implementation Plan artifacts focused: clear objective, verifiable criteria, file list, and numbered steps.
 - On multi-stage tasks, provide 3–5 line progress checkpoints between major milestones.
 
+## ASD-STE100 & Aircraft Maintenance Log Protocol
+To maximize context efficiency and eliminate AI conversational fluff:
+- **Maximum 20 words per sentence.** Write concise, direct statements.
+- **Imperative voice only:** Use action verbs directly ("Run X", "Edit Y", never "I have updated...").
+- **Zero conversational padding:** Eliminate introductory pleasantries, speculative commentary, and unsolicited advice.
+- **Aircraft Maintenance Log Delivery Schema:** Structure delivery summaries and bug reports strictly as follows:
+  - **DISCREPANCY:** Exact issue, defect, or requested task.
+  - **ROOT CAUSE:** Originating file, line, or logic gap (if bug fix).
+  - **CORRECTIVE ACTION:** Precise changes applied.
+  - **PARTS MODIFIED:** List of changed files with line delta.
+  - **RETURN TO SERVICE:** Exact verification command and measured outcome.
+
 ## Delivery Summary (≤ 8 Lines)
-1. **What changed:** Single-line list of modified files.
-2. **Why:** Rationale for the changes.
-3. **Verification:** Exact commands executed and observed outcomes.
-4. **Known constraints / Non-goals:** What was deliberately deferred.
+Follow the Aircraft Maintenance Log schema above. Never reprint large diffs or re-explain unchanged systems.
