@@ -1,0 +1,17 @@
+{
+  "short_name": "CannonBlitz",
+  "name": "CANNON BLITZ 3D // PHYSICS DEMOLITION",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#cfe8f7",
+  "theme_color": "#ea580c",
+  "display": "fullscreen",
+  "orientation": "any"
+}

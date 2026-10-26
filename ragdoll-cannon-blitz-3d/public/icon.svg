@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Sky Background Gradient -->
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#7dd3fc" />
+      <stop offset="100%" stop-color="#cfe8f7" />
+    </linearGradient>
+
+    <!-- Warm Golden Sun Glow -->
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fffbeb" stop-opacity="0.9" />
+      <stop offset="60%" stop-color="#fef08a" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#fef08a" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Cannon Iron Gradient -->
+    <linearGradient id="cannonIron" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <!-- Brass Gold Rim Gradient -->
+    <linearGradient id="brassGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="50%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+
+    <!-- Red TNT Barrel Gradient -->
+    <linearGradient id="tntRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="50%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#991b1b" />
+    </linearGradient>
+
+    <!-- Cannonball Gradient -->
+    <radialGradient id="ballGrad" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="60%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </radialGradient>
+
+    <!-- Explosion Glow -->
+    <radialGradient id="boomGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="25%" stop-color="#fef08a" />
+      <stop offset="60%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect width="512" height="512" rx="108" fill="url(#skyGrad)" />
+  <circle cx="256" cy="160" r="150" fill="url(#sunGlow)" />
+
+  <!-- Tropical Ocean Waves Base -->
+  <path d="M0 420 Q128 390 256 420 T512 420 L512 512 L0 512 Z" fill="#0284c7" opacity="0.4" />
+  <path d="M0 445 Q128 425 256 445 T512 445 L512 512 L0 512 Z" fill="#0369a1" />
+
+  <!-- Island Bedrock Pedestal -->
+  <ellipse cx="360" cy="410" rx="110" ry="32" fill="#d4d4d8" filter="url(#shadow)" />
+  <ellipse cx="360" cy="404" rx="104" ry="28" fill="#4ade80" />
+
+  <!-- Target Dummy on Island -->
+  <g transform="translate(370, 310)" filter="url(#shadow)">
+    <!-- Body -->
+    <rect x="-10" y="30" width="20" height="42" rx="6" fill="#fde047" stroke="#ca8a04" stroke-width="3" />
+    <!-- Target Decal -->
+    <circle cx="0" cy="50" r="8" fill="#ef4444" />
+    <circle cx="0" cy="50" r="4" fill="#ffffff" />
+    <!-- Head -->
+    <circle cx="0" cy="18" r="14" fill="#fed7aa" stroke="#ea580c" stroke-width="2" />
+    <!-- Eyes (X_X / stunned) -->
+    <path d="M-6 14 L-2 18 M-2 14 L-6 18" stroke="#7c2d12" stroke-width="2" stroke-linecap="round" />
+    <path d="M2 14 L6 18 M6 14 L2 18" stroke="#7c2d12" stroke-width="2" stroke-linecap="round" />
+  </g>
+
+  <!-- Red TNT Hazard Barrel -->
+  <g transform="translate(320, 340)" filter="url(#shadow)">
+    <rect x="-18" y="0" width="36" height="52" rx="6" fill="url(#tntRed)" stroke="#7f1d1d" stroke-width="2" />
+    <rect x="-18" y="18" width="36" height="16" fill="#fef08a" />
+    <text x="0" y="30" font-family="Arial, sans-serif" font-weight="900" font-size="11" fill="#7f1d1d" text-anchor="middle">TNT</text>
+  </g>
+
+  <!-- Muzzle Blast Explosion Particles -->
+  <circle cx="210" cy="240" r="48" fill="url(#boomGlow)" />
+  <circle cx="230" cy="225" r="12" fill="#fef08a" />
+  <circle cx="245" cy="210" r="8" fill="#f97316" />
+
+  <!-- Flying Iron Cannonball -->
+  <circle cx="265" cy="195" r="26" fill="url(#ballGrad)" stroke="#1e293b" stroke-width="3" filter="url(#shadow)" />
+  <circle cx="257" cy="187" r="7" fill="#ffffff" opacity="0.6" />
+
+  <!-- Stylized Cannon Assembly -->
+  <g transform="translate(130, 340) rotate(-35)" filter="url(#shadow)">
+    <!-- Rear Knob -->
+    <circle cx="-55" cy="0" r="14" fill="url(#cannonIron)" stroke="#0f172a" stroke-width="3" />
+    <!-- Cannon Barrel Body -->
+    <path d="M-50 -24 L75 -16 L75 16 L-50 24 Z" fill="url(#cannonIron)" stroke="#0f172a" stroke-width="3" />
+    <!-- Brass Reinforced Rings -->
+    <rect x="-25" y="-23" width="12" height="46" rx="3" fill="url(#brassGold)" />
+    <rect x="25" y="-19" width="10" height="38" rx="2" fill="url(#brassGold)" />
+    <rect x="68" y="-18" width="8" height="36" rx="2" fill="url(#brassGold)" />
+  </g>
+
+  <!-- Cannon Carriage Base & Wheel -->
+  <g transform="translate(110, 385)" filter="url(#shadow)">
+    <!-- Wooden Carriage Bracket -->
+    <path d="M-30 0 L40 0 L25 -35 L-15 -35 Z" fill="#b45309" stroke="#78350f" stroke-width="3" />
+    <!-- Big Wooden Spoked Wheel -->
+    <circle cx="0" cy="5" r="38" fill="#78350f" stroke="#451a03" stroke-width="4" />
+    <circle cx="0" cy="5" r="28" fill="#b45309" />
+    <circle cx="0" cy="5" r="12" fill="url(#brassGold)" stroke="#78350f" stroke-width="3" />
+    <!-- Wheel Spokes -->
+    <line x1="0" y1="-28" x2="0" y2="38" stroke="#451a03" stroke-width="4" />
+    <line x1="-28" y1="5" x2="28" y2="5" stroke="#451a03" stroke-width="4" />
+  </g>
+</svg>

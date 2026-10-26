@@ -105,8 +105,8 @@
     "id": "ragdoll-cannon-blitz-3d",
     "title": "CANNON BLITZ 3D // PHYSICS DEMOLITION",
     "category": "casual-fps-physics",
-    "status": "ready",
-    "rank": 1,
+    "status": "completed",
+    "rank": null,
     "revenueScore": 94,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -115,8 +115,8 @@
       "webglFeasibilityScore": 18
     },
     "createdAt": "2026-10-22",
-    "lastValidatedAt": "2026-10-22",
-    "validationNote": "Rank #1 3D physics shooter & demolition hit. Combines 1-tap FPS/cannon aiming with Rapier.js rigid-body tower collapse and red explosive barrels.",
+    "lastValidatedAt": "2026-10-26",
+    "validationNote": "Successfully built and deployed with 3-Phase Studio Squad. 60 FPS Rapier.js physics, daylight art direction, ASMR audio, and 3 rewarded ad hooks.",
     "coreLoop": "Tap to aim and fire physics cannonballs from first-person perspective at precarious 3D block towers, red explosive barrels, and target dummies resting on floating sunlit islands. Trigger chain-reaction collapses to topple every target into the sea within your ammo budget.",
     "solvableMathSpec": "Each fortress layout has structural weak-point pillars and explosive barrels positioned so a direct hit collapses 100% of targets within par ammo.",
     "cameraErgonomics": "Crisp first-person cannon view with parabolic trajectory arc preview and dynamic impact zoom; zero foreground obstruction.",
@@ -140,7 +140,7 @@
     "title": "GOODS SORT 3D // SHELF TIDY MASTER",
     "category": "3d-sort-stack",
     "status": "ready",
-    "rank": 2,
+    "rank": 1,
     "revenueScore": 94,
     "scoreBreakdown": {
       "rewardedAdScore": 34,
@@ -174,7 +174,7 @@
     "title": "DROP MERGE 3D // SPHERE SUIKA",
     "category": "physics-merge-drop",
     "status": "ready",
-    "rank": 3,
+    "rank": 2,
     "revenueScore": 93,
     "scoreBreakdown": {
       "rewardedAdScore": 31,
@@ -208,7 +208,7 @@
     "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
     "category": "3d-sort-stack",
     "status": "ready",
-    "rank": 4,
+    "rank": 3,
     "revenueScore": 92,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -242,7 +242,7 @@
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "category": "3d-spatial-jam",
     "status": "ready",
-    "rank": 5,
+    "rank": 4,
     "revenueScore": 89,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
