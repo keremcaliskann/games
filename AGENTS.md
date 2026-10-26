@@ -63,7 +63,9 @@
 
 - Search first (`grep` / file search), then read only the relevant line range. Do not reread unchanged files.
 - Truncate terminal outputs (`| tail -n 40`, `--silent`). Never dump `dist/`, `node_modules/`, `*.glb`, `*.wasm`, or lockfiles into context.
-- Keep delivery summaries concise (≤ 8 lines).
+- Keep delivery summaries concise (≤ 6 lines) using the Aircraft Maintenance Log schema (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / VERIFICATION`).
+- Subagents for research, auditing, and scouting must default to lightweight models (`Model: "flash"` or `"flash_lite"`) to conserve quota and eliminate 429 errors.
+- Compress multi-turn context using `/compact` after completing major milestones.
 
 ## 6. Performance Reflex
 

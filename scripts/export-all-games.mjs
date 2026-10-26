@@ -10,7 +10,12 @@ const workspaceRoot = path.resolve(__dirname, '..');
 const platformArg = process.argv[2] || 'all'; // all | yandex | crazygames | youtube | poki
 const gameArg = process.argv[3] || 'all'; // all | color-block-jam-3d | cyber-arrow-3d | cyber-flap
 
-const games = ['physics-drop-merge-3d', 'goods-sort-3d', 'ragdoll-cannon-blitz-3d', 'voxel-craft-smash-3d', 'hole-city-io-3d', 'hexa-sort-3d', 'screw-jam-3d', 'color-block-jam-3d', 'cyber-arrow-3d', 'cyber-flap'].filter((g) => {
+const gamesCatalogPath = path.join(workspaceRoot, 'games.json');
+const gamesCatalog = fs.existsSync(gamesCatalogPath)
+  ? JSON.parse(fs.readFileSync(gamesCatalogPath, 'utf8'))
+  : [];
+
+const games = gamesCatalog.map(g => g.id).filter((g) => {
   if (gameArg !== 'all' && g !== gameArg) return false;
   return fs.existsSync(path.join(workspaceRoot, g, 'scripts', 'export-platforms.mjs'));
 });

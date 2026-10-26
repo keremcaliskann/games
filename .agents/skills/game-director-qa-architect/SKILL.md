@@ -7,7 +7,7 @@ metadata:
 
 # Game Director QA & To-Do Architect (`game-director-qa-architect`)
 
-This skill operates **Producer B** of the autonomous studio pipeline (scheduled every 2 days with `Argon 4 High`). Instead of spending its token quota writing boilerplate across multiple projects in a single session, it performs a deep architectural, mechanical, and gameplay audit across all active games and writes concrete, file-level, prioritized tasks into **`backlog/studio-todo.json`** for the nightly **Studio Executor** to implement.
+This skill operates **Producer B** of the autonomous studio pipeline. Instead of spending its token quota writing boilerplate across multiple projects in a single session, it performs a deep architectural, mechanical, and gameplay audit across all active games (using `Model: "flash"` subagent tasks to conserve quota) and writes concrete, file-level, prioritized tasks into **`backlog/studio-todo.json`** for the nightly **Studio Executor** to implement.
 
 ---
 
@@ -36,8 +36,9 @@ Evaluate each active game across 4 Studio Pillars:
 2. Sort all `status === "ready"` items strictly by `priority` (`P0` first, then `P1`, then `P2`) and descending `priorityScore`.
 3. Commit and push the updated `backlog/studio-todo.json` to `origin/main`.
 
-### Step 5: Mandatory Concise Post-Run Report (≤ 6 Lines in Turkish)
-Every run must conclude with a **very short Turkish summary (`<= 6 lines`)** in chat:
-- Number of games audited & `typecheck` health status.
-- Newly added tasks (`P0 / P1 / P2`) and their target games.
-- Current Top 3 tasks waiting at the top of `backlog/studio-todo.json`.
+### Step 5: Mandatory Concise Post-Run Report (ASD-STE100 Schema, ≤ 6 Lines in Turkish)
+Every run must conclude with a **very short Turkish summary (`<= 6 lines`)** structured by the Aircraft Maintenance Log schema:
+- **DISCREPANCY:** Denetlenen oyun sayısı ve tespit edilen P0/P1/P2 task hacmi.
+- **ROOT CAUSE:** Öncelikli oyunlardaki eksik mekanik veya görsel açıklar.
+- **CORRECTIVE ACTION:** `backlog/studio-todo.json` dosyasına eklenen ve önceliklendirilen yeni görevler.
+- **RETURN TO SERVICE:** `typecheck` doğrulama durumu ve git commit/push linki.

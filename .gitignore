@@ -5,6 +5,8 @@ node_modules/
 # Production builds
 dist/
 */dist/
+release/
+*/release/
 
 # OS and IDE files
 .DS_Store

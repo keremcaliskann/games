@@ -39,5 +39,15 @@ To maximize context efficiency and eliminate AI conversational fluff:
   - **PARTS MODIFIED:** List of changed files with line delta.
   - **RETURN TO SERVICE:** Exact verification command and measured outcome.
 
-## Delivery Summary (≤ 8 Lines)
+## Subagent Model Tiering & Context Isolation
+- **Default to Lightweight Models:** When spawning subagents (`invoke_subagent`), set `Model: "flash"` or `"flash_lite"` for research, auditing, or code scanning tasks. Reserve flagship models (`inherit` / `"pro"`) exclusively for complex architectural decisions.
+- **Context Isolation:** Subagents run in isolated scratchpads. They must return concise structured summaries (≤ 25 lines) via `send_message`, preventing raw multi-turn traces from polluting parent context.
+- **Ephemeral Lifecycle:** Terminate (`kill`) finished subagents immediately to release system resources.
+
+## Prompt Caching & Rule Hygiene
+- Keep global instruction files (`AGENTS.md`) under 150 lines.
+- Preserve prompt cache prefixes: keep static rules and tool schemas unchanged during an active task.
+- Use `/compact` when a multi-step task completes to compress dialogue history and recover context budget.
+
+## Delivery Summary (≤ 6 Lines)
 Follow the Aircraft Maintenance Log schema above. Never reprint large diffs or re-explain unchanged systems.

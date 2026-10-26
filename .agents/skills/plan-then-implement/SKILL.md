@@ -79,12 +79,13 @@ Present the plan and **wait for explicit user approval**. Do not write or modify
 
 Never report unexecuted verification steps as completed.
 
-## Phase 6: Delivery Summary (≤ 8 Lines)
-1. **What changed:** Single-line list of files modified.
-2. **Why:** Rationale for the change.
-3. **Verification:** Exact commands run and test observations.
-4. **Constraints / Deferred items:** Remaining items or known limitations.
-5. *(Optional)* Recommended next steps.
+## Phase 6: Delivery Summary (Aircraft Maintenance Log Schema, ≤ 6 Lines)
+Structure delivery summaries strictly adhering to the ASD-STE100 Aviation Maintenance Log schema:
+- **DISCREPANCY:** Exact task or defect addressed.
+- **ROOT CAUSE:** Originating file, line, or architectural gap (if bug fix).
+- **CORRECTIVE ACTION:** Precise changes applied.
+- **PARTS MODIFIED:** List of modified files with line deltas.
+- **RETURN TO SERVICE:** Exact verification command and measured outcome.
 
 ## Bug Hunting Variant
 1. **Reproduce:** Establish the minimal scenario or test demonstrating the issue.

@@ -8,20 +8,15 @@ description: >-
 
 # /audit — Full Workspace Quality & Gameplay Audit
 
-Conducts an automated health check across all active games registered in root `games.json` (`hexa-sort-3d`, `screw-jam-3d`, `color-block-jam-3d`, `cyber-arrow-3d`, `cyber-flap`).
+Conducts an automated health check across all active games dynamically registered in root `games.json`.
 
 ## Audit Steps
 
 1. **Static Analysis & Types:**
-   Read `games.json` at the workspace root and run `npm run typecheck` across every game directory:
-   - `npm --prefix hexa-sort-3d run typecheck`
-   - `npm --prefix screw-jam-3d run typecheck`
-   - `npm --prefix color-block-jam-3d run typecheck`
-   - `npm --prefix cyber-arrow-3d run typecheck`
-   - `npm --prefix cyber-flap run typecheck`
+   Read `games.json` at the workspace root and run `npm run typecheck --silent` across every registered game directory.
 
 2. **Production Bundle & Budget Check:**
-   Run `npm run build` across all games:
+   Run `npm run build --silent` across all registered games:
    - Verify `dist/` bundle size is strictly `< 5 MB`.
    - Verify zero external network calls in `index.html`.
 
@@ -30,6 +25,8 @@ Conducts an automated health check across all active games registered in root `g
    - **Monetization Hooks:** 3 mandatory rewarded ad hooks (`65-monetization-ads.md`).
    - **Performance:** Zero heap allocations in hot paths (`20-performance-budget.md`).
 
-4. **Output Report:**
-   Present a concise Turkish table with results per game:
-   `Typecheck (OK/Fail) | Build (OK/Fail) | Bundle Size | Art/Rules | Verdict`
+4. **Output Report (Aircraft Maintenance Log Schema, ≤ 6 Lines):**
+   - **DISCREPANCY:** Identified type errors, build failures, or rule non-compliances.
+   - **ROOT CAUSE:** File, module, or assets violating budgets or standards.
+   - **CORRECTIVE ACTION:** Direct mechanical fixes applied or logged to `backlog/studio-todo.json`.
+   - **RETURN TO SERVICE:** All games verified healthy (`npm run typecheck --silent && npm run build --silent`).
