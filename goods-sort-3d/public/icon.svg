@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="60%" stop-color="#bae6fd" />
+      <stop offset="100%" stop-color="#cfe8f7" />
+    </linearGradient>
+
+    <!-- Shelf Wood Gradient -->
+    <linearGradient id="woodGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+
+    <!-- Soda Can Red Gradient -->
+    <linearGradient id="canRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="40%" stop-color="#f87171" />
+      <stop offset="70%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#991b1b" />
+    </linearGradient>
+
+    <!-- Soda Can Metal Rim Gradient -->
+    <linearGradient id="canRim" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#cbd5e1" />
+      <stop offset="50%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#94a3b8" />
+    </linearGradient>
+
+    <!-- Snack Box Yellow Gradient -->
+    <linearGradient id="boxYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="40%" stop-color="#facc15" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+
+    <!-- Jam Jar Blue/Purple Gradient -->
+    <linearGradient id="jarPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#6d28d9" />
+    </linearGradient>
+
+    <!-- Golden Star Sparkle -->
+    <radialGradient id="starGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#eab308" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Soft Drop Shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="125%" height="125%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.22" />
+    </filter>
+  </defs>
+
+  <!-- Background Card -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)" />
+
+  <!-- Wooden Shelf Planks -->
+  <g filter="url(#shadow)">
+    <!-- Backboard -->
+    <rect x="56" y="80" width="400" height="350" rx="20" fill="#fef3c7" opacity="0.85" />
+    <!-- Top Shelf -->
+    <rect x="46" y="220" width="420" height="24" rx="6" fill="url(#woodGrad)" />
+    <!-- Bottom Shelf Plank -->
+    <rect x="46" y="380" width="420" height="28" rx="8" fill="url(#woodGrad)" />
+    <!-- Shelf Front Bevel -->
+    <rect x="46" y="380" width="420" height="8" rx="4" fill="#fbbf24" />
+  </g>
+
+  <!-- Star Sparkle Aura -->
+  <circle cx="256" cy="300" r="140" fill="url(#starGlow)" />
+
+  <!-- 3D Item 1: Cute Red Soda Can (Left) -->
+  <g transform="translate(130, 260)" filter="url(#shadow)">
+    <!-- Can Body -->
+    <rect x="-32" y="0" width="64" height="105" rx="10" fill="url(#canRed)" />
+    <!-- Top Metal Rim -->
+    <ellipse cx="0" cy="0" rx="32" ry="10" fill="url(#canRim)" />
+    <ellipse cx="0" cy="0" rx="26" ry="7" fill="#64748b" />
+    <!-- Bottom Rim -->
+    <ellipse cx="0" cy="105" rx="32" ry="8" fill="#94a3b8" />
+    <!-- Star Label -->
+    <circle cx="0" cy="50" r="18" fill="#ffffff" opacity="0.9" />
+    <path d="M0 38 L4 46 L13 47 L6 53 L8 62 L0 57 L-8 62 L-6 53 L-13 47 L-4 46 Z" fill="#ef4444" />
+  </g>
+
+  <!-- 3D Item 2: Yellow Snack Box (Center Hero) -->
+  <g transform="translate(256, 235)" filter="url(#shadow)">
+    <!-- Box Body -->
+    <rect x="-38" y="0" width="76" height="130" rx="12" fill="url(#boxYellow)" stroke="#b45309" stroke-width="3" />
+    <!-- Top Flap Bevel -->
+    <path d="M-38 0 L-20 -15 L20 -15 L38 0 Z" fill="#fde047" stroke="#b45309" stroke-width="2" />
+    <!-- Snack Character / Smile Face -->
+    <circle cx="0" cy="65" r="22" fill="#ffffff" />
+    <circle cx="-8" cy="60" r="4" fill="#0f172a" />
+    <circle cx="8" cy="60" r="4" fill="#0f172a" />
+    <path d="M-9 72 Q0 82 9 72" stroke="#ea580c" stroke-width="3" stroke-linecap="round" fill="none" />
+    <!-- Ribbon Tag -->
+    <rect x="-26" y="100" width="52" height="18" rx="6" fill="#ef4444" />
+    <text x="0" y="113" font-family="Arial, sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">MATCH</text>
+  </g>
+
+  <!-- 3D Item 3: Purple Jam Jar (Right) -->
+  <g transform="translate(382, 270)" filter="url(#shadow)">
+    <!-- Glass Jar Body -->
+    <rect x="-30" y="10" width="60" height="90" rx="14" fill="url(#jarPurple)" />
+    <!-- Checkered Cloth Lid -->
+    <path d="M-36 10 Q0 -6 36 10 L30 18 L-30 18 Z" fill="#fbcfe8" stroke="#be185d" stroke-width="2" />
+    <!-- Ribbon Tie -->
+    <rect x="-28" y="16" width="56" height="6" rx="3" fill="#db2777" />
+    <!-- Heart Label -->
+    <circle cx="0" cy="55" r="16" fill="#fdf2f8" />
+    <path d="M0 62 C-10 50 -12 40 -4 40 C0 40 0 44 0 44 C0 44 0 40 4 40 C12 40 10 50 0 62 Z" fill="#ec4899" />
+  </g>
+
+  <!-- Pop Sparkle Stars -->
+  <g fill="#fef08a" stroke="#ca8a04" stroke-width="1.5">
+    <!-- Top Left Star -->
+    <path d="M120 160 L124 172 L136 174 L126 182 L129 194 L120 187 L111 194 L114 182 L104 174 L116 172 Z" />
+    <!-- Top Right Star -->
+    <path d="M390 140 L393 150 L403 152 L395 158 L397 168 L390 162 L383 168 L385 158 L377 152 L387 150 Z" />
+    <!-- Tiny Sparkles -->
+    <circle cx="210" cy="180" r="6" fill="#ffffff" stroke="none" />
+    <circle cx="310" cy="190" r="5" fill="#fef08a" stroke="none" />
+  </g>
+</svg>

@@ -1,5 +1,18 @@
 [
   {
+    "id": "goods-sort-3d",
+    "title": "GOODS SORT 3D // SHELF TIDY MASTER",
+    "description": "Tactile 3D shelf organization and match-3 puzzle! Sort colorful soda cans, snack boxes, and jam jars into matching compartments to trigger satisfying ASMR pops.",
+    "path": "./goods-sort-3d/",
+    "tags": ["3D Puzzle", "Goods Sort", "ASMR Match-3", "Shelf Tidy", "60 FPS"],
+    "date": "2026-10-26",
+    "icon": "./goods-sort-3d/icon.svg",
+    "iconEmoji": "🗄️",
+    "featured": true,
+    "themeColor": "#d97706",
+    "accentGradient": "linear-gradient(135deg, #d97706, #f59e0b)"
+  },
+  {
     "id": "ragdoll-cannon-blitz-3d",
     "title": "CANNON BLITZ 3D // PHYSICS DEMOLITION",
     "description": "Aim and fire physics cannonballs at precarious island fortresses! Trigger chain-reaction TNT explosions, topple block towers, and knock target dummies into the sea.",

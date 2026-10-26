@@ -1,0 +1,17 @@
+{
+  "short_name": "GoodsSort3D",
+  "name": "GOODS SORT 3D // SHELF TIDY MASTER",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#cfe8f7",
+  "theme_color": "#d97706",
+  "display": "fullscreen",
+  "orientation": "any"
+}
