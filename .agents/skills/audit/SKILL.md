@@ -39,8 +39,6 @@ Conducts an automated health check, rule verification, performance inspection, a
    - Queue all discovered items into `backlog/studio-todo.json` prioritized as `P0` (blockers), `P1` (mechanics/performance), `P2` (visual juice).
    - Commit and push `backlog/studio-todo.json` to `origin/main`.
 
-7. **Output Report (Aircraft Maintenance Log Schema, ≤ 6 Lines):**
-   - **DISCREPANCY:** Identified type errors, build status, or rule/performance non-compliances.
-   - **ROOT CAUSE:** Modules or assets needing optimization, mechanics, or polish.
-   - **CORRECTIVE ACTION:** All tasks strictly logged and prioritized in `backlog/studio-todo.json` (zero direct code modification).
-   - **RETURN TO SERVICE:** All games verified and queue updated for the Studio Executor.
+7. **Output Report (Aircraft Maintenance Log + Simple Task List):**
+   - Provide the concise ASD-STE100 summary (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / RETURN TO SERVICE`).
+   - Immediately append a **Simple Task List** showing all active `ready` tasks in `backlog/studio-todo.json` (Priority, Game, Task Title).

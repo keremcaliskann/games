@@ -68,9 +68,12 @@ Inspect each game across the 5 pillars. Formulate concrete, file-level specifica
 2. Sort all `status === "ready"` items strictly by `priority` (`P0` first, then `P1`, then `P2`) and descending `priorityScore`.
 3. Commit and push only `backlog/studio-todo.json` to `origin/main`.
 
-### Step 5: Mandatory Concise Post-Run Report (ASD-STE100 Schema, ≤ 6 Lines in Turkish)
-Conclude with a **very short Turkish summary (`<= 6 lines`, max 20 words per sentence)**:
-- **DISCREPANCY:** Denetlenen oyunlar, kural uyumu ve tespit edilen görev hacmi.
-- **ROOT CAUSE:** Kod, performans veya görsel eksiklerin listelenmesi.
-- **CORRECTIVE ACTION:** Görevlerin tamamı `backlog/studio-todo.json` listesine eklendi (doğrudan kodlama yapılmadı).
-- **RETURN TO SERVICE:** Yeni görev kuyruğu hazır; Studio Executor (`/studio`) için sıraya alındı.
+### Step 5: Mandatory Concise Post-Run Report & Simple Task List (in Turkish)
+Conclude with:
+1. **ASD-STE100 Maintenance Log Summary (`<= 6 lines`, max 20 words per sentence):**
+   - **DISCREPANCY:** Denetlenen oyunlar, kural uyumu ve tespit edilen görev hacmi.
+   - **ROOT CAUSE:** Kod, performans veya görsel eksiklerin listelenmesi.
+   - **CORRECTIVE ACTION:** Görevlerin tamamı `backlog/studio-todo.json` listesine eklendi (doğrudan kodlama yapılmadı).
+   - **RETURN TO SERVICE:** Yeni görev kuyruğu hazır; Studio Executor (`/studio`) için sıraya alındı.
+2. **Basit Aktif Görev Listesi Tablosu:**
+   - `backlog/studio-todo.json` içindeki tüm aktif (`status: ready`) görevleri basit bir markdown listesi/tablosu olarak raporda sun (Öncelik, Oyun, Görev Başlığı, Skor).
