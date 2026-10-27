@@ -1,5 +1,67 @@
 [
   {
+    "id": "bus-escape-jam-3d-tunnel-spawner-and-vip-gold",
+    "gameId": "bus-escape-jam-3d",
+    "priority": "P1",
+    "priorityScore": 94,
+    "status": "ready",
+    "type": "mechanic",
+    "title": "Add 3D Tunnel Bus Dispenser, VIP Golden Passengers & Smart Helo Match",
+    "description": "Add a 3D tunnel arch at the rear of the lot that spawns reserve buses when cleared, spawn VIP Golden Passengers granting 2x coins, and prioritize front-passenger color matching in extractBusWithHelo().",
+    "targetFiles": [
+      "bus-escape-jam-3d/src/game/systems/bus-manager.ts",
+      "bus-escape-jam-3d/src/game/entities/passenger.ts",
+      "bus-escape-jam-3d/src/render/PrefabFactory.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
+    "id": "ragdoll-cannon-blitz-3d-hotpath-vector-pool",
+    "gameId": "ragdoll-cannon-blitz-3d",
+    "priority": "P1",
+    "priorityScore": 90,
+    "status": "ready",
+    "type": "performance",
+    "title": "Eliminate Hot-Path Vector3 & Quaternion Allocations in Update Loops",
+    "description": "Replace per-frame new THREE.Vector3 and new THREE.Quaternion allocations inside update(dt) of cannon.ts, projectile.ts, and target-dummy.ts with pre-allocated module-level scratch instances.",
+    "targetFiles": [
+      "ragdoll-cannon-blitz-3d/src/game/entities/cannon.ts",
+      "ragdoll-cannon-blitz-3d/src/game/entities/projectile.ts",
+      "ragdoll-cannon-blitz-3d/src/game/entities/target-dummy.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
+    "id": "voxel-craft-smash-3d-and-screw-jam-hotpath-pool",
+    "gameId": "voxel-craft-smash-3d",
+    "priority": "P1",
+    "priorityScore": 88,
+    "status": "ready",
+    "type": "performance",
+    "title": "Eliminate Update Loop Vector3 & Quaternion Allocations in LootCube & ScrewJam",
+    "description": "Replace per-frame new THREE.Vector3 in voxel-craft-smash-3d/src/game/entities/loot-cube.ts and new THREE.Quaternion in screw-jam-3d/src/main.ts update(dt) with reusable scratch objects.",
+    "targetFiles": [
+      "voxel-craft-smash-3d/src/game/entities/loot-cube.ts",
+      "screw-jam-3d/src/main.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
+    "id": "bus-escape-jam-3d-dock-align-and-vip-bay-glow",
+    "gameId": "bus-escape-jam-3d",
+    "priority": "P2",
+    "priorityScore": 85,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Add Smooth Bay Docking Rotation Alignment & VIP Bay Unlock Glow",
+    "description": "Smoothly interpolate bus rotation to face forward when docking into loading bays and visually illuminate the VIP Bay wireframe marker upon rewarded ad unlock.",
+    "targetFiles": [
+      "bus-escape-jam-3d/src/game/entities/bus.ts",
+      "bus-escape-jam-3d/src/game/entities/parking-lot.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
     "id": "physics-drop-merge-3d-jar-inertia-and-wildcard",
     "gameId": "physics-drop-merge-3d",
     "priority": "P1",
