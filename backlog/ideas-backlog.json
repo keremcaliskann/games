@@ -241,8 +241,8 @@
     "id": "bus-escape-jam-3d",
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "category": "3d-spatial-jam",
-    "status": "ready",
-    "rank": 1,
+    "status": "completed",
+    "rank": null,
     "revenueScore": 89,
     "scoreBreakdown": {
       "rewardedAdScore": 33,

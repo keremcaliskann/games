@@ -5,6 +5,7 @@ export interface BodyMetadata {
   id: string;
   tier: number;
   isBomb?: boolean;
+  isRainbow?: boolean;
 }
 
 export class PhysicsWorld {
@@ -93,6 +94,16 @@ export class PhysicsWorld {
       const vy = strength * (0.8 + Math.random() * 0.4);
       const vz = (Math.random() - 0.5) * strength * 0.4;
       body.applyImpulse({ x: vx, y: vy, z: vz }, true);
+    });
+  }
+
+  public applyLateralInertia(forceX: number): void {
+    const clampedX = Math.max(-14.0, Math.min(14.0, forceX));
+    if (Math.abs(clampedX) < 0.25) return;
+    this.world.forEachRigidBody((body) => {
+      if (body.isFixed()) return;
+      const jitterY = Math.abs(clampedX) * 0.18;
+      body.applyImpulse({ x: clampedX * 0.35, y: jitterY, z: 0 }, true);
     });
   }
 

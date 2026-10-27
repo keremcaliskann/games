@@ -8,6 +8,7 @@ export class GoodsItem {
   public slotIndex: number;
   public layer: number; // 0 = front, 1 = rear
   public isVip: boolean = false;
+  public isGolden: boolean = false;
 
   private isAnimating = false;
   private animStartPos = new THREE.Vector3();
@@ -25,16 +26,30 @@ export class GoodsItem {
     col: number,
     slotIndex: number,
     layer: number,
-    initialPos: THREE.Vector3
+    initialPos: THREE.Vector3,
+    isGolden: boolean = false
   ) {
     this.tier = tier;
     this.col = col;
     this.slotIndex = slotIndex;
     this.layer = layer;
+    this.isGolden = isGolden;
 
     this.mesh = PrefabFactory.createItemMesh(typeId);
     this.mesh.position.copy(initialPos);
     this.mesh.name = id;
+
+    if (isGolden) {
+      this.mesh.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+          child.material = new THREE.MeshStandardMaterial({
+            color: 0xfacc15,
+            roughness: 0.18,
+            metalness: 0.65,
+          });
+        }
+      });
+    }
 
     // Dim rear layer items slightly to show they are in the back
     if (layer === 1) {

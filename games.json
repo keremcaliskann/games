@@ -1,10 +1,35 @@
 [
   {
+    "id": "bus-escape-jam-3d",
+    "title": "BUS ESCAPE 3D // PASSENGER JAM",
+    "description": "Tactile 3D traffic jam & passenger conga color sorting puzzle! Tap angled buses in a congested lot to drive them into loading bays and board matching passengers.",
+    "path": "./bus-escape-jam-3d/",
+    "tags": [
+      "3D Puzzle",
+      "Traffic Jam",
+      "Bus Escape",
+      "Color Sort",
+      "60 FPS"
+    ],
+    "date": "2026-10-27",
+    "icon": "./bus-escape-jam-3d/icon.svg",
+    "iconEmoji": "🚌",
+    "featured": true,
+    "themeColor": "#f59e0b",
+    "accentGradient": "linear-gradient(135deg, #f59e0b, #ef4444)"
+  },
+  {
     "id": "conveyor-marble-sort-3d",
     "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
     "description": "Tactile 3D conveyor loop marble sorting ASMR puzzle! Release glossy color-coded marbles from hoppers onto the circulating track to fulfill crate orders.",
     "path": "./conveyor-marble-sort-3d/",
-    "tags": ["3D Puzzle", "Conveyor Flow", "Marble Sort", "Casual ASMR", "60 FPS"],
+    "tags": [
+      "3D Puzzle",
+      "Conveyor Flow",
+      "Marble Sort",
+      "Casual ASMR",
+      "60 FPS"
+    ],
     "date": "2026-10-27",
     "icon": "./conveyor-marble-sort-3d/icon.svg",
     "iconEmoji": "🔄",
@@ -17,7 +42,13 @@
     "title": "DROP MERGE 3D // SPHERE SUIKA",
     "description": "Bouncy 3D physics fruit merge puzzle! Aim and drop juicy spheres into the translucent jar, merge identical pairs, and chain reactions to unlock the Giant Golden Sun Core.",
     "path": "./physics-drop-merge-3d/",
-    "tags": ["3D Physics", "Suika Merge", "Rapier.js", "Casual ASMR", "60 FPS"],
+    "tags": [
+      "3D Physics",
+      "Suika Merge",
+      "Rapier.js",
+      "Casual ASMR",
+      "60 FPS"
+    ],
     "date": "2026-10-26",
     "icon": "./physics-drop-merge-3d/icon.svg",
     "iconEmoji": "🍉",
@@ -30,7 +61,13 @@
     "title": "GOODS SORT 3D // SHELF TIDY MASTER",
     "description": "Tactile 3D shelf organization and match-3 puzzle! Sort colorful soda cans, snack boxes, and jam jars into matching compartments to trigger satisfying ASMR pops.",
     "path": "./goods-sort-3d/",
-    "tags": ["3D Puzzle", "Goods Sort", "ASMR Match-3", "Shelf Tidy", "60 FPS"],
+    "tags": [
+      "3D Puzzle",
+      "Goods Sort",
+      "ASMR Match-3",
+      "Shelf Tidy",
+      "60 FPS"
+    ],
     "date": "2026-10-26",
     "icon": "./goods-sort-3d/icon.svg",
     "iconEmoji": "🗄️",
@@ -43,7 +80,13 @@
     "title": "CANNON BLITZ 3D // PHYSICS DEMOLITION",
     "description": "Aim and fire physics cannonballs at precarious island fortresses! Trigger chain-reaction TNT explosions, topple block towers, and knock target dummies into the sea.",
     "path": "./ragdoll-cannon-blitz-3d/",
-    "tags": ["3D Physics", "Casual Demolition", "Rapier.js", "FPS Cannon", "60 FPS"],
+    "tags": [
+      "3D Physics",
+      "Casual Demolition",
+      "Rapier.js",
+      "FPS Cannon",
+      "60 FPS"
+    ],
     "date": "2026-10-26",
     "icon": "./ragdoll-cannon-blitz-3d/icon.svg",
     "iconEmoji": "💣",
@@ -56,7 +99,13 @@
     "title": "VOXEL SMASH 3D // BLOCK MINER & TURRET",
     "description": "Tactile 3D voxel fortress destruction ASMR! Demolish procedural castles, chain-react TNT powder kegs, fend off marching golems, and vacuum glowing loot cubes.",
     "path": "./voxel-craft-smash-3d/",
-    "tags": ["Voxel Sandbox", "ASMR Destruction", "Turret Defense", "Instanced Mesh", "60 FPS"],
+    "tags": [
+      "Voxel Sandbox",
+      "ASMR Destruction",
+      "Turret Defense",
+      "Instanced Mesh",
+      "60 FPS"
+    ],
     "date": "2026-10-25",
     "icon": "./voxel-craft-smash-3d/icon.svg",
     "iconEmoji": "🧱",
@@ -69,7 +118,13 @@
     "title": "HOLE SWALLOW 3D // CITY ARENA .IO",
     "description": "Steer a hungry 3D black hole across a miniature sunlit city. Swallow props, cars, and skyscrapers, eliminate rival bots, and top the live 8-player leaderboard!",
     "path": "./hole-city-io-3d/",
-    "tags": [".io Arena", "Fake Multiplayer", "3D Physics", "Casual Action", "60 FPS"],
+    "tags": [
+      ".io Arena",
+      "Fake Multiplayer",
+      "3D Physics",
+      "Casual Action",
+      "60 FPS"
+    ],
     "date": "2026-10-24",
     "icon": "./hole-city-io-3d/icon.svg",
     "iconEmoji": "🕳️",
@@ -82,7 +137,13 @@
     "title": "HEXA SORT 3D // CASCADE STACK",
     "description": "Tactile 3D hexagonal tile sorting ASMR puzzle! Stack, match colors, and trigger satisfying domino cascade clears on a floating honeycomb grid under warm daylight.",
     "path": "./hexa-sort-3d/",
-    "tags": ["3D Puzzle", "Hexa Sort", "ASMR Cascade", "Spatial Logic", "Casual"],
+    "tags": [
+      "3D Puzzle",
+      "Hexa Sort",
+      "ASMR Cascade",
+      "Spatial Logic",
+      "Casual"
+    ],
     "date": "2026-10-22",
     "icon": "./hexa-sort-3d/icon.svg",
     "iconEmoji": "🔷",
@@ -95,7 +156,13 @@
     "title": "SCREW JAM 3D // HYPER UNBOLT",
     "description": "Tactile 3D pin-unscrew ASMR puzzle! Unbolt colorful translucent acrylic plates, match screws into 3-slot color toolboxes, and manage the buffer dock under warm daylight.",
     "path": "./screw-jam-3d/",
-    "tags": ["3D Puzzle", "Pin Unscrew", "ASMR Jam", "Spatial Logic", "Casual"],
+    "tags": [
+      "3D Puzzle",
+      "Pin Unscrew",
+      "ASMR Jam",
+      "Spatial Logic",
+      "Casual"
+    ],
     "date": "2026-10-21",
     "icon": "./screw-jam-3d/icon.svg",
     "iconEmoji": "🔩",
@@ -108,7 +175,13 @@
     "title": "COLOR BLOCK JAM 3D // SHREDDER ESCAPE",
     "description": "Tactile 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with satisfying ASMR voxel bursts!",
     "path": "./color-block-jam-3d/",
-    "tags": ["3D Puzzle", "Spatial Jam", "Shredder Escape", "ASMR", "Casual"],
+    "tags": [
+      "3D Puzzle",
+      "Spatial Jam",
+      "Shredder Escape",
+      "ASMR",
+      "Casual"
+    ],
     "date": "2026-10-21",
     "icon": "./color-block-jam-3d/icon.svg",
     "iconEmoji": "🧩",
@@ -121,7 +194,13 @@
     "title": "CYBER ARROW 3D",
     "description": "Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.",
     "path": "./cyber-arrow-3d/",
-    "tags": ["3D Puzzle", "Spatial Logic", "ASMR Escape", "Three.js", "Casual"],
+    "tags": [
+      "3D Puzzle",
+      "Spatial Logic",
+      "ASMR Escape",
+      "Three.js",
+      "Casual"
+    ],
     "date": "2026-10-20",
     "icon": "./cyber-arrow-3d/icon.svg",
     "iconEmoji": "🎯",
@@ -134,7 +213,13 @@
     "title": "CYBER FLAP // 2099",
     "description": "High-energy 3D aerobatic drone runner. Soar through sunlit city skies, thread precision aerial rings, and dodge dynamic obstacles with responsive 60 FPS controls.",
     "path": "./cyber-flap/",
-    "tags": ["3D Sky Runner", "Aerobatic Flight", "Physics", "60 FPS", "Arcade"],
+    "tags": [
+      "3D Sky Runner",
+      "Aerobatic Flight",
+      "Physics",
+      "60 FPS",
+      "Arcade"
+    ],
     "date": "2026-10-19",
     "icon": "./cyber-flap/icon.svg",
     "iconEmoji": "⚡",

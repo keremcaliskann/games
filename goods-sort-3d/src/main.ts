@@ -52,6 +52,7 @@ class GoodsSortApp {
   private remainingTime = 90;
   private totalLevelTime = 90;
   private isFirstFrame = true;
+  private restockedTiers = new Set<number>();
 
   constructor() {
     this.appEl = document.getElementById('app')!;
@@ -168,6 +169,8 @@ class GoodsSortApp {
     this.hud.updateTimer(this.remainingTime, this.totalLevelTime);
     this.hud.updateSound(this.sound.muted);
 
+    this.restockedTiers.clear();
+
     // Build Cabinet Items
     this.cabinet.clear();
     for (const itemData of this.currentLevelData.items) {
@@ -191,7 +194,14 @@ class GoodsSortApp {
 
   private checkMatches(): void {
     let anyMatched = false;
-    while (this.matcher.checkMatches()) {
+    while (
+      this.matcher.checkMatches((_typeId, isGolden) => {
+        anyMatched = true;
+        const coinsEarned = isGolden ? 30 : 10;
+        this.economy.addCoins(coinsEarned);
+        this.hud.updateCoins(this.economy.coins);
+      })
+    ) {
       anyMatched = true;
     }
 
@@ -199,11 +209,46 @@ class GoodsSortApp {
       this.sound.resetCombo();
     }
 
+    // Check if any tier was fully cleared -> trigger conveyor restock drop
+    for (let t = 0; t < 3; t++) {
+      if (this.cabinet.isTierEmpty(t) && !this.restockedTiers.has(t)) {
+        this.restockedTiers.add(t);
+        this.triggerTierRestock(t);
+      }
+    }
+
     if (this.cabinet.getAllItems().length === 0 && this.state === GameState.PLAYING) {
       this.state = GameState.LEVEL_WON;
       this.sound.playVictory();
       this.hud.showVictoryModal(GAME_CONFIG.coinsPerClear);
     }
+  }
+
+  private triggerTierRestock(tier: number): void {
+    // Drop 3 fresh matching items into the cleared tier
+    const types = ['soda_can', 'snack_box', 'juice_carton', 'milk_bottle', 'chips_bag'];
+    const chosenType = types[Math.floor(Math.random() * types.length)];
+    const isGolden = Math.random() < 0.35; // 35% chance to spawn golden items
+
+    for (let s = 0; s < 3; s++) {
+      const targetPos = this.cabinet.getSlotPos(tier, 1, s, false);
+      const spawnPos = targetPos.clone();
+      spawnPos.y += 2.8; // drop from above
+
+      const item = new GoodsItem(
+        `restock_${tier}_${s}_${Date.now()}`,
+        chosenType,
+        tier,
+        1,
+        s,
+        0,
+        spawnPos,
+        isGolden
+      );
+      this.cabinet.addItem(item);
+      item.moveTo(targetPos);
+    }
+    this.sound.playThud();
   }
 
   // --- Booster 1: Tidy Magic Wand ---

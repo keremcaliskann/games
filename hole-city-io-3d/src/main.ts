@@ -299,6 +299,15 @@ class HoleCityApp {
       }
       this.hud.updateTimer(this.matchTimeRemaining);
 
+      // Mega-Tornado Hazard during final 30s
+      if (this.matchTimeRemaining <= 30.0) {
+        this.arena.activateTornado();
+        this.hud.showTornadoAlert(true);
+        this.arena.updateTornado(dt);
+      } else {
+        this.hud.showTornadoAlert(false);
+      }
+
       // 2. Player Input & Movement
       const move = this.input.getMoveVector();
       this.playerHole.setMoveDirection(move.x, move.z);
@@ -408,6 +417,9 @@ class HoleCityApp {
     prey.group.visible = false;
     predator.kills++;
     predator.addScore(250, 0.45);
+
+    predator.showTaunt('😈 NOM NOM!');
+    prey.showTaunt('😱 NOOO!');
 
     this.particles.spawnBurst(prey.position, 0xec4899, 32);
 

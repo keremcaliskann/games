@@ -161,4 +161,33 @@ export class PrefabFactory {
 
     return group;
   }
+
+  public static createRainbowMesh(radius: number = 0.9): THREE.Group {
+    const group = new THREE.Group();
+
+    // Iridescent pearl sphere
+    const sphereMat = new THREE.MeshStandardMaterial({
+      color: 0xfff0f5,
+      roughness: 0.18,
+      metalness: 0.25,
+    });
+    const sphere = new THREE.Mesh(new THREE.SphereGeometry(radius, 24, 24), sphereMat);
+    sphere.castShadow = true;
+    group.add(sphere);
+
+    // Glowing subtle golden outer halo ring
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0xfbbf24, wireframe: true, transparent: true, opacity: 0.6 });
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(radius * 1.1, 0.04, 8, 24), ringMat);
+    ring.rotation.x = Math.PI / 4;
+    group.add(ring);
+
+    // Rainbow Decal
+    const tex = this.createFaceTexture('🌈', '#f472b6');
+    const decalMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
+    const decal = new THREE.Mesh(new THREE.PlaneGeometry(radius * 1.3, radius * 1.3), decalMat);
+    decal.position.set(0, 0, radius + 0.02);
+    group.add(decal);
+
+    return group;
+  }
 }

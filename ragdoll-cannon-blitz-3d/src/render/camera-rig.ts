@@ -35,17 +35,36 @@ export class CameraRig {
     this.trauma = Math.min(this.trauma + amount, 1.0);
   }
 
+  private slowMoTimer = 0;
+  private zoomFactor = 1.0;
+
+  public triggerSlowMoDestruct(duration = 0.35): void {
+    this.slowMoTimer = duration;
+    this.addTrauma(0.75);
+  }
+
+  public get isSlowMo(): boolean {
+    return this.slowMoTimer > 0;
+  }
+
   public update(dt: number): void {
+    if (this.slowMoTimer > 0) {
+      this.slowMoTimer = Math.max(0, this.slowMoTimer - dt);
+      this.zoomFactor = THREE.MathUtils.lerp(this.zoomFactor, 0.88, dt * 8.0);
+    } else {
+      this.zoomFactor = THREE.MathUtils.lerp(this.zoomFactor, 1.0, dt * 5.0);
+    }
+
     if (this.trauma > 0) {
       this.trauma = Math.max(0, this.trauma - dt * 2.2);
       const shake = this.trauma * this.trauma * 0.8;
       this.camera.position.set(
         this.basePos.x + (Math.random() - 0.5) * shake,
         this.basePos.y + (Math.random() - 0.5) * shake,
-        this.basePos.z + (Math.random() - 0.5) * shake * 0.5
+        this.basePos.z * this.zoomFactor + (Math.random() - 0.5) * shake * 0.5
       );
     } else {
-      this.camera.position.copy(this.basePos);
+      this.camera.position.set(this.basePos.x, this.basePos.y, this.basePos.z * this.zoomFactor);
     }
     this.camera.lookAt(this.lookTarget);
   }

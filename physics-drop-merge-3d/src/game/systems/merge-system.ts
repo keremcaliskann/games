@@ -19,6 +19,7 @@ export class MergeSystem {
   private spheres: SphereItem[] = [];
   private pendingMerges: MergePair[] = [];
   private sphereIdCounter = 0;
+  private totalMerges = 0;
 
   constructor(
     private readonly scene: THREE.Scene,
@@ -28,10 +29,14 @@ export class MergeSystem {
     private readonly cameraRig: CameraRig
   ) {}
 
-  public spawnSphere(x: number, y: number, z: number, tier: number, isBomb: boolean = false): SphereItem {
+  public get mergeCount(): number {
+    return this.totalMerges;
+  }
+
+  public spawnSphere(x: number, y: number, z: number, tier: number, isBomb: boolean = false, isRainbow: boolean = false): SphereItem {
     const def = TIER_DEFINITIONS[tier - 1] || TIER_DEFINITIONS[0];
-    const radius = isBomb ? 0.85 : def.radius;
-    const mass = isBomb ? 4.0 : def.mass;
+    const radius = isBomb ? 0.85 : (isRainbow ? 0.85 : def.radius);
+    const mass = isBomb ? 4.0 : (isRainbow ? 2.5 : def.mass);
 
     const bodyDesc = RAPIER.RigidBodyDesc.dynamic()
       .setTranslation(x, y, z)
@@ -49,9 +54,9 @@ export class MergeSystem {
     this.physics.world.createCollider(colliderDesc, body);
 
     const id = `sphere_${++this.sphereIdCounter}`;
-    this.physics.registerMeta(body.handle, { id, tier, isBomb });
+    this.physics.registerMeta(body.handle, { id, tier, isBomb, isRainbow });
 
-    const item = new SphereItem(id, tier, body, isBomb);
+    const item = new SphereItem(id, tier, body, isBomb, isRainbow);
     this.scene.add(item.mesh);
     this.spheres.push(item);
 
@@ -76,19 +81,24 @@ export class MergeSystem {
       return;
     }
 
-    // 2. Fruit Sphere Contact: Check Same Tier Match
-    if (item1.tier === item2.tier && item1.tier < TIER_DEFINITIONS.length) {
+    // 2. Fruit Sphere Contact: Check Same Tier Match or Rainbow Wildcard
+    const isRainbowContact = item1.isRainbow || item2.isRainbow;
+    if ((item1.tier === item2.tier || isRainbowContact) && Math.min(item1.tier, item2.tier) < TIER_DEFINITIONS.length) {
       item1.isMerging = true;
       item2.isMerging = true;
+      this.totalMerges++;
 
       const p1 = item1.body.translation();
       const p2 = item2.body.translation();
       const midpoint = new THREE.Vector3((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
 
-      const targetTier = item1.tier + 1;
+      const targetTier = isRainbowContact
+        ? Math.min(TIER_DEFINITIONS.length, (item1.isRainbow ? item2.tier : item1.tier) + 1)
+        : item1.tier + 1;
+
       this.pendingMerges.push({ itemA: item1, itemB: item2, targetTier, midpoint });
 
-      const points = TIER_DEFINITIONS[targetTier - 1]?.points || 10;
+      const points = (TIER_DEFINITIONS[targetTier - 1]?.points || 10) * (isRainbowContact ? 2 : 1);
       if (onMergePoints) {
         onMergePoints(points, targetTier);
       }
@@ -207,5 +217,6 @@ export class MergeSystem {
     }
     this.spheres = [];
     this.pendingMerges = [];
+    this.totalMerges = 0;
   }
 }

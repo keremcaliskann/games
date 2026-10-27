@@ -34,6 +34,50 @@ export class PrefabFactory {
   private static matSkyscraperGlass = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.25, metalness: 0.3 });
 
   // 1. Traffic Cone (Tier 1, required radius >= 1.0)
+  public static createTornadoMesh(): THREE.Group {
+    const group = new THREE.Group();
+    const ringMat = new THREE.MeshStandardMaterial({
+      color: 0x93c5fd,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.65,
+    });
+    for (let i = 0; i < 4; i++) {
+      const radius = 1.2 + i * 0.9;
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, 0.22, 8, 24), ringMat);
+      ring.position.y = 0.5 + i * 1.5;
+      ring.rotation.x = Math.PI / 2;
+      group.add(ring);
+    }
+    return group;
+  }
+
+  public static createTauntSprite(emojiText: string): THREE.Sprite {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d')!;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.roundRect(4, 4, 120, 56, 16);
+    ctx.fill();
+    ctx.strokeStyle = '#3b82f6';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.font = '28px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#1e293b';
+    ctx.fillText(emojiText, 64, 34);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+    const sprite = new THREE.Sprite(mat);
+    sprite.scale.set(3.5, 1.8, 1.0);
+    return sprite;
+  }
+
   public static createTrafficCone(): PropPrefabData {
     const group = new THREE.Group();
 

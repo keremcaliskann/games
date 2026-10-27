@@ -9,6 +9,7 @@ export class DropperEntity {
   private primedMesh: THREE.Group | null = null;
   private currentTier = 1;
   private isBombPrimed = false;
+  private isRainbowPrimed = false;
 
   constructor(scene: THREE.Scene) {
     this.mesh = new THREE.Group();
@@ -53,9 +54,10 @@ export class DropperEntity {
     return this.currentX;
   }
 
-  public setPrimed(tier: number, isBomb: boolean = false): void {
+  public setPrimed(tier: number, isBomb: boolean = false, isRainbow: boolean = false): void {
     this.currentTier = tier;
     this.isBombPrimed = isBomb;
+    this.isRainbowPrimed = isRainbow;
 
     if (this.primedMesh) {
       this.mesh.remove(this.primedMesh);
@@ -63,6 +65,8 @@ export class DropperEntity {
 
     if (isBomb) {
       this.primedMesh = PrefabFactory.createBombMesh(0.8);
+    } else if (isRainbow) {
+      this.primedMesh = PrefabFactory.createRainbowMesh(0.85);
     } else {
       const def = TIER_DEFINITIONS[tier - 1] || TIER_DEFINITIONS[0];
       this.primedMesh = PrefabFactory.createSphereMesh(def);
@@ -78,6 +82,10 @@ export class DropperEntity {
 
   public get isBomb(): boolean {
     return this.isBombPrimed;
+  }
+
+  public get isRainbow(): boolean {
+    return this.isRainbowPrimed;
   }
 
   public setTrajectoryVisible(visible: boolean): void {

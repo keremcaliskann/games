@@ -52,6 +52,7 @@ class DropMergeApp {
   private currentScore = 0;
   private nextTier = 1;
   private isNextBomb = false;
+  private isNextRainbow = false;
   private dangerTimer = 0;
   private isFirstFrame = true;
   private dropCooldown = 0;
@@ -158,6 +159,11 @@ class DropMergeApp {
           this.dropper.setX(x);
         }
       },
+      onDragInertia: (dx) => {
+        if (this.state === GameState.PLAYING) {
+          this.physics.applyLateralInertia(dx * 0.08);
+        }
+      },
       onDrop: (x) => {
         if (this.state === GameState.PLAYING) {
           this.dropActiveSphere(x);
@@ -185,8 +191,9 @@ class DropMergeApp {
 
     this.nextTier = this.rollNextTier();
     this.isNextBomb = false;
-    this.dropper.setPrimed(1, false);
-    this.hud.updateNextBall(this.nextTier, this.isNextBomb);
+    this.isNextRainbow = false;
+    this.dropper.setPrimed(1, false, false);
+    this.hud.updateNextBall(this.nextTier, this.isNextBomb, this.isNextRainbow);
 
     this.sound.resetCombo();
     PlatformBridge.gameReady();
@@ -208,19 +215,23 @@ class DropMergeApp {
     this.hud.hideAimHint();
     const tierToDrop = this.dropper.primedTier;
     const isBomb = this.dropper.isBomb;
+    const isRainbow = this.dropper.isRainbow;
 
     this.sound.playDrop();
-    this.mergeSystem.spawnSphere(x, GAME_CONFIG.dropper.spawnY - 0.5, 0, tierToDrop, isBomb);
+    this.mergeSystem.spawnSphere(x, GAME_CONFIG.dropper.spawnY - 0.5, 0, tierToDrop, isBomb, isRainbow);
 
     // Queue next sphere
     const upcomingTier = this.nextTier;
     const upcomingBomb = this.isNextBomb;
+    const upcomingRainbow = this.isNextRainbow;
 
     this.nextTier = this.rollNextTier();
     this.isNextBomb = false;
+    // Check if next ball should be a Rainbow Wildcard (triggered every 15 merges)
+    this.isNextRainbow = this.mergeSystem.mergeCount > 0 && this.mergeSystem.mergeCount % 15 === 0;
 
-    this.dropper.setPrimed(upcomingTier, upcomingBomb);
-    this.hud.updateNextBall(this.nextTier, this.isNextBomb);
+    this.dropper.setPrimed(upcomingTier, upcomingBomb, upcomingRainbow);
+    this.hud.updateNextBall(this.nextTier, this.isNextBomb, this.isNextRainbow);
   }
 
   // --- Booster 1: Pop Shake ---

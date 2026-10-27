@@ -12,6 +12,7 @@ export class GolemEnemy {
   public maxHp: number;
   public isAlive = true;
   public speed: number;
+  public freezeTimer = 0;
   private walkTime = 0;
 
   constructor(x: number, z: number, hp = 10, speed = 2.2) {
@@ -43,8 +44,17 @@ export class GolemEnemy {
     return false;
   }
 
+  public freeze(duration = 3.0): void {
+    this.freezeTimer = duration;
+  }
+
   public update(dt: number, targetZ: number): boolean {
     if (!this.isAlive) return false;
+
+    if (this.freezeTimer > 0) {
+      this.freezeTimer = Math.max(0, this.freezeTimer - dt);
+      return false; // Frozen in ice!
+    }
 
     // Advance towards target Z (turret)
     this.group.position.z += this.speed * dt;

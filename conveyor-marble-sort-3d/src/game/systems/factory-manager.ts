@@ -21,6 +21,9 @@ export class FactoryManager {
   public conveyor: ConveyorBelt;
   public dispensers: DispenserEntity[] = [];
   public activeCrates: CollectorCrateEntity[] = [];
+  public isSurging: boolean = false;
+  private comboStreak: number = 0;
+  private surgeTimer: number = 0;
   private queuedCrates: CrateSpec[] = [];
   private activeLevelData!: LevelData;
 
@@ -68,11 +71,21 @@ export class FactoryManager {
     this.events = events;
 
     this.conveyor = new ConveyorBelt(loopCurve);
+
+    const gate = PrefabFactory.createSplitterGate();
+    gate.root.position.set(0, 0.2, 3.2);
+    this.scene.add(gate.root);
+    this.conveyor.splitterGate = gate;
   }
 
   public startLevel(levelNum: number): void {
     this.currentLevel = levelNum;
     this.state = 'playing';
+    this.comboStreak = 0;
+    this.isSurging = false;
+    this.surgeTimer = 0;
+    this.conveyor.speed = GAME_CONFIG.conveyor.speed;
+    this.conveyor.isGateOpen = false;
     this.audio.resetCombo();
 
     // Clean up existing entities
@@ -176,6 +189,17 @@ export class FactoryManager {
   public update(dt: number): void {
     if (this.state === 'victory') return;
 
+    // Handle Speed Surge
+    if (this.isSurging) {
+      this.surgeTimer -= dt;
+      if (this.surgeTimer <= 0) {
+        this.isSurging = false;
+        this.conveyor.speed = GAME_CONFIG.conveyor.speed;
+        this.conveyor.isGateOpen = false;
+        this.events.emit('surge:ended');
+      }
+    }
+
     // 1. Update conveyor loop
     this.conveyor.update(dt);
 
@@ -234,6 +258,17 @@ export class FactoryManager {
             this.totalClearedMarbles++;
             this.audio.playAbsorb();
             this.effects.spawnPopBurst(crate.root.position, [m.hex, 0xffffff]);
+
+            // Combo & Speed Surge Trigger
+            this.comboStreak++;
+            if (this.comboStreak >= 5 && !this.isSurging) {
+              this.isSurging = true;
+              this.surgeTimer = 5.0;
+              this.conveyor.speed = GAME_CONFIG.conveyor.speed * 1.6;
+              this.conveyor.isGateOpen = true;
+              this.effects.spawnPopBurst(crate.root.position, [0xfacc15, 0xffffff, 0xf59e0b]);
+              this.events.emit('surge:started');
+            }
 
             if (crate.isFull) {
               crate.triggerShipDeparture();

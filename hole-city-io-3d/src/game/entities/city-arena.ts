@@ -1,8 +1,11 @@
 import * as THREE from 'three';
 import { GAME_CONFIG } from '../config/game-config';
+import { PrefabFactory } from '../../render/PrefabFactory';
 
 export class CityArena {
   public readonly group = new THREE.Group();
+  public tornadoMesh: THREE.Group | null = null;
+  private tornadoAngle = 0;
 
   constructor() {
     this.buildCityGround();
@@ -146,5 +149,22 @@ export class CityArena {
       curb.receiveShadow = true;
       this.group.add(curb);
     });
+  }
+
+  public activateTornado(): void {
+    if (this.tornadoMesh) return;
+    this.tornadoMesh = PrefabFactory.createTornadoMesh();
+    this.tornadoMesh.position.set(0, 0, 0);
+    this.group.add(this.tornadoMesh);
+  }
+
+  public updateTornado(dt: number): THREE.Vector3 | null {
+    if (!this.tornadoMesh) return null;
+    this.tornadoAngle += dt * 0.8;
+    this.tornadoMesh.rotation.y += dt * 6.0;
+    const rx = Math.sin(this.tornadoAngle) * 24.0;
+    const rz = Math.sin(this.tornadoAngle * 2.0) * 16.0;
+    this.tornadoMesh.position.set(rx, 0, rz);
+    return this.tornadoMesh.position;
   }
 }

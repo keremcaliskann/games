@@ -41,6 +41,32 @@ export class PrefabFactory {
   /**
    * Creates the floating factory platform and environment
    */
+  public static createSplitterGate(): { root: THREE.Group; arm: THREE.Mesh } {
+    const root = new THREE.Group();
+
+    // Post / Servo mount
+    const postMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.5 });
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.25, 0.8, 16), postMat);
+    post.position.y = 0.4;
+    root.add(post);
+
+    // Hazard indicator light
+    const lightMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 0.8 });
+    const light = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 12), lightMat);
+    light.position.y = 0.85;
+    root.add(light);
+
+    // Rotating barrier arm
+    const armMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3 });
+    const armGeo = new THREE.BoxGeometry(0.8, 0.18, 0.08);
+    armGeo.translate(0.4, 0, 0); // pivot at end
+    const arm = new THREE.Mesh(armGeo, armMat);
+    arm.position.set(0, 0.5, 0);
+    root.add(arm);
+
+    return { root, arm };
+  }
+
   public static createFactoryStage(): THREE.Group {
     const group = new THREE.Group();
 

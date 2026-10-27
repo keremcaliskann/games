@@ -138,6 +138,14 @@ class ConveyorMarbleApp {
       }
     });
 
+    this.events.on('surge:started', () => {
+      this.hud.setSurgeVisible(true);
+    });
+
+    this.events.on('surge:ended', () => {
+      this.hud.setSurgeVisible(false);
+    });
+
     this.events.on('game:jammed', () => {
       this.hud.showReviveModal();
     });

@@ -92,7 +92,7 @@ export class StructureManager {
     // Audio & Visual Effects
     this.audio.playTntExplosion();
     this.particles.spawnExplosion(vecPos, 0xef4444, 35);
-    this.cameraRig.addTrauma(0.65);
+    this.cameraRig.triggerSlowMoDestruct(0.4);
 
     // Apply Radial Physics Impulse
     const cfg = GAME_CONFIG.explosions;

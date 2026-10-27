@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GAME_CONFIG } from '../config/game-config';
+import { PrefabFactory } from '../../render/PrefabFactory';
 
 export class Hole {
   public readonly id: string;
@@ -16,6 +17,9 @@ export class Hole {
   public turboTimer: number = 0;
   public magnetTimer: number = 0;
   public invulnerableTimer: number = 0;
+
+  private tauntSprite: THREE.Sprite | null = null;
+  private tauntTimer: number = 0;
 
   // Movement
   public readonly velocity = new THREE.Vector3();
@@ -129,8 +133,33 @@ export class Hole {
     this.invulnerableTimer = durationSec;
   }
 
+  public showTaunt(emoji: string, duration = 2.0): void {
+    if (this.tauntSprite) {
+      this.group.remove(this.tauntSprite);
+      this.tauntSprite = null;
+    }
+    this.tauntSprite = PrefabFactory.createTauntSprite(emoji);
+    this.tauntSprite.position.set(0, 3.8, 0);
+    this.group.add(this.tauntSprite);
+    this.tauntTimer = duration;
+  }
+
   public update(dt: number): void {
-    if (!this.isAlive) return;
+    if (!this.isAlive) {
+      if (this.tauntSprite) {
+        this.group.remove(this.tauntSprite);
+        this.tauntSprite = null;
+      }
+      return;
+    }
+
+    if (this.tauntTimer > 0) {
+      this.tauntTimer -= dt;
+      if (this.tauntTimer <= 0 && this.tauntSprite) {
+        this.group.remove(this.tauntSprite);
+        this.tauntSprite = null;
+      }
+    }
 
     // Tick timers
     if (this.turboTimer > 0) this.turboTimer = Math.max(0, this.turboTimer - dt);

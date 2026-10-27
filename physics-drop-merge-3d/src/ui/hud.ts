@@ -62,10 +62,16 @@ export class Hud {
     this.bestScoreEl.textContent = String(best);
   }
 
-  public updateNextBall(tier: number, isBomb: boolean = false): void {
+  public updateNextBall(tier: number, isBomb: boolean = false, isRainbow: boolean = false): void {
     if (isBomb) {
       this.nextBallEl.style.backgroundColor = '#1e293b';
       this.nextBallEl.textContent = '💣';
+      this.nextBallEl.style.fontSize = '14px';
+      this.nextBallEl.style.textAlign = 'center';
+      this.nextBallEl.style.lineHeight = '22px';
+    } else if (isRainbow) {
+      this.nextBallEl.style.backgroundColor = '#ec4899';
+      this.nextBallEl.textContent = '🌈';
       this.nextBallEl.style.fontSize = '14px';
       this.nextBallEl.style.textAlign = 'center';
       this.nextBallEl.style.lineHeight = '22px';

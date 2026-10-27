@@ -244,6 +244,7 @@ class VoxelSmashApp {
         const success = await this.ads.showRewarded('booster_magnet');
         if (success) {
           this.lootCubes.triggerGlobalVacuum();
+          this.golems.forEach((g) => g.freeze(3.0));
           this.sound.playLootCollect();
         }
       },
@@ -279,6 +280,9 @@ class VoxelSmashApp {
         for (const g of this.golems) {
           if (g.isAlive && pos.distanceTo(g.position) < 1.6) {
             const dead = g.takeDamage(1);
+            if (this.turret.doubleCannonTimer > 0) {
+              g.freeze(3.0);
+            }
             this.sound.playVoxelShatter(0.85);
             this.particles.spawnBlockFracture(g.position, 0x475569, 12);
             if (dead) {

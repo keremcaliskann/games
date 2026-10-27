@@ -8,6 +8,7 @@ export class ProjectileManager {
     velocity: THREE.Vector3;
     active: boolean;
     life: number;
+    bounces: number;
   }[] = [];
   private readonly maxProjectiles = 60;
 
@@ -24,6 +25,7 @@ export class ProjectileManager {
         velocity: new THREE.Vector3(),
         active: false,
         life: 0,
+        bounces: 0,
       });
     }
 
@@ -35,6 +37,7 @@ export class ProjectileManager {
       if (!p.active) {
         p.active = true;
         p.life = 0;
+        p.bounces = 0;
         p.mesh.position.copy(origin);
         p.mesh.scale.setScalar(isPowered ? 1.6 : 1.0);
         (p.mesh.material as THREE.MeshBasicMaterial).color.setHex(isPowered ? 0xf59e0b : 0x38bdf8);
@@ -66,8 +69,15 @@ export class ProjectileManager {
       // Check collision with voxels or golems
       const hit = onHitCheck(p.mesh.position, GAME_CONFIG.projectileRadius);
       if (hit) {
-        p.active = false;
-        p.mesh.visible = false;
+        if (p.bounces < 2) {
+          p.bounces++;
+          p.velocity.x *= -0.75;
+          p.velocity.z *= -0.75;
+          p.mesh.position.x += p.velocity.x * dt * 2.0;
+        } else {
+          p.active = false;
+          p.mesh.visible = false;
+        }
       }
     }
   }

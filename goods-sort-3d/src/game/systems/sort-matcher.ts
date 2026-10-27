@@ -10,7 +10,7 @@ export class SortMatcher {
     private readonly particles: ParticleEffects
   ) {}
 
-  public checkMatches(onClearedTrio?: (typeId: string) => void): boolean {
+  public checkMatches(onClearedTrio?: (typeId: string, isGolden: boolean) => void): boolean {
     let hadMatch = false;
 
     // 1. Check all compartments
@@ -21,9 +21,10 @@ export class SortMatcher {
           const type0 = frontItems[0].typeId;
           if (frontItems[1].typeId === type0 && frontItems[2].typeId === type0) {
             // Trio Match Found!
+            const isGolden = frontItems.some((i) => i.isGolden);
             this.clearTrio(frontItems, t, c, false);
             hadMatch = true;
-            if (onClearedTrio) onClearedTrio(type0);
+            if (onClearedTrio) onClearedTrio(type0, isGolden);
           }
         }
       }
@@ -35,9 +36,10 @@ export class SortMatcher {
       if (vipItems.length === 3) {
         const type0 = vipItems[0].typeId;
         if (vipItems[1].typeId === type0 && vipItems[2].typeId === type0) {
+          const isGolden = vipItems.some((i) => i.isGolden);
           this.clearTrio(vipItems, 0, 0, true);
           hadMatch = true;
-          if (onClearedTrio) onClearedTrio(type0);
+          if (onClearedTrio) onClearedTrio(type0, isGolden);
         }
       }
     }
@@ -47,9 +49,14 @@ export class SortMatcher {
 
   private clearTrio(items: GoodsItem[], tier: number, col: number, isVip: boolean): void {
     const centerPos = items[1].mesh.position.clone();
+    const isGolden = items.some((i) => i.isGolden);
 
     this.audio.playTrioPop();
-    this.particles.spawnPopBurst(centerPos);
+    if (isGolden) {
+      this.particles.spawnPopBurst(centerPos, [0xfacc15, 0xfff6e5, 0xeab308]);
+    } else {
+      this.particles.spawnPopBurst(centerPos);
+    }
 
     for (const item of items) {
       this.cabinet.removeItem(item);

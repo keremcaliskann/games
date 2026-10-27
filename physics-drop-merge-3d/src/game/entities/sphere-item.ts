@@ -7,6 +7,7 @@ export class SphereItem {
   public readonly def: TierVisualDef;
   public isMerging = false;
   public isBomb: boolean;
+  public isRainbow: boolean;
   public age = 0;
 
   private squashTimer = 0;
@@ -15,13 +16,17 @@ export class SphereItem {
     public readonly id: string,
     public readonly tier: number,
     public readonly body: RAPIER.RigidBody,
-    isBomb: boolean = false
+    isBomb: boolean = false,
+    isRainbow: boolean = false
   ) {
     this.isBomb = isBomb;
+    this.isRainbow = isRainbow;
     this.def = TIER_DEFINITIONS[tier - 1] || TIER_DEFINITIONS[0];
 
     if (isBomb) {
       this.mesh = PrefabFactory.createBombMesh(0.85);
+    } else if (isRainbow) {
+      this.mesh = PrefabFactory.createRainbowMesh(0.85);
     } else {
       this.mesh = PrefabFactory.createSphereMesh(this.def);
     }

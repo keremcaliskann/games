@@ -59,6 +59,10 @@ export class Cabinet {
     );
   }
 
+  public isTierEmpty(tier: number): boolean {
+    return this.items.filter((i) => !i.isVip && i.tier === tier).length === 0;
+  }
+
   public getAvailableSlot(tier: number, col: number): number {
     const occupiedSlots = new Set(
       this.items

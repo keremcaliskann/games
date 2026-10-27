@@ -16,6 +16,8 @@ export interface MarbleItem {
 export class ConveyorBelt {
   public maxSlots: number = GAME_CONFIG.conveyor.defaultSlotCount;
   public speed: number = GAME_CONFIG.conveyor.speed;
+  public isGateOpen: boolean = false;
+  public splitterGate: { root: THREE.Group; arm: THREE.Mesh } | null = null;
   private marbles: MarbleItem[] = [];
   private readonly loopPath: {
     getPathPoint: (t: number) => THREE.Vector3;
@@ -84,6 +86,11 @@ export class ConveyorBelt {
 
   public update(dt: number): void {
     this.beltOffset = (this.beltOffset + this.speed * dt) % 1;
+
+    if (this.splitterGate) {
+      const targetRot = this.isGateOpen ? 0.95 : 0.0;
+      this.splitterGate.arm.rotation.y = THREE.MathUtils.lerp(this.splitterGate.arm.rotation.y, targetRot, dt * 8.0);
+    }
 
     // Advance circulating marbles
     for (let i = 0; i < this.marbles.length; i++) {

@@ -59,6 +59,18 @@ export class Hud {
     this.levelNumEl.textContent = String(level);
   }
 
+  public setSurgeVisible(visible: boolean): void {
+    let surgeBadge = document.getElementById('surge-badge');
+    if (!surgeBadge) {
+      surgeBadge = document.createElement('div');
+      surgeBadge.id = 'surge-badge';
+      surgeBadge.style.cssText = 'position:absolute;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#f59e0b,#eab308);color:#ffffff;font-weight:800;font-size:13px;padding:6px 16px;border-radius:20px;box-shadow:0 4px 12px rgba(245,158,11,0.4);pointer-events:none;z-index:30;display:none;letter-spacing:1px;';
+      surgeBadge.textContent = '⚡ SPEED SURGE 1.6x & GATE OPEN!';
+      this.container.appendChild(surgeBadge);
+    }
+    surgeBadge.style.display = visible ? 'block' : 'none';
+  }
+
   public updateCoins(coins: number): void {
     this.coinCountEl.textContent = String(coins);
   }

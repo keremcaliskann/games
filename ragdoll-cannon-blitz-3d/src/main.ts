@@ -293,6 +293,9 @@ class CannonBlitzApp {
   private fixedUpdate(dt: number): void {
     if (this.state === GameState.REVIVE_PROMPT) return;
 
+    // Apply slow-mo scale during foundation destruction
+    const effectiveDt = this.cameraRig.isSlowMo ? dt * 0.45 : dt;
+
     // Step Rapier Physics
     this.physics.step((h1, h2) => {
       const meta1 = this.physics.getMeta(h1);
@@ -308,11 +311,11 @@ class CannonBlitzApp {
       }
     });
 
-    this.structures.update(dt);
-    this.targets.update(dt, (remaining) => {
+    this.structures.update(effectiveDt);
+    this.targets.update(effectiveDt, (remaining) => {
       this.hud.updateTargets(remaining);
     });
-    this.projectiles.update(dt);
+    this.projectiles.update(effectiveDt);
 
     // Check Victory
     if (this.targets.remainingCount === 0 && this.state === GameState.PLAYING) {

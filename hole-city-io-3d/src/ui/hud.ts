@@ -313,6 +313,18 @@ export class Hud {
     this.scoreEl.textContent = String(Math.floor(score));
   }
 
+  public showTornadoAlert(visible: boolean): void {
+    let alertEl = document.getElementById('tornado-alert');
+    if (!alertEl) {
+      alertEl = document.createElement('div');
+      alertEl.id = 'tornado-alert';
+      alertEl.style.cssText = 'position:absolute;top:75px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0284c7,#38bdf8);color:#ffffff;font-weight:800;font-size:13px;padding:6px 18px;border-radius:20px;box-shadow:0 4px 14px rgba(2,132,199,0.5);pointer-events:none;z-index:30;display:none;letter-spacing:1px;';
+      alertEl.textContent = '🌪️ MEGA-TORNADO WARNING!';
+      this.container.appendChild(alertEl);
+    }
+    alertEl.style.display = visible ? 'block' : 'none';
+  }
+
   public updateLeaderboard(rankings: LeaderboardEntry[]): void {
     const top5 = rankings.slice(0, 5);
     const playerEntry = rankings.find((r) => r.isPlayer);

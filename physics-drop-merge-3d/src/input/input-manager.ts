@@ -3,11 +3,13 @@ import { GAME_CONFIG } from '../game/config/game-config';
 export interface InputCallbacks {
   onAim(targetX: number): void;
   onDrop(x: number): void;
+  onDragInertia?(deltaX: number): void;
 }
 
 export class InputManager {
   private isPointerDown = false;
   private currentX = 0;
+  private lastClientX = 0;
 
   constructor(
     private readonly container: HTMLElement,
@@ -32,11 +34,17 @@ export class InputManager {
       }
 
       this.isPointerDown = true;
+      this.lastClientX = e.clientX;
       this.updateAimX(e.clientX);
     });
 
     window.addEventListener('pointermove', (e) => {
       if (!this.isPointerDown) return;
+      const dx = e.clientX - this.lastClientX;
+      this.lastClientX = e.clientX;
+      if (this.callbacks.onDragInertia && Math.abs(dx) > 1) {
+        this.callbacks.onDragInertia(dx);
+      }
       this.updateAimX(e.clientX);
     });
 
