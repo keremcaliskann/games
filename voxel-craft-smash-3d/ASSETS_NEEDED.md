@@ -1,6 +1,6 @@
 # Optional 3D Model Upgrades (`ASSETS_NEEDED.md`)
 
-This game runs out-of-the-box with **100% lightweight procedural Compound & Instanced Voxel 3D Prefabs** (`src/render/PrefabFactory.ts`), guaranteeing instant startup, zero external network requests (CSP clean), and a bundle well under 5 MB.
+This game runs out-of-the-box with **100% lightweight procedural Compound & Instanced Voxel 3D Prefabs** (`src/render/PrefabFactory.ts`), guaranteeing instant startup, zero external network requests (CSP clean), and a bundle well under 50 MB.
 
 If you wish to enhance visual fidelity with custom artist-crafted `.glb` models, you can place optional low-poly GLTF/GLB files into the `public/models/` folder:
 

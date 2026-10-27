@@ -3,7 +3,7 @@
 - **Scan Window:** Last 90 Days (August – October 2026)
 - **Scan & Validation Date:** `2026-10-22`
 - **Primary Target:** YouTube Playables (`ytgame` SDK) + Universal Multi-Portal (Yandex Games, CrazyGames, Poki, GitHub Pages)
-- **Scoring Framework:** 100-Point Revenue Matrix (`Rewarded Ad Conversion: 35` | `Session Retention: 25` | `YouTube Ergonomics: 20` | `WebGL/<5MB Feasibility: 20`)
+- **Scoring Framework:** 100-Point Revenue Matrix (`Rewarded Ad Conversion: 35` | `Session Retention: 25` | `YouTube Ergonomics: 20` | `WebGL/<50MB Feasibility: 20`)
 
 ---
 

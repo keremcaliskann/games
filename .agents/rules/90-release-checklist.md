@@ -56,7 +56,7 @@ Run through this verification checklist before preparing a production build or r
 - [ ] `ytgame.system.onPause`, `onResume`, and `onAudioEnabledChange` are wired to `GameClock` and `SoundController`.
 - [ ] `ytgame.game.loadData()` is awaited prior to `saveData()`, with `localStorage` fallback outside YouTube Playables.
 - [ ] All 3 Mandatory Revenue Hooks function cleanly: (1) In-Level Rescue Boosters, (2) Near-Miss Revive Modal, (3) Victory 2x/3x/5x Moving Multiplier Bar.
-- [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 5 MB`.
+- [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 50 MB`.
 - [ ] Compound Procedural 3D Prefabs used (no raw primitive placeholders), with `ASSETS_NEEDED.md` generated if optional `.glb` overrides apply.
 
 ## 9. Multi-Platform Export Packages (`npm run export:all`)
@@ -65,5 +65,5 @@ Run through this verification checklist before preparing a production build or r
   - `<game>-yandex.zip`: Bundles `<script src="https://yandex.ru/games/sdk/v2"></script>`.
   - `<game>-crazygames.zip`: Bundles `<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>`.
   - `<game>-poki.zip`: Bundles `<script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>`.
-- [ ] All generated packages verified `< 5 MB` with `index.html` at archive root ready for direct console upload.
+- [ ] All generated packages verified `< 50 MB` with `index.html` at archive root ready for direct console upload.
 

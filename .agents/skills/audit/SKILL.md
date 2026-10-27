@@ -32,7 +32,7 @@ Conducts an automated health check, rule verification, performance inspection, a
 
 5. **Static Analysis & Production Bundle Check:**
    - Run `npm run typecheck --silent` across all registered games.
-   - Run `npm run build --silent` across all registered games: verify `dist/` bundle size is strictly `< 5 MB`, zero external network calls in `index.html`.
+   - Run `npm run build --silent` across all registered games: verify `dist/` bundle size is strictly `< 50 MB`, zero external network calls in `index.html`.
 
 6. **Self-Feedback & Backlog Queueing (`backlog/studio-todo.json`):**
    - Extract design, visual, performance, and mechanical critique notes.

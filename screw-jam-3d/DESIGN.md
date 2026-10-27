@@ -2,7 +2,7 @@
 
 > Status: Approved Architecture Specification (Phase 1: Studio Designer Squad)  
 > Target Platforms: YouTube Playables (`ytgame`), Yandex Games, CrazyGames, Poki, GitHub Pages  
-> Bundle Budget: < 5 MB | Performance Target: 60 FPS (Zero runtime GC allocations)  
+> Bundle Budget: < 50 MB | Performance Target: 60 FPS (Zero runtime GC allocations)  
 > Art Direction: Stylized Toony Soft Daylight (Rule 32)
 
 ---

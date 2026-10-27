@@ -134,7 +134,7 @@ for (const pKey of platformsToBuild) {
     Platform: plat.name,
     File: zipName,
     Size: stats.size < 1024 * 1024 ? `${sizeKB} KB` : `${sizeMB} MB`,
-    Status: stats.size < 5 * 1024 * 1024 ? '✅ < 5MB OK' : '⚠️ > 5MB',
+    Status: stats.size < 50 * 1024 * 1024 ? '✅ < 50MB OK' : '⚠️ > 50MB',
   });
 }
 

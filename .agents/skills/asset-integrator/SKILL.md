@@ -24,7 +24,7 @@ Every game in the workspace is built with a **3-Tier Asset Pipeline**:
 
 ### Step 1: Inspect `ASSETS_NEEDED.md` & Incoming Files
 1. Check `<game-name>/public/models/` and `<game-name>/ASSETS_NEEDED.md`.
-2. Verify file size (`< 2 MB` per `.glb` to protect the YouTube Playables `< 5 MB` total bundle budget).
+2. Verify file size (optimized to protect the `< 50 MB` total bundle budget).
 
 ### Step 2: Normalize Bounding Box, Scale & Pivot
 External `.glb` models often arrive with arbitrary scales or off-center pivots. Inside `PrefabFactory.ts`:

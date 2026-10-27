@@ -78,7 +78,7 @@ Audit the completed build across **4 Mandatory Filters**:
 - [ ] Are `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, and `loadData`/`saveData` wired?
 - [ ] Do all 3 Rewarded Ad hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar) work end-to-end?
 - [ ] Does Dual-Mode Shell hide sidebars in embedded portal mode (`?embed=1` / `ytgame`) and show Arcade Shell on GitHub Pages?
-- [ ] Zero external network fetches (CSP clean) and `dist/` bundle `< 5 MB`?
+- [ ] Zero external network fetches (CSP clean) and `dist/` bundle `< 50 MB`?
 
 ### Filter D: Technical & Release Integrity
 - [ ] Zero allocations in hot paths (`update`, `fixedUpdate`, `render`).
@@ -94,4 +94,4 @@ Apply any polish fixes immediately, mark the game `"completed"` in `backlog/idea
 Every execution must finish with a **very short Turkish report (`<= 6 lines`, max 20 words per sentence)** following the Aircraft Maintenance Log schema:
 - **DISCREPANCY / TASK:** `studio-todo.json` içindeki bekleyen düzeltmeler ve `ideas-backlog.json` 1 numaralı yeni oyun görevi.
 - **CORRECTIVE ACTION:** Tamamlanan mevcut oyun düzeltmeleri (`studio-todo.json`) ve sıfırdan inşa edilen 1 yeni oyun (`ideas-backlog.json`).
-- **VERIFICATION & RETURN TO SERVICE:** `sync-shared-core.mjs`, `typecheck` + `build` sonucu (`< 5 MB`), commit kodu ve canlı yayın linki.
+- **VERIFICATION & RETURN TO SERVICE:** `sync-shared-core.mjs`, `typecheck` + `build` sonucu (`< 50 MB`), commit kodu ve canlı yayın linki.

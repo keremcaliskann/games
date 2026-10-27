@@ -6,7 +6,7 @@
 ## 1. Project & Workspace Architecture
 
 - **Scope:** This workspace hosts multiple independent HTML5 3D game projects and two central studio queues: `backlog/ideas-backlog.json` (new game blueprints across `.io`, 3D physics, casual FPS, and voxel genres) and `backlog/studio-todo.json` (prioritized bugfixes and mechanical/visual upgrades for existing games). Each game lives in its own dedicated subdirectory.
-- **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 5 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
+- **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 50 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
 - **Platform Boundary:** Game logic is platform-agnostic. Platform differences (`ytgame`, `YaGames`, `CrazyGames`, `PokiSDK`, `MockAdProvider`) reside exclusively within `src/platform/`.
 - **Layering Order:** `core` ← `render` / `physics` / `input` / `platform` ← `game` ← `ui`. Sublayers must never import upper layers.
@@ -75,7 +75,7 @@
 ## 7. Definition of Done
 
 A task is complete only when:
-1. `npm run typecheck` and `npm run build` pass without errors (`dist/` bundle `< 5 MB`, zero external network calls).
+1. `npm run typecheck` and `npm run build` pass without errors (`dist/` bundle `< 50 MB`, zero external network calls).
 2. Unit tests pass (if applicable).
 3. YouTube Playables SDK (`ytgame`) & Universal Portal Bridge wired: `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, `loadData`/`saveData`, and all 3 Mandatory Rewarded Ad Hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar).
 4. No memory allocations, `console.log`, or debug remnants in hot paths.

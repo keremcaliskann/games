@@ -5,7 +5,7 @@
 **Genre:** 3D Physics Sphere Merge & Puzzle (Suika / Watermelon style)  
 **Platforms:** YouTube Playables (`ytgame`), Yandex Games, CrazyGames, Poki, GitHub Pages, Android/iOS (Capacitor)  
 **Target Frame Rate:** 60 FPS locked  
-**Bundle Budget:** Strictly < 5 MB (expected ~2.5 MB with Rapier Wasm)
+**Bundle Budget:** Strictly < 50 MB (expected ~2.5 MB with Rapier Wasm)
 
 ---
 

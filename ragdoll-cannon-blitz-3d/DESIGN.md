@@ -5,7 +5,7 @@
 **Genre:** 3D Casual FPS Demolition & Physics Puzzle  
 **Platforms:** YouTube Playables (`ytgame`), Yandex Games, CrazyGames, Poki, GitHub Pages, Android/iOS (Capacitor)  
 **Target Frame Rate:** 60 FPS locked  
-**Bundle Budget:** Strictly < 5 MB (expected ~600 kB)
+**Bundle Budget:** Strictly < 50 MB (expected ~600 kB)
 
 ---
 

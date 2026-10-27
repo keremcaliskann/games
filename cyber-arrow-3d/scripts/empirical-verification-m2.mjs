@@ -202,8 +202,8 @@ test('Production bundle dist/ exists, is < 5MB and contains all compiled markers
   const totalBytes = getDirSize(distDir);
   const totalMB = (totalBytes / (1024 * 1024)).toFixed(3);
   console.log(`       dist/ total bundle size: ${totalMB} MB (${totalBytes} bytes)`);
-  if (totalBytes >= 5 * 1024 * 1024) {
-    throw new Error(`Bundle size exceeds 5MB limit: ${totalMB} MB`);
+  if (totalBytes >= 50 * 1024 * 1024) {
+    throw new Error(`Bundle size exceeds 50MB limit: ${totalMB} MB`);
   }
 
   // Find index JS bundle

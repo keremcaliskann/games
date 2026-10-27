@@ -51,6 +51,6 @@ Texture memory cost formula: `width × height × 4 bytes × 1.33` (with mipmaps)
 - Account for thermal throttling: if performance drops after 3–5 minutes on mobile, investigate device thermals rather than chasing phantom regressions.
 
 ## Asset Loading & Delivery
-- Initial asset bundle target: ≲ 5 MB downloaded data. Lazy-load non-essential scenes and assets with dynamic `import()`.
+- Initial asset bundle target: ≲ 50 MB downloaded data. Lazy-load non-essential scenes and assets with dynamic `import()`.
 - Use glTF 2.0 with Meshopt geometry compression and KTX2 textures (which stay compressed in GPU memory).
 - Note: WebP/PNG only reduces network transfer size, not GPU VRAM consumption.

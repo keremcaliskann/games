@@ -29,7 +29,7 @@ Run this audit whenever:
 | **#4** | **SDK Invariants** | `PlatformBridge.loadData()` is awaited at startup **before** any `saveData()`. | Check `main.ts` bootstrap order for `loadData`. |
 | **#5** | **Raycast Integrity** | Composite 3D meshes have `userData.block = this` / `userData.entity = this`. | Verify `getRaycastTargets()` includes child meshes. |
 | **#6** | **Reward Math** | Ad multipliers calculate exact bonus delta; no infinite loops or negative balances. | Check economy methods for `Math.max(0, ...)` and delta addition. |
-| **#7** | **Bundle & Memory** | `dist/` $< 5\text{ MB}$, zero hot-path allocations, proper resource `dispose()`. | Run `npm run build` and scan `update()` loops for `new`. |
+| **#7** | **Bundle & Memory** | `dist/` $< 50\text{ MB}$, zero hot-path allocations, proper resource `dispose()`. | Run `npm run build` and scan `update()` loops for `new`. |
 
 ---
 
@@ -101,7 +101,7 @@ Inspect `EconomySystem` or score handlers:
    ```powershell
    cd <game-dir>; npm run build
    ```
-   *Requirement:* `dist/` bundle total size must be strictly $< 5\text{ MB}$.
+   *Requirement:* `dist/` bundle total size must be strictly $< 50\text{ MB}$.
 3. Verify zero heap allocations in hot paths:
    Scan `update()`, `fixedUpdate()`, and `render()` for:
    - `new THREE.Vector3(`
@@ -121,5 +121,5 @@ Before declaring a game verified:
 - [ ] All clickable child meshes tagged with `userData` and in raycast targets.
 - [ ] Economy transactions clamped and reward deltas calculated cleanly.
 - [ ] `npm run typecheck` passes with zero diagnostics.
-- [ ] `npm run build` succeeds and produces `< 5 MB` bundle.
+- [ ] `npm run build` succeeds and produces `< 50 MB` bundle.
 - [ ] Dual-Mode shell and `public/icon.svg` intact.

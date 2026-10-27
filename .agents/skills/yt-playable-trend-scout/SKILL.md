@@ -35,7 +35,7 @@ Classify each candidate into its primary category (`io-fake-multiplayer`, `casua
 | **1. Rewarded Ad Conversion (`rewardedAdScore`)** | **35 pts** | Natural friction points for **Hook 1: In-Level Rescue Boosters** (Hammer, Hint, Extra Slot, Shuffle), **Hook 2: Near-Miss Revive** (failing with 1 move/slot left), and **Hook 3: Victory 2x/3x/5x Multiplier Bar**. |
 | **2. Session Retention & Watch-Time (`retentionScore`)** | **25 pts** | "Just one more level" compulsion, tactile ASMR visual/audio payoff, and cloud-saved meta-progression (`ytgame.game.saveData()` streaks, unlockable themes/skins). |
 | **3. YouTube Playables Ergonomics (`ergonomicsScore`)** | **20 pts** | Instant 2-second comprehension with zero text walls, effortless single-finger control in both **9:16 portrait** and **16:9 landscape**, and 360° unobstructed camera line-of-sight. |
-| **4. 3D WebGL & Prefab Fit (`webglFeasibilityScore`)** | **20 pts** | 60 FPS Three.js + Rapier.js performance, `< 5 MB` zero-external-network bundle, Compound Procedural 3D Prefab visual richness, and 100% solvable deterministic level math. |
+| **4. 3D WebGL & Prefab Fit (`webglFeasibilityScore`)** | **20 pts** | 60 FPS Three.js + Rapier.js performance, `< 50 MB` zero-external-network bundle, Compound Procedural 3D Prefab visual richness, and 100% solvable deterministic level math. |
 
 - **Tier S (`85–100 pts`):** Top priority (`status: "ready"`).
 - **Tier A (`78–84 pts`):** Secondary queue (`status: "ready"`).

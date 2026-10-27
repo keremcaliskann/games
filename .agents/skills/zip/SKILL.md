@@ -8,7 +8,7 @@ description: >-
 
 # /zip — Multi-Platform Game Exporter & Archiver
 
-Automatically builds, adapts SDK script headers, and packages games into clean, standalone ZIP files ready for instant developer portal upload (< 5 MB budget).
+Automatically builds, adapts SDK script headers, and packages games into clean, standalone ZIP files ready for instant developer portal upload (< 50 MB budget).
 
 ## How to Execute
 
@@ -29,7 +29,7 @@ Examples:
 
 ### 3. Verification & Report
 1. Check that the command exited with 0.
-2. Verify all ZIP file sizes are strictly under 5 MB.
+2. Verify all ZIP file sizes are strictly under 50 MB.
 3. Present a concise Turkish summary table to the user with:
    - Game Name
    - Platform

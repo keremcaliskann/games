@@ -7,7 +7,12 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "export:all": "node scripts/export-platforms.mjs all",
+    "export:yandex": "node scripts/export-platforms.mjs yandex",
+    "export:crazygames": "node scripts/export-platforms.mjs crazygames",
+    "export:youtube": "node scripts/export-platforms.mjs youtube",
+    "export:poki": "node scripts/export-platforms.mjs poki"
   },
   "dependencies": {
     "three": "^0.170.0"

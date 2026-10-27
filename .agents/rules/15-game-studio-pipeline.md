@@ -77,7 +77,7 @@ Enforces all 7 technical domain checkpoints:
 Every build must pass all **4 Evaluation Filters** before deployment:
 - **Filter A (Camera & Ergonomics):** Zero occlusion from bottom/sides; effortless one-hand play in both 9:16 portrait and 16:9 landscape.
 - **Filter B (Art, Daylight & ASMR Juice):** Bright sunlit palette, multi-part 3D prefabs (no raw placeholder boxes), particle bursts, and tactile pitch-ramped audio.
-- **Filter C (YouTube Playables SDK & Revenue Hooks):** `ytgame` lifecycle hooks wired, all 3 Rewarded Ad hooks (Booster, Revive, Multiplier) functional, zero external network calls (CSP clean), bundle `< 5 MB`.
+- **Filter C (YouTube Playables SDK & Revenue Hooks):** `ytgame` lifecycle hooks wired, all 3 Rewarded Ad hooks (Booster, Revive, Multiplier) functional, zero external network calls (CSP clean), bundle `< 50 MB`.
 - **Filter D (Technical & QA):** Zero per-frame heap allocations in hot paths; `npm run typecheck` and `npm run build` exit with code 0.
 
 If any filter finds a defect, surgical polish patches must be applied immediately prior to `git push origin main`.

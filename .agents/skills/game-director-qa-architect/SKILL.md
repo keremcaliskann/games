@@ -20,7 +20,7 @@ Every audit cycle enforces 5 mandatory inspection and feedback pillars:
 1. **Rule Compliance Verification (Evolving Rules Check):**
    - Continuously verify every active game against current studio standards in `AGENTS.md` and `.agents/rules/`:
      - `10-code-quality.md`: Pure TypeScript, defensive imports, zero orphans.
-     - `20-performance-budget.md`: 60 FPS, `< 5 MB` bundle, zero hot-path heap allocations.
+     - `20-performance-budget.md`: 60 FPS, `< 50 MB` bundle, zero hot-path heap allocations.
      - `25-defensive-gameplay-and-hardening.md`: `data-hud-interactive="true"`, state idempotency latches, cloud loadData preflight.
      - `32-daylight-and-lighting.md`: Stylized Toony Soft Daylight (`0xcfe8f7` sky, warm sunlight `0xfff6e5`, biscuit boards `0xfcf8ee`, zero `#000` dark voids, zero blown-out white).
      - `55-arcade-layout-and-shell.md`: Standard 3-column `#arcade-shell` on desktop, auto-collapse in embedded portals (`?embed=1`).

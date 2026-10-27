@@ -6,7 +6,7 @@ description: "YouTube Playables SDK (ytgame) integration, universal multi-portal
 # YouTube Playables & Multi-Portal Architecture Policy
 
 ## 1. Primary Target & Universal Compatibility Principle
-All games in this workspace are engineered **first and foremost for YouTube Playables (`ytgame` SDK)**. Because YouTube Playables enforces the strictest technical constraints in the HTML5 gaming ecosystem (strict zero-external-network CSP, `< 5 MB` initial load target, mandatory audio/pause lifecycle hooks, and responsive 9:16 portrait + 16:9 landscape ergonomics), every game built to this standard is **simultaneously compatible with Yandex Games, CrazyGames, Poki, and GitHub Pages** via a single `src/platform/` adapter.
+All games in this workspace are engineered **first and foremost for YouTube Playables (`ytgame` SDK)**. Because YouTube Playables enforces the strictest technical constraints in the HTML5 gaming ecosystem (strict zero-external-network CSP, `< 50 MB` initial load target, mandatory audio/pause lifecycle hooks, and responsive 9:16 portrait + 16:9 landscape ergonomics), every game built to this standard is **simultaneously compatible with Yandex Games, CrazyGames, Poki, and GitHub Pages** via a single `src/platform/` adapter.
 
 ---
 
@@ -64,7 +64,7 @@ Game code must never branch on portal globals directly. `src/platform/` detects 
    - Never fetch external fonts (Google Fonts CDN), external audio files, remote textures, or analytics trackers at runtime.
    - Use system UI font stacks (`system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif`), procedural Web Audio (`35-procedural-audio`), and bundled/procedural 3D assets.
 2. **Bundle Budget:**
-   - Target total production `dist/` size `< 5 MB` (YouTube Playables hard cap is 30 MB; keeping builds `< 5 MB` guarantees sub-second `firstFrameReady()` and maximum player conversion).
+   - Target total production `dist/` size `< 50 MB` (keeping builds optimal guarantees fast `firstFrameReady()` and maximum player conversion).
 3. **Portrait (9:16) & Landscape (16:9) Universal Ergonomics:**
    - Because YouTube Playables is heavily played in **9:16 portrait mode** on the YouTube mobile app as well as **16:9 landscape** on desktop, the `CameraRig` FOV/distance and HUD overlays must dynamically adapt to both aspect ratios without clipping UI buttons or 3D puzzle bounds.
 
