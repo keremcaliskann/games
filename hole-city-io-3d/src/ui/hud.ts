@@ -270,19 +270,19 @@ export class Hud {
 
         <!-- Bottom Tactical Boosters (3 Mandatory Revenue Hooks) -->
         <div class="hud-bottom-bar">
-          <button id="btn-booster-magnet" class="hud-booster-btn" type="button">
+          <button id="btn-booster-magnet" class="hud-booster-btn" type="button" data-hud-interactive="true">
             <span class="hud-booster-icon">🧲</span>
             <span class="hud-booster-name">MAGNET</span>
             <span class="hud-booster-badge">REKLAM</span>
           </button>
 
-          <button id="btn-booster-turbo" class="hud-booster-btn" type="button">
+          <button id="btn-booster-turbo" class="hud-booster-btn" type="button" data-hud-interactive="true">
             <span class="hud-booster-icon">⚡</span>
             <span class="hud-booster-name">TURBO</span>
             <span class="hud-booster-badge">REKLAM</span>
           </button>
 
-          <button id="btn-booster-size" class="hud-booster-btn" type="button">
+          <button id="btn-booster-size" class="hud-booster-btn" type="button" data-hud-interactive="true">
             <span class="hud-booster-icon">✨</span>
             <span class="hud-booster-name">+25% BOYUT</span>
             <span class="hud-booster-badge">REKLAM</span>
@@ -356,10 +356,10 @@ export class Hud {
           <div style="font-size: 38px; margin-bottom: 8px;">💥</div>
           <h2 class="hud-modal-title">ÇOK YAKLAŞTIN!</h2>
           <p class="hud-modal-subtitle">Liderliği kapmak üzereydin! Reklam izleyerek +25s ek süre ve 5s yenilmez dev kalkan ile savaşa dön!</p>
-          <button id="btn-modal-revive" class="hud-btn-primary" type="button">
+          <button id="btn-modal-revive" class="hud-btn-primary" type="button" data-hud-interactive="true">
             🎬 REKLAM İZLE & CANLAN (+25s)
           </button>
-          <button id="btn-modal-giveup" class="hud-btn-secondary" type="button">
+          <button id="btn-modal-giveup" class="hud-btn-secondary" type="button" data-hud-interactive="true">
             Maçı Bitir
           </button>
         </div>
@@ -407,10 +407,10 @@ export class Hud {
             <div id="mult-needle" class="multiplier-needle" style="left: 0%;"></div>
           </div>
 
-          <button id="btn-claim-multiplier" class="hud-btn-primary" type="button">
+          <button id="btn-claim-multiplier" class="hud-btn-primary" type="button" data-hud-interactive="true">
             🎬 ÇARPANI AL (<span id="mult-label">3x</span> ÖDÜL)
           </button>
-          <button id="btn-claim-base" class="hud-btn-secondary" type="button">
+          <button id="btn-claim-base" class="hud-btn-secondary" type="button" data-hud-interactive="true">
             Normal Ödülü Al (${baseCoins} Altın)
           </button>
         </div>
