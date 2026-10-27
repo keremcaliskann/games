@@ -1,10 +1,44 @@
 [
   {
+    "id": "ragdoll-archers-duel-3d",
+    "title": "ARCHER DUEL 3D // RAGDOLL SHOWDOWN",
+    "category": "casual-fps-physics",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 96,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "New Rank #1. Unstoppable market momentum from Ragdoll Archers & Bowmasters. 1-finger pull-and-release ballistic showdown with high-converting revive & triple-arrow hooks.",
+    "coreLoop": "Pull and release a stylized composite bow to fire physics arrows at perched enemy stickman archers across dynamic floating castles. Headshots deal 3x critical damage and trigger hilarious ragdoll tumble physics; shoot flying red apples to recover health.",
+    "solvableMathSpec": "Ballistic projectile arc equation with deterministic gravity and wind compensation; enemy archers feature calibrated reaction times and accuracy jitter so skilled players always win clean duels.",
+    "cameraErgonomics": "Dynamic 3/4 side-isometric duel framing automatically adjusting zoom to keep both archer platforms in frame with zero UI occlusion in 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Triple Split Arrow (Fires 3 spread-shot arrows simultaneously via Rewarded Ad)",
+        "Piercing Laser Arrow (Guarantees 1-hit KO penetrating all armor via Rewarded Ad)",
+        "Guardian Shield (Absorbs next 2 lethal enemy headshots via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When eliminated with 1 enemy archer remaining at low health, prompt 'Defeated in Duel! Watch Ad to Revive with Full Health & 1 Instant Piercing Shot'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge on headshot coin payouts."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Capsule-and-cylinder ragdoll stickman joints via Rapier.js, stylized wooden compound bow with curved Bezier bowstring, beveled arrow projectiles with fletching, and floating sunlit stone duel bastions.",
+      "optionalUserGlb": "public/models/archer_stickman.glb (Optional <2k tris low-poly character)"
+    }
+  },
+  {
     "id": "bumper-smash-io-3d",
     "title": "BUMPER SMASH 3D // ARENA KNOCKOUT .IO",
     "category": "io-fake-multiplayer",
     "status": "ready",
-    "rank": 1,
+    "rank": 2,
     "revenueScore": 95,
     "scoreBreakdown": {
       "rewardedAdScore": 34,
@@ -14,7 +48,7 @@
     },
     "createdAt": "2026-10-27",
     "lastValidatedAt": "2026-10-27",
-    "validationNote": "Confirmed Rank #1 from 90-day scan. Top-performing .io arena category (Snake Clash 101M+ plays benchmark). Massive near-miss revive & nitro booster monetization.",
+    "validationNote": "Rank #2. Top-performing .io arena category (Snake Clash 101M+ plays benchmark). Massive near-miss revive & nitro booster monetization.",
     "coreLoop": "Steer a bouncy 3D spring-bumper kart on a floating sunlit circular arena, ramming 7 AI bot opponents with physics impulses to knock them off into the sea. Each KO expands bumper radius by +15% and increases mass while the arena ring shrinks over 75s.",
     "solvableMathSpec": "Dynamic steering vector AI with obstacle avoidance and threat scoring; deterministic ring shrink curve ensures every match resolves to a single survivor within 75 seconds without stalemates.",
     "cameraErgonomics": "Elevated 3D orbital chase camera tilted at 50° with smooth look-ahead damping; auto-zooms out as bumper size scales; floating sunlit arena with zero bottom occlusion.",
@@ -34,11 +68,45 @@
     }
   },
   {
+    "id": "rolling-sky-ball-3d",
+    "title": "ROLLING BALL 3D // SKY MOMENTUM",
+    "category": "arcade-skill-runner",
+    "status": "ready",
+    "rank": 3,
+    "revenueScore": 94,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Rank #3. Capitalizes on Going Balls 98M+ plays benchmark on YouTube Playables. High speedrun replayability and checkpoint revive monetization.",
+    "coreLoop": "Swipe to steer a high-momentum chrome rolling ball across a sky-high obstacle course, leaping over gaps, balancing on narrow wooden rails, hitting speed booster pads, and collecting gold gems on the track to the goal portal.",
+    "solvableMathSpec": "Deterministic Rapier.js sphere physics with clamped angular velocity and dynamic gravity bias; procedural track segments validated for solvable speed thresholds and jump clearance.",
+    "cameraErgonomics": "Third-person chase camera with smooth position interpolation and look-ahead yaw matching track curvature; daylight soft pastel sky background with zero ground occlusion.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Energy Shield (Absorbs 1 fall or obstacle collision via Rewarded Ad)",
+        "Coin Magnet (+5m magnetic attraction radius for track gems via Rewarded Ad)",
+        "Mega Boost Pad (+50% forward speed surge with rainbow trail via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When falling off track past 70% progress, trigger 'Fell off Track (78%)! Watch Ad to Spawn at Last Checkpoint with 3s Shield'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Glossy chrome/patterned rolling sphere, modular track sections (wooden planks, speed strips, banked turns, loop-de-loops), and gemstone pickup items.",
+      "optionalUserGlb": "public/models/custom_ball_skin.glb (Optional <1k tris ball skin)"
+    }
+  },
+  {
     "id": "giant-demolition-3d",
     "title": "GIANT SMASH 3D // WRECKING BALL CRUSH",
     "category": "casual-fps-physics",
     "status": "ready",
-    "rank": 2,
+    "rank": 4,
     "revenueScore": 93,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -48,7 +116,7 @@
     },
     "createdAt": "2026-10-27",
     "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #2 in 90-day scan. Surging casual FPS physics demolition trend (Ragdoll Gun Shooter & Car Crash Sandbox). High video viral potential and cluster shot revives.",
+    "validationNote": "Rank #4 in 90-day scan. Surging casual FPS physics demolition trend (Ragdoll Gun Shooter & Car Crash Sandbox). High video viral potential and cluster shot revives.",
     "coreLoop": "Drag and release a towering construction crane to swing a heavy physics wrecking ball into multi-story stylized building structures, towering voxel golems, and explosive TNT fuel barrels to achieve 100% demolition within limited par swings.",
     "solvableMathSpec": "Rapier.js rigid compound bodies with structural load thresholds; destroying foundational support blocks (bottom 25%) reliably triggers cascading gravity collapse across remaining floors.",
     "cameraErgonomics": "High-angle 3/4 cinematic destruction camera with dynamic screen trauma shake, 360° unobstructed sightlines over the suspended demolition site, and auto-framing for 9:16 portrait and 16:9 landscape.",
@@ -72,7 +140,7 @@
     "title": "VOXEL MINER 3D // DUNGEON ESCAPE",
     "category": "voxel-sandbox-action",
     "status": "ready",
-    "rank": 3,
+    "rank": 5,
     "revenueScore": 91,
     "scoreBreakdown": {
       "rewardedAdScore": 32,
@@ -82,7 +150,7 @@
     },
     "createdAt": "2026-10-27",
     "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #3 in 90-day scan. Proven rogue-lite voxel action loop (Voxiom.io & Stealth Master). High-converting mega drill boosters and lava freeze revives.",
+    "validationNote": "Rank #5 in 90-day scan. Proven rogue-lite voxel action loop (Voxiom.io & Stealth Master). High-converting mega drill boosters and lava freeze revives.",
     "coreLoop": "1-finger swipe / drag to dig and tunnel through soft voxel dirt and mineral walls in a sunlit subterranean canyon, mining emeralds, triggering TNT block traps to blast open sealed treasure vaults, and escaping before the rising lava reaches the player.",
     "solvableMathSpec": "Procedural grid maze with A* connectivity check guaranteeing at least one unobstructed tunnel path from spawn to exit, seeded with guaranteed mineral clusters and trap triggers.",
     "cameraErgonomics": "Top-down 60° tilted isometric camera centered on miner pawn; transparent dither cutaway shader for foreground blocks ensuring player and exit portal are never occluded.",
@@ -99,6 +167,40 @@
       "complexity": "Tier-1 Compound Procedural",
       "proceduralPrefabs": "Stylized blocky miner pawn with animated pickaxe, InstancedMesh voxel blocks (dirt, stone, gold ore, TNT), bubbling lava plane, and pooled voxel break particles.",
       "optionalUserGlb": "public/models/miner_character.glb (Optional <1.5k tris low-poly character)"
+    }
+  },
+  {
+    "id": "crash-arena-demolition-3d",
+    "title": "CAR SMASH 3D // DEMOLITION SANDBOX",
+    "category": "casual-fps-physics",
+    "status": "ready",
+    "rank": 6,
+    "revenueScore": 90,
+    "scoreBreakdown": {
+      "rewardedAdScore": 32,
+      "retentionScore": 23,
+      "ergonomicsScore": 18,
+      "webglFeasibilityScore": 17
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Rank #6 in 90-day scan. Surging demand for Car Crash Sandbox mechanics with zero installation friction. High visual viral potential.",
+    "coreLoop": "Launch customizable muscle cars off sky-high stunt ramps into towering stacks of obstacles, explosive barrels, and rival crash cars, maximizing destruction points and part detachments before coming to a complete rest.",
+    "solvableMathSpec": "Multi-joint compound car physics with detached wheel/door thresholds; ramp angles and booster placements tuned for reliable high-speed impact spectacles.",
+    "cameraErgonomics": "Cinematic dynamic follow camera transitioning to slow-motion impact cam upon first high-velocity collision; full 360° sightlines across sunlit stadium.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Nitro Rocket Booster (2x launch velocity with flaming thrust exhaust via Rewarded Ad)",
+        "Monster Truck Chassis (Replaces car with heavy spiked monster truck via Rewarded Ad)",
+        "Weight Multiplier (Increases car mass by 3x for maximum demolition impact via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When stopping just short of target point threshold, offer 'Target Near (89%)! Watch Ad to Fire Secondary Rocket Booster from Rest'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x destruction payout multiplier."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Multi-part muscle car with detachable hood, doors, and wheels, launch ramp with neon speed arrows, stacked cargo containers, and metal crunch spark particles.",
+      "optionalUserGlb": "public/models/derby_car.glb (Optional <2.5k tris smash car model)"
     }
   },
   {
