@@ -1,5 +1,107 @@
 [
   {
+    "id": "bumper-smash-io-3d",
+    "title": "BUMPER SMASH 3D // ARENA KNOCKOUT .IO",
+    "category": "io-fake-multiplayer",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 95,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Confirmed Rank #1 from 90-day scan. Top-performing .io arena category (Snake Clash 101M+ plays benchmark). Massive near-miss revive & nitro booster monetization.",
+    "coreLoop": "Steer a bouncy 3D spring-bumper kart on a floating sunlit circular arena, ramming 7 AI bot opponents with physics impulses to knock them off into the sea. Each KO expands bumper radius by +15% and increases mass while the arena ring shrinks over 75s.",
+    "solvableMathSpec": "Dynamic steering vector AI with obstacle avoidance and threat scoring; deterministic ring shrink curve ensures every match resolves to a single survivor within 75 seconds without stalemates.",
+    "cameraErgonomics": "Elevated 3D orbital chase camera tilted at 50° with smooth look-ahead damping; auto-zooms out as bumper size scales; floating sunlit arena with zero bottom occlusion.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Mega Nitro Ram (Instant 2.5x speed surge with invulnerable golden shockwave shield via Rewarded Ad)",
+        "Magnet Vortex (Pulls 2 nearby smaller bots into your bumper path via Rewarded Ad)",
+        "Spike Armor (Deals 2x knockback force on collisions for 8s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When knocked off in Top 3, trigger 'Knocked Out at #2! Watch Ad to Rocket-Jump Back onto Arena Center with Repulsion Shockwave'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge for multiplied Arena Trophy and Coin rewards."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Rubberized bumper ring chassis, spring antenna with flag, cartoon go-kart chassis with vinyl colors, and floating sunlit stone arena with perimeter danger ring.",
+      "optionalUserGlb": "public/models/kart_chassis.glb (Optional <2k tris stylized kart mesh)"
+    }
+  },
+  {
+    "id": "giant-demolition-3d",
+    "title": "GIANT SMASH 3D // WRECKING BALL CRUSH",
+    "category": "casual-fps-physics",
+    "status": "ready",
+    "rank": 2,
+    "revenueScore": 93,
+    "scoreBreakdown": {
+      "rewardedAdScore": 33,
+      "retentionScore": 24,
+      "ergonomicsScore": 18,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Rank #2 in 90-day scan. Surging casual FPS physics demolition trend (Ragdoll Gun Shooter & Car Crash Sandbox). High video viral potential and cluster shot revives.",
+    "coreLoop": "Drag and release a towering construction crane to swing a heavy physics wrecking ball into multi-story stylized building structures, towering voxel golems, and explosive TNT fuel barrels to achieve 100% demolition within limited par swings.",
+    "solvableMathSpec": "Rapier.js rigid compound bodies with structural load thresholds; destroying foundational support blocks (bottom 25%) reliably triggers cascading gravity collapse across remaining floors.",
+    "cameraErgonomics": "High-angle 3/4 cinematic destruction camera with dynamic screen trauma shake, 360° unobstructed sightlines over the suspended demolition site, and auto-framing for 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Nuclear Wrecking Ball (Equips a giant glowing spiked ball with 5x shockwave radius via Rewarded Ad)",
+        "Precision Laser Sight (Projects exact bounce and ricochet trajectory line via Rewarded Ad)",
+        "Dynamite Rain (Drops 3 TNT barrels into structural joints via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When swings run out with 85%+ building damage, prompt 'Almost Crushed (88%)! Watch Ad for +2 Explosive Cluster Shots'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge on demolition destruction score."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Articulated yellow crane arm, elastic chain-linked wrecking sphere, modular structural concrete/glass blocks, red explosive barrels, and pooled dust/debris particles.",
+      "optionalUserGlb": "public/models/crane_cabin.glb (Optional <2k tris crane model)"
+    }
+  },
+  {
+    "id": "voxel-dungeon-miner-3d",
+    "title": "VOXEL MINER 3D // DUNGEON ESCAPE",
+    "category": "voxel-sandbox-action",
+    "status": "ready",
+    "rank": 3,
+    "revenueScore": 91,
+    "scoreBreakdown": {
+      "rewardedAdScore": 32,
+      "retentionScore": 23,
+      "ergonomicsScore": 18,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-27",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Rank #3 in 90-day scan. Proven rogue-lite voxel action loop (Voxiom.io & Stealth Master). High-converting mega drill boosters and lava freeze revives.",
+    "coreLoop": "1-finger swipe / drag to dig and tunnel through soft voxel dirt and mineral walls in a sunlit subterranean canyon, mining emeralds, triggering TNT block traps to blast open sealed treasure vaults, and escaping before the rising lava reaches the player.",
+    "solvableMathSpec": "Procedural grid maze with A* connectivity check guaranteeing at least one unobstructed tunnel path from spawn to exit, seeded with guaranteed mineral clusters and trap triggers.",
+    "cameraErgonomics": "Top-down 60° tilted isometric camera centered on miner pawn; transparent dither cutaway shader for foreground blocks ensuring player and exit portal are never occluded.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Mega Drill Aura (Instantly vaporizes a 3x3 block tunnel around player for 6s via Rewarded Ad)",
+        "Mineral Radar (Highlights secret gold and diamond chambers through walls via Rewarded Ad)",
+        "Speed Boots (+50% tunneling speed and lava shield for 10s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When caught by lava or slime near the exit portal, offer 'Trapped near Exit! Watch Ad to Revive with 5s Invulnerability & Lava Freeze'.",
+      "victoryMultiplier": "2x / 3x / 5x gem multiplier roulette on successful dungeon escape."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural",
+      "proceduralPrefabs": "Stylized blocky miner pawn with animated pickaxe, InstancedMesh voxel blocks (dirt, stone, gold ore, TNT), bubbling lava plane, and pooled voxel break particles.",
+      "optionalUserGlb": "public/models/miner_character.glb (Optional <1.5k tris low-poly character)"
+    }
+  },
+  {
     "id": "hexa-sort-3d",
     "title": "HEXA SORT 3D // CASCADE STACK",
     "category": "3d-sort-stack",
