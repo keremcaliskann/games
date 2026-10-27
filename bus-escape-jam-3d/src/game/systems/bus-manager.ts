@@ -12,6 +12,7 @@ import { GAME_CONFIG } from '../config/game-config';
 export class BusManager {
   public buses: BusEntity[] = [];
   public passengers: PassengerEntity[] = [];
+  private tunnelReserve: { bus: BusEntity; targetWorldPos: THREE.Vector3 }[] = [];
   private isProcessingBoarding = false;
   private currentLevel = 1;
 
@@ -29,8 +30,9 @@ export class BusManager {
 
     const data: LevelData = LevelGenerator.generateLevel(levelNum);
 
-    // 1. Spawn buses
-    for (const b of data.buses) {
+    // 1. Spawn buses (hold final bus in 3D Tunnel Dispenser on level >= 2)
+    for (let idx = 0; idx < data.buses.length; idx++) {
+      const b = data.buses[idx];
       const startTile = b.tiles[0];
       const worldPos = this.lot.gridToWorld(startTile.col, startTile.row);
 
@@ -41,27 +43,59 @@ export class BusManager {
         worldPos.x += ((b.lengthTiles - 1) * this.lot.tileSize) / 2;
       }
 
-      const bus = new BusEntity(b.id, b.colorDef, b.lengthTiles, b.orientation, b.tiles, worldPos);
-      this.lot.root.add(bus.root);
-      this.buses.push(bus);
+      const isTunnelBus = levelNum >= 2 && idx === data.buses.length - 1 && data.buses.length >= 4;
+      const initialPos = isTunnelBus ? new THREE.Vector3(0, 0, -5.6) : worldPos;
+      const bus = new BusEntity(b.id, b.colorDef, b.lengthTiles, b.orientation, b.tiles, initialPos);
+
+      if (isTunnelBus) {
+        bus.root.visible = false;
+        this.lot.root.add(bus.root);
+        this.tunnelReserve.push({ bus, targetWorldPos: worldPos });
+      } else {
+        this.lot.root.add(bus.root);
+        this.buses.push(bus);
+      }
     }
     this.lot.buses = this.buses;
 
-    // 2. Spawn Passenger Conga Line (Front at x = -4.5, extending rightwards)
+    // 2. Spawn Passenger Conga Line (Front at x = -4.5, extending rightwards; every 5th is VIP Gold)
     const queueStartX = -4.5;
     for (let i = 0; i < data.passengerQueue.length; i++) {
       const colorDef = data.passengerQueue[i];
       const pos = new THREE.Vector3(queueStartX + i * 0.75, 0.15, 4.2);
-      const passenger = new PassengerEntity(`p_${i}`, colorDef, pos);
+      const isVipGold = i > 0 && i % 5 === 0;
+      const passenger = new PassengerEntity(`p_${i}`, colorDef, pos, isVipGold);
       this.lot.root.add(passenger.root);
       this.passengers.push(passenger);
     }
 
     this.events.emit('level:started', {
       level: levelNum,
-      remainingBuses: this.buses.length,
+      remainingBuses: this.buses.length + this.tunnelReserve.length,
       remainingPassengers: this.passengers.length,
     });
+  }
+
+  private trySpawnFromTunnel(): void {
+    if (this.tunnelReserve.length === 0) return;
+
+    const occupied = new Set<string>();
+    for (const other of this.buses) {
+      if (other.isDocked) continue;
+      for (const t of other.tiles) {
+        occupied.add(`${t.col}_${t.row}`);
+      }
+    }
+
+    const next = this.tunnelReserve[0];
+    const canFit = next.bus.tiles.every((t) => !occupied.has(`${t.col}_${t.row}`));
+    if (canFit) {
+      this.tunnelReserve.shift();
+      next.bus.root.visible = true;
+      this.buses.push(next.bus);
+      this.particles.spawnExhaustPuff(next.bus.root.position);
+      next.bus.driveTo(next.targetWorldPos, 0.32);
+    }
   }
 
   public handleTapBus(bus: BusEntity): boolean {
@@ -94,31 +128,47 @@ export class BusManager {
     this.particles.spawnExhaustPuff(bus.root.position);
     this.cameraRig.addTrauma(0.2);
 
-    bus.driveTo(freeBay.pos, 0.38, () => {
-      this.processBoarding();
-    });
+    bus.driveTo(
+      freeBay.pos,
+      0.38,
+      () => {
+        this.trySpawnFromTunnel();
+        this.processBoarding();
+      },
+      true
+    );
 
     return true;
   }
 
   public extractBusWithHelo(): boolean {
-    // Finds first trapped bus and airlifts it to free bay
+    // Prioritizes bus matching front passenger color, falling back to any trapped or undocked bus
     const freeBay = this.lot.getFirstFreeBay();
     if (!freeBay) return false;
 
-    const trappedBus = this.buses.find((b) => !b.isDocked && !this.lot.canBusExit(b));
-    if (!trappedBus) return false;
+    const frontColorId = this.passengers[0]?.colorDef.id;
+    const targetBus =
+      this.buses.find((b) => !b.isDocked && b.colorDef.id === frontColorId) ||
+      this.buses.find((b) => !b.isDocked && !this.lot.canBusExit(b)) ||
+      this.buses.find((b) => !b.isDocked);
+    if (!targetBus) return false;
 
-    freeBay.bus = trappedBus;
-    trappedBus.isDocked = true;
-    trappedBus.dockedBayIndex = freeBay.index;
+    freeBay.bus = targetBus;
+    targetBus.isDocked = true;
+    targetBus.dockedBayIndex = freeBay.index;
 
     this.audio.playHelo();
-    this.particles.spawnHeloSparks(trappedBus.root.position);
+    this.particles.spawnHeloSparks(targetBus.root.position);
 
-    trappedBus.flyHeloTo(freeBay.pos, 0.75, () => {
-      this.processBoarding();
-    });
+    targetBus.flyHeloTo(
+      freeBay.pos,
+      0.75,
+      () => {
+        this.trySpawnFromTunnel();
+        this.processBoarding();
+      },
+      true
+    );
 
     return true;
   }
@@ -182,7 +232,16 @@ export class BusManager {
       passenger.boardBus(bus.root.position, () => {
         bus.addPassenger();
         this.audio.playPassengerBoard();
-        this.particles.spawnBoardingBurst(bus.root.position, bus.colorDef.hex);
+        this.particles.spawnBoardingBurst(
+          bus.root.position,
+          passenger.isVipGold ? 0xfbbf24 : bus.colorDef.hex
+        );
+        if (passenger.isVipGold) {
+          this.events.emit('bus:departed', {
+            coinsEarned: GAME_CONFIG.economy.coinsPerBus,
+            remainingBuses: this.buses.length,
+          });
+        }
         this.lot.root.remove(passenger.root);
 
         this.repositionQueue();
@@ -266,6 +325,10 @@ export class BusManager {
   public clear(): void {
     this.audio.resetPitch();
     this.lot.clear();
+    for (const r of this.tunnelReserve) {
+      this.lot.root.remove(r.bus.root);
+    }
+    this.tunnelReserve = [];
     for (const p of this.passengers) {
       this.lot.root.remove(p.root);
     }

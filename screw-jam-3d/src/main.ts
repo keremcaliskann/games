@@ -19,6 +19,8 @@ import { Toolbox } from './game/entities/toolbox';
 import { BufferDock } from './game/entities/buffer-dock';
 
 const _ORIGIN = new THREE.Vector3(0, 0, 0);
+const _IDENTITY_QUAT = new THREE.Quaternion();
+const _TEMP_QUAT = new THREE.Quaternion();
 
 class ScrewJamApp {
   private readonly appEl: HTMLElement;
@@ -153,7 +155,7 @@ class ScrewJamApp {
         p.holes,
         p.color,
         p.position,
-        new THREE.Quaternion().setFromEuler(p.rotation)
+        _TEMP_QUAT.setFromEuler(p.rotation)
       );
       this.plates.push(plate);
       this.assemblyGroup.add(plate.group);
@@ -165,7 +167,7 @@ class ScrewJamApp {
         s.id,
         s.color,
         s.position,
-        new THREE.Quaternion()
+        _IDENTITY_QUAT
       );
       this.screws.push(screw);
       this.assemblyGroup.add(screw.group);

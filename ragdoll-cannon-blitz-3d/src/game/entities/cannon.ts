@@ -2,6 +2,11 @@ import * as THREE from 'three';
 import { GAME_CONFIG } from '../config/game-config';
 import { PrefabFactory } from '../../render/PrefabFactory';
 
+const _ORIGIN = new THREE.Vector3();
+const _FORWARD = new THREE.Vector3();
+const _QUAT = new THREE.Quaternion();
+const _VELOCITY = new THREE.Vector3();
+
 export class Cannon {
   public readonly mesh: THREE.Group;
   private readonly barrelGroup: THREE.Group;
@@ -72,21 +77,19 @@ export class Cannon {
   }
 
   public getLaunchInfo(): { origin: THREE.Vector3; velocity: THREE.Vector3 } {
-    const origin = new THREE.Vector3();
-    this.barrelGroup.getWorldPosition(origin);
+    this.barrelGroup.getWorldPosition(_ORIGIN);
 
-    const forward = new THREE.Vector3(0, 0, -1);
-    const quat = new THREE.Quaternion();
-    this.barrelGroup.getWorldQuaternion(quat);
-    forward.applyQuaternion(quat).normalize();
+    _FORWARD.set(0, 0, -1);
+    this.barrelGroup.getWorldQuaternion(_QUAT);
+    _FORWARD.applyQuaternion(_QUAT).normalize();
 
     // Spawn slightly ahead of muzzle
-    origin.addScaledVector(forward, 2.2);
+    _ORIGIN.addScaledVector(_FORWARD, 2.2);
 
     const speed = GAME_CONFIG.cannon.shotPower;
-    const velocity = forward.multiplyScalar(speed);
+    _VELOCITY.copy(_FORWARD).multiplyScalar(speed);
 
-    return { origin, velocity };
+    return { origin: _ORIGIN, velocity: _VELOCITY };
   }
 
   public setTrajectoryVisible(visible: boolean): void {

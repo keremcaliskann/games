@@ -5,6 +5,8 @@ import { PhysicsWorld } from '../../physics/physics-world';
 import { ParticleEffects } from '../../render/effects';
 import { SoundController } from '../../core/audio';
 
+const _SPLASH_POS = new THREE.Vector3();
+
 export type ProjectileType = 'standard' | 'cluster' | 'megaLaser';
 
 interface ActiveBall {
@@ -101,7 +103,8 @@ export class ProjectileManager {
 
       // Check below sea level
       if (pos.y < GAME_CONFIG.seaKillY) {
-        this.particles.spawnWaterSplash(new THREE.Vector3(pos.x, 0, pos.z));
+        _SPLASH_POS.set(pos.x, 0, pos.z);
+        this.particles.spawnWaterSplash(_SPLASH_POS);
         this.audio.playWaterSplash();
         toRemove.push(ball);
       } else if (ball.life > 7.0) {

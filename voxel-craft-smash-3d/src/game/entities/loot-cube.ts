@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+const _TO_TURRET = new THREE.Vector3();
+
 export interface LootCubeData {
   mesh: THREE.Mesh;
   velocity: THREE.Vector3;
@@ -90,8 +92,8 @@ export class LootCubeManager {
 
       if (c.isVacuuming) {
         // Accelerate directly towards turret position
-        const toTurret = new THREE.Vector3().subVectors(turretPos, c.mesh.position);
-        const dist = toTurret.length();
+        _TO_TURRET.subVectors(turretPos, c.mesh.position);
+        const dist = _TO_TURRET.length();
 
         if (dist < 1.4) {
           // Reached base!
@@ -101,8 +103,8 @@ export class LootCubeManager {
           continue;
         }
 
-        toTurret.normalize().multiplyScalar(c.vacuumSpeed * dt);
-        c.mesh.position.add(toTurret);
+        _TO_TURRET.normalize().multiplyScalar(c.vacuumSpeed * dt);
+        c.mesh.position.add(_TO_TURRET);
         c.mesh.rotation.x += dt * 10;
         c.mesh.rotation.y += dt * 8;
       } else {

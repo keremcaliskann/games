@@ -9,6 +9,7 @@ export interface LoadingBay {
   bus: BusEntity | null;
   isVip: boolean;
   unlocked: boolean;
+  markerMat: THREE.MeshBasicMaterial;
 }
 
 export class ParkingLot {
@@ -26,6 +27,11 @@ export class ParkingLot {
 
     const stage = PrefabFactory.createLotStage(lotWidth, lotDepth);
     this.root.add(stage);
+
+    const tunnel = PrefabFactory.createTunnelDispenser();
+    tunnel.position.set(0, 0, -lotDepth * 0.5 - 1.35);
+    this.root.add(tunnel);
+
     scene.add(this.root);
 
     this.setupBays();
@@ -60,6 +66,7 @@ export class ParkingLot {
         bus: null,
         isVip,
         unlocked: !isVip, // 3 default bays unlocked, VIP locked initially
+        markerMat,
       });
     }
   }
@@ -68,6 +75,8 @@ export class ParkingLot {
     const vip = this.bays.find((b) => b.isVip);
     if (vip) {
       vip.unlocked = true;
+      vip.markerMat.opacity = 0.95;
+      vip.markerMat.color.setHex(0xfbbf24);
     }
   }
 
@@ -139,7 +148,11 @@ export class ParkingLot {
     this.buses = [];
     for (const bay of this.bays) {
       bay.bus = null;
-      if (bay.isVip) bay.unlocked = false;
+      if (bay.isVip) {
+        bay.unlocked = false;
+        bay.markerMat.opacity = 0.35;
+        bay.markerMat.color.setHex(0xf59e0b);
+      }
     }
   }
 }

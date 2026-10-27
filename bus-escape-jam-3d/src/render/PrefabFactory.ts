@@ -172,9 +172,9 @@ export class PrefabFactory {
   }
 
   /**
-   * Creates a cute passenger pawn
+   * Creates a cute passenger pawn (with optional VIP Gold halo crown)
    */
-  public static createPassengerPawn(colorDef: VehicleColorDef): THREE.Group {
+  public static createPassengerPawn(colorDef: VehicleColorDef, isVipGold = false): THREE.Group {
     const group = new THREE.Group();
 
     // Body Capsule / Cylinder
@@ -198,6 +198,55 @@ export class PrefabFactory {
     const cap = new THREE.Mesh(capGeo, bodyMat);
     cap.position.y = 0.72;
     group.add(cap);
+
+    if (isVipGold) {
+      const crownGeo = new THREE.TorusGeometry(0.18, 0.045, 8, 16);
+      crownGeo.rotateX(Math.PI * 0.5);
+      const crownMat = new THREE.MeshStandardMaterial({
+        color: 0xfbbf24,
+        emissive: 0xf59e0b,
+        emissiveIntensity: 0.45,
+        metalness: 0.7,
+        roughness: 0.25,
+      });
+      const crown = new THREE.Mesh(crownGeo, crownMat);
+      crown.position.y = 1.02;
+      group.add(crown);
+    }
+
+    return group;
+  }
+
+  /**
+   * Creates a 3D Tunnel Arch Dispenser at the rear of the parking lot
+   */
+  public static createTunnelDispenser(): THREE.Group {
+    const group = new THREE.Group();
+
+    const archMat = new THREE.MeshStandardMaterial({ color: 0x475569, roughness: 0.6 });
+    const trimMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.4 });
+
+    const pillarGeo = new THREE.BoxGeometry(0.45, 1.8, 0.9);
+    const leftPillar = new THREE.Mesh(pillarGeo, archMat);
+    leftPillar.position.set(-1.1, 0.9, 0);
+    leftPillar.castShadow = true;
+    group.add(leftPillar);
+
+    const rightPillar = new THREE.Mesh(pillarGeo, archMat);
+    rightPillar.position.set(1.1, 0.9, 0);
+    rightPillar.castShadow = true;
+    group.add(rightPillar);
+
+    const roofGeo = new THREE.BoxGeometry(2.7, 0.45, 1.0);
+    const roof = new THREE.Mesh(roofGeo, archMat);
+    roof.position.set(0, 1.9, 0);
+    roof.castShadow = true;
+    group.add(roof);
+
+    const stripeGeo = new THREE.BoxGeometry(2.75, 0.14, 1.04);
+    const stripe = new THREE.Mesh(stripeGeo, trimMat);
+    stripe.position.set(0, 1.72, 0);
+    group.add(stripe);
 
     return group;
   }

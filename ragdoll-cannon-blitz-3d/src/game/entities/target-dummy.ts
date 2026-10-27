@@ -7,6 +7,8 @@ import { ParticleEffects } from '../../render/effects';
 import { SoundController } from '../../core/audio';
 import { GAME_CONFIG } from '../config/game-config';
 
+const _SPLASH_POS = new THREE.Vector3();
+
 interface TargetItem {
   body: RAPIER.RigidBody;
   mesh: THREE.Group;
@@ -72,7 +74,8 @@ export class TargetDummyManager {
       const distFromIsland = Math.hypot(pos.x, pos.z - (-4));
       if (pos.y < GAME_CONFIG.seaKillY || (distFromIsland > 13.5 && pos.y < 1.0)) {
         d.eliminated = true;
-        this.particles.spawnWaterSplash(new THREE.Vector3(pos.x, 0, pos.z));
+        _SPLASH_POS.set(pos.x, 0, pos.z);
+        this.particles.spawnWaterSplash(_SPLASH_POS);
         this.audio.playWaterSplash();
         this.audio.playTargetSqueak();
 

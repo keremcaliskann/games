@@ -32,6 +32,9 @@ export class BusEntity {
   private animTarget = new THREE.Vector3();
   private animProgress = 0;
   private animDuration = 0.35;
+  private startRotY = 0;
+  private targetRotY = 0;
+  private alignRotation = false;
   private onAnimFinish?: () => void;
   private shakeTimer = 0;
 
@@ -97,21 +100,37 @@ export class BusEntity {
     this.shakeTimer = 0.25;
   }
 
-  public driveTo(targetPos: THREE.Vector3, duration = 0.35, onFinish?: () => void): void {
+  public driveTo(
+    targetPos: THREE.Vector3,
+    duration = 0.35,
+    onFinish?: () => void,
+    alignToBay = false
+  ): void {
     this.isDriving = true;
     this.animStart.copy(this.root.position);
     this.animTarget.copy(targetPos);
     this.animProgress = 0;
     this.animDuration = duration;
+    this.alignRotation = alignToBay;
+    this.startRotY = this.root.rotation.y;
+    this.targetRotY = 0;
     this.onAnimFinish = onFinish;
   }
 
-  public flyHeloTo(targetPos: THREE.Vector3, duration = 0.7, onFinish?: () => void): void {
+  public flyHeloTo(
+    targetPos: THREE.Vector3,
+    duration = 0.7,
+    onFinish?: () => void,
+    alignToBay = true
+  ): void {
     this.isHeloFlying = true;
     this.animStart.copy(this.root.position);
     this.animTarget.copy(targetPos);
     this.animProgress = 0;
     this.animDuration = duration;
+    this.alignRotation = alignToBay;
+    this.startRotY = this.root.rotation.y;
+    this.targetRotY = 0;
     this.onAnimFinish = onFinish;
   }
 
@@ -137,6 +156,9 @@ export class BusEntity {
       // Ease out cubic
       const ease = 1 - Math.pow(1 - t, 3);
       this.root.position.lerpVectors(this.animStart, this.animTarget, ease);
+      if (this.alignRotation) {
+        this.root.rotation.y = THREE.MathUtils.lerp(this.startRotY, this.targetRotY, ease);
+      }
 
       // Slight suspension dip on motion
       this.root.rotation.x = Math.sin(t * Math.PI) * 0.08;
@@ -145,7 +167,12 @@ export class BusEntity {
         this.isDriving = false;
         this.root.position.copy(this.animTarget);
         this.root.rotation.x = 0;
-        this.onAnimFinish?.();
+        if (this.alignRotation) {
+          this.root.rotation.y = this.targetRotY;
+        }
+        const cb = this.onAnimFinish;
+        this.onAnimFinish = undefined;
+        cb?.();
       }
     }
 
@@ -155,11 +182,19 @@ export class BusEntity {
       const t = Math.min(1.0, this.animProgress);
       this.root.position.lerpVectors(this.animStart, this.animTarget, t);
       this.root.position.y += Math.sin(t * Math.PI) * 4.5; // High arc
+      if (this.alignRotation) {
+        this.root.rotation.y = THREE.MathUtils.lerp(this.startRotY, this.targetRotY, t);
+      }
 
       if (t >= 1.0) {
         this.isHeloFlying = false;
         this.root.position.copy(this.animTarget);
-        this.onAnimFinish?.();
+        if (this.alignRotation) {
+          this.root.rotation.y = this.targetRotY;
+        }
+        const cb = this.onAnimFinish;
+        this.onAnimFinish = undefined;
+        cb?.();
       }
     }
   }

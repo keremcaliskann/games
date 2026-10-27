@@ -5,6 +5,7 @@ import { PrefabFactory } from '../../render/PrefabFactory';
 export class PassengerEntity {
   public readonly id: string;
   public readonly colorDef: VehicleColorDef;
+  public readonly isVipGold: boolean;
   public readonly root: THREE.Group;
 
   public isMoving = false;
@@ -16,10 +17,11 @@ export class PassengerEntity {
   private onFinish?: () => void;
   private hopHeight = 0.4;
 
-  constructor(id: string, colorDef: VehicleColorDef, startPos: THREE.Vector3) {
+  constructor(id: string, colorDef: VehicleColorDef, startPos: THREE.Vector3, isVipGold = false) {
     this.id = id;
     this.colorDef = colorDef;
-    this.root = PrefabFactory.createPassengerPawn(colorDef);
+    this.isVipGold = isVipGold;
+    this.root = PrefabFactory.createPassengerPawn(colorDef, isVipGold);
     this.root.position.copy(startPos);
   }
 
