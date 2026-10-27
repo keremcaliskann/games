@@ -209,7 +209,7 @@ export class UniversalAdProvider implements IAdProvider {
       modal.className = 'mock-ad-modal modal-overlay';
       modal.setAttribute('data-hud-interactive', 'true');
       modal.style.cssText = `
-        position: fixed; inset: 0; background: rgba(3, 7, 18, 0.95);
+        position: absolute; inset: 0; background: rgba(3, 7, 18, 0.95);
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         z-index: 100000; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         color: #fff; backdrop-filter: blur(8px); pointer-events: auto;
@@ -235,7 +235,8 @@ export class UniversalAdProvider implements IAdProvider {
         </div>
       `;
 
-      document.body.appendChild(modal);
+      const stageHost = document.getElementById('shell-stage') || document.body;
+      stageHost.appendChild(modal);
 
       const countEl = modal.querySelector('#mock-ad-countdown') as HTMLElement;
       const btn = modal.querySelector('#mock-ad-claim-btn') as HTMLButtonElement;

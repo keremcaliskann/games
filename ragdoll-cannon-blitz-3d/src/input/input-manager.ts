@@ -48,8 +48,10 @@ export class InputManager {
     window.addEventListener('pointermove', (e) => {
       if (!this.isPointerDown) return;
 
-      const dx = (e.clientX - this.startX) / (window.innerWidth * 0.5);
-      const dy = (e.clientY - this.startY) / (window.innerHeight * 0.5);
+      const cw = this.container.clientWidth || 800;
+      const ch = this.container.clientHeight || 600;
+      const dx = (e.clientX - this.startX) / (cw * 0.5);
+      const dy = (e.clientY - this.startY) / (ch * 0.5);
 
       if (Math.abs(dx) > 0.01 || Math.abs(dy) > 0.01) {
         this.hasAimed = true;

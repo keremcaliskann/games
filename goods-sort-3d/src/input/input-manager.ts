@@ -47,8 +47,10 @@ export class InputManager {
     });
 
     window.addEventListener('pointermove', (e) => {
-      const px = (e.clientX / window.innerWidth) * 2 - 1;
-      const py = (e.clientY / window.innerHeight) * 2 - 1;
+      const rect = this.container.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const py = ((e.clientY - rect.top) / rect.height) * 2 - 1;
       this.callbacks.onParallax(px, py);
     });
   }

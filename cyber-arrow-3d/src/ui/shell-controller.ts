@@ -1,9 +1,10 @@
 /**
  * Standardized 3-Column Arcade Shell Controller (Single Source of Truth across all Arcade 3D games).
- * - Permanently preserves the 3-column layout (Left Navigation Sidebar + Center 3D Stage + Right Ad Rail).
+ * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app and #hud
+ *   so the inner game (#app + #hud) is 100% independent of the outer screen layout.
+ * - Permanently displays Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail.
  * - Zero fullscreen mode or sidebar hiding.
- * - Observes #app with ResizeObserver so canvas & camera aspect ratio never stretch.
- * - Wires #shell-restart-btn, arcade:restart custom event, and ../games.json cross-discovery.
+ * - Observes #app with ResizeObserver so canvas & camera aspect ratio always match #shell-stage.
  */
 
 export interface ShellControllerOptions {
@@ -24,8 +25,8 @@ export function applyDualModeShell(): boolean {
 
 export class ShellController {
   private readonly options: ShellControllerOptions;
-  private readonly restartBtn: HTMLElement | null;
-  private readonly otherGamesList: HTMLElement | null;
+  private restartBtn: HTMLElement | null = null;
+  private otherGamesList: HTMLElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private lastRestartTimestamp = 0;
   private lastObservedWidth = 0;
@@ -37,14 +38,105 @@ export class ShellController {
     this.options = options;
     applyDualModeShell();
 
+    this.ensureCanonicalShellDom();
+
     this.restartBtn = document.getElementById('shell-restart-btn');
     this.otherGamesList = document.getElementById('shell-other-games-list');
 
-    // Remove any legacy fullscreen button or banner if present in DOM
+    this.init();
+  }
+
+  /**
+   * Ensures the outer 3-Column Arcade Shell (#arcade-shell -> Left Nav + #shell-stage + Right Ad Rail)
+   * is 100% identical across all games, while keeping #app and #hud untouched inside #shell-stage.
+   */
+  private ensureCanonicalShellDom(): void {
+    if (typeof document === 'undefined') return;
+
+    const appEl = document.getElementById('app');
+    const hudEl = document.getElementById('hud');
+    if (!appEl) return;
+
+    appEl.classList.add('game-canvas-container');
+    if (hudEl) {
+      hudEl.classList.add('game-hud-overlay');
+    }
+
+    let shellEl = document.getElementById('arcade-shell');
+    if (!shellEl) {
+      shellEl = document.createElement('div');
+      shellEl.id = 'arcade-shell';
+      document.body.prepend(shellEl);
+    }
+    shellEl.className = 'arcade-shell';
+
+    let stageEl = document.getElementById('shell-stage') || shellEl.querySelector('.shell-stage') as HTMLElement | null;
+    if (!stageEl) {
+      stageEl = document.createElement('main');
+      stageEl.appendChild(appEl);
+      if (hudEl) stageEl.appendChild(hudEl);
+    }
+    stageEl.id = 'shell-stage';
+    stageEl.className = 'shell-stage';
+
+    // Remove any legacy fullscreen elements
     document.getElementById('shell-fullscreen-btn')?.remove();
     document.getElementById('fullscreen-ad-banner')?.remove();
 
-    this.init();
+    // Ensure canonical Left Navigation Sidebar
+    let leftEl = shellEl.querySelector('.shell-sidebar-left') as HTMLElement | null;
+    if (!leftEl) {
+      leftEl = document.createElement('aside');
+      shellEl.prepend(leftEl);
+    }
+    leftEl.className = 'shell-sidebar shell-sidebar-left';
+    leftEl.innerHTML = `
+      <div class="shell-brand">
+        <a href="../" class="shell-brand-link">
+          <span class="shell-brand-badge">ARCADE</span>
+          <span class="shell-brand-title">3D GAMES</span>
+        </a>
+      </div>
+      <nav class="shell-nav">
+        <a href="../" class="shell-btn shell-btn-portal" title="Return to Central Arcade Portal">
+          <span class="btn-icon">←</span> Portala Dön
+        </a>
+        <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
+          <span class="btn-icon">🔄</span> Yeniden Başlat
+        </button>
+      </nav>
+      <section class="shell-other-games">
+        <h3 class="shell-section-title">Diğer Oyunlar</h3>
+        <div id="shell-other-games-list" class="other-games-list"></div>
+      </section>
+    `;
+
+    // Ensure Stage is between Left and Right sidebars
+    if (stageEl.parentElement !== shellEl) {
+      shellEl.appendChild(stageEl);
+    }
+
+    // Ensure canonical Right Sponsor Ad Rail
+    let rightEl = shellEl.querySelector('.shell-sidebar-right') as HTMLElement | null;
+    if (!rightEl) {
+      rightEl = document.createElement('aside');
+      shellEl.appendChild(rightEl);
+    }
+    rightEl.className = 'shell-sidebar shell-sidebar-right';
+    const shortTitle = document.title.split('//')[0].trim() || 'ARCADE 3D';
+    rightEl.innerHTML = `
+      <div class="ad-rail-wrapper">
+        <span class="ad-header-tag">SPONSOR // REKLAM</span>
+        <div id="ad-banner-desktop" class="ad-banner-slot banner-300x600">
+          <div class="ad-mock-creative">
+            <div class="ad-mock-glow"></div>
+            <p class="ad-mock-brand">${shortTitle}</p>
+            <p class="ad-mock-desc">Zero-install 60 FPS WebGL 3D Arcade</p>
+            <div class="ad-mock-cta">ŞİMDİ OYNA</div>
+          </div>
+        </div>
+      </div>
+    `;
   }
 
   private init(): void {

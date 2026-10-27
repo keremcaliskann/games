@@ -257,10 +257,11 @@
         cursor: pointer;
       }
     </style>
-          <style id="shared-arcade-shell-css">
+              <style id="shared-arcade-shell-css">
 /* ==========================================================================
    SHARED ARCADE 3-COLUMN SHELL CSS (LEFT NAV + CENTER STAGE + RIGHT AD RAIL)
-   Single Source of Truth across all HTML5 3D Arcade Games (Zero Fullscreen Mode)
+   Single Source of Truth across all HTML5 3D Arcade Games
+   Game content (#app & #hud) is 100% isolated inside #shell-stage.
    ========================================================================== */
 
 /* Automatic Disabled State When Ads Are Unavailable (Offline / AdBlocker / No Inventory) */
@@ -282,26 +283,31 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
 #arcade-shell,
 .arcade-shell {
   display: flex !important;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
+  flex-direction: row !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  overflow: hidden !important;
   background: #cfe8f7;
   color: #fff;
   position: relative;
 }
 
-/* Left Sidebar Navigation — Always Visible */
+/* Left Sidebar Navigation — Always Visible & Identical Across All Games */
 .shell-sidebar-left {
-  width: 260px;
-  min-width: 260px;
-  background: rgba(13, 16, 28, 0.96);
-  border-right: 1px solid rgba(56, 189, 248, 0.2);
+  width: 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  height: 100% !important;
+  background: rgba(13, 16, 28, 0.96) !important;
+  border-right: 1px solid rgba(56, 189, 248, 0.2) !important;
   display: flex !important;
-  flex-direction: column;
-  padding: 18px 14px;
-  gap: 16px;
-  z-index: 50;
+  flex-direction: column !important;
+  padding: 18px 14px !important;
+  gap: 16px !important;
+  z-index: 50 !important;
+  flex-shrink: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 .shell-brand {
@@ -382,6 +388,8 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 0;
+  flex: 1 1 auto;
 }
 
 .shell-section-title {
@@ -397,8 +405,8 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 320px;
   overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 .other-game-item {
@@ -448,49 +456,67 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   color: #38bdf8;
 }
 
-/* Center Stage */
+/* Center Game Stage — 100% Isolated Viewport Container for the Game (#app + #hud) */
+#shell-stage,
 .shell-stage {
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  width: auto !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
   background: #cfe8f7;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
+  /* CSS containment + transform traps any position:fixed modals/HUD strictly inside the game stage */
+  transform: translateZ(0);
+  contain: layout paint;
 }
 
+#app,
 .game-canvas-container {
-  position: absolute;
-  inset: 0;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   touch-action: none;
+  z-index: 1;
 }
 
+#app canvas,
 .game-canvas-container canvas {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 100% !important;
+  height: 100% !important;
 }
 
+#hud,
 .game-hud-overlay {
-  position: absolute;
-  inset: 0;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   pointer-events: none;
   z-index: 20;
+  overflow: hidden;
 }
 
-/* Right Ad Rail — Always Visible on Desktop */
+/* Right Ad Rail — Always Visible & Identical on Desktop */
 .shell-sidebar-right {
-  width: 320px;
-  min-width: 320px;
-  background: rgba(13, 16, 28, 0.96);
-  border-left: 1px solid rgba(56, 189, 248, 0.2);
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  height: 100% !important;
+  background: rgba(13, 16, 28, 0.96) !important;
+  border-left: 1px solid rgba(56, 189, 248, 0.2) !important;
   display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 10px;
-  z-index: 50;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 16px 10px !important;
+  z-index: 50 !important;
+  flex-shrink: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 .ad-rail-wrapper {
@@ -569,7 +595,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
 }
 
-/* Responsive Layout for Narrow Screens */
+/* Responsive Layout for Narrow Mobile/Tablet Screens */
 @media (max-width: 1024px) {
   .shell-sidebar-right {
     display: none !important;
@@ -579,29 +605,30 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
 @media (max-width: 768px) {
   #arcade-shell,
   .arcade-shell {
-    flex-direction: column;
+    flex-direction: column !important;
   }
   .shell-sidebar-left {
-    width: 100%;
-    min-width: 100%;
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-right: none;
-    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 8px 12px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2) !important;
   }
   .shell-other-games {
-    display: none;
+    display: none !important;
   }
   .shell-nav {
-    flex-direction: row;
-    gap: 6px;
+    flex-direction: row !important;
+    gap: 6px !important;
   }
   .shell-btn {
-    padding: 6px 10px;
-    font-size: 11px;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
   }
 }
 
@@ -609,7 +636,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   </head>
   <body>
     <div id="arcade-shell" class="arcade-shell">
-            <!-- Left Navigation Rail -->
+                  <!-- Left Navigation Rail -->
       <aside class="shell-sidebar shell-sidebar-left">
         <div class="shell-brand">
           <a href="../" class="shell-brand-link">
@@ -687,7 +714,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
         </div>
       </main>
 
-            <!-- Right Advertising Rail -->
+                  <!-- Right Advertising Rail -->
       <aside class="shell-sidebar shell-sidebar-right">
         <div class="ad-rail-wrapper">
           <span class="ad-header-tag">SPONSOR // REKLAM</span>
