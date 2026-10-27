@@ -23,7 +23,7 @@ const gamesCatalog = fs.existsSync(gamesCatalogPath)
   : [];
 
 console.log(`\n===============================================================`);
-console.log(`🎮 STUDIO GÖREV VE GELİŞTİRME LİSTELERİ (/gametasks)`);
+console.log(`🎮 STUDIO GÖREV VE GELİŞTİRME LİSTELERİ (/tasks)`);
 console.log(`===============================================================\n`);
 
 const activeStudioTodo = studioTodo.filter(t => t.status === 'ready' || t.status === 'in_progress');

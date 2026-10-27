@@ -121,5 +121,5 @@ A task is complete only when:
 | `skills/trend` | slash_command | `/trend` — 90-day market scan and ideas backlog re-scoring |
 | `skills/studio` | slash_command | `/studio` — Autonomous 3-Phase Studio Squad for #1 backlog game |
 | `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
-| `skills/gametasks` | slash_command | `/gametasks` — Read and display all studio task lists (studio-todo, ideas-backlog, priorities) |
+| `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (studio-todo, ideas-backlog) with zero fluff |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |
