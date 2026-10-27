@@ -11,19 +11,16 @@ This skill orchestrates the **Consumer (Studio Executor)** automation of the dec
 
 ---
 
-## 1. Dual-Queue Intake & Dispatcher (`studio-todo.json` + `ideas-backlog.json`)
+## 1. Dual-Queue Intake & Sequential Priority Dispatcher (`studio-todo.json` -> `ideas-backlog.json`)
 
 1. Read **both** `backlog/studio-todo.json` and `backlog/ideas-backlog.json`.
-2. **Dispatch Priority Rules:**
-   - **Rule A — Urgent `P0` Bug Override:** If `backlog/studio-todo.json` contains any item with `status === "ready"` and `priority === "P0"`, immediately execute all `P0` bugfix tasks first.
-   - **Rule B — Mode Selection (New Game vs. Existing Game Upgrade):**
-     - **If invoked in `TODO_MODE` (e.g., the 04:00 nightly slot) OR if `ideas-backlog.json` has no `status === "ready"` items:**
-       - Pull the top **2 to 3 highest-scored `status === "ready"` tasks** from `backlog/studio-todo.json`.
-       - Implement the exact mechanical/visual upgrades or bugfixes in the specified `targetFiles`, verify `npm run typecheck` and `npm run build` for each modified game, mark those tasks `"completed"` in `backlog/studio-todo.json`, commit, and push to `origin/main`.
-     - **If invoked in `NEW_GAME_MODE` (e.g., the 23:00 nightly slot or `/studio` command) and `ideas-backlog.json` has a `status === "ready"` item:**
-       - Select the item with `status === "ready"` that has the **highest `revenueScore` (Rank #1)** in `backlog/ideas-backlog.json`.
-       - Update its status to `"in_progress"` and execute Phases 1, 2, and 3 below to build and publish the new game from scratch.
-       - Plus, if time/budget permits after building or if no new game is ready, complete the #1 task from `backlog/studio-todo.json`.
+2. **Strict Sequential Execution Order (Every Run):**
+   - **Step 1 — Finish Existing Game Fixes & Upgrades First (`backlog/studio-todo.json`):**
+     - If `backlog/studio-todo.json` contains any item with `status === "ready"` or `status === "in_progress"`, execute **all** pending tasks in priority order (`P0` -> `P1` -> `P2`) before starting a new game.
+     - Implement the specified bugfixes, mechanical upgrades, or visual polish in `targetFiles`, run `node scripts/sync-shared-core.mjs`, verify `npm --prefix <game-id> run typecheck` and `npm --prefix <game-id> run build` for each modified game, and mark every finished task `"completed"` in `backlog/studio-todo.json`.
+   - **Step 2 — Build 1 New Game (`backlog/ideas-backlog.json`):**
+     - Immediately after all pending tasks in `backlog/studio-todo.json` are completed (or if `studio-todo.json` already has zero `"ready"` items), select **1 game** — the item with `status === "ready"` that has the **highest `revenueScore` (Rank #1)** in `backlog/ideas-backlog.json`.
+     - Update its status to `"in_progress"` and execute Phases 1, 2, and 3 below to build, synchronize (`node scripts/sync-shared-core.mjs`), verify, and publish that 1 new game from scratch.
 
 ---
 
@@ -92,9 +89,9 @@ Apply any polish fixes immediately, mark the game `"completed"` in `backlog/idea
 
 ---
 
-## 5. Mandatory Concise Post-Run Report (≤ 6 Lines in Turkish)
+## 5. Mandatory Concise Post-Run Report (ASD-STE100 / ≤ 6 Lines in Turkish)
 
-Every execution (whether `NEW_GAME_MODE` or `TODO_MODE`) must finish with a **very short Turkish report (`<= 6 lines`)** in chat:
-- **Mode Executed:** Yeni Oyun İnşası (`ideas-backlog.json`) veya Mevcut Oyun Geliştirme (`studio-todo.json`).
-- **Completed Items:** Tamamlanan oyun veya `studio-todo.json` görevlerinin adları ve yapılan değişiklikler.
-- **Verification & Live Status:** `typecheck` + `build` sonucu, commit kodu ve canlı yayın linki.
+Every execution must finish with a **very short Turkish report (`<= 6 lines`, max 20 words per sentence)** following the Aircraft Maintenance Log schema:
+- **DISCREPANCY / TASK:** `studio-todo.json` içindeki bekleyen düzeltmeler ve `ideas-backlog.json` 1 numaralı yeni oyun görevi.
+- **CORRECTIVE ACTION:** Tamamlanan mevcut oyun düzeltmeleri (`studio-todo.json`) ve sıfırdan inşa edilen 1 yeni oyun (`ideas-backlog.json`).
+- **VERIFICATION & RETURN TO SERVICE:** `sync-shared-core.mjs`, `typecheck` + `build` sonucu (`< 5 MB`), commit kodu ve canlı yayın linki.

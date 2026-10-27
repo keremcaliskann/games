@@ -1,0 +1,17 @@
+{
+  "name": "CONVEYOR FLOW 3D // MARBLE FACTORY",
+  "short_name": "Conveyor Flow 3D",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#cfe8f7",
+  "theme_color": "#0284c7",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

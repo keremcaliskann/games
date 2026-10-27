@@ -1,5 +1,18 @@
 [
   {
+    "id": "conveyor-marble-sort-3d",
+    "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
+    "description": "Tactile 3D conveyor loop marble sorting ASMR puzzle! Release glossy color-coded marbles from hoppers onto the circulating track to fulfill crate orders.",
+    "path": "./conveyor-marble-sort-3d/",
+    "tags": ["3D Puzzle", "Conveyor Flow", "Marble Sort", "Casual ASMR", "60 FPS"],
+    "date": "2026-10-27",
+    "icon": "./conveyor-marble-sort-3d/icon.svg",
+    "iconEmoji": "🔄",
+    "featured": true,
+    "themeColor": "#0284c7",
+    "accentGradient": "linear-gradient(135deg, #0284c7, #38bdf8)"
+  },
+  {
     "id": "physics-drop-merge-3d",
     "title": "DROP MERGE 3D // SPHERE SUIKA",
     "description": "Bouncy 3D physics fruit merge puzzle! Aim and drop juicy spheres into the translucent jar, merge identical pairs, and chain reactions to unlock the Giant Golden Sun Core.",

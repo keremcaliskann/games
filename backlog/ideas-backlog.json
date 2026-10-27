@@ -207,8 +207,8 @@
     "id": "conveyor-marble-sort-3d",
     "title": "CONVEYOR FLOW 3D // MARBLE FACTORY",
     "category": "3d-sort-stack",
-    "status": "ready",
-    "rank": 1,
+    "status": "completed",
+    "rank": null,
     "revenueScore": 92,
     "scoreBreakdown": {
       "rewardedAdScore": 33,
@@ -217,8 +217,8 @@
       "webglFeasibilityScore": 17
     },
     "createdAt": "2026-10-20",
-    "lastValidatedAt": "2026-10-21",
-    "validationNote": "Score adjusted up to 92 (+2 pts) following Loom Games' $125M+ Pixel Flow breakout and industry-wide surge in conveyor-loop mechanics. Strong dock-slot and belt expansion monetization.",
+    "lastValidatedAt": "2026-10-27",
+    "validationNote": "Successfully built and deployed with 3-Phase Studio Squad. 60 FPS Three.js conveyor loop sorting, daylight art direction, ASMR audio, and 3 rewarded ad hooks.",
     "coreLoop": "Tap color-coded 3D dispenser boxes to release marbles onto a looping 3D conveyor belt so they roll into matching collector crates without overflowing the belt capacity.",
     "solvableMathSpec": "Deterministic crate queue matches exact dispenser marble counts on the board.",
     "cameraErgonomics": "Tilted 3D overview of the floating conveyor loop with unobstructed rotation and responsive 9:16 portrait framing.",
@@ -242,7 +242,7 @@
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "category": "3d-spatial-jam",
     "status": "ready",
-    "rank": 2,
+    "rank": 1,
     "revenueScore": 89,
     "scoreBreakdown": {
       "rewardedAdScore": 33,

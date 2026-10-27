@@ -33,13 +33,12 @@ To protect the user's daytime working quota (`10:00–18:00`) across 5-hour toke
                                            ▼ (backlog/studio-todo.json + ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
 | AUTOMATION 3: STUDIO EXECUTOR (Consumer — Nightly at 23:00 & 04:00)                     |
-| - Reads BOTH backlog/studio-todo.json and backlog/ideas-backlog.json:                   |
-|   1) Urgent Override: If any 'P0' bug exists in studio-todo.json, fixes it first        |
-|   2) 23:00 Slot (or New Game Turn): Pulls Rank #1 'ready' game from ideas-backlog.json  |
-|      and builds/publishes it end-to-end via the 3-Phase Studio Squad                    |
-|   3) 04:00 Slot (or Polish Turn): Pulls top 2-3 'ready' tasks from studio-todo.json,    |
-|      implements mechanical/visual upgrades across existing games, verifies & deploys    |
-| - Outputs a concise <= 6-line Turkish post-run report after every execution             |
+| - Reads BOTH backlog/studio-todo.json and backlog/ideas-backlog.json in strict order:   |
+|   1) Priority 1 (Existing Games First): Completes ALL 'ready' / 'in_progress' tasks in  |
+|      backlog/studio-todo.json (P0 -> P1 -> P2), syncs shared UI/Ads core, and verifies  |
+|   2) Priority 2 (Then 1 New Game): Pulls Rank #1 'ready' game from ideas-backlog.json   |
+|      and builds/publishes 1 complete game end-to-end via the 3-Phase Studio Squad       |
+| - Outputs a concise <= 6-line Turkish ASD-STE100 Maintenance Log report after execution |
 +-----------------------------------------------------------------------------------------+
 ```
 
