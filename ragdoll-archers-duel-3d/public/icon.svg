@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bae6fd" />
+      <stop offset="100%" stop-color="#f0f9ff" />
+    </linearGradient>
+    <linearGradient id="bowWood" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="goldTip" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#eab308" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#sky)" />
+  <circle cx="400" cy="110" r="54" fill="#fef08a" opacity="0.85" />
+  <!-- Sunlit Stone Bastion -->
+  <rect x="44" y="340" width="160" height="130" rx="16" fill="#fcf8ee" stroke="#cbd5e1" stroke-width="8" />
+  <rect x="34" y="316" width="44" height="36" rx="8" fill="#fcf8ee" stroke="#cbd5e1" stroke-width="6" />
+  <rect x="102" y="316" width="44" height="36" rx="8" fill="#fcf8ee" stroke="#cbd5e1" stroke-width="6" />
+  <rect x="170" y="316" width="44" height="36" rx="8" fill="#fcf8ee" stroke="#cbd5e1" stroke-width="6" />
+  <!-- Archer Stickman Silhouette -->
+  <circle cx="124" cy="202" r="32" fill="#2563eb" stroke="#1e40af" stroke-width="6" />
+  <rect x="108" y="236" width="32" height="82" rx="16" fill="#2563eb" />
+  <!-- Stylized Composite Bow -->
+  <path d="M 220 92 Q 336 226 220 360" fill="none" stroke="url(#bowWood)" stroke-width="24" stroke-linecap="round" />
+  <line x1="220" y1="92" x2="152" y2="226" stroke="#f8fafc" stroke-width="7" />
+  <line x1="220" y1="360" x2="152" y2="226" stroke="#f8fafc" stroke-width="7" />
+  <!-- Golden Arrow + Red Apple -->
+  <line x1="146" y1="226" x2="365" y2="176" stroke="#78350f" stroke-width="14" stroke-linecap="round" />
+  <polygon points="396,168 352,154 362,196" fill="url(#goldTip)" stroke="#a16207" stroke-width="4" />
+  <circle cx="424" cy="162" r="28" fill="#ef4444" stroke="#991b1b" stroke-width="5" />
+  <path d="M 424 132 Q 438 116 446 128" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round" />
+</svg>
