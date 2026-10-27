@@ -7,13 +7,15 @@ metadata:
 
 # Game Director QA & To-Do Architect (`game-director-qa-architect`)
 
-This skill operates **Producer B** of the autonomous studio pipeline. It conducts a comprehensive studio audit across all active games, ensuring strict adherence to evolving studio rules, verifying functional gameplay, directly implementing performance and visual optimizations, and generating prioritized mechanical and design feedback tickets in **`backlog/studio-todo.json`**.
+This skill operates **Producer B** of the autonomous studio pipeline. It conducts a comprehensive studio audit across all active games, ensuring strict adherence to evolving studio rules, verifying functional gameplay, and generating prioritized mechanical, performance, and design feedback tickets in **`backlog/studio-todo.json`**.
+
+> **STRICT PRODUCER ROLE (QUEUE ONLY — ZERO DIRECT CODE EDITS):** The QA Architect's sole purpose is to inspect, audit, critique, and add prioritized `P0 / P1 / P2` tasks to `backlog/studio-todo.json`. It **DOES NOT write or modify game code directly**. All coding and implementation work is reserved strictly for the Consumer (Studio Executor / `/studio`).
 
 ---
 
-## 1. 5 Core Audit Responsibilities
+## 1. 5 Core Audit Responsibilities (Inspection & Queueing)
 
-Every audit cycle enforces 5 mandatory inspection and improvement pillars:
+Every audit cycle enforces 5 mandatory inspection and feedback pillars:
 
 1. **Rule Compliance Verification (Evolving Rules Check):**
    - Continuously verify every active game against current studio standards in `AGENTS.md` and `.agents/rules/`:
@@ -26,22 +28,23 @@ Every audit cycle enforces 5 mandatory inspection and improvement pillars:
 
 2. **Feature & Gameplay Health Verification:**
    - Verify that all active game features, controls, physics simulations, audio synthesis, camera rigs, and platform bridges are fully functional.
-   - Verify that interactive raycasting, particle bursts, and UI booster modals trigger without deadlocks or errors.
+   - If any feature or SDK hook is broken, log a `P0` or `P1` ticket in `backlog/studio-todo.json`.
 
-3. **Direct Code Optimization & Refinements:**
+3. **Code & Performance Inspection (Heap / GC Audits):**
    - Inspect hot paths (`update`, `fixedUpdate`, `render`, collision callbacks).
-   - Directly eliminate unnecessary `new THREE.Vector3()`, array allocations, or closures in per-frame loops.
-   - Refactor repetitive logic and streamline entity/pool management.
+   - Detect unnecessary `new THREE.Vector3()`, array allocations, or closures in per-frame loops.
+   - Log exact file lines and optimization specs as `P1` performance tickets in `backlog/studio-todo.json`.
 
-4. **Visual & Aesthetic Polish:**
-   - Inspect and enhance scene lighting, material roughness/metalness, color contrast, and shadows.
-   - Enhance tactile feedback: screen shake/trauma, impact particle bursts, squash-and-stretch, and floating streak badges.
+4. **Visual & Aesthetic Critique:**
+   - Inspect lighting, material roughness/metalness, color contrast, and shadows.
+   - Evaluate tactile feedback: screen shake/trauma, impact particle bursts, squash-and-stretch, and floating streak badges.
+   - Log visual polish improvements as `P2` visual-juice tickets in `backlog/studio-todo.json`.
 
 5. **Self-Feedback & Backlog Generation (Design & Mechanics):**
    - Perform critical gameplay analysis: evaluate retention loops, pacing, difficulty curves, and bot AI behavior.
    - Log actionable, file-level improvement tickets into `backlog/studio-todo.json` prioritized as:
      - `P0` (Critical Blocker / Softlock)
-     - `P1` (High-Impact Gameplay Mechanic / Retention Upgrade)
+     - `P1` (High-Impact Gameplay Mechanic / Performance Upgrade)
      - `P2` (Visual Juice / ASMR Polish)
 
 ---
@@ -57,18 +60,17 @@ Every audit cycle enforces 5 mandatory inspection and improvement pillars:
 1. Run `node scripts/sync-shared-core.mjs` to ensure universal UI/Ads synchronization.
 2. Run `npm run typecheck --silent` across all active game directories to detect any compilation or type regressions.
 
-### Step 3: Deep Studio Game Director Audit & Direct Optimizations (Per Game)
-Inspect each game across the 5 pillars. For immediate, low-risk code/visual optimizations or rule alignments, implement surgical edits directly.
+### Step 3: Deep Studio Game Director Audit & Defect Logging (Per Game)
+Inspect each game across the 5 pillars. Formulate concrete, file-level specifications for every bug, optimization, or polish item found.
 
-### Step 4: Update & Re-Rank `backlog/studio-todo.json`
-1. For multi-file or structural mechanical upgrades, add concrete tasks to `backlog/studio-todo.json` with exact `targetFiles` and actionable specifications.
+### Step 4: Update & Re-Rank `backlog/studio-todo.json` (Queue Only)
+1. Add all newly discovered tasks to `backlog/studio-todo.json` with exact `targetFiles` and actionable specifications.
 2. Sort all `status === "ready"` items strictly by `priority` (`P0` first, then `P1`, then `P2`) and descending `priorityScore`.
-3. Verify modified games with `npm run typecheck` and `npm run build`.
-4. Commit and push the updated files to `origin/main`.
+3. Commit and push only `backlog/studio-todo.json` to `origin/main`.
 
 ### Step 5: Mandatory Concise Post-Run Report (ASD-STE100 Schema, ≤ 6 Lines in Turkish)
 Conclude with a **very short Turkish summary (`<= 6 lines`, max 20 words per sentence)**:
-- **DISCREPANCY:** Denetlenen oyunlar, kural uyumu ve tespit edilen optimizasyon alanları.
-- **ROOT CAUSE:** Eksik kural uyumlulukları, performans darboğazları veya mekanik eksikler.
-- **CORRECTIVE ACTION:** Uygulanan doğrudan optimizasyonlar ve `studio-todo.json` listesine eklenen yeni görevler.
-- **RETURN TO SERVICE:** `typecheck`, `build` ve `sync-shared-core` doğrulama durumu.
+- **DISCREPANCY:** Denetlenen oyunlar, kural uyumu ve tespit edilen görev hacmi.
+- **ROOT CAUSE:** Kod, performans veya görsel eksiklerin listelenmesi.
+- **CORRECTIVE ACTION:** Görevlerin tamamı `backlog/studio-todo.json` listesine eklendi (doğrudan kodlama yapılmadı).
+- **RETURN TO SERVICE:** Yeni görev kuyruğu hazır; Studio Executor (`/studio`) için sıraya alındı.
