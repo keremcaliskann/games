@@ -26,13 +26,16 @@ console.log(`\n===============================================================`)
 console.log(`🎮 STUDIO GÖREV VE GELİŞTİRME LİSTELERİ (/gametasks)`);
 console.log(`===============================================================\n`);
 
+const activeStudioTodo = studioTodo.filter(t => t.status === 'ready' || t.status === 'in_progress');
+const completedStudioTodo = studioTodo.filter(t => t.status === 'completed');
+
 console.log(`📌 1. AKTİF OYUN İYİLEŞTİRME & HATA LİSTESİ (backlog/studio-todo.json):`);
-if (studioTodo.length === 0) {
-  console.log(`  (Bekleyen görev bulunmamaktadır.)`);
+if (activeStudioTodo.length === 0) {
+  console.log(`  (Bekleyen aktif görev bulunmamaktadır. Tüm ${completedStudioTodo.length} görev tamamlandı.)`);
 } else {
-  const p0 = studioTodo.filter(t => t.priority === 'P0');
-  const p1 = studioTodo.filter(t => t.priority === 'P1');
-  const p2 = studioTodo.filter(t => t.priority === 'P2');
+  const p0 = activeStudioTodo.filter(t => t.priority === 'P0');
+  const p1 = activeStudioTodo.filter(t => t.priority === 'P1');
+  const p2 = activeStudioTodo.filter(t => t.priority === 'P2');
 
   if (p0.length > 0) {
     console.log(`\n  🚨 [P0 - KRİTİK HATALAR] (${p0.length} görev):`);
