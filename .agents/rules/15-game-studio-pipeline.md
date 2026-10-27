@@ -24,10 +24,12 @@ To protect the user's daytime working quota (`10:00–18:00`) across 5-hour toke
                                            ▼ (backlog/ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
 | AUTOMATION 2: GAME DIRECTOR QA ARCHITECT (Producer B — Every 2 Days at 18:05, Argon High)|
-| - Deep-audits all active games in games.json for bugs, softlocks, mechanical depth,     |
-|   AI bot behavior, visual juice, and performance                                        |
-| - Populates and re-ranks backlog/studio-todo.json by priority (P0 > P1 > P2)            |
-| - Outputs a concise <= 6-line Turkish summary of newly queued tasks                     |
+| - Deep-audits all active games against latest rules (AGENTS.md & .agents/rules/*.md)   |
+| - Verifies working status of all core features, controls, audio, and 3 ad hooks         |
+| - Inspects code and directly applies performance optimizations & surgical improvements   |
+| - Verifies and applies visual polish (Soft Daylight, materials, particles, juice)       |
+| - Extracts design & mechanical feedback, logging P0/P1/P2 tasks to studio-todo.json     |
+| - Outputs a concise <= 6-line Turkish ASD-STE100 post-run summary                       |
 +-----------------------------------------------------------------------------------------+
                                            │
                                            ▼ (backlog/studio-todo.json + ideas-backlog.json)
