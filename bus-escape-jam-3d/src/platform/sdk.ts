@@ -8,17 +8,8 @@ export class PlatformBridge {
   private static isAudioMutedByPlatform = false;
 
   public static applyDualModeShell(): void {
-    const isEmbedded =
-      window.self !== window.top ||
-      new URLSearchParams(window.location.search).get('embed') === '1' ||
-      Boolean((window as unknown as { ytgame?: unknown }).ytgame) ||
-      Boolean((window as unknown as { YaGames?: unknown }).YaGames) ||
-      Boolean((window as unknown as { CrazyGames?: unknown }).CrazyGames);
-
-    if (isEmbedded) {
-      document.body.classList.add('embed-fullscreen-mode');
-      document.documentElement.classList.add('yt-embed-mode');
-    }
+    document.documentElement.classList.remove('yt-embed-mode');
+    document.body?.classList.remove('embed-fullscreen-mode');
   }
 
   public static async initPlatform(): Promise<void> {

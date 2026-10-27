@@ -48,13 +48,13 @@ All platform lifecycle, cloud save, audio sync, and score reporting calls must f
 
 Game code must never branch on portal globals directly. `src/platform/` detects the active host environment in priority order:
 
-| Priority | Platform | Detection Condition | Viewport Mode |
+| Priority | Platform | Detection Condition | Shell Layout |
 |---|---|---|---|
-| **1** | **YouTube Playables** | `Boolean(window.ytgame?.IN_PLAYABLES_ENV)` | **100% Full-Viewport** (Sidebars hidden) |
-| **2** | **Yandex Games** | `Boolean((window as any).YaGames)` | **100% Full-Viewport** (Sidebars hidden) |
-| **3** | **CrazyGames** | `Boolean((window as any).CrazyGames?.SDK)` | **100% Full-Viewport** (Sidebars hidden) |
-| **4** | **Poki** | `Boolean((window as any).PokiSDK)` | **100% Full-Viewport** (Sidebars hidden) |
-| **5** | **GitHub Pages Portal** | Default fallback (unless `?embed=1` is present) | **3-Column Arcade Shell** |
+| **1** | **YouTube Playables** | `Boolean(window.ytgame?.IN_PLAYABLES_ENV)` | **3-Column Arcade Shell** (Left Nav + Center Stage + Right Ad Rail) |
+| **2** | **Yandex Games** | `Boolean((window as any).YaGames)` | **3-Column Arcade Shell** (Left Nav + Center Stage + Right Ad Rail) |
+| **3** | **CrazyGames** | `Boolean((window as any).CrazyGames?.SDK)` | **3-Column Arcade Shell** (Left Nav + Center Stage + Right Ad Rail) |
+| **4** | **Poki** | `Boolean((window as any).PokiSDK)` | **3-Column Arcade Shell** (Left Nav + Center Stage + Right Ad Rail) |
+| **5** | **GitHub Pages Portal** | Default fallback | **3-Column Arcade Shell** (Left Nav + Center Stage + Right Ad Rail) |
 
 ---
 

@@ -53,8 +53,8 @@ Build the complete project inside `c:/Users/kerem/Desktop/Games/<game-name>`:
    - Zero bottom/side camera occlusion; responsive FOV/zoom for both **9:16 portrait** and **16:9 landscape**.
 4. **Procedural ASMR Web Audio (`src/core/audio.ts`):**
    - Zero external audio files; pitch-ramped combo clicks, pops, whooshes, and victory arpeggios synced with `ytgame.system.onAudioEnabledChange`.
-5. **Dual-Mode Arcade Shell & Icon (`index.html`, `public/icon.svg`):**
-   - Auto-collapses sidebars (`body.embed-fullscreen-mode`) inside YouTube Playables / Yandex / CrazyGames / `?embed=1` for 100% full-viewport play; renders 3-column Arcade Shell on GitHub Pages.
+5. **3-Column Arcade Shell & Icon (`index.html`, `public/icon.svg`):**
+   - Renders the 3-column Arcade Shell (Left Navigation Sidebar, Center 3D Stage, Right Sponsor Ad Rail) with zero fullscreen toggle or sidebar hiding.
    - Create custom `public/icon.svg` (512×512) and `public/manifest.json`.
 
 ---
@@ -77,7 +77,7 @@ Audit the completed build across **4 Mandatory Filters**:
 - [ ] Is `<script src="https://www.youtube.com/game_api/v1"></script>` first in `index.html`?
 - [ ] Are `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, and `loadData`/`saveData` wired?
 - [ ] Do all 3 Rewarded Ad hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar) work end-to-end?
-- [ ] Does Dual-Mode Shell hide sidebars in embedded portal mode (`?embed=1` / `ytgame`) and show Arcade Shell on GitHub Pages?
+- [ ] Does the 3-Column Arcade Shell render Left Navigation Sidebar and Right Ad Rail visibly with zero fullscreen toggle?
 - [ ] Zero external network fetches (CSP clean) and `dist/` bundle `< 50 MB`?
 
 ### Filter D: Technical & Release Integrity

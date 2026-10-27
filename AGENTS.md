@@ -81,7 +81,7 @@ A task is complete only when:
 4. No memory allocations, `console.log`, or debug remnants in hot paths.
 5. Code committed with a clean English Conventional Commit and pushed to the repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
-7. Dual-Mode Arcade Shell compliant: Auto-collapses sidebars for 100% full-viewport inside YouTube Playables / Yandex / CrazyGames / `?embed=1`, renders 3-column Arcade Shell on GitHub Pages, and includes verified `public/icon.svg`.
+7. 3-Column Arcade Shell compliant: Always renders the 3-column Arcade Shell (Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail, zero fullscreen toggle/collapse) and includes verified `public/icon.svg`.
 8. Game Director 4-Filter Critique Pass: Evaluated across (A) 360° camera line-of-sight & 9:16/16:9 ergonomics, (B) daylight palette & Compound Procedural Prefabs (`ASSETS_NEEDED.md`), (C) YouTube Playables SDK & 3 Revenue Hooks, and (D) 60 FPS QA before final push.
 
 ## 8. Rules & Skills Directory
@@ -97,7 +97,7 @@ A task is complete only when:
 | `rules/35-procedural-audio.md` | glob | Triggered when editing `**/src/core/audio*.ts` |
 | `rules/40-rapier-physics.md` | glob | Triggered when editing `**/src/physics/**` |
 | `rules/50-input-abstraction.md` | glob | Triggered when editing `**/src/input/**`, `**/src/ui/**` |
-| `rules/55-arcade-layout-and-shell.md` | model_decision | Dual-Mode Arcade Shell (auto full-viewport in YT/Portals, 3-column on GitHub Pages) & `icon.svg` |
+| `rules/55-arcade-layout-and-shell.md` | model_decision | 3-Column Arcade Shell (Left Navigation Sidebar, Center Stage, Right Ad Rail, zero fullscreen toggle) & `icon.svg` |
 | `rules/60-mobile-capacitor.md` | model_decision | Mobile, Capacitor, WebView, safe area |
 | `rules/62-youtube-playables.md` | model_decision | YouTube Playables SDK (`ytgame`), universal portal bridge, CSP/bundle budget, hot-swap 3D assets |
 | `rules/65-monetization-ads.md` | model_decision | YouTube Playables & Multi-Portal `UniversalAdProvider` + 3 mandatory rewarded ad revenue hooks |

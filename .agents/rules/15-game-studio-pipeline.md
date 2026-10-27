@@ -71,7 +71,7 @@ Enforces all 7 technical domain checkpoints:
    - Sunlit daylight environment (`HemisphereLight` + `DirectionalLight`) and high-saturation vibrant colors.
 5. **Procedural ASMR Web Audio (`core/audio.ts`):** Zero-asset Web Audio synthesis strictly governed by `ytgame.system.onAudioEnabledChange`.
 6. **3 Mandatory Revenue Loops (`ui/`, `game/`):** Working In-Level Boosters, Near-Miss Revive modal, and Victory Moving Multiplier bar.
-7. **Dual-Mode Arcade Shell (`ui/`, `index.html`):** Auto-collapses sidebars for 100% full-viewport gameplay inside YouTube Playables / Yandex / CrazyGames (`?embed=1`), while displaying the 3-column Arcade Shell on GitHub Pages.
+7. **3-Column Arcade Shell (`ui/`, `index.html`):** Always displays the 3-column Arcade Shell (Left Navigation Sidebar, Center 3D Stage, Right Sponsor Ad Rail) with zero fullscreen toggle or sidebar hiding.
 
 ### Phase 3: Game Director Critique & Polish Loop (`CRITIQUE.md`)
 Every build must pass all **4 Evaluation Filters** before deployment:

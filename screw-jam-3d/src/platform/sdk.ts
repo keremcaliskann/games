@@ -34,9 +34,8 @@ export class PlatformBridge {
   }
 
   public static applyDualModeShell(): void {
-    if (this.isEmbeddedMode()) {
-      document.body.classList.add('embed-fullscreen-mode');
-    }
+    document.documentElement.classList.remove('yt-embed-mode');
+    document.body?.classList.remove('embed-fullscreen-mode');
   }
 
   public static async initPlatform(): Promise<void> {

@@ -389,27 +389,11 @@
         box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
       }
     </style>
-                                      <style id="shared-arcade-shell-css">
+                                              <style id="shared-arcade-shell-css">
 /* ==========================================================================
-   SHARED ARCADE 3-COLUMN SHELL & DUAL-MODE VIEWPORT CSS
-   Single Source of Truth across all HTML5 3D Arcade Games
+   SHARED ARCADE 3-COLUMN SHELL CSS (LEFT NAV + CENTER STAGE + RIGHT AD RAIL)
+   Single Source of Truth across all HTML5 3D Arcade Games (Zero Fullscreen Mode)
    ========================================================================== */
-
-body.embed-fullscreen-mode .shell-sidebar-left,
-body.embed-fullscreen-mode .shell-sidebar-right,
-body.embed-fullscreen-mode .fullscreen-ad-banner,
-html.yt-embed-mode .shell-sidebar-left,
-html.yt-embed-mode .shell-sidebar-right,
-html.yt-embed-mode .fullscreen-ad-banner {
-  display: none !important;
-}
-
-body.embed-fullscreen-mode .shell-stage,
-html.yt-embed-mode .shell-stage {
-  width: 100vw !important;
-  height: 100vh !important;
-  height: 100dvh !important;
-}
 
 /* Automatic Disabled State When Ads Are Unavailable (Offline / AdBlocker / No Inventory) */
 body.ads-unavailable .booster-btn,
@@ -427,8 +411,9 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   display: none !important;
 }
 
+#arcade-shell,
 .arcade-shell {
-  display: flex;
+  display: flex !important;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
@@ -438,13 +423,13 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   position: relative;
 }
 
-/* Left Sidebar Navigation */
+/* Left Sidebar Navigation — Always Visible */
 .shell-sidebar-left {
   width: 260px;
   min-width: 260px;
   background: rgba(13, 16, 28, 0.96);
   border-right: 1px solid rgba(56, 189, 248, 0.2);
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   padding: 18px 14px;
   gap: 16px;
@@ -516,6 +501,14 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   font-size: 15px;
 }
 
+/* Explicitly hide any legacy fullscreen button or banner */
+#shell-fullscreen-btn,
+.shell-btn-fullscreen,
+#fullscreen-ad-banner,
+.fullscreen-ad-banner {
+  display: none !important;
+}
+
 .shell-other-games {
   margin-top: auto;
   display: flex;
@@ -536,7 +529,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 260px;
+  max-height: 320px;
   overflow-y: auto;
 }
 
@@ -618,61 +611,13 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   z-index: 20;
 }
 
-/* Fullscreen Sticky Banner */
-.fullscreen-ad-banner {
-  display: none;
-}
-
-:fullscreen .fullscreen-ad-banner,
-.arcade-shell:fullscreen .fullscreen-ad-banner {
-  display: flex !important;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 54px;
-  background: rgba(11, 17, 32, 0.95);
-  border-top: 1px solid rgba(56, 189, 248, 0.4);
-  z-index: 999;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(8px);
-}
-
-:fullscreen .game-canvas-container {
-  bottom: 54px;
-}
-
-.fullscreen-ad-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ad-tag {
-  background: #f59e0b;
-  color: #000;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 3px 6px;
-  border-radius: 4px;
-  letter-spacing: 1px;
-}
-
-.ad-placeholder-text {
-  font-size: 12px;
-  font-weight: 600;
-  color: #94a3b8;
-  letter-spacing: 1px;
-}
-
-/* Right Ad Rail */
+/* Right Ad Rail — Always Visible on Desktop */
 .shell-sidebar-right {
   width: 320px;
   min-width: 320px;
   background: rgba(13, 16, 28, 0.96);
   border-left: 1px solid rgba(56, 189, 248, 0.2);
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -756,14 +701,15 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
 }
 
-/* Responsive Collapse */
+/* Responsive Layout for Narrow Screens */
 @media (max-width: 1024px) {
   .shell-sidebar-right {
-    display: none;
+    display: none !important;
   }
 }
 
 @media (max-width: 768px) {
+  #arcade-shell,
   .arcade-shell {
     flex-direction: column;
   }
@@ -795,7 +741,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   </head>
   <body>
     <div id="arcade-shell" class="arcade-shell">
-      <!-- Left Navigation Rail -->
+            <!-- Left Navigation Rail -->
       <aside class="shell-sidebar shell-sidebar-left">
         <div class="shell-brand">
           <a href="../" class="shell-brand-link">
@@ -810,9 +756,6 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
           </a>
           <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
             <span class="btn-icon">🔄</span> Yeniden Başlat
-          </button>
-          <button id="shell-fullscreen-btn" class="shell-btn shell-btn-fullscreen" type="button">
-            <span class="btn-icon">⛶</span> Tam Ekran
           </button>
         </nav>
 
@@ -875,17 +818,9 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
             </button>
           </div>
         </div>
-      
-        <!-- Sticky banner displayed during Fullscreen mode -->
-        <div id="fullscreen-ad-banner" class="fullscreen-ad-banner" aria-label="Sponsor Banner">
-          <div class="fullscreen-ad-content">
-            <span class="ad-tag">SPONSOR</span>
-            <span class="ad-placeholder-text">HTML5 3D ARCADE // 60 FPS WEBGL EXPERIENCE</span>
-          </div>
-        </div>
       </main>
 
-      <!-- Right Advertising Rail -->
+            <!-- Right Advertising Rail -->
       <aside class="shell-sidebar shell-sidebar-right">
         <div class="ad-rail-wrapper">
           <span class="ad-header-tag">SPONSOR // REKLAM</span>

@@ -1,8 +1,9 @@
 /**
- * Standardized Dual-Mode Arcade Shell Controller (Single Source of Truth across all Arcade 3D games).
- * - Automatically collapses sidebars in embedded portals (YouTube Playables, Yandex, CrazyGames, Poki, ?embed=1).
- * - Observes #app with ResizeObserver so canvas & camera aspect ratio never stretch when sidebars toggle.
- * - Wires #shell-restart-btn, #shell-fullscreen-btn, arcade:restart custom event, and ../games.json cross-discovery.
+ * Standardized 3-Column Arcade Shell Controller (Single Source of Truth across all Arcade 3D games).
+ * - Permanently preserves the 3-column layout (Left Navigation Sidebar + Center 3D Stage + Right Ad Rail).
+ * - Zero fullscreen mode or sidebar hiding.
+ * - Observes #app with ResizeObserver so canvas & camera aspect ratio never stretch.
+ * - Wires #shell-restart-btn, arcade:restart custom event, and ../games.json cross-discovery.
  */
 
 export interface ShellControllerOptions {
@@ -14,33 +15,22 @@ export interface ShellControllerOptions {
 export type ShellOptions = ShellControllerOptions;
 
 export function applyDualModeShell(): boolean {
-  if (typeof window === 'undefined' || typeof document === 'undefined') return false;
-  const w = window as any;
-  const isEmbedded = Boolean(
-    w.ytgame?.IN_PLAYABLES_ENV ||
-      w.YaGames ||
-      w.CrazyGames?.SDK ||
-      w.PokiSDK ||
-      new URLSearchParams(window.location.search).get('embed') === '1'
-  );
-  if (isEmbedded) {
-    document.documentElement.classList.add('yt-embed-mode');
-    document.body?.classList.add('embed-fullscreen-mode');
+  if (typeof document !== 'undefined') {
+    document.documentElement.classList.remove('yt-embed-mode');
+    document.body?.classList.remove('embed-fullscreen-mode');
   }
-  return isEmbedded;
+  return false;
 }
 
 export class ShellController {
   private readonly options: ShellControllerOptions;
   private readonly restartBtn: HTMLElement | null;
-  private readonly fullscreenBtn: HTMLElement | null;
   private readonly otherGamesList: HTMLElement | null;
   private resizeObserver: ResizeObserver | null = null;
   private lastRestartTimestamp = 0;
   private lastObservedWidth = 0;
   private lastObservedHeight = 0;
 
-  private readonly onFullscreenChangeBound = () => this.handleFullscreenChange();
   private readonly onArcadeRestartBound = () => this.triggerRestart();
 
   constructor(options: ShellControllerOptions) {
@@ -48,8 +38,11 @@ export class ShellController {
     applyDualModeShell();
 
     this.restartBtn = document.getElementById('shell-restart-btn');
-    this.fullscreenBtn = document.getElementById('shell-fullscreen-btn');
     this.otherGamesList = document.getElementById('shell-other-games-list');
+
+    // Remove any legacy fullscreen button or banner if present in DOM
+    document.getElementById('shell-fullscreen-btn')?.remove();
+    document.getElementById('fullscreen-ad-banner')?.remove();
 
     this.init();
   }
@@ -61,11 +54,6 @@ export class ShellController {
       this.restartBtn.addEventListener('click', () => {
         window.dispatchEvent(new CustomEvent('arcade:restart'));
       });
-    }
-
-    if (this.fullscreenBtn) {
-      this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
-      document.addEventListener('fullscreenchange', this.onFullscreenChangeBound);
     }
 
     this.setupResizeObserver();
@@ -101,32 +89,8 @@ export class ShellController {
     this.resizeObserver.observe(appEl);
   }
 
-  private toggleFullscreen(): void {
-    const shell = document.getElementById('arcade-shell') || document.documentElement;
-    if (!document.fullscreenElement) {
-      shell.requestFullscreen?.().catch(() => {});
-    } else {
-      document.exitFullscreen?.().catch(() => {});
-    }
-  }
-
-  private handleFullscreenChange(): void {
-    if (!this.fullscreenBtn) return;
-    if (document.fullscreenElement) {
-      this.fullscreenBtn.innerHTML = '<span class="btn-icon">⛷</span> Tam Ekrandan Çık';
-    } else {
-      this.fullscreenBtn.innerHTML = '<span class="btn-icon">⛶</span> Tam Ekran';
-    }
-  }
-
   private async loadOtherGames(): Promise<void> {
     if (!this.otherGamesList) return;
-    if (
-      document.body.classList.contains('embed-fullscreen-mode') ||
-      document.documentElement.classList.contains('yt-embed-mode')
-    ) {
-      return;
-    }
 
     try {
       const res = await fetch('../games.json');
@@ -154,7 +118,6 @@ export class ShellController {
 
   public dispose(): void {
     window.removeEventListener('arcade:restart', this.onArcadeRestartBound);
-    document.removeEventListener('fullscreenchange', this.onFullscreenChangeBound);
     this.resizeObserver?.disconnect();
   }
 }
