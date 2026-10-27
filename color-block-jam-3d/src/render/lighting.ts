@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 export class LightingSetup {
   public static setup(scene: THREE.Scene): {
@@ -6,6 +7,7 @@ export class LightingSetup {
     dirLight: THREE.DirectionalLight;
     rimLight: THREE.DirectionalLight;
   } {
+    VisualEnhancer.enhanceScene(scene);
     // 1. Hemisphere Light (Soft Sky Blue + Warm Biscuit Ground Bounce)
     // Warm ground bounce ensures shadowed faces stay bright and warm without blowout
     const hemiLight = new THREE.HemisphereLight(0xdbeefd, 0xf5e6ca, 0.92);

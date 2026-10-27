@@ -115,6 +115,7 @@ A task is complete only when:
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |
 | `skills/shared-ui-ads-sync` | skill | Synchronizes shared 3-column Arcade Shell (`shared/ui/`) and `UniversalAdProvider` (`shared/platform/ads.ts`) across all games via `scripts/sync-shared-core.mjs` |
+| `skills/visual-polish-3d` | skill | Applies zero-asset 60 FPS Three.js visual polish (`RoomEnvironment` IBL, `RoundedBoxGeometry` bevels, Fresnel rim-light shader, contact shadows, sky dome) via `shared/render/visual-enhancer.ts` |
 | `skills/games-portal-catalog` | skill | Central arcade portal index management |
 | `skills/zip` | slash_command | `/zip` — Multi-platform ZIP packaging (Yandex, CrazyGames, YouTube, Poki) |
 | `skills/audit` | slash_command | `/audit` — Typecheck, build, 60 FPS, and defensive gameplay audit |

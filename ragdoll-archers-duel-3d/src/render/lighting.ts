@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 export class DaylightLighting {
   public readonly sunLight: THREE.DirectionalLight;
@@ -6,6 +7,7 @@ export class DaylightLighting {
   private readonly clouds: THREE.Group[] = [];
 
   constructor(scene: THREE.Scene) {
+    VisualEnhancer.enhanceScene(scene);
     // Stylized Toony Soft Daylight Art Direction (32-daylight-and-lighting)
     scene.background = new THREE.Color(0xcfe8f7);
     scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);

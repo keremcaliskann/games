@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 export function setupCyberLighting(scene: THREE.Scene): THREE.DirectionalLight {
+    VisualEnhancer.enhanceScene(scene);
   // Horizon blending fog matching daylight sky
   scene.fog = new THREE.FogExp2(0xcfe8f7, 0.012);
 

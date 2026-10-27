@@ -17,6 +17,7 @@ const catalog = JSON.parse(fs.readFileSync(path.join(rootDir, 'games.json'), 'ut
 const sharedAdsContent = fs.readFileSync(path.join(rootDir, 'shared/platform/ads.ts'), 'utf8');
 const sharedShellContent = fs.readFileSync(path.join(rootDir, 'shared/ui/shell-controller.ts'), 'utf8');
 const sharedCssContent = fs.readFileSync(path.join(rootDir, 'shared/ui/arcade-shell.css'), 'utf8');
+const sharedVisualContent = fs.readFileSync(path.join(rootDir, 'shared/render/visual-enhancer.ts'), 'utf8');
 
 function buildLeftSidebarHtml() {
   return `      <!-- Left Navigation Rail -->
@@ -132,6 +133,23 @@ function syncGameSdk(sdkText) {
   );
 }
 
+function syncGameLighting(lightingText) {
+  let updated = lightingText;
+  if (!updated.includes("from './visual-enhancer'")) {
+    updated = updated.replace(
+      /import \* as THREE from 'three';/,
+      `import * as THREE from 'three';\nimport { VisualEnhancer } from './visual-enhancer';`
+    );
+  }
+  if (!updated.includes('VisualEnhancer.enhanceScene(scene)')) {
+    updated = updated.replace(
+      /(constructor\(scene:\s*THREE\.Scene\)\s*\{|setup\(scene:\s*THREE\.Scene\):\s*(?:void|\{[\s\S]*?\})\s*\{|setupCyberLighting\(scene:\s*THREE\.Scene\):\s*THREE\.DirectionalLight\s*\{)/,
+      `$1\n    VisualEnhancer.enhanceScene(scene);`
+    );
+  }
+  return updated;
+}
+
 const report = [];
 
 for (const gameMeta of catalog) {
@@ -141,14 +159,26 @@ for (const gameMeta of catalog) {
 
   const adsPath = path.join(gameDir, 'src/platform/ads.ts');
   const shellPath = path.join(gameDir, 'src/ui/shell-controller.ts');
+  const visualPath = path.join(gameDir, 'src/render/visual-enhancer.ts');
+  const lightingPath = path.join(gameDir, 'src/render/lighting.ts');
   const sdkPath = path.join(gameDir, 'src/platform/sdk.ts');
   const htmlPath = path.join(gameDir, 'index.html');
 
   if (!checkOnly) {
     fs.mkdirSync(path.dirname(adsPath), { recursive: true });
     fs.mkdirSync(path.dirname(shellPath), { recursive: true });
+    fs.mkdirSync(path.dirname(visualPath), { recursive: true });
     fs.writeFileSync(adsPath, sharedAdsContent, 'utf8');
     fs.writeFileSync(shellPath, sharedShellContent, 'utf8');
+    fs.writeFileSync(visualPath, sharedVisualContent, 'utf8');
+
+    if (fs.existsSync(lightingPath)) {
+      const currentLighting = fs.readFileSync(lightingPath, 'utf8');
+      const nextLighting = syncGameLighting(currentLighting);
+      if (nextLighting !== currentLighting) {
+        fs.writeFileSync(lightingPath, nextLighting, 'utf8');
+      }
+    }
 
     if (fs.existsSync(sdkPath)) {
       const currentSdk = fs.readFileSync(sdkPath, 'utf8');
@@ -170,11 +200,14 @@ for (const gameMeta of catalog) {
   // Verify compliance after sync
   const finalAds = fs.existsSync(adsPath) ? fs.readFileSync(adsPath, 'utf8') : '';
   const finalShell = fs.existsSync(shellPath) ? fs.readFileSync(shellPath, 'utf8') : '';
+  const finalVisual = fs.existsSync(visualPath) ? fs.readFileSync(visualPath, 'utf8') : '';
+  const finalLighting = fs.existsSync(lightingPath) ? fs.readFileSync(lightingPath, 'utf8') : '';
   const finalHtml = fs.existsSync(htmlPath) ? fs.readFileSync(htmlPath, 'utf8') : '';
   const finalSdk = fs.existsSync(sdkPath) ? fs.readFileSync(sdkPath, 'utf8') : '';
 
   const adsSynced = finalAds === sharedAdsContent;
   const shellSynced = finalShell === sharedShellContent;
+  const visualSynced = finalVisual === sharedVisualContent && finalLighting.includes('VisualEnhancer.enhanceScene(scene)');
   const hasShellDom =
     finalHtml.includes('id="arcade-shell"') &&
     finalHtml.includes('class="shell-sidebar shell-sidebar-left"') &&
@@ -192,6 +225,7 @@ for (const gameMeta of catalog) {
     game: g,
     ads: adsSynced ? 'SYNCED' : 'DRIFT',
     shellCtrl: shellSynced ? 'SYNCED' : 'DRIFT',
+    visualIBL: visualSynced ? 'SYNCED' : 'DRIFT',
     shellDom: hasShellDom ? 'OK' : 'MISSING',
     ytSdk: hasYtSdk ? 'OK' : 'MISSING',
     icon: hasIcon ? 'OK' : 'MISSING',
@@ -201,7 +235,7 @@ for (const gameMeta of catalog) {
 console.table(report);
 
 const failed = report.filter(
-  (r) => r.ads !== 'SYNCED' || r.shellCtrl !== 'SYNCED' || r.shellDom !== 'OK' || r.ytSdk !== 'OK' || r.icon !== 'OK'
+  (r) => r.ads !== 'SYNCED' || r.shellCtrl !== 'SYNCED' || r.visualIBL !== 'SYNCED' || r.shellDom !== 'OK' || r.ytSdk !== 'OK' || r.icon !== 'OK'
 );
 
 if (failed.length > 0) {

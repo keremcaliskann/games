@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 /**
  * High contrast cyber/neon lighting setup.
@@ -6,6 +7,7 @@ import * as THREE from 'three';
  */
 export class LightingSetup {
   public static setup(scene: THREE.Scene): void {
+    VisualEnhancer.enhanceScene(scene);
     // 1. Hemisphere Light (Soft Sky Blue + Warm Biscuit Ground Bounce)
     const hemiLight = new THREE.HemisphereLight(0xdbeefd, 0xf5e6ca, 0.9);
     hemiLight.position.set(0, 30, 0);

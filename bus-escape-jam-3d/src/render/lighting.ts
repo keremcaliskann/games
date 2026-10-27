@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 export class LightingSetup {
   public readonly sunLight: THREE.DirectionalLight;
@@ -6,6 +7,7 @@ export class LightingSetup {
   public readonly rimLight: THREE.DirectionalLight;
 
   constructor(scene: THREE.Scene) {
+    VisualEnhancer.enhanceScene(scene);
     // 1. Soft Daylight Hemisphere Ambient
     this.hemiLight = new THREE.HemisphereLight(0xcfe8f7, 0xfcf8ee, 0.75);
     scene.add(this.hemiLight);

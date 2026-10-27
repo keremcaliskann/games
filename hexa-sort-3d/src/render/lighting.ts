@@ -1,8 +1,10 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 import { GAME_CONFIG } from '../game/config/game-config';
 
 export class LightingSetup {
   public static setup(scene: THREE.Scene): void {
+    VisualEnhancer.enhanceScene(scene);
     // 1. Hemisphere Light: Soft Sky Blue top + Warm Biscuit ground bounce (Rule 32)
     const hemiLight = new THREE.HemisphereLight(
       GAME_CONFIG.daylight.skyColor,

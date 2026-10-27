@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { VisualEnhancer } from './visual-enhancer';
 
 export class LightingSetup {
   public readonly hemisphere: THREE.HemisphereLight;
@@ -6,6 +7,7 @@ export class LightingSetup {
   public readonly fillLight: THREE.DirectionalLight;
 
   constructor(scene: THREE.Scene) {
+    VisualEnhancer.enhanceScene(scene);
     // Stylized Soft Daylight Palette (32-daylight-and-lighting.md)
     scene.background = new THREE.Color(0xcfe8f7);
     scene.fog = new THREE.FogExp2(0xcfe8f7, 0.008);
