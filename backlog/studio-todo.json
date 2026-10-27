@@ -1,5 +1,51 @@
 [
   {
+    "id": "ragdoll-archers-duel-3d-arrow-clash-and-headshot-callouts",
+    "gameId": "ragdoll-archers-duel-3d",
+    "priority": "P1",
+    "priorityScore": 95,
+    "status": "ready",
+    "type": "mechanic",
+    "title": "Add Mid-Air Arrow-vs-Arrow Clash Deflection & Floating Headshot Callouts",
+    "description": "Detect mid-air collisions between player and enemy arrows in duel-manager.ts to trigger a metallic clang, spark burst, and +15 bonus coins, and display floating 'HEADSHOT! 3x' / '+40 HP' callout badges on hits.",
+    "targetFiles": [
+      "ragdoll-archers-duel-3d/src/game/systems/duel-manager.ts",
+      "ragdoll-archers-duel-3d/src/ui/hud.ts",
+      "ragdoll-archers-duel-3d/src/core/audio.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
+    "id": "hole-city-io-3d-and-conveyor-hotpath-zero-alloc",
+    "gameId": "hole-city-io-3d",
+    "priority": "P1",
+    "priorityScore": 92,
+    "status": "ready",
+    "type": "performance",
+    "title": "Eliminate Update-Triggered Array Spread & Vector3 Allocations in BotAI & FactoryManager",
+    "description": "Replace [...this.bots.filter()] and new THREE.Vector3() in hole-city-io-3d/src/game/systems/bot-ai.ts makeDecision() and new THREE.Vector3(0, 0.7, 0) in conveyor-marble-sort-3d/src/game/systems/factory-manager.ts update(dt) with reusable module scratch instances.",
+    "targetFiles": [
+      "hole-city-io-3d/src/game/systems/bot-ai.ts",
+      "conveyor-marble-sort-3d/src/game/systems/factory-manager.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
+    "id": "ragdoll-archers-duel-3d-wind-streamers-and-pinned-arrows",
+    "gameId": "ragdoll-archers-duel-3d",
+    "priority": "P2",
+    "priorityScore": 86,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Add 3D Canyon Wind Streamer Ribbons & Pinned Hit Arrow Visuals",
+    "description": "Render drifting 3D wind streamer trails across the canyon whose velocity scales with windX, and visually pin impacting arrows onto enemy archer shields and torsos.",
+    "targetFiles": [
+      "ragdoll-archers-duel-3d/src/render/lighting.ts",
+      "ragdoll-archers-duel-3d/src/game/entities/archer.ts"
+    ],
+    "createdAt": "2026-10-27"
+  },
+  {
     "id": "bus-escape-jam-3d-tunnel-spawner-and-vip-gold",
     "gameId": "bus-escape-jam-3d",
     "priority": "P1",
