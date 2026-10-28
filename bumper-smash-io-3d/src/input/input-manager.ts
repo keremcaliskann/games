@@ -16,8 +16,19 @@ export class InputManager {
   private startX = 0;
   private startY = 0;
   private readonly keys = new Set<string>();
+  private readonly joyBase: HTMLDivElement;
+  private readonly joyKnob: HTMLDivElement;
 
   constructor(private readonly stageEl: HTMLElement) {
+    this.joyBase = document.createElement('div');
+    this.joyBase.style.cssText =
+      'position:absolute;width:86px;height:86px;margin-left:-43px;margin-top:-43px;border-radius:50%;border:3px solid rgba(255,255,255,0.65);background:rgba(15,23,42,0.26);pointer-events:none;display:none;z-index:25;';
+    this.joyKnob = document.createElement('div');
+    this.joyKnob.style.cssText =
+      'position:absolute;left:50%;top:50%;width:36px;height:36px;margin-left:-18px;margin-top:-18px;border-radius:50%;background:rgba(249,115,22,0.95);box-shadow:0 4px 10px rgba(0,0,0,0.3);';
+    this.joyBase.appendChild(this.joyKnob);
+    this.stageEl.appendChild(this.joyBase);
+
     this.bindEvents();
   }
 
@@ -28,6 +39,7 @@ export class InputManager {
       this.steer.active = false;
       this.steer.dx = 0;
       this.steer.dz = 0;
+      this.joyBase.style.display = 'none';
     }
   }
 
@@ -35,15 +47,20 @@ export class InputManager {
     this.stageEl.addEventListener('pointerdown', (e: PointerEvent) => {
       if (!this.enabled) return;
       const target = e.target as HTMLElement | null;
-      if (target && target.closest('[data-hud-interactive="true"]')) return;
+      if (target && target.closest('[data-hud-interactive="true"], button, .modal-overlay')) return;
 
       this.pointerId = e.pointerId;
       this.startX = e.clientX;
       this.startY = e.clientY;
       this.steer.active = true;
 
-      // Also steer immediately toward tap offset relative to stage center
       const rect = this.stageEl.getBoundingClientRect();
+      this.joyBase.style.display = 'block';
+      this.joyBase.style.left = `${this.startX - rect.left}px`;
+      this.joyBase.style.top = `${this.startY - rect.top}px`;
+      this.joyKnob.style.transform = 'translate(0px, 0px)';
+
+      // Also steer immediately toward tap offset relative to stage center
       const cx = rect.left + rect.width * 0.5;
       const cy = rect.top + rect.height * 0.55;
       const ox = e.clientX - cx;
@@ -60,20 +77,26 @@ export class InputManager {
       const dx = e.clientX - this.startX;
       const dy = e.clientY - this.startY;
       const dist = Math.hypot(dx, dy);
-      if (dist > 6) {
+      const maxRadius = 46;
+      if (dist > 4) {
         this.steer.dx = dx / dist;
         this.steer.dz = dy / dist;
-        // Softly pull anchor so virtual thumbstick follows finger smoothly
-        if (dist > 54) {
-          this.startX += (dx / dist) * (dist - 54);
-          this.startY += (dy / dist) * (dist - 54);
+        if (dist > maxRadius) {
+          this.startX += (dx / dist) * (dist - maxRadius);
+          this.startY += (dy / dist) * (dist - maxRadius);
+          const rect = this.stageEl.getBoundingClientRect();
+          this.joyBase.style.left = `${this.startX - rect.left}px`;
+          this.joyBase.style.top = `${this.startY - rect.top}px`;
         }
+        const knobDist = Math.min(dist, maxRadius);
+        this.joyKnob.style.transform = `translate(${(dx / dist) * knobDist}px, ${(dy / dist) * knobDist}px)`;
       }
     });
 
     const releasePointer = (e: PointerEvent): void => {
       if (this.pointerId !== e.pointerId) return;
       this.pointerId = null;
+      this.joyBase.style.display = 'none';
       this.updateKeyboardFallback();
     };
 

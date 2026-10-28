@@ -98,17 +98,17 @@ export class InputManager {
   private onPointerMove(e: PointerEvent): void {
     if (!this.isPointerDown) return;
 
-    if (this.activeBlock && !this.isSwiped) {
+    if (this.activeBlock) {
       const deltaX = e.clientX - this.startScreenX;
       const deltaY = e.clientY - this.startScreenY;
       const dist = Math.hypot(deltaX, deltaY);
 
-      // 20px threshold for responsive swipe detection
-      if (dist >= 20) {
+      // 12px threshold with continuous multi-step drag support
+      if (dist >= 12) {
         this.isSwiped = true;
+        this.startScreenX = e.clientX;
+        this.startScreenY = e.clientY;
 
-        // Camera-relative swipe projection:
-        // Reads camera orientation on the ground XZ plane so screen swipes match player view
         this.camera.updateMatrixWorld();
         const m = this.camera.matrixWorld.elements;
         const camRightX = m[0];
@@ -116,16 +116,10 @@ export class InputManager {
         const camForwardX = -m[8];
         const camForwardZ = -m[10];
 
-        // Screen coordinates: +deltaX is Screen Right, -deltaY is Screen Up (forward into scene)
         const screenUp = -deltaY;
         const worldVecX = deltaX * camRightX + screenUp * camForwardX;
         const worldVecZ = deltaX * camRightZ + screenUp * camForwardZ;
 
-        // Project world vector onto cardinal grid axes:
-        // Grid +X is World +X (1, 0)
-        // Grid -X is World -X (-1, 0)
-        // Grid +Y is World +Z (0, 1)
-        // Grid -Y is World -Z (0, -1)
         let dirX = 0;
         let dirY = 0;
 
@@ -138,9 +132,11 @@ export class InputManager {
         }
 
         const block = this.activeBlock;
-        block.setGrabbed(false);
-        this.activeBlock = null;
         this.callbacks.onBlockSwipe(block, dirX, dirY);
+        if (block.state !== 'idle') {
+          block.setGrabbed(false);
+          this.activeBlock = null;
+        }
       }
     } else if (!this.activeBlock) {
       // Free drag on empty space / board: rotate camera smoothly around 3D stage

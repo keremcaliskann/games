@@ -12,7 +12,12 @@ export interface InputCallbacks {
 export class InputManager {
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointer = new THREE.Vector2();
+  private readonly dragPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -0.6);
+  private readonly dragPoint = new THREE.Vector3();
   private selectedItem: GoodsItem | null = null;
+  private isDraggingItem = false;
+  private downClientX = 0;
+  private downClientY = 0;
 
   constructor(
     private readonly container: HTMLElement,
@@ -40,10 +45,16 @@ export class InputManager {
       }
 
       const rect = this.container.getBoundingClientRect();
+      this.downClientX = e.clientX;
+      this.downClientY = e.clientY;
+      this.isDraggingItem = false;
       this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       this.handleTap();
+      if (this.selectedItem) {
+        this.isDraggingItem = true;
+      }
     });
 
     window.addEventListener('pointermove', (e) => {
@@ -52,6 +63,65 @@ export class InputManager {
       const px = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const py = ((e.clientY - rect.top) / rect.height) * 2 - 1;
       this.callbacks.onParallax(px, py);
+
+      if (this.isDraggingItem && this.selectedItem) {
+        const dist = Math.hypot(e.clientX - this.downClientX, e.clientY - this.downClientY);
+        if (dist > 14) {
+          this.pointer.x = px;
+          this.pointer.y = -py;
+          this.raycaster.setFromCamera(this.pointer, this.camera);
+          if (this.raycaster.ray.intersectPlane(this.dragPlane, this.dragPoint)) {
+            this.selectedItem.mesh.position.set(this.dragPoint.x, this.dragPoint.y, 0.85);
+          }
+        }
+      }
+    });
+
+    window.addEventListener('pointerup', (e) => {
+      if (!this.isDraggingItem || !this.selectedItem) {
+        this.isDraggingItem = false;
+        return;
+      }
+      this.isDraggingItem = false;
+      const dist = Math.hypot(e.clientX - this.downClientX, e.clientY - this.downClientY);
+      if (dist <= 14) return; // Short tap: keep selectedItem active for Tap-to-Place
+
+      const rect = this.container.getBoundingClientRect();
+      this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      this.raycaster.setFromCamera(this.pointer, this.camera);
+
+      if (this.raycaster.ray.intersectPlane(this.dragPlane, this.dragPoint)) {
+        const comp = this.calculateCompartmentFromPoint(this.dragPoint);
+        if (
+          comp &&
+          (comp.isVip ||
+            comp.tier !== this.selectedItem.tier ||
+            comp.col !== this.selectedItem.col)
+        ) {
+          const prevItem = this.selectedItem;
+          this.tryMoveSelectedItem(comp.tier, comp.col, comp.isVip);
+          if (this.selectedItem === prevItem) {
+            // Compartment was full: snap back to original slot
+            const origPos = this.cabinet.getSlotPos(
+              prevItem.tier,
+              prevItem.col,
+              prevItem.slotIndex,
+              prevItem.isVip
+            );
+            prevItem.moveTo(origPos);
+          }
+          return;
+        }
+      }
+      // Dropped outside or same compartment: snap back cleanly
+      const origPos = this.cabinet.getSlotPos(
+        this.selectedItem.tier,
+        this.selectedItem.col,
+        this.selectedItem.slotIndex,
+        this.selectedItem.isVip
+      );
+      this.selectedItem.moveTo(origPos);
     });
   }
 

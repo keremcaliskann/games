@@ -132,7 +132,7 @@ export class GameApp {
       this.busManager.handleTapBus(bus);
     });
 
-    this.appEl.addEventListener('pointerup', () => {
+    this.appEl.addEventListener('pointerdown', () => {
       this.input.checkBusRaycast(this.busManager.buses);
     });
 

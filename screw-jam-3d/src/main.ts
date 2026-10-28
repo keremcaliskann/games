@@ -262,7 +262,25 @@ class ScrewJamApp {
     }
 
     const hits = raycaster.intersectObjects(meshes, false);
-    if (hits.length === 0) return;
+    if (hits.length === 0) {
+      // Magnetic Tap Assist: if ray missed tiny screw head, pick closest idle screw within 0.52m of ray
+      let bestScrew: Screw | null = null;
+      let bestDistSq = 0.52 * 0.52;
+      for (let i = 0; i < this.screws.length; i++) {
+        const s = this.screws[i];
+        if (s.state !== 'idle') continue;
+        s.headMesh.getWorldPosition(_ORIGIN);
+        const dSq = raycaster.ray.distanceSqToPoint(_ORIGIN);
+        if (dSq < bestDistSq) {
+          bestDistSq = dSq;
+          bestScrew = s;
+        }
+      }
+      if (bestScrew) {
+        this.processScrewUnbolt(bestScrew);
+      }
+      return;
+    }
 
     const firstHit = hits[0].object as THREE.Mesh;
     const hitPlate = firstHit.userData?.plate as Plate | undefined;

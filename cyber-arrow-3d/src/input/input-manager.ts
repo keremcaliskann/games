@@ -21,7 +21,7 @@ export class InputManager {
   private lastY = 0;
   private totalDragDistance = 0;
 
-  private readonly dragThreshold = 8; // Pixels
+  private readonly dragThreshold = 18; // Generous 18px mobile tap tolerance
   private onTap: TapCallback | null = null;
   private onDrag: DragCallback | null = null;
 

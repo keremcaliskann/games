@@ -34,9 +34,12 @@ export class KeyboardPointerSource implements InputSource {
   };
 
   private readonly onPointerDown = (e: PointerEvent): void => {
-    // Ignore clicks on interactive HUD buttons so pause button doesn't also trigger flap
+    // Ignore clicks on interactive HUD buttons or shell sidebars
     const target = e.target as HTMLElement | null;
-    if (target && target.closest('[data-hud-interactive="true"]')) {
+    if (
+      target &&
+      target.closest('[data-hud-interactive="true"], button, a, .shell-sidebar, .modal-overlay')
+    ) {
       return;
     }
     const mask = Action.Flap | Action.Confirm;

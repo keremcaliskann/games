@@ -192,10 +192,27 @@ class GameApp {
     const targets = this.grid.getRaycastTargets();
     const hits = raycaster.intersectObjects(targets, false);
 
+    let selectedBlock: ArrowBlock | undefined;
     if (hits.length > 0) {
-      const hitObj = hits[0].object;
-      const block = hitObj.userData.block as ArrowBlock | undefined;
-      if (!block || block.state !== 'IDLE') return;
+      selectedBlock = hits[0].object.userData.block as ArrowBlock | undefined;
+    } else {
+      // Magnetic Tap Assist: pick closest idle block within 0.68m of ray
+      let bestDistSq = 0.68 * 0.68;
+      for (let i = 0; i < targets.length; i++) {
+        const t = targets[i];
+        const candidate = t.userData.block as ArrowBlock | undefined;
+        if (!candidate || candidate.state !== 'IDLE') continue;
+        t.getWorldPosition(_ORIGIN);
+        const dSq = raycaster.ray.distanceSqToPoint(_ORIGIN);
+        if (dSq < bestDistSq) {
+          bestDistSq = dSq;
+          selectedBlock = candidate;
+        }
+      }
+    }
+
+    if (selectedBlock && selectedBlock.state === 'IDLE') {
+      const block = selectedBlock;
 
       if (this.isHammerActive) {
         this.isHammerActive = false;

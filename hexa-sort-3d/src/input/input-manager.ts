@@ -20,12 +20,15 @@ export class InputManager {
   private readonly groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
   private readonly planeIntersect = new THREE.Vector3();
 
-  // Active Drag State
+  // Active Drag / Tap-to-Place State
   private isPointerDown = false;
   private isOrbiting = false;
+  private startPointerX = 0;
+  private startPointerY = 0;
   private lastPointerX = 0;
   private lastPointerY = 0;
   private draggedStack: TileStack | null = null;
+  private selectedTraySlot: TraySlot | null = null;
   private originSlot: TraySlot | null = null;
   private originCell: HexCell | null = null;
   private hoveredCell: HexCell | null = null;
@@ -89,6 +92,8 @@ export class InputManager {
 
     this.isPointerDown = true;
     this.isOrbiting = false;
+    this.startPointerX = e.clientX;
+    this.startPointerY = e.clientY;
     this.lastPointerX = e.clientX;
     this.lastPointerY = e.clientY;
     this.updatePointer(e.clientX, e.clientY);
@@ -99,7 +104,7 @@ export class InputManager {
 
       // 1. Hammer Mode: tap cell to smash stack
       if (this.mode === 'hammer') {
-        const target = this.grid.findSnapTarget(hitX, hitZ, 1.2);
+        const target = this.grid.findSnapTarget(hitX, hitZ, 1.65);
         if (target && !target.stack.isEmpty()) {
           this.mode = 'normal';
           this.onModeResetCallback();
@@ -110,7 +115,7 @@ export class InputManager {
 
       // 2. Move Stack Mode: tap cell to pick up stack into a temporary carrier stack
       if (this.mode === 'move_stack') {
-        const target = this.grid.findSnapTarget(hitX, hitZ, 1.2);
+        const target = this.grid.findSnapTarget(hitX, hitZ, 1.65);
         if (target && !target.stack.isEmpty()) {
           this.mode = 'normal';
           this.onModeResetCallback();
@@ -132,15 +137,46 @@ export class InputManager {
         return;
       }
 
-      // 3. Normal Tray Stack Drag
-      const hitSlot = this.tray.findHoveredSlot(hitX, hitZ, 1.3);
+      // 2.5 If a tray slot was already selected by Tap-to-Select, tapping a valid board cell places it immediately!
+      if (this.selectedTraySlot && this.selectedTraySlot.stack) {
+        const targetCell = this.grid.findSnapTarget(hitX, hitZ, 1.65);
+        if (targetCell) {
+          const canPlace =
+            targetCell.stack.isEmpty() ||
+            targetCell.stack.getTopColor()?.id === this.selectedTraySlot.stack.getTopColor()?.id;
+          if (canPlace) {
+            const stackToMove = this.selectedTraySlot.stack;
+            this.selectedTraySlot.stack = null;
+            this.selectedTraySlot = null;
+            while (!stackToMove.isEmpty()) {
+              const item = stackToMove.tiles.shift()!;
+              stackToMove.group.remove(item.mesh);
+              targetCell.stack.pushTile(item.color, item.mesh);
+            }
+            stackToMove.clear();
+            stackToMove.group.parent?.remove(stackToMove.group);
+            this.grid.clearHighlights();
+            this.audio.playPlace();
+            this.onStackPlacedCallback(targetCell);
+            this.isPointerDown = false;
+            return;
+          }
+        }
+      }
+
+      // 3. Normal Tray Stack Grab (generous 1.85m hit radius)
+      const hitSlot = this.tray.findHoveredSlot(hitX, hitZ, 1.85);
       if (hitSlot && hitSlot.stack) {
+        if (this.selectedTraySlot && this.selectedTraySlot.stack) {
+          this.selectedTraySlot.stack.group.position.copy(this.selectedTraySlot.worldPos);
+        }
+        this.selectedTraySlot = hitSlot;
         this.originSlot = hitSlot;
         this.draggedStack = hitSlot.stack;
         hitSlot.stack = null; // Detach from tray
 
         // Elevate slightly for tactile grab feedback
-        this.draggedStack.group.position.set(hitX, 1.2, hitZ);
+        this.draggedStack.group.position.set(hitX, 1.25, hitZ - 0.35);
         this.domElement.style.cursor = 'grabbing';
         return;
       }
@@ -158,11 +194,11 @@ export class InputManager {
         const curX = this.planeIntersect.x;
         const curZ = this.planeIntersect.z;
 
-        // Smooth follow under cursor with tactile lift height
-        this.draggedStack.group.position.set(curX, 1.25, curZ);
+        // Smooth follow under cursor with tactile lift height & slight forward Z offset so finger doesn't cover cell
+        this.draggedStack.group.position.set(curX, 1.35, curZ - 0.35);
 
-        // Check snap hover on board
-        const snap = this.grid.findSnapTarget(curX, curZ, 1.2);
+        // Check snap hover on board (generous 1.75m snap radius)
+        const snap = this.grid.findSnapTarget(curX, curZ - 0.35, 1.75);
 
         if (snap !== this.hoveredCell) {
           this.grid.clearHighlights();
@@ -225,6 +261,7 @@ export class InputManager {
         this.draggedStack.clear();
         this.draggedStack.group.parent?.remove(this.draggedStack.group);
         this.draggedStack = null;
+        this.selectedTraySlot = null;
         this.originSlot = null;
         this.originCell = null;
         this.grid.clearHighlights();
@@ -233,10 +270,22 @@ export class InputManager {
         this.audio.playPlace();
         this.onStackPlacedCallback(snap);
       } else {
-        // Return to origin
+        // Return to origin (or keep elevated if it was a short tap on tray for Tap-to-Place!)
+        const dragDist = Math.hypot(
+          this.lastPointerX - this.startPointerX,
+          this.lastPointerY - this.startPointerY
+        );
         if (this.originSlot) {
           this.originSlot.stack = this.draggedStack;
           this.draggedStack.group.position.copy(this.originSlot.worldPos);
+          if (dragDist < 16) {
+            // Keep elevated by +0.45y so player sees it's selected for Tap-to-Place!
+            this.draggedStack.group.position.y += 0.45;
+            this.selectedTraySlot = this.originSlot;
+          } else {
+            this.selectedTraySlot = null;
+            this.audio.playBlocked();
+          }
           this.originSlot = null;
         } else if (this.originCell) {
           while (!this.draggedStack.isEmpty()) {
@@ -247,9 +296,9 @@ export class InputManager {
           this.draggedStack.clear();
           this.draggedStack.group.parent?.remove(this.draggedStack.group);
           this.originCell = null;
+          this.audio.playBlocked();
         }
 
-        this.audio.playBlocked();
         this.draggedStack = null;
         this.grid.clearHighlights();
         this.hoveredCell = null;

@@ -10,7 +10,7 @@ export class InputManager {
   private lastX = 0;
   private lastY = 0;
   private hasMovedSignificantly = false;
-  private readonly dragThreshold = 8; // px
+  private readonly dragThreshold = 18; // Generous 18px mobile tap tolerance so slight finger roll still registers tap
 
   private onTapCallback: ((raycaster: THREE.Raycaster) => void) | null = null;
   private onRotateCallback: ((deltaX: number, deltaY: number) => void) | null = null;
