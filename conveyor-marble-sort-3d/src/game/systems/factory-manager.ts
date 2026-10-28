@@ -9,6 +9,9 @@ import { SoundController } from '../../core/audio';
 import { EventBus } from '../../core/events';
 import { MARBLE_COLORS, GAME_CONFIG } from '../config/game-config';
 
+const _CRATE_HOP_OFFSET = new THREE.Vector3(0, 0.7, 0);
+const _BOOSTER_BURST_POS = new THREE.Vector3(0, 2, 0);
+
 export type FactoryGameState = 'playing' | 'jammed' | 'victory';
 
 export class FactoryManager {
@@ -249,8 +252,10 @@ export class FactoryManager {
             // Absorb!
             m.isAbsorbing = true;
             m.absorbProgress = 0;
-            m.absorbStartPos = m.mesh.position.clone();
-            m.absorbEndPos = crate.root.position.clone().add(new THREE.Vector3(0, 0.7, 0));
+            if (!m.absorbStartPos) m.absorbStartPos = new THREE.Vector3();
+            if (!m.absorbEndPos) m.absorbEndPos = new THREE.Vector3();
+            m.absorbStartPos.copy(m.mesh.position);
+            m.absorbEndPos.copy(crate.root.position).add(_CRATE_HOP_OFFSET);
 
             crate.addMarble();
             this.score += GAME_CONFIG.economy.coinsPerMarble;
@@ -366,7 +371,7 @@ export class FactoryManager {
 
     if (transferred > 0) {
       this.audio.playBooster();
-      this.effects.spawnPopBurst(new THREE.Vector3(0, 2, 0), [0x38bdf8, 0xfacc15]);
+      this.effects.spawnPopBurst(_BOOSTER_BURST_POS, [0x38bdf8, 0xfacc15]);
       this.events.emit('state:updated', {
         score: this.score,
         coins: this.coins,

@@ -134,6 +134,26 @@ export class SoundController {
     osc.stop(now + 0.15);
   }
 
+  public playArrowClash(): void {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const freqs = [1046.5, 1567.98];
+    for (let i = 0; i < freqs.length; i++) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freqs[i], now + i * 0.025);
+      osc.frequency.exponentialRampToValueAtTime(freqs[i] * 1.25, now + i * 0.025 + 0.11);
+      gain.gain.setValueAtTime(0.2, now + i * 0.025);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.025 + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now + i * 0.025);
+      osc.stop(now + i * 0.025 + 0.13);
+    }
+  }
+
   public playVictory(): void {
     const ctx = this.ensureContext();
     if (!ctx) return;

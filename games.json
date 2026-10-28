@@ -1,5 +1,24 @@
 [
   {
+    "id": "bumper-smash-io-3d",
+    "title": "BUMPER SMASH 3D // ARENA KNOCKOUT .IO",
+    "description": "Steer a bouncy 3D spring-bumper kart across a shrinking sunlit arena! Ram 7 AI rivals into the sea, grow your kart, and claim the #1 Knockout Crown.",
+    "path": "./bumper-smash-io-3d/",
+    "tags": [
+      ".io Arena",
+      "Bumper Knockout",
+      "Fake Multiplayer",
+      "3D Physics",
+      "60 FPS"
+    ],
+    "date": "2026-10-28",
+    "icon": "./bumper-smash-io-3d/icon.svg",
+    "iconEmoji": "🏎️",
+    "featured": true,
+    "themeColor": "#f97316",
+    "accentGradient": "linear-gradient(135deg, #f97316, #ea580c)"
+  },
+  {
     "id": "ragdoll-archers-duel-3d",
     "title": "ARCHER DUEL 3D // RAGDOLL SHOWDOWN",
     "description": "1-finger ballistic bow showdown across sunlit floating castle bastions! Land 3x critical headshots, trigger hilarious ragdoll physics, and shoot flying apples.",

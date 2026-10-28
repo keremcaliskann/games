@@ -5,6 +5,8 @@ export class DaylightLighting {
   public readonly sunLight: THREE.DirectionalLight;
   public readonly hemiLight: THREE.HemisphereLight;
   private readonly clouds: THREE.Group[] = [];
+  private readonly windStreamers: THREE.Mesh[] = [];
+  public currentWindX = 0;
 
   constructor(scene: THREE.Scene) {
     VisualEnhancer.enhanceScene(scene);
@@ -85,15 +87,44 @@ export class DaylightLighting {
       scene.add(group);
       this.clouds.push(group);
     }
+
+    // 3D Canyon Wind Streamer Ribbons
+    const streamerGeo = new THREE.BoxGeometry(1.35, 0.04, 0.04);
+    const streamerMat = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.42,
+    });
+    for (let i = 0; i < 8; i++) {
+      const ribbon = new THREE.Mesh(streamerGeo, streamerMat);
+      ribbon.position.set(
+        -12 + (i * 3.4),
+        1.2 + ((i * 1.7) % 5.5),
+        -1.5 - (i % 3) * 0.8
+      );
+      scene.add(ribbon);
+      this.windStreamers.push(ribbon);
+    }
   }
 
   public update(dt: number): void {
     for (let i = 0; i < this.clouds.length; i++) {
       const c = this.clouds[i];
-      c.position.x += dt * 0.25 * ((i % 2 === 0) ? 1 : 0.7);
+      c.position.x += dt * (0.25 + this.currentWindX * 0.15) * ((i % 2 === 0) ? 1 : 0.7);
       if (c.position.x > 22) {
         c.position.x = -22;
+      } else if (c.position.x < -22) {
+        c.position.x = 22;
       }
+    }
+
+    const windSpeed = Math.abs(this.currentWindX) < 0.08 ? 0.6 : this.currentWindX * 3.2;
+    for (let i = 0; i < this.windStreamers.length; i++) {
+      const r = this.windStreamers[i];
+      r.position.x += windSpeed * dt;
+      r.scale.x = 0.7 + Math.min(1.6, Math.abs(this.currentWindX) * 0.45);
+      if (r.position.x > 16) r.position.x = -16;
+      if (r.position.x < -16) r.position.x = 16;
     }
   }
 }

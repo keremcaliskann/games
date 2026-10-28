@@ -107,6 +107,19 @@ export class ArcherEntity {
       this.recoilTorsoVel += recoilSign * 6.5;
     }
 
+    // Visually pin an impacting arrow onto the hit joint (capped at 4 per archer)
+    if (this.rig.torsoGroup.children.length < 10) {
+      const pinnedArrow = PrefabFactory.createArrowProjectile(false);
+      pinnedArrow.scale.setScalar(0.78);
+      pinnedArrow.rotation.z = knockDirX >= 0 ? -0.15 : Math.PI + 0.15;
+      pinnedArrow.position.set(knockDirX >= 0 ? -0.22 : 0.22, hitZone === 'head' ? 0.12 : 0.0, 0);
+      if (hitZone === 'head') {
+        this.rig.headGroup.add(pinnedArrow);
+      } else {
+        this.rig.torsoGroup.add(pinnedArrow);
+      }
+    }
+
     this.hp = Math.max(0, this.hp - damage);
     const ratio = Math.max(0.001, this.hp / this.maxHp);
     this.rig.hpBarFill.scale.x = ratio;

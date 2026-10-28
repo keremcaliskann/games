@@ -30,6 +30,7 @@ export interface DuelCallbacks {
   onHudUpdate: () => void;
   onWaveVictory: (earnedCoins: number, headshots: number) => void;
   onPlayerDefeated: () => void;
+  onCallout?: (text: string, colorHex?: string) => void;
 }
 
 export class DuelManager {
@@ -381,6 +382,30 @@ export class DuelManager {
       }
 
       if (arrow.fromPlayer) {
+        // Check mid-air arrow-vs-arrow clash deflection against enemy arrows
+        for (let otherIdx = 0; otherIdx < this.arrowPool.length; otherIdx++) {
+          const other = this.arrowPool[otherIdx];
+          if (!other.active || other.fromPlayer || other.stuckTimer > 0) continue;
+          if (Math.hypot(arrow.pos.x - other.pos.x, arrow.pos.y - other.pos.y) <= 0.42) {
+            _BURST_POS.copy(arrow.pos);
+            this.particles.spawnBurst(_BURST_POS, 0xfacc15, 16);
+            this.audio.playArrowClash();
+            this.waveCoinsEarned += 15;
+            this.callbacks.onCallout?.('⚔️ ARROW CLASH! +15 🪙', '#38bdf8');
+            this.callbacks.onHudUpdate();
+            other.vel.x = -other.vel.x * 0.45;
+            other.vel.y = 4.5;
+            other.stuckTimer = 0.28;
+            if (!arrow.isLaser) {
+              arrow.vel.x = -arrow.vel.x * 0.45;
+              arrow.vel.y = 4.5;
+              arrow.stuckTimer = 0.28;
+            }
+            break;
+          }
+        }
+        if (arrow.stuckTimer > 0) continue;
+
         // Check apple hits
         for (let aIdx = 0; aIdx < this.apples.length; aIdx++) {
           const apple = this.apples[aIdx];
@@ -400,6 +425,10 @@ export class DuelManager {
               this.player.heal(40);
             }
             this.waveCoinsEarned += apple.isGolden ? 35 : 20;
+            this.callbacks.onCallout?.(
+              apple.isGolden ? '🍎 GOLDEN APPLE! +40 HP & +35 🪙' : '🍎 +40 HP!',
+              '#4ade80'
+            );
             this.callbacks.onHudUpdate();
           }
         }
@@ -425,6 +454,7 @@ export class DuelManager {
               this.particles.spawnBurst(_BURST_POS, 0xfacc15, 18);
               this.audio.playHeadshotCrit();
               this.cameraRig.addTrauma(0.55);
+              this.callbacks.onCallout?.('🎯 HEADSHOT! 3x CRIT (+30 🪙)', '#facc15');
             } else {
               this.waveCoinsEarned += 10;
               this.particles.spawnBurst(_BURST_POS, 0xef4444, 10);

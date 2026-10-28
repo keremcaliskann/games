@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { Hole } from '../entities/hole';
 import { Prop } from '../entities/prop';
 
+const _STEER_DIR = new THREE.Vector3();
+
 export class BotAISystem {
   private bots: Hole[] = [];
   private playerHole: Hole | null = null;
@@ -18,7 +20,8 @@ export class BotAISystem {
   public update(dt: number, currentTimeSec: number): void {
     if (!this.playerHole) return;
 
-    for (const bot of this.bots) {
+    for (let i = 0; i < this.bots.length; i++) {
+      const bot = this.bots[i];
       if (!bot.isAlive) continue;
 
       const nextDecision = this.nextDecisionTimes.get(bot.id) || 0;
@@ -34,14 +37,23 @@ export class BotAISystem {
 
   private makeDecision(bot: Hole): void {
     const botPos = bot.position;
+    const player = this.playerHole!;
 
-    // 1. Check for immediate threats (Flee from larger holes)
-    const allHoles = [this.playerHole!, ...this.bots.filter((b) => b !== bot)];
+    // 1. Check for immediate threats (Flee from larger holes) without array allocations
     let closestThreat: Hole | null = null;
     let minThreatDist = 14.0;
 
-    for (const other of allHoles) {
-      if (other.isAlive && other.radius > bot.radius * 1.15) {
+    if (player.isAlive && player.radius > bot.radius * 1.15) {
+      const dPlayer = botPos.distanceTo(player.position);
+      if (dPlayer < minThreatDist) {
+        minThreatDist = dPlayer;
+        closestThreat = player;
+      }
+    }
+
+    for (let i = 0; i < this.bots.length; i++) {
+      const other = this.bots[i];
+      if (other !== bot && other.isAlive && other.radius > bot.radius * 1.15) {
         const dist = botPos.distanceTo(other.position);
         if (dist < minThreatDist) {
           minThreatDist = dist;
@@ -51,9 +63,8 @@ export class BotAISystem {
     }
 
     if (closestThreat) {
-      // Flee away from threat
-      const fleeDir = new THREE.Vector3().subVectors(botPos, closestThreat.position).normalize();
-      bot.setMoveDirection(fleeDir.x, fleeDir.z);
+      _STEER_DIR.subVectors(botPos, closestThreat.position).normalize();
+      bot.setMoveDirection(_STEER_DIR.x, _STEER_DIR.z);
       return;
     }
 
@@ -61,8 +72,22 @@ export class BotAISystem {
     let closestPrey: Hole | null = null;
     let minPreyDist = 16.0;
 
-    for (const other of allHoles) {
-      if (other.isAlive && other.invulnerableTimer <= 0 && bot.radius > other.radius * 1.15) {
+    if (player.isAlive && player.invulnerableTimer <= 0 && bot.radius > player.radius * 1.15) {
+      const dPlayer = botPos.distanceTo(player.position);
+      if (dPlayer < minPreyDist) {
+        minPreyDist = dPlayer;
+        closestPrey = player;
+      }
+    }
+
+    for (let i = 0; i < this.bots.length; i++) {
+      const other = this.bots[i];
+      if (
+        other !== bot &&
+        other.isAlive &&
+        other.invulnerableTimer <= 0 &&
+        bot.radius > other.radius * 1.15
+      ) {
         const dist = botPos.distanceTo(other.position);
         if (dist < minPreyDist) {
           minPreyDist = dist;
@@ -72,8 +97,8 @@ export class BotAISystem {
     }
 
     if (closestPrey) {
-      const chaseDir = new THREE.Vector3().subVectors(closestPrey.position, botPos).normalize();
-      bot.setMoveDirection(chaseDir.x, chaseDir.z);
+      _STEER_DIR.subVectors(closestPrey.position, botPos).normalize();
+      bot.setMoveDirection(_STEER_DIR.x, _STEER_DIR.z);
       return;
     }
 
@@ -93,17 +118,17 @@ export class BotAISystem {
     }
 
     if (bestProp) {
-      const huntDir = new THREE.Vector3().subVectors(bestProp.position, botPos).normalize();
-      bot.setMoveDirection(huntDir.x, huntDir.z);
+      _STEER_DIR.subVectors(bestProp.position, botPos).normalize();
+      bot.setMoveDirection(_STEER_DIR.x, _STEER_DIR.z);
       return;
     }
 
     // 4. Fallback: steer towards center with slight wandering offset
-    const toCenter = new THREE.Vector3(
+    _STEER_DIR.set(
       -botPos.x + (Math.random() - 0.5) * 20,
       0,
       -botPos.z + (Math.random() - 0.5) * 20
     ).normalize();
-    bot.setMoveDirection(toCenter.x, toCenter.z);
+    bot.setMoveDirection(_STEER_DIR.x, _STEER_DIR.z);
   }
 }

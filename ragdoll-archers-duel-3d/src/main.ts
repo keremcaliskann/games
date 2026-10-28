@@ -77,6 +77,9 @@ export class ArcherDuelApp {
           this.audio.playDefeat();
           this.hud.showNearMissReviveModal(this.duel.aliveEnemyCount);
         },
+        onCallout: (text, colorHex) => {
+          this.hud.showFloatingCallout(text, colorHex);
+        },
       }
     );
 
@@ -175,6 +178,7 @@ export class ArcherDuelApp {
 
   private syncHud(): void {
     const player = this.duel.player;
+    this.lighting.currentWindX = this.duel.windX;
     this.hud.syncStats({
       wave: this.duel.currentWave,
       coins: this.saveState.coins,

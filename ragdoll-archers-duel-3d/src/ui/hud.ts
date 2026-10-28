@@ -116,6 +116,36 @@ export class HudController {
     this.boosterPierceBtn.classList.toggle('active-booster', opts.laserArmed);
   }
 
+  public showFloatingCallout(text: string, colorHex = '#facc15'): void {
+    const badge = document.createElement('div');
+    badge.textContent = text;
+    badge.style.cssText = `
+      position: absolute;
+      left: 50%;
+      top: 24%;
+      transform: translate(-50%, 0) scale(0.9);
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.85);
+      color: ${colorHex};
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      pointer-events: none;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.25);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;
+      z-index: 40;
+    `;
+    this.hudEl.appendChild(badge);
+    requestAnimationFrame(() => {
+      badge.style.transform = 'translate(-50%, -28px) scale(1.06)';
+      badge.style.opacity = '0';
+    });
+    window.setTimeout(() => {
+      badge.remove();
+    }, 580);
+  }
+
   public showNearMissReviveModal(aliveEnemies: number): void {
     this.closeModal();
     const overlay = document.createElement('div');
