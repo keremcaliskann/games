@@ -1,5 +1,36 @@
 [
   {
+    "id": "stumble-knockout-royale-3d-midair-recovery-and-confetti",
+    "gameId": "stumble-knockout-royale-3d",
+    "priority": "P1",
+    "priorityScore": 94,
+    "status": "ready",
+    "type": "mechanic",
+    "title": "Add Mid-Air Recovery Roll, Finish Line Confetti Cannons & Dynamic Crowd Cheers",
+    "description": "Allow player to tap jump while stunned in mid-air to trigger an aerodynamic recovery tumble on touchdown (reducing stun duration by 60%), trigger dual 3D confetti cannons and celebration audio when any runner crosses the qualification arch.",
+    "targetFiles": [
+      "stumble-knockout-royale-3d/src/game/entities/runner.ts",
+      "stumble-knockout-royale-3d/src/render/effects.ts",
+      "stumble-knockout-royale-3d/src/core/audio.ts"
+    ],
+    "createdAt": "2026-10-28"
+  },
+  {
+    "id": "bumper-smash-io-3d-drift-skids-and-splash-ripples",
+    "gameId": "bumper-smash-io-3d",
+    "priority": "P2",
+    "priorityScore": 87,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Add Dynamic Drift Tire Skidmarks, Water Splash Rings & Ring Collapse Warning Flash",
+    "description": "Render fading 3D tire skid ribbons during sharp turns at high speed, spawn expanding foam water ripple rings when a kart falls into the sea, and add a pulsing beacon warning when the arena ring begins shrinking.",
+    "targetFiles": [
+      "bumper-smash-io-3d/src/render/effects.ts",
+      "bumper-smash-io-3d/src/game/systems/arena-manager.ts"
+    ],
+    "createdAt": "2026-10-28"
+  },
+  {
     "id": "ragdoll-archers-duel-3d-arrow-clash-and-headshot-callouts",
     "gameId": "ragdoll-archers-duel-3d",
     "priority": "P1",
