@@ -1,0 +1,18 @@
+{
+  "name": "BRIDGE RACE 3D // STAIR BUILDER .IO",
+  "short_name": "Bridge Race 3D",
+  "description": "Race 11 AI rivals across 3 sky islands! Collect color bricks, stack a towering spine on your back, tackle smaller rivals, and build bridges to the Trophy Podium.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#cfe8f7",
+  "theme_color": "#2563eb",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

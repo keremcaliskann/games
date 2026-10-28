@@ -16,6 +16,8 @@ export class RunnerEntity {
   public qualified = false;
   public finishOrder = 99;
   public stunTimer = 0;
+  public canRecoveryRoll = false;
+  public rollSpinTimer = 0;
   public checkpointZ = 0;
 
   // Boosters
@@ -62,7 +64,19 @@ export class RunnerEntity {
   }
 
   public triggerJumpOrDive(): 'jump' | 'dive' | 'none' {
-    if (this.qualified || this.stunTimer > 0) return 'none';
+    if (this.qualified) return 'none';
+
+    // Mid-air Stumble Recovery Roll when knocked back
+    if (!this.isGrounded && this.stunTimer > 0 && this.canRecoveryRoll) {
+      this.canRecoveryRoll = false;
+      this.stunTimer *= 0.35;
+      this.rollSpinTimer = 0.36;
+      this.vel.y = Math.max(this.vel.y, 4.8);
+      this.vel.z += 5.5 * this.speedUpgradeMult;
+      return 'dive';
+    }
+
+    if (this.stunTimer > 0) return 'none';
 
     if (this.isGrounded) {
       this.isGrounded = false;
@@ -86,6 +100,7 @@ export class RunnerEntity {
     this.vel.z = nz * force;
     this.vel.y = 6.5;
     this.isGrounded = false;
+    this.canRecoveryRoll = true;
     this.stunTimer = Math.max(0.15, 0.45 * this.stabilityUpgradeMult);
   }
 
@@ -99,6 +114,13 @@ export class RunnerEntity {
 
     if (this.stunTimer > 0) {
       this.stunTimer = Math.max(0, this.stunTimer - dt);
+    }
+    if (this.rollSpinTimer > 0) {
+      this.rollSpinTimer = Math.max(0, this.rollSpinTimer - dt);
+      this.rig.bodyPivot.rotation.x = (1.0 - this.rollSpinTimer / 0.36) * Math.PI * 2;
+      if (this.rollSpinTimer <= 0) {
+        this.rig.bodyPivot.rotation.x = 0;
+      }
     }
     if (this.jetpackTimer > 0) this.jetpackTimer = Math.max(0, this.jetpackTimer - dt);
     if (this.giantTimer > 0) this.giantTimer = Math.max(0, this.giantTimer - dt);

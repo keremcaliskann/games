@@ -45,6 +45,8 @@ export class ArenaManager {
   public matchDuration = 75.0;
   public timeRemaining = 75.0;
   public matchCoinsEarned = 0;
+  private shrinkWarningTriggered = false;
+  private skidSpawnTimer = 0;
 
   private matchEnded = false;
   private endDelayTimer = 0;
@@ -94,6 +96,8 @@ export class ArenaManager {
     this.arenaRig.platformGroup.scale.set(this.currentRadius, 1, this.currentRadius);
     this.timeRemaining = this.matchDuration;
     this.matchCoinsEarned = 0;
+    this.shrinkWarningTriggered = false;
+    this.skidSpawnTimer = 0;
     this.matchEnded = false;
     this.pendingOutcome = null;
     this.endDelayTimer = 0;
@@ -203,6 +207,23 @@ export class ArenaManager {
       this.currentRadius =
         this.initialRadius - (this.initialRadius - this.minRadius) * shrinkRatio;
       this.arenaRig.platformGroup.scale.set(this.currentRadius, 1, this.currentRadius);
+
+      if (this.timeRemaining < 30 && !this.shrinkWarningTriggered) {
+        this.shrinkWarningTriggered = true;
+        this.callbacks.onCallout('⚠️ DANGER! ARENA RING SHRINKING FAST!', '#ef4444');
+      }
+      if (this.shrinkWarningTriggered) {
+        const pulse = Math.sin(this.timeRemaining * 8.0) > 0;
+        (this.arenaRig.dangerRing.material as THREE.MeshStandardMaterial).color.setHex(
+          pulse ? 0xef4444 : 0xfacc15
+        );
+      }
+    }
+
+    this.skidSpawnTimer += dt;
+    const canSpawnSkid = this.skidSpawnTimer >= 0.08;
+    if (canSpawnSkid) {
+      this.skidSpawnTimer = 0;
     }
 
     // Apply player steering
@@ -228,9 +249,18 @@ export class ArenaManager {
       }
 
       const newlyEliminated = k.update(dt, this.currentRadius);
+      if (
+        canSpawnSkid &&
+        k.isAlive &&
+        !k.isFallingInSea &&
+        Math.hypot(k.vel.x, k.vel.z) > 6.8
+      ) {
+        this.particles.spawnSkidMark(k.pos.x, k.pos.z, k.headingRad);
+      }
       if (newlyEliminated) {
         _BURST_POS.set(k.pos.x, -2.5, k.pos.z);
         this.particles.spawnBurst(_BURST_POS, 0x38bdf8, 18);
+        this.particles.spawnWaterRipple(k.pos.x, k.pos.z);
         this.audio.playKnockoutSplash();
 
         if (k.lastHitBy && k.lastHitBy.isAlive) {

@@ -102,6 +102,26 @@ export class SoundController {
     }
   }
 
+  public playCrowdCheer(): void {
+    const ctx = this.ensureContext();
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    const chord = [440, 554.37, 659.25, 880];
+    for (let i = 0; i < chord.length; i++) {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(chord[i], now);
+      osc.frequency.exponentialRampToValueAtTime(chord[i] * 1.08, now + 0.28);
+      gain.gain.setValueAtTime(0.09, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.31);
+    }
+  }
+
   public playBoosterActivate(): void {
     const ctx = this.ensureContext();
     if (!ctx) return;

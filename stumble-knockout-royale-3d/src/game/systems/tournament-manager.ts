@@ -350,9 +350,11 @@ export class TournamentManager {
         r.finishOrder = this.qualifiedCount;
         _BURST_POS.copy(r.pos);
         this.particles.spawnBurst(_BURST_POS, 0xfacc15, 18);
+        this.particles.spawnConfettiCannons(this.finishZ, this.trackHalfWidth);
 
         if (r.isPlayer) {
           this.audio.playQualifyChime();
+          this.audio.playCrowdCheer();
           this.callbacks.onCallout(
             this.roundNumber === 3
               ? '👑 TOURNAMENT CHAMPION (#1)!'

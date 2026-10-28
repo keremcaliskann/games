@@ -1,5 +1,24 @@
 [
   {
+    "id": "bridge-rush-io-3d",
+    "title": "BRIDGE RACE 3D // STAIR BUILDER .IO",
+    "description": "Race 11 AI rivals across 3 tiered sky islands! Collect color bricks to stack a towering spine on your back, tackle smaller rivals, and build stair bridges to the Golden Trophy Podium.",
+    "path": "./bridge-rush-io-3d/",
+    "tags": [
+      ".io Race",
+      "Bridge Builder",
+      "12 Players",
+      "3-Tier Islands",
+      "60 FPS"
+    ],
+    "date": "2026-10-28",
+    "icon": "./bridge-rush-io-3d/icon.svg",
+    "iconEmoji": "🧱",
+    "featured": true,
+    "themeColor": "#2563eb",
+    "accentGradient": "linear-gradient(135deg, #38bdf8, #2563eb)"
+  },
+  {
     "id": "stumble-knockout-royale-3d",
     "title": "PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO",
     "description": "Sprint, jump, and dive against 15 AI rivals across a 3-round sky obstacle tournament! Dodge spinning hammers, qualify through Round 1 & 2, unlock 6 runner skins, and claim the Golden Crown.",

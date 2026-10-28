@@ -8,12 +8,14 @@ interface ParticleSlot {
   active: boolean;
 }
 
+const CONFETTI_COLORS = [0xfacc15, 0xec4899, 0x38bdf8, 0x4ade80, 0xa855f7];
+
 export class ParticleEffects {
   private readonly pool: ParticleSlot[] = [];
 
   constructor(scene: THREE.Scene) {
     const geo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < 96; i++) {
       const mat = new THREE.MeshStandardMaterial({
         color: 0xfacc15,
         roughness: 0.4,
@@ -46,6 +48,30 @@ export class ParticleEffects {
       const speed = 3.0 + Math.random() * 5.2;
       p.vel.set(Math.cos(angle) * speed, 3.2 + Math.random() * 4.5, Math.sin(angle) * speed);
       p.mesh.scale.setScalar(1.0);
+      p.mesh.visible = true;
+      spawned++;
+    }
+  }
+
+  public spawnConfettiCannons(finishZ: number, trackHalfWidth: number): void {
+    let spawned = 0;
+    for (let i = 0; i < this.pool.length && spawned < 24; i++) {
+      const p = this.pool[i];
+      if (p.active) continue;
+      const isLeft = spawned % 2 === 0;
+      p.active = true;
+      p.maxLife = 0.65 + Math.random() * 0.35;
+      p.life = p.maxLife;
+      p.mesh.position.set(
+        isLeft ? -trackHalfWidth + 0.3 : trackHalfWidth - 0.3,
+        1.2,
+        finishZ
+      );
+      const colorHex = CONFETTI_COLORS[spawned % CONFETTI_COLORS.length];
+      (p.mesh.material as THREE.MeshStandardMaterial).color.setHex(colorHex);
+      const inwardVx = (isLeft ? 1 : -1) * (2.5 + Math.random() * 4.0);
+      p.vel.set(inwardVx, 6.5 + Math.random() * 4.5, (Math.random() - 0.5) * 3.5);
+      p.mesh.scale.setScalar(1.15);
       p.mesh.visible = true;
       spawned++;
     }
