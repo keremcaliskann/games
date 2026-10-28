@@ -1,9 +1,21 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Trend Scout Directives",
-  "description": "User-editable configuration for the Trend Scout automation. Update this file anytime to steer game genre discoveries without modifying automations.",
-  "batchSize": 3,
-  "minScoreThreshold": 80,
+  "title": "Trend Scout Directives — Large-Scale 3D Fake-Multiplayer (.io & Royale) Focus",
+  "description": "User-editable configuration for the Trend Scout automation. Focused 100% on large-scale, high-depth 3D Fake-Multiplayer (.io, Knockout Royale, Brawl Arena, Collect-and-Build Race, Turf Conquest, Mob Clash) games.",
+  "batchSize": 4,
+  "minScoreThreshold": 85,
+  "scaleStandards": {
+    "maxBundleSizeMB": 100,
+    "minBotCompetitors": 12,
+    "maxBotCompetitors": 24,
+    "multiStageOrBiomeCount": 3,
+    "mandatoryMetaSystems": [
+      "Persistent Garage / Skin & Character Shop (6+ unlockable skins/hats/trails saved in CloudSaveData)",
+      "Persistent Stat Upgrade Tree (Speed, Power/Mass, Magnet/Range upgrades)",
+      "Multi-Biome or Multi-Round Tournament Progression (3+ distinct 3D stages/biomes)",
+      "Live Named AI Bot Competitors (12-20 bots with distinct personalities, ranks, and emoji taunts)"
+    ]
+  },
   "targetPlatforms": [
     "YouTube Playables",
     "CrazyGames",
@@ -12,34 +24,40 @@
   ],
   "priorityGenres": [
     {
-      "tag": "io-fake-multiplayer",
+      "tag": "io-party-knockout-royale",
+      "weight": 98,
+      "name": "3B Kaos Parkur & Eleme Royale (Fall Guys / Stumble Guys 3D)",
+      "description": "16-24 yapay zeka botla aynı anda dönen çekiçler, hareketli silindirler, trambolinler ve yıkılan kapılardan oluşan 3 aşamalı büyük 3B parkur turnuvası (Qualify -> Semifinal -> Crown Final)."
+    },
+    {
+      "tag": "io-collect-build-race",
+      "weight": 97,
+      "name": "3B Rekabetçi İnşa, Köprü & Hırsızlık Yarışı (Bridge Race / Shortcut Run 3D)",
+      "description": "12+ AI rakiple çok katlı adalar arasında kendi rengindeki tuğlaları/kütükleri sırtında kule gibi dizme, senden az bloğu olan rakiplere omuz atıp bloklarını yağmalama ve 3 köprüyü ilk tamamlayıp zirve podyumuna çıkma."
+    },
+    {
+      "tag": "io-brawl-battle-royale",
+      "weight": 96,
+      "name": "3B Silahlı & Yetenekli Battle Royale (Brawl Stars / Smash Karts 3D)",
+      "description": "12-16 AI savaşçı/kart ile geniş 3B arenada sandık kırma, güç küpleriyle evrimleşme, özel süper silahlar/roketler ateşleme ve daralan fırtına çemberinde son hayatta kalan olma."
+    },
+    {
+      "tag": "io-grow-evolve-arena",
       "weight": 95,
-      "name": "Fake-Multiplayer .io Arena",
-      "description": "Hole.io, Bumper.io, Paper.io tarzı; gerçekçi oyuncu isimlerine sahip yapay zeka botlarla 60-90 saniyelik hızlı rekabet, büyüme ve canlı skor tablosu."
+      "name": "3B Devasa Büyüme, Kuşatma & Yutma (.io) (Snake Clash / Snowball.io 3D)",
+      "description": "Büyük açık haritada enerji/kar/av toplayarak 10 aşamalı devasa boyuta evrilme, 15+ AI rakibi kuşatıp patlatma veya buz/lav adasından fırlatma."
     },
     {
-      "tag": "casual-fps-physics",
-      "weight": 92,
-      "name": "Casual FPS / Okçu / 3B Fizik Yıkım",
-      "description": "1-tap/drag nişan alma, mancınık veya top atışı, Rapier.js fizik motoruyla kule/blok yıkma, patlayan kırmızı variller ve dalga savunma."
-    },
-    {
-      "tag": "voxel-sandbox-action",
-      "weight": 90,
-      "name": "Voxel / Minecraft Tarzı Blok Kırma & Savunma",
-      "description": "InstancedMesh ile yüksek FPS voksel kalesi yıkma, blok madenciliği, taret savunması ve hızlı ganimet toplama."
-    },
-    {
-      "tag": "physics-merge-drop",
-      "weight": 85,
-      "name": "3B Fizik Bırakma & Birleştirme",
-      "description": "Suika 3D tarzı; silindir içine bırakılan topların/şekillerin çarpışarak daha büyük üst seviyelere dönüşmesi."
+      "tag": "io-turf-mob-conquest",
+      "weight": 94,
+      "name": "3B Bölge Boyama & Sürü/Kule Fetih Savaşı (Paper.io 3D / Crowd City / Mob Control)",
+      "description": "Haritadaki nötr kalabalıkları veya bölgeleri kendi rengine katarak 100+ birimlik dev sürü/bölge oluşturma ve rakip AI ordularını/kalelerini ele geçirme."
     }
   ],
   "excludedGenres": [
-    "Aşırı doymuş klasik 2D hiper-casual koşucular",
-    "Fizik içermeyen tekrarlı otopark/jam kopyaları",
-    "50 MB sınırını aşan ağır 3D açık dünya oyunları"
+    "Tek kişilik statik 3D bulmaca / sıralama / jam oyunları",
+    "Tek sahneli küçük mini-oyunlar (en az 3 biyom/aşama ve Garaj/Upgrade mağazası şarttır)",
+    "2D düz oyunlar"
   ],
-  "customInstructions": "Sadece bulmaca/jam oyunlarına takılı kalma. YouTube Playables ve web portallarında en yüksek oynanma ve oturum süresi getiren eğlenceli aksiyon, fizik ve .io türlerine odaklan. Her taramada birbirinden farklı kategorilerden fikirler üret."
+  "customInstructions": "ANA HEDEF %100 BÜYÜK ÇAPLI 3B FAKE-MULTIPLAYER OYUNLARDIR. Sadece yuvarlak adada çarpışma ile sınırlı kalma; Stumble Guys tarzı çok aşamalı parkur eleme turnuvaları, Bridge Race tarzı blok çalma ve köprü kurma yarışları, Brawl Stars/Smash Karts tarzı silahlı battle royale arenaları, Snake Clash tarzı dev evrim oyunları ve Crowd/Paper.io tarzı bölge fetih oyunları üret. Her oyun büyük harita, 12-20 canlı AI rakip, çoklu biyom/etap ve kalıcı Garaj/Yükseltme (Upgrade/Skin) mağazası içermelidir."
 }

@@ -1,5 +1,175 @@
 [
   {
+    "id": "stumble-knockout-royale-3d",
+    "title": "PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO",
+    "category": "io-party-knockout-royale",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 98,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 19
+    },
+    "createdAt": "2026-10-28",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "New Rank #1 Large-Scale 3D Fake-Multiplayer Royale (Stumble Guys / Fall Guys benchmark). Features 16 live AI competitors, 3-Round Tournament elimination (Qualify 16->8, Semifinal 8->4, Crown Final 4->1), and a persistent Skin & Speed Upgrade Garage.",
+    "coreLoop": "Sprint, jump, and dive alongside 15 named AI competitors across a multi-stage 3D sky obstacle course featuring spinning giant hammers, rotating log rollers, bouncy trampolines, and vanishing honeycomb tiles. Qualify in the Top 8 (Round 1), Top 4 (Round 2), and grab the floating Golden Crown first in the Final Round to win the tournament!",
+    "solvableMathSpec": "Deterministic obstacle rotation phases with guaranteed safe crossing windows; rubber-banding AI bot pathfinding ensures thrilling photo-finish qualification moments without unfair blocks.",
+    "cameraErgonomics": "Elevated third-person chase camera with dynamic look-ahead over suspended sky-parkour stages; zero ground/pedestal occlusion and responsive FOV for 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Rocket Jetpack (Flies over the current obstacle section at 2.5x speed via Rewarded Ad)",
+        "Giant Heavy Mode (Makes runner 1.8x larger and immune to hammer knockbacks for 10s via Rewarded Ad)",
+        "Speed Dash Boots (+40% sprint and jump velocity for the entire round via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When eliminated at 9th/10th place (1 spot away from qualifying), prompt 'Eliminated at #9! Watch Ad to Qualify Instantly into Next Round with Speed Boots'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x needle gauge on Tournament Crown Victory screen + persistent Skin & Stat Upgrade Shop."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Large-Scale Compound Procedural + Optional GLB (< 100 MB budget)",
+      "proceduralPrefabs": "Articulated bean-runner characters with 6 unlockable hats/skins (Crown, Astronaut, Ninja, Viking, Dino, Cyber), spinning padded hammers, bumper pillars, and 3 distinct sky-parkour course stages.",
+      "optionalUserGlb": "public/models/party_runner.glb (Optional <5k tris stylized character mesh)"
+    }
+  },
+  {
+    "id": "bridge-rush-io-3d",
+    "title": "BRIDGE RACE 3D // STAIR BUILDER .IO",
+    "category": "io-collect-build-race",
+    "status": "ready",
+    "rank": 2,
+    "revenueScore": 97,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-28",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Rank #2 Large-Scale 3D Fake-Multiplayer Collect-and-Build Race (Bridge Race 500M+ downloads benchmark). Multi-island 3-tier vertical progression with 12 AI rivals, brick-stealing tackles, and persistent Upgrade Shop.",
+    "coreLoop": "Race against 11 color-coded AI rivals across 3 tiered sky islands. Collect bricks matching your color to stack a towering spine on your back, build stairs across water gaps to reach the next island tier, and tackle rivals carrying fewer bricks to scatter and steal their stack!",
+    "solvableMathSpec": "Dynamic brick spawner maintains balanced color distribution (at least 28% player-color bricks on each island tier) so the player can always build or counter-tackle to reach the 3rd-tier Trophy Podium.",
+    "cameraErgonomics": "Elevated 45° isometric chase camera that smoothly pulls back as the player's backpack brick tower grows taller; unobstructed sightlines across all 3 island tiers.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "+25 Instant Bricks (Spawns 25 bricks directly onto your back stack via Rewarded Ad)",
+        "Brick Magnet & Hoverboard (+50% move speed + magnetic brick vacuum for 12s via Rewarded Ad)",
+        "Unstoppable Shield (Prevents larger rivals from knocking down your brick stack for 15s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When a rival reaches the final bridge at 85%+ completion, prompt 'Rival Almost at Finish! Watch Ad to Freeze Rivals & Auto-Complete Your Bridge'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar + persistent Stack Speed & Brick Skin Garage."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Large-Scale Compound Procedural + Instanced Bricks",
+      "proceduralPrefabs": "Articulated runner with procedural backpack brick stack, InstancedMesh color bricks, step-by-step animated bridge stair segments across 3 island tiers, and victory podium.",
+      "optionalUserGlb": "public/models/bridge_runner.glb (Optional <5k tris character mesh)"
+    }
+  },
+  {
+    "id": "smash-karts-brawl-3d",
+    "title": "SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO",
+    "category": "io-brawl-battle-royale",
+    "status": "ready",
+    "rank": 3,
+    "revenueScore": 96,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-28",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Rank #3 Large-Scale 3D Weaponized Vehicular Battle Royale (Smash Karts & Brawl Stars benchmark). 12 AI combat karts, Mystery Weapon Crates (Homing Rockets, Twin Gatling, Shockwave Mines), 3 Arena Biomes, and Full Kart Garage.",
+    "coreLoop": "Drive and drift an armored combat kart across a large multi-ramp 3D stadium against 11 AI battle karts. Smash through Mystery Weapon Crates to equip Homing Missiles, Twin Machine Guns, and EMP Mines, collect Power Cubes from eliminated rivals to level up HP and damage, and survive the closing storm!",
+    "solvableMathSpec": "Auto-aim cone assistance on weapon fire guarantees effortless 1-hand mobile targeting while preserving skill-based drifting, ramp jumps, and crate control.",
+    "cameraErgonomics": "Dynamic 3D stadium chase camera with smooth drift banking and wide peripheral awareness; zero foreground occlusion in 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Mecha Tank Drop (Transforms kart into a Twin-Cannon Mecha Tank with 2x HP for 15s via Rewarded Ad)",
+        "Homing Missile Barrage (Fires 5 lock-on missiles at the nearest rivals via Rewarded Ad)",
+        "Full Repair & Turbo Shield (Restores 100% HP + invulnerable shield for 10s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When destroyed in the Top 4, prompt 'Wrecked at #3! Watch Ad to Airdrop Back with Full HP & Mecha Cannon'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar + persistent Kart Chassis & Weapon Upgrade Garage."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Large-Scale Compound Procedural + Optional GLB",
+      "proceduralPrefabs": "Weaponized battle karts with roof-mounted turrets/rocket pods, question-mark weapon crates, stunt ramps, boost pads, and missile smoke trails.",
+      "optionalUserGlb": "public/models/battle_kart.glb (Optional <5k tris weaponized kart mesh)"
+    }
+  },
+  {
+    "id": "snake-clash-io-3d",
+    "title": "SNAKE CLASH 3D // MONSTER EVOLUTION .IO",
+    "category": "io-grow-evolve-arena",
+    "status": "ready",
+    "rank": 4,
+    "revenueScore": 96,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-28",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Rank #4 Large-Scale 3D Evolution .io Arena (Snake Clash 101M+ plays #1 YouTube Playables benchmark). 15 AI rivals, 10-Stage Monster Evolution (Hatchling -> Viper -> Mecha Wyrm -> Golden Dragon), and Boss Hunts.",
+    "coreLoop": "Slither and dash across a vast sunlit 3D valley against 15 AI serpents. Devour glowing XP fruits and lower-level rivals to evolve through 10 distinct 3D monster forms, cut off giant rival bosses so they crash into your segmented body, and vacuum their massive coin explosions!",
+    "solvableMathSpec": "Smooth spline-interpolated body segments with deterministic head-to-body collision checks and level-gated direct head-on eating (higher evolution tier wins head-to-head).",
+    "cameraErgonomics": "High-angle top-down 3D camera that progressively zooms out across 10 evolution tiers so even a 40-segment Dragon remains 100% framed in 9:16 and 16:9.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "+2 Evolution Tiers (Instantly evolves serpent by +2 monster forms via Rewarded Ad)",
+        "Black Hole Mouth (3x magnetic loot vacuum radius for 15s via Rewarded Ad)",
+        "Infinite Turbo Dash (Zero stamina drain on speed boost for 15s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When crashing into a rival serpent near #1 rank, prompt 'Slain at #2! Watch Ad to Respawn Keeping 100% Length & +1 Evolution Tier'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar + persistent Dragon Skin & Starting Level Upgrade Shop."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Large-Scale Compound Procedural",
+      "proceduralPrefabs": "Articulated multi-segment 3D serpents/dragons with horns, wings, and glowing scales, crystal XP clusters, and multi-biome valley arena.",
+      "optionalUserGlb": "public/models/dragon_head.glb (Optional <4k tris stylized dragon head)"
+    }
+  },
+  {
+    "id": "turf-paint-conquest-io-3d",
+    "title": "TURF PAINT 3D // TERRITORY CONQUEST .IO",
+    "category": "io-turf-mob-conquest",
+    "status": "ready",
+    "rank": 5,
+    "revenueScore": 95,
+    "scoreBreakdown": {
+      "rewardedAdScore": 34,
+      "retentionScore": 24,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-10-28",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Rank #5 Large-Scale 3D Territory & Swarm Conquest .io (Paper.io 3D & Splatoon benchmark). 12 AI rivals, real-time 3D hex-grid territory capture, tail-cutting eliminations, and Guard Turret upgrades.",
+    "coreLoop": "Steer a 3D paint-roller hovercraft out from your home base to draw a glowing trail across the 2,500-tile 3D island; loop back into your territory to flood-fill and claim all enclosed tiles! Slice across rival AI trails before they return home to detonate them and steal their territory.",
+    "solvableMathSpec": "2D flood-fill polygon closure algorithm over a 50x50 3D tile grid executes in <0.4 ms using pre-allocated Uint8Array buffers with zero heap allocations.",
+    "cameraErgonomics": "Elevated 55° orbital chase camera with live % territory ownership bar and mini-leader crowns on the #1 territory holder.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Paint Bomb Airdrop (Instantly claims a 9x9 tile radius around your vehicle via Rewarded Ad)",
+        "Armored Trail Shield (Makes your exposed tail trail uncuttable for 10s via Rewarded Ad)",
+        "Turbo Roller (+45% capture speed and double trail width for 12s via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When your tail is cut by a rival while holding 25%+ of the map, prompt 'Trail Cut at 32% Map! Watch Ad to Respawn & Keep All Captured Territory'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x coin multiplier bar + persistent Roller Vehicle & Base Upgrade Shop."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Large-Scale Instanced Grid + Compound Prefabs",
+      "proceduralPrefabs": "Hover-roller vehicles with spinning paint drums, 2,500-instance 3D beveled territory tiles with pop-up capture springs, and base citadels.",
+      "optionalUserGlb": "public/models/paint_rover.glb (Optional <4k tris vehicle mesh)"
+    }
+  },
+  {
     "id": "ragdoll-archers-duel-3d",
     "title": "ARCHER DUEL 3D // RAGDOLL SHOWDOWN",
     "category": "casual-fps-physics",
@@ -71,18 +241,18 @@
     "id": "rolling-sky-ball-3d",
     "title": "ROLLING BALL 3D // SKY MOMENTUM",
     "category": "arcade-skill-runner",
-    "status": "ready",
-    "rank": 3,
-    "revenueScore": 94,
+    "status": "archived",
+    "rank": null,
+    "revenueScore": 84,
     "scoreBreakdown": {
-      "rewardedAdScore": 33,
-      "retentionScore": 24,
-      "ergonomicsScore": 19,
-      "webglFeasibilityScore": 18
+      "rewardedAdScore": 30,
+      "retentionScore": 21,
+      "ergonomicsScore": 17,
+      "webglFeasibilityScore": 16
     },
     "createdAt": "2026-10-27",
-    "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #3. Capitalizes on Going Balls 98M+ plays benchmark on YouTube Playables. High speedrun replayability and checkpoint revive monetization.",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Archived per new Studio Directive: shifting 100% focus to Large-Scale 3D Fake-Multiplayer (.io & Royale) games.",
     "coreLoop": "Swipe to steer a high-momentum chrome rolling ball across a sky-high obstacle course, leaping over gaps, balancing on narrow wooden rails, hitting speed booster pads, and collecting gold gems on the track to the goal portal.",
     "solvableMathSpec": "Deterministic Rapier.js sphere physics with clamped angular velocity and dynamic gravity bias; procedural track segments validated for solvable speed thresholds and jump clearance.",
     "cameraErgonomics": "Third-person chase camera with smooth position interpolation and look-ahead yaw matching track curvature; daylight soft pastel sky background with zero ground occlusion.",
@@ -105,18 +275,18 @@
     "id": "giant-demolition-3d",
     "title": "GIANT SMASH 3D // WRECKING BALL CRUSH",
     "category": "casual-fps-physics",
-    "status": "ready",
-    "rank": 4,
-    "revenueScore": 93,
+    "status": "archived",
+    "rank": null,
+    "revenueScore": 83,
     "scoreBreakdown": {
-      "rewardedAdScore": 33,
-      "retentionScore": 24,
-      "ergonomicsScore": 18,
-      "webglFeasibilityScore": 18
+      "rewardedAdScore": 30,
+      "retentionScore": 20,
+      "ergonomicsScore": 17,
+      "webglFeasibilityScore": 16
     },
     "createdAt": "2026-10-27",
-    "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #4 in 90-day scan. Surging casual FPS physics demolition trend (Ragdoll Gun Shooter & Car Crash Sandbox). High video viral potential and cluster shot revives.",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Archived per new Studio Directive: shifting 100% focus to Large-Scale 3D Fake-Multiplayer (.io & Royale) games.",
     "coreLoop": "Drag and release a towering construction crane to swing a heavy physics wrecking ball into multi-story stylized building structures, towering voxel golems, and explosive TNT fuel barrels to achieve 100% demolition within limited par swings.",
     "solvableMathSpec": "Rapier.js rigid compound bodies with structural load thresholds; destroying foundational support blocks (bottom 25%) reliably triggers cascading gravity collapse across remaining floors.",
     "cameraErgonomics": "High-angle 3/4 cinematic destruction camera with dynamic screen trauma shake, 360° unobstructed sightlines over the suspended demolition site, and auto-framing for 9:16 portrait and 16:9 landscape.",
@@ -139,18 +309,18 @@
     "id": "voxel-dungeon-miner-3d",
     "title": "VOXEL MINER 3D // DUNGEON ESCAPE",
     "category": "voxel-sandbox-action",
-    "status": "ready",
-    "rank": 5,
-    "revenueScore": 91,
+    "status": "archived",
+    "rank": null,
+    "revenueScore": 82,
     "scoreBreakdown": {
-      "rewardedAdScore": 32,
-      "retentionScore": 23,
-      "ergonomicsScore": 18,
-      "webglFeasibilityScore": 18
+      "rewardedAdScore": 29,
+      "retentionScore": 20,
+      "ergonomicsScore": 17,
+      "webglFeasibilityScore": 16
     },
     "createdAt": "2026-10-27",
-    "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #5 in 90-day scan. Proven rogue-lite voxel action loop (Voxiom.io & Stealth Master). High-converting mega drill boosters and lava freeze revives.",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Archived per new Studio Directive: shifting 100% focus to Large-Scale 3D Fake-Multiplayer (.io & Royale) games.",
     "coreLoop": "1-finger swipe / drag to dig and tunnel through soft voxel dirt and mineral walls in a sunlit subterranean canyon, mining emeralds, triggering TNT block traps to blast open sealed treasure vaults, and escaping before the rising lava reaches the player.",
     "solvableMathSpec": "Procedural grid maze with A* connectivity check guaranteeing at least one unobstructed tunnel path from spawn to exit, seeded with guaranteed mineral clusters and trap triggers.",
     "cameraErgonomics": "Top-down 60° tilted isometric camera centered on miner pawn; transparent dither cutaway shader for foreground blocks ensuring player and exit portal are never occluded.",
@@ -173,18 +343,18 @@
     "id": "crash-arena-demolition-3d",
     "title": "CAR SMASH 3D // DEMOLITION SANDBOX",
     "category": "casual-fps-physics",
-    "status": "ready",
-    "rank": 6,
-    "revenueScore": 90,
+    "status": "archived",
+    "rank": null,
+    "revenueScore": 80,
     "scoreBreakdown": {
-      "rewardedAdScore": 32,
-      "retentionScore": 23,
-      "ergonomicsScore": 18,
-      "webglFeasibilityScore": 17
+      "rewardedAdScore": 29,
+      "retentionScore": 19,
+      "ergonomicsScore": 16,
+      "webglFeasibilityScore": 16
     },
     "createdAt": "2026-10-27",
-    "lastValidatedAt": "2026-10-27",
-    "validationNote": "Rank #6 in 90-day scan. Surging demand for Car Crash Sandbox mechanics with zero installation friction. High visual viral potential.",
+    "lastValidatedAt": "2026-10-28",
+    "validationNote": "Archived per new Studio Directive: shifting 100% focus to Large-Scale 3D Fake-Multiplayer (.io & Royale) games.",
     "coreLoop": "Launch customizable muscle cars off sky-high stunt ramps into towering stacks of obstacles, explosive barrels, and rival crash cars, maximizing destruction points and part detachments before coming to a complete rest.",
     "solvableMathSpec": "Multi-joint compound car physics with detached wheel/door thresholds; ramp angles and booster placements tuned for reliable high-speed impact spectacles.",
     "cameraErgonomics": "Cinematic dynamic follow camera transitioning to slow-motion impact cam upon first high-velocity collision; full 360° sightlines across sunlit stadium.",

@@ -63,8 +63,8 @@ Game code must never branch on portal globals directly. `src/platform/` detects 
 1. **Zero Unauthorized External Network Calls (CSP):**
    - Never fetch external fonts (Google Fonts CDN), external audio files, remote textures, or analytics trackers at runtime.
    - Use system UI font stacks (`system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif`), procedural Web Audio (`35-procedural-audio`), and bundled/procedural 3D assets.
-2. **Bundle Budget:**
-   - Target total production `dist/` size `< 50 MB` (keeping builds optimal guarantees fast `firstFrameReady()` and maximum player conversion).
+2. **Bundle Budget (Expanded for Large-Scale 3D Games):**
+   - Target total production `dist/` size `< 100 MB` (YouTube Playables official ceiling is 100 MB uncompressed / 30 MB per single asset; keeping initial boot fast while allowing multi-stage arenas, Garage/Skin shops, and `< 5,000 tris` `.glb` models).
 3. **Portrait (9:16) & Landscape (16:9) Universal Ergonomics:**
    - Because YouTube Playables is heavily played in **9:16 portrait mode** on the YouTube mobile app as well as **16:9 landscape** on desktop, the `CameraRig` FOV/distance and HUD overlays must dynamically adapt to both aspect ratios without clipping UI buttons or 3D puzzle bounds.
 

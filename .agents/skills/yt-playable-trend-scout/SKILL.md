@@ -22,10 +22,15 @@ This skill operates the **Producer** stage of the autonomous game studio pipelin
 
 ### Step 2: 90-Day Market & Genre Scan (Driven by `scout-directives.json`)
 Use `search_web` to analyze the **last 3 months (90 days)** across the platforms specified in `scout-directives.json` (`YouTube Playables`, `CrazyGames`, `Poki`, `Yandex Games`):
-- Prioritize categories according to `priorityGenres` and their weights in `scout-directives.json`.
-- Strictly filter out anything listed under `excludedGenres`.
-- Comply with `customInstructions`.
-- **Batch & Diversity Invariant:** Every scan must discover and add at least `batchSize` (3) new concepts, with **each concept coming from a DIFFERENT genre** so `backlog/ideas-backlog.json` maintains continuous variety.
+- **Primary Focus: Large-Scale 3D Fake-Multiplayer (`.io` & Royale) Games:**
+  - Every discovered concept must feature **live competition against 12–24 named AI bots**, a live leaderboard or elimination counter, **multi-stage / multi-biome progression (3+ distinct arenas/courses)**, and a **persistent Garage / Skin & Stat Upgrade Shop**.
+- **Sub-Genre Diversity Invariant:** Do NOT limit candidates to circular arena knockouts. Every scan must span diverse 3D Fake-Multiplayer sub-genres defined in `scout-directives.json`:
+  1. `io-party-knockout-royale` (Fall Guys / Stumble Guys 3D multi-round obstacle knockout)
+  2. `io-collect-build-race` (Bridge Race / Shortcut Run 3D competitive brick-stealing & bridge-building race)
+  3. `io-brawl-battle-royale` (Brawl Stars / Smash Karts 3D weapon & power-cube arena battle royale)
+  4. `io-grow-evolve-arena` (Snake Clash / Snowball.io 3D 10-tier monster evolution & encirclement)
+  5. `io-turf-mob-conquest` (Paper.io 3D / Crowd City / Mob Control turf painting & swarm conquest)
+- Bundle budget is expanded up to `< 100 MB` (YouTube Playables max ceiling) with up to `5,000–8,000` triangles per hero `.glb` override and `InstancedMesh` crowds/obstacles.
 
 ### Step 3: 100-Point YouTube Playables Revenue & Engagement Matrix
 Classify each candidate into its primary category (`io-fake-multiplayer`, `casual-fps-physics`, `voxel-sandbox-action`, `physics-merge-drop`, `arcade-skill-runner`, `3d-spatial-jam`, `3d-sort-stack`) and score across 4 pillars:

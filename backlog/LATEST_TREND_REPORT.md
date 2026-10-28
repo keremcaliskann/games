@@ -1,37 +1,25 @@
-# YouTube Playables & Web Game 90-Day Revenue Trend Report
+# YouTube Playables & Multi-Portal 90-Day Trend Report — Large-Scale 3D Fake-Multiplayer Edition
 
-- **Scan Window:** Last 90 Days (August – October 2026)
-- **Scan & Validation Date:** `2026-10-27`
-- **Directives Alignment:** Strictly aligned with `backlog/scout-directives.json` (Prioritizing `.io` Arenas, Casual FPS/Ballistic Physics, Voxel Sandbox Action, and Momentum Skill Runners).
-- **Primary Target:** YouTube Playables (`ytgame` SDK, < 50 MB, zero external network) + Universal Multi-Portal (Yandex Games, CrazyGames, Poki, GitHub Pages).
-- **Scoring Framework:** 100-Point Revenue Matrix (`Rewarded Ad Conversion: 35` | `Session Retention: 25` | `YouTube Ergonomics: 20` | `WebGL/<50MB Feasibility: 20`).
-
----
-
-## 1. Executive Summary & Market Dynamics
-
-1. **Market Scale & Strategic Shift:**
-   - On YouTube Playables and major web portals (CrazyGames, Poki), instant physics dueling (*Ragdoll Archers*, *Bowmasters*), bumper combat arenas (*Bumper.io*, *Snake Clash!* at 101M+ plays), and rolling ball momentum tracks (*Going Balls* at 98M+ plays) generate peak session lengths and repeat-play rates.
-   - The studio production queue has expanded into a diverse 6-blueprint pipeline encompassing **Ballistic Archery**, **Fake-Multiplayer .io**, **Sky Ball Momentum**, **Wrecking Ball Demolition**, **Voxel Dungeon Mining**, and **Car Smash Derbies**.
-
-2. **Active Portfolio Status (`games.json` — 12 Released Titles):**
-   - 12 verified titles live on GitHub Pages and YouTube Playables ready.
-   - All 12 games operate with 0 hot-path memory allocations, 60 FPS performance, Soft Daylight art direction, and dual-mode responsive arcade shells.
-
-3. **Production Queue Top Candidates:**
-   - **`ragdoll-archers-duel-3d` // ARCHER DUEL 3D (Score: 96/100, Tier S, Rank #1):** 1-finger ballistic bow showdown with hilarious ragdoll tumble physics, headshot multipliers, and triple-arrow revives.
-   - **`bumper-smash-io-3d` // BUMPER SMASH 3D (Score: 95/100, Tier S, Rank #2):** Bouncy spring-bumper kart arena with 7 AI bots, expanding mass upon knockouts, and high-converting near-miss revives.
-   - **`rolling-sky-ball-3d` // ROLLING BALL 3D (Score: 94/100, Tier S, Rank #3):** High-momentum chrome rolling ball obstacle course inspired by *Going Balls* (98M plays benchmark).
+**Scan Date:** 2026-10-28
+**Strategic Shift:** 100% Large-Scale 3D Fake-Multiplayer (`.io`, Knockout Royale, Collect-and-Build Race, Weaponized Kart Battle Royale, Monster Evolution, Territory Conquest).
+**Expanded Technical & Scope Ceiling:**
+- **Bundle Budget:** Expanded up to `< 100 MB` (`dist/`).
+- **Competitor Scale:** 12 to 16 live named AI bots per match with dynamic personalities and live leaderboard/qualification tracking.
+- **Multi-Stage / Multi-Biome Depth:** Every new game features **3+ distinct stages/biomes** (e.g., 3-Round Tournament or 3-Island Progression) plus a **persistent Garage / Skin & Stat Upgrade Shop** saved via `CloudSaveData`.
 
 ---
 
-## 2. Active Production Queue (`backlog/ideas-backlog.json`)
+## Ranked Queue (`backlog/ideas-backlog.json` — `status: "ready"`)
 
-| Rank | ID | Title | Category | Total Score | Rewarded Ad (35) | Retention (25) | Ergonomics (20) | WebGL Fit (20) | Asset Strategy | Status |
-|:---|:---|:---|:---|:---:|:---:|:---:|:---:|:---:|:---|:---:|
-| **#1** | `ragdoll-archers-duel-3d` | **ARCHER DUEL 3D // RAGDOLL SHOWDOWN** | `casual-fps-physics` | **96** | 34 | 25 | 19 | 18 | Tier-1 Compound Procedural | `ready` |
-| **#2** | `bumper-smash-io-3d` | **BUMPER SMASH 3D // ARENA KNOCKOUT .IO** | `io-fake-multiplayer` | **95** | 34 | 24 | 19 | 18 | Tier-1 Compound Procedural | `ready` |
-| **#3** | `rolling-sky-ball-3d` | **ROLLING BALL 3D // SKY MOMENTUM** | `arcade-skill-runner` | **94** | 33 | 24 | 19 | 18 | Tier-1 Compound Procedural | `ready` |
-| **#4** | `giant-demolition-3d` | **GIANT SMASH 3D // WRECKING BALL CRUSH** | `casual-fps-physics` | **93** | 33 | 24 | 18 | 18 | Tier-1 Compound Procedural | `ready` |
-| **#5** | `voxel-dungeon-miner-3d` | **VOXEL MINER 3D // DUNGEON ESCAPE** | `voxel-sandbox-action` | **91** | 32 | 23 | 18 | 18 | Tier-1 Compound Procedural | `ready` |
-| **#6** | `crash-arena-demolition-3d` | **CAR SMASH 3D // DEMOLITION SANDBOX** | `casual-fps-physics` | **90** | 32 | 23 | 18 | 17 | Tier-1 Compound Procedural | `ready` |
+| Rank | Game ID | Title | Sub-Genre | Score (`100`) | Breakdown (`Ad 35 / Ret 25 / Ergo 20 / WebGL 20`) |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **#1** | `stumble-knockout-royale-3d` | **PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO** | `io-party-knockout-royale` | **98** | `35 / 25 / 19 / 19` |
+| **#2** | `bridge-rush-io-3d` | **BRIDGE RACE 3D // STAIR BUILDER .IO** | `io-collect-build-race` | **97** | `35 / 25 / 19 / 18` |
+| **#3** | `smash-karts-brawl-3d` | **SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO** | `io-brawl-battle-royale` | **96** | `34 / 25 / 19 / 18` |
+| **#4** | `snake-clash-io-3d` | **SNAKE CLASH 3D // MONSTER EVOLUTION .IO** | `io-grow-evolve-arena` | **96** | `35 / 24 / 19 / 18` |
+| **#5** | `turf-paint-conquest-io-3d` | **TURF PAINT 3D // TERRITORY CONQUEST .IO** | `io-turf-mob-conquest` | **95** | `34 / 24 / 19 / 18` |
+
+---
+
+## Re-Validation Changelog
+- **Archived (`status: "archived"`):** `rolling-sky-ball-3d`, `giant-demolition-3d`, `voxel-dungeon-miner-3d`, `crash-arena-demolition-3d` (single-player arcade/sandbox titles archived per new 100% 3D Fake-Multiplayer directive).
