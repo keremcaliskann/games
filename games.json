@@ -1,5 +1,24 @@
 [
   {
+    "id": "stumble-knockout-royale-3d",
+    "title": "PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO",
+    "description": "Sprint, jump, and dive against 15 AI rivals across a 3-round sky obstacle tournament! Dodge spinning hammers, qualify through Round 1 & 2, unlock 6 runner skins, and claim the Golden Crown.",
+    "path": "./stumble-knockout-royale-3d/",
+    "tags": [
+      ".io Royale",
+      "3-Round Tournament",
+      "16 Players",
+      "3D Obstacle Course",
+      "60 FPS"
+    ],
+    "date": "2026-10-28",
+    "icon": "./stumble-knockout-royale-3d/icon.svg",
+    "iconEmoji": "👑",
+    "featured": true,
+    "themeColor": "#ec4899",
+    "accentGradient": "linear-gradient(135deg, #ec4899, #8b5cf6)"
+  },
+  {
     "id": "bumper-smash-io-3d",
     "title": "BUMPER SMASH 3D // ARENA KNOCKOUT .IO",
     "description": "Steer a bouncy 3D spring-bumper kart across a shrinking sunlit arena! Ram 7 AI rivals into the sea, grow your kart, and claim the #1 Knockout Crown.",

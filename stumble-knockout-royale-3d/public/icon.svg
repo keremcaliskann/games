@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <linearGradient id="crownGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <!-- Checkered Finish Track Arc -->
+  <ellipse cx="256" cy="410" rx="190" ry="52" fill="#fcf8ee" stroke="#ffffff" stroke-width="8" />
+  <!-- Spinning Hammer Obstacle -->
+  <rect x="64" y="290" width="120" height="36" rx="18" fill="#ef4444" stroke="#ffffff" stroke-width="6" transform="rotate(-18 124 308)" />
+  <!-- Bean Runner Body -->
+  <rect x="176" y="178" width="160" height="200" rx="80" fill="#fb7185" stroke="#ffffff" stroke-width="10" />
+  <!-- Face Plate -->
+  <rect x="202" y="212" width="108" height="72" rx="36" fill="#ffffff" />
+  <circle cx="234" cy="248" r="12" fill="#0f172a" />
+  <circle cx="278" cy="248" r="12" fill="#0f172a" />
+  <!-- Golden Royal Crown -->
+  <polygon points="184,174 202,94 238,136 256,82 274,136 310,94 328,174" fill="url(#crownGrad)" stroke="#ffffff" stroke-width="8" stroke-linejoin="round" />
+</svg>
