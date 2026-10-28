@@ -18,6 +18,7 @@ const sharedAdsContent = fs.readFileSync(path.join(rootDir, 'shared/platform/ads
 const sharedShellContent = fs.readFileSync(path.join(rootDir, 'shared/ui/shell-controller.ts'), 'utf8');
 const sharedCssContent = fs.readFileSync(path.join(rootDir, 'shared/ui/arcade-shell.css'), 'utf8');
 const sharedVisualContent = fs.readFileSync(path.join(rootDir, 'shared/render/visual-enhancer.ts'), 'utf8');
+const sharedInputContent = fs.readFileSync(path.join(rootDir, 'shared/input/ergonomic-input.ts'), 'utf8');
 
 function buildLeftSidebarHtml() {
   return `      <!-- Left Navigation Rail -->
@@ -160,6 +161,9 @@ for (const gameMeta of catalog) {
   const adsPath = path.join(gameDir, 'src/platform/ads.ts');
   const shellPath = path.join(gameDir, 'src/ui/shell-controller.ts');
   const visualPath = path.join(gameDir, 'src/render/visual-enhancer.ts');
+  const ergonomicInputPath = path.join(gameDir, 'src/input/ergonomic-input.ts');
+  const inputManagerPath = path.join(gameDir, 'src/input/input-manager.ts');
+  const kbMousePath = path.join(gameDir, 'src/input/keyboard-mouse.ts');
   const lightingPath = path.join(gameDir, 'src/render/lighting.ts');
   const sdkPath = path.join(gameDir, 'src/platform/sdk.ts');
   const htmlPath = path.join(gameDir, 'index.html');
@@ -168,9 +172,11 @@ for (const gameMeta of catalog) {
     fs.mkdirSync(path.dirname(adsPath), { recursive: true });
     fs.mkdirSync(path.dirname(shellPath), { recursive: true });
     fs.mkdirSync(path.dirname(visualPath), { recursive: true });
+    fs.mkdirSync(path.dirname(ergonomicInputPath), { recursive: true });
     fs.writeFileSync(adsPath, sharedAdsContent, 'utf8');
     fs.writeFileSync(shellPath, sharedShellContent, 'utf8');
     fs.writeFileSync(visualPath, sharedVisualContent, 'utf8');
+    fs.writeFileSync(ergonomicInputPath, sharedInputContent, 'utf8');
 
     if (fs.existsSync(lightingPath)) {
       const currentLighting = fs.readFileSync(lightingPath, 'utf8');
@@ -201,6 +207,10 @@ for (const gameMeta of catalog) {
   const finalAds = fs.existsSync(adsPath) ? fs.readFileSync(adsPath, 'utf8') : '';
   const finalShell = fs.existsSync(shellPath) ? fs.readFileSync(shellPath, 'utf8') : '';
   const finalVisual = fs.existsSync(visualPath) ? fs.readFileSync(visualPath, 'utf8') : '';
+  const finalErgonomicInput = fs.existsSync(ergonomicInputPath) ? fs.readFileSync(ergonomicInputPath, 'utf8') : '';
+  const finalInputMgr = fs.existsSync(inputManagerPath)
+    ? fs.readFileSync(inputManagerPath, 'utf8') + (fs.existsSync(kbMousePath) ? fs.readFileSync(kbMousePath, 'utf8') : '')
+    : '';
   const finalLighting = fs.existsSync(lightingPath) ? fs.readFileSync(lightingPath, 'utf8') : '';
   const finalHtml = fs.existsSync(htmlPath) ? fs.readFileSync(htmlPath, 'utf8') : '';
   const finalSdk = fs.existsSync(sdkPath) ? fs.readFileSync(sdkPath, 'utf8') : '';
@@ -208,6 +218,10 @@ for (const gameMeta of catalog) {
   const adsSynced = finalAds === sharedAdsContent;
   const shellSynced = finalShell === sharedShellContent;
   const visualSynced = finalVisual === sharedVisualContent && finalLighting.includes('VisualEnhancer.enhanceScene(scene)');
+  const inputErgonomicOk =
+    finalErgonomicInput === sharedInputContent &&
+    finalInputMgr.includes('pointerdown') &&
+    !finalInputMgr.includes('dragThreshold = 8');
   const hasShellDom =
     finalHtml.includes('id="arcade-shell"') &&
     finalHtml.includes('class="shell-sidebar shell-sidebar-left"') &&
@@ -226,6 +240,7 @@ for (const gameMeta of catalog) {
     ads: adsSynced ? 'SYNCED' : 'DRIFT',
     shellCtrl: shellSynced ? 'SYNCED' : 'DRIFT',
     visualIBL: visualSynced ? 'SYNCED' : 'DRIFT',
+    inputCtrl: inputErgonomicOk ? 'SYNCED' : 'DRIFT',
     shellDom: hasShellDom ? 'OK' : 'MISSING',
     ytSdk: hasYtSdk ? 'OK' : 'MISSING',
     icon: hasIcon ? 'OK' : 'MISSING',
@@ -235,7 +250,14 @@ for (const gameMeta of catalog) {
 console.table(report);
 
 const failed = report.filter(
-  (r) => r.ads !== 'SYNCED' || r.shellCtrl !== 'SYNCED' || r.visualIBL !== 'SYNCED' || r.shellDom !== 'OK' || r.ytSdk !== 'OK' || r.icon !== 'OK'
+  (r) =>
+    r.ads !== 'SYNCED' ||
+    r.shellCtrl !== 'SYNCED' ||
+    r.visualIBL !== 'SYNCED' ||
+    r.inputCtrl !== 'SYNCED' ||
+    r.shellDom !== 'OK' ||
+    r.ytSdk !== 'OK' ||
+    r.icon !== 'OK'
 );
 
 if (failed.length > 0) {

@@ -64,9 +64,11 @@ Build the complete project inside `c:/Users/kerem/Desktop/Games/<game-name>`:
 Audit the completed build across **4 Mandatory Filters**:
 
 ```markdown
-### Filter A: Camera & 9:16 / 16:9 Ergonomics
+### Filter A: Camera, 9:16 / 16:9 Ergonomics & Universal Input (`50-input-abstraction.md`)
 - [ ] Are bottom and side viewing angles 100% unobstructed (zero ground/pedestal blocking)?
 - [ ] Does the game play effortlessly with one hand in both 9:16 portrait and 16:9 landscape?
+- [ ] Are movement axes 100% camera-relative (dragging Right / pressing `D` moves toward Screen Right even on `+Z` cameras)?
+- [ ] Do `.io`/action games render a Floating Virtual Joystick with dynamic anchor, aiming games use Direct Point-and-Aim + hover tracking, and puzzles support both Tap-to-Place and Drag-and-Drop with Magnetic Tap Assist?
 
 ### Filter B: Art Direction, Compound Prefabs & ASMR Juice
 - [ ] Is the environment bright, sunlit, and vibrant? (STRICT: scene.background >= 0xbae6fd or pastel daylight, warm Hemisphere ground bounce >= 0xd0d0d0, zero dark voids, zero black floor grids).

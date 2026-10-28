@@ -23,8 +23,9 @@ Conducts an automated health check, rule verification, performance inspection, a
    - **Monetization Hooks:** 3 mandatory rewarded ad hooks (`65-monetization-ads.md`) and ad-disabled latching.
    - **Defensive Gameplay:** Pointerdown HUD isolation (`data-hud-interactive="true"`), single-shot transition latches, preflight `loadData`.
 
-3. **Feature & Gameplay Health Verification:**
-   - Verify core controls, camera angles/bounds (9:16 portrait and 16:9 landscape), audio mute sync, and level solvability.
+3. **Feature, Input Ergonomics & Gameplay Health Verification (`50-input-abstraction.md` / `universal-input-ergonomics`):**
+   - Verify camera-relative axis alignment (zero inverted Left/Right on `+Z` cameras), floating virtual thumbsticks with dynamic anchors, direct point-and-aim + hover tracking, dual-mode puzzle manipulation (Tap-to-Place + Drag-and-Drop), and magnetic raycast tap assist (`>= 18px` tap tolerance).
+   - Verify camera angles/bounds (9:16 portrait and 16:9 landscape), audio mute sync, and level solvability.
 
 4. **Code & Performance Inspection (No Direct Edits):**
    - Inspect hot paths (`update`, `fixedUpdate`, `render`) for heap allocations (`new THREE.Vector3`, array spreads, closures) and performance bottlenecks.

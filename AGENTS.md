@@ -82,7 +82,7 @@ A task is complete only when:
 5. Code committed with a clean English Conventional Commit and pushed to the repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
 7. 3-Column Arcade Shell compliant: Always renders the 3-column Arcade Shell (Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail, zero fullscreen toggle/collapse) and includes verified `public/icon.svg`.
-8. Game Director 4-Filter Critique Pass: Evaluated across (A) 360° camera line-of-sight & 9:16/16:9 ergonomics, (B) daylight palette & Compound Procedural Prefabs (`ASSETS_NEEDED.md`), (C) YouTube Playables SDK & 3 Revenue Hooks, and (D) 60 FPS QA before final push.
+8. Game Director 4-Filter Critique Pass: Evaluated across (A) 360° camera line-of-sight, 9:16/16:9 ergonomics & camera-relative input (`50-input-abstraction.md` / `universal-input-ergonomics`), (B) daylight palette & Compound Procedural Prefabs (`ASSETS_NEEDED.md`), (C) YouTube Playables SDK & 3 Revenue Hooks, and (D) 60 FPS QA before final push.
 
 ## 8. Rules & Skills Directory
 
@@ -114,7 +114,8 @@ A task is complete only when:
 | `skills/game-preflight-audit` | skill | Automated pre-flight QA, safeguard integrity audit, and deadlock detection |
 | `skills/capacitor-mobile-port` | skill | Packaging web build to Android/iOS |
 | `skills/plan-then-implement` | skill | Complex, multi-file, or ambiguous tasks |
-| `skills/shared-ui-ads-sync` | skill | Synchronizes shared 3-column Arcade Shell (`shared/ui/`) and `UniversalAdProvider` (`shared/platform/ads.ts`) across all games via `scripts/sync-shared-core.mjs` |
+| `skills/shared-ui-ads-sync` | skill | Synchronizes shared 3-column Arcade Shell (`shared/ui/`), `UniversalAdProvider` (`shared/platform/ads.ts`), and `ErgonomicInput` (`shared/input/ergonomic-input.ts`) across all games via `scripts/sync-shared-core.mjs` |
+| `skills/universal-input-ergonomics` | skill | Enforces camera-relative 3D movement projection, visual floating joysticks with dynamic anchors, direct point-and-aim, dual-mode puzzle controls, and magnetic tap assist |
 | `skills/visual-polish-3d` | skill | Applies zero-asset 60 FPS Three.js visual polish (`RoomEnvironment` IBL, `RoundedBoxGeometry` bevels, Fresnel rim-light shader, contact shadows, sky dome) via `shared/render/visual-enhancer.ts` |
 | `skills/games-portal-catalog` | skill | Central arcade portal index management |
 | `skills/zip` | slash_command | `/zip` — Multi-platform ZIP packaging (Yandex, CrazyGames, YouTube, Poki) |
