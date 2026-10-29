@@ -1,5 +1,36 @@
 [
   {
+    "id": "bridge-rush-io-3d-backpack-stack-sway-and-pickup-pop",
+    "gameId": "bridge-rush-io-3d",
+    "priority": "P1",
+    "priorityScore": 93,
+    "status": "ready",
+    "type": "mechanic",
+    "title": "Add Physics Backpack Stack Sway Wobble & Floating Brick Pickup Number Pops",
+    "description": "Apply velocity-dependent sinusoidal sway and lean inertia to the backpack brick tower as stack height scales past 15 bricks, and spawn small floating '+1' team-colored pop markers when collecting floor bricks.",
+    "targetFiles": [
+      "bridge-rush-io-3d/src/game/entities/builder-runner.ts",
+      "bridge-rush-io-3d/src/render/effects.ts"
+    ],
+    "createdAt": "2026-10-29"
+  },
+  {
+    "id": "stumble-knockout-royale-3d-dive-dust-rings-and-trampoline-squash",
+    "gameId": "stumble-knockout-royale-3d",
+    "priority": "P2",
+    "priorityScore": 88,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Add Aerodynamic Dive Wind Streaks, Ground Touchdown Dust Rings & Bouncer Mesh Squash",
+    "description": "Render fading 3D wind velocity streaks during mid-air dive dashes, spawn expanding ground dust ring decals on landing, and apply vertical mesh squash-and-stretch to mushroom trampolines when stepped on.",
+    "targetFiles": [
+      "stumble-knockout-royale-3d/src/render/effects.ts",
+      "stumble-knockout-royale-3d/src/render/PrefabFactory.ts",
+      "stumble-knockout-royale-3d/src/game/systems/obstacle-course.ts"
+    ],
+    "createdAt": "2026-10-29"
+  },
+  {
     "id": "stumble-knockout-royale-3d-midair-recovery-and-confetti",
     "gameId": "stumble-knockout-royale-3d",
     "priority": "P1",
