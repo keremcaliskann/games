@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { CameraRig } from './render/camera-rig';
 import { LightingSetup } from './render/lighting';
 import { ParticleBurstEffect } from './render/effects';
+import { VisualEnhancer } from './render/visual-enhancer';
 import { SoundController } from './core/audio';
 import { GameLoop } from './core/game-loop';
 import { InputManager } from './input/input-manager';
@@ -70,8 +71,7 @@ class HoleCityApp {
     });
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2.0));
-    this.renderer.shadowMap.enabled = true;
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    VisualEnhancer.enhanceRendererAndIBL(this.renderer, this.scene);
     this.appEl.appendChild(this.renderer.domElement);
 
     this.cameraRig = new CameraRig(width / height);
@@ -162,6 +162,8 @@ class HoleCityApp {
     // 4. Generate ~350 Interactive City Props across all 5 Tiers
     this.spawnCityProps();
 
+    VisualEnhancer.upgradeSceneMaterials(this.scene);
+
     this.leaderboard.setHoles([this.playerHole, ...this.bots]);
     this.botAi.setEntities(this.bots, this.playerHole, this.props);
   }
@@ -249,8 +251,16 @@ class HoleCityApp {
       this.props[i].reset();
     }
 
+    this.botAi.resetState();
+
     this.hud.updateTimer(this.matchTimeRemaining);
     this.hud.updateScore(0);
+    this.syncPlayerEvolutionHud();
+  }
+
+  private syncPlayerEvolutionHud(): void {
+    const evo = this.playerHole.getStageProgress();
+    this.hud.updateEvolutionProgress(this.playerHole.radius, evo.current, evo.next, evo.progress01);
   }
 
   private setupHudBoosters(): void {
@@ -277,9 +287,15 @@ class HoleCityApp {
       onSize: async () => {
         const success = await this.ads.showRewarded('booster_size');
         if (success) {
+          const oldStage = this.playerHole.currentStage;
           this.playerHole.activateSizeSurge();
           this.sound.playGrow();
-          this.particles.spawnBurst(this.playerHole.position, 0xa855f7, 24);
+          this.particles.spawnBurst(this.playerHole.position, 0xa855f7, 28);
+          this.syncPlayerEvolutionHud();
+          if (this.playerHole.currentStage > oldStage) {
+            this.cameraRig.triggerStageZoomKick();
+            this.hud.showStageUpBanner(this.playerHole.getEvolutionStage());
+          }
         }
       },
     });
@@ -365,14 +381,24 @@ class HoleCityApp {
 
         if (dist <= suctionRadius && hole.canSwallowProp(prop.radius)) {
           prop.startSwallow(hole.position, () => {
-            hole.addScore(prop.points, prop.radius * 0.02);
+            const leveledUp = hole.addScore(prop.points, prop.radius * 0.042);
 
             if (hole.isPlayer) {
               if (prop.tier === 1) this.sound.playPop();
               else if (prop.tier <= 3) this.sound.playCrunch();
               else this.sound.playRumble();
 
-              this.particles.spawnBurst(hole.position, 0x38bdf8, 8 + prop.tier * 3);
+              this.hud.spawnEatPopup(prop.points, prop.tier);
+              this.syncPlayerEvolutionHud();
+              this.particles.spawnBurst(hole.position, 0x38bdf8, 8 + prop.tier * 4);
+
+              if (leveledUp) {
+                const newStage = hole.getEvolutionStage();
+                this.sound.playGrow();
+                this.cameraRig.triggerStageZoomKick();
+                this.hud.showStageUpBanner(newStage);
+                this.particles.spawnBurst(hole.position, newStage.accentHex, 34);
+              }
             }
           });
           break;
@@ -416,7 +442,7 @@ class HoleCityApp {
     prey.isAlive = false;
     prey.group.visible = false;
     predator.kills++;
-    predator.addScore(250, 0.45);
+    const leveledUp = predator.addScore(250, 0.48);
 
     predator.showTaunt('😈 NOM NOM!');
     prey.showTaunt('😱 NOOO!');
@@ -425,6 +451,12 @@ class HoleCityApp {
 
     if (predator.isPlayer) {
       this.sound.playEliminate();
+      this.syncPlayerEvolutionHud();
+      if (leveledUp) {
+        const newStage = predator.getEvolutionStage();
+        this.cameraRig.triggerStageZoomKick();
+        this.hud.showStageUpBanner(newStage);
+      }
     }
 
     // Hook 2: Near-Miss Revive Modal if Player was eaten

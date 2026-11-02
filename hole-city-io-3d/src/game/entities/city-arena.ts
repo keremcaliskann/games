@@ -16,14 +16,14 @@ export class CityArena {
   private buildCityGround(): void {
     const size = GAME_CONFIG.arenaSize;
 
-    // Biscuit/cream sidewalk foundational pavement (Strict Soft Daylight)
+    // Warm sunlit sandstone sidewalk foundational pavement (Soft Daylight)
     const groundGeo = new THREE.PlaneGeometry(size, size);
     groundGeo.rotateX(-Math.PI * 0.5);
 
     const groundMat = new THREE.MeshStandardMaterial({
-      color: 0xf5eedb,
-      roughness: 0.75,
-      metalness: 0.05,
+      color: 0xeeddbe,
+      roughness: 0.72,
+      metalness: 0.04,
     });
 
     const groundMesh = new THREE.Mesh(groundGeo, groundMat);
@@ -31,37 +31,69 @@ export class CityArena {
     groundMesh.position.y = -0.01;
     this.group.add(groundMesh);
 
-    // Park grass zones in selected city quadrants
-    const grassGeo = new THREE.PlaneGeometry(36, 36);
+    // 4 Lush emerald park quadrants with decorative water ponds
+    const grassGeo = new THREE.PlaneGeometry(30, 30);
     grassGeo.rotateX(-Math.PI * 0.5);
     const grassMat = new THREE.MeshStandardMaterial({
-      color: 0x86efac,
-      roughness: 0.85,
+      color: 0x4ade80,
+      roughness: 0.75,
+    });
+
+    const pondRimGeo = new THREE.CircleGeometry(6.8, 24);
+    pondRimGeo.rotateX(-Math.PI * 0.5);
+    const pondRimMat = new THREE.MeshStandardMaterial({
+      color: 0xfde68a,
+      roughness: 0.65,
+    });
+
+    const pondGeo = new THREE.CircleGeometry(5.6, 24);
+    pondGeo.rotateX(-Math.PI * 0.5);
+    const pondMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      roughness: 0.25,
+      metalness: 0.15,
     });
 
     const parkPositions = [
-      [-38, 0.01, -38],
-      [38, 0.01, 38],
+      [-24, 0.01, -24],
+      [24, 0.01, 24],
+      [-24, 0.01, 24],
+      [24, 0.01, -24],
     ];
 
-    parkPositions.forEach(([x, y, z]) => {
+    parkPositions.forEach(([x, y, z], idx) => {
       const park = new THREE.Mesh(grassGeo, grassMat);
       park.position.set(x, y, z);
       park.receiveShadow = true;
       this.group.add(park);
+
+      if (idx < 2) {
+        const rim = new THREE.Mesh(pondRimGeo, pondRimMat);
+        rim.position.set(x, 0.015, z);
+        this.group.add(rim);
+
+        const pond = new THREE.Mesh(pondGeo, pondMat);
+        pond.position.set(x, 0.02, z);
+        this.group.add(pond);
+      }
     });
   }
 
   private buildRoadNetwork(): void {
     const size = GAME_CONFIG.arenaSize;
     const roadMat = new THREE.MeshStandardMaterial({
-      color: 0xd4cabb, // Clean light matte asphalt (no dark void black!)
-      roughness: 0.65,
+      color: 0x64748b, // Crisp slate-blue-grey asphalt for strong contrast
+      roughness: 0.62,
     });
 
     const stripeMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
+      color: 0xf8fafc,
       roughness: 0.4,
+    });
+
+    const yellowStripeMat = new THREE.MeshStandardMaterial({
+      color: 0xfacc15,
+      roughness: 0.45,
     });
 
     // Main Avenue Cross (North-South & East-West)
@@ -103,23 +135,46 @@ export class CityArena {
       this.group.add(rMesh);
     });
 
-    // Center Intersection Dashes
-    const dashGeo = new THREE.PlaneGeometry(2.4, 0.4);
+    // Center Intersection Dashes & Zebra Crosswalks
+    const dashGeo = new THREE.PlaneGeometry(2.6, 0.45);
     dashGeo.rotateX(-Math.PI * 0.5);
 
     for (let i = -size / 2 + 5; i < size / 2; i += 7) {
-      if (Math.abs(i) > 8) {
+      if (Math.abs(i) > 9 && Math.abs(Math.abs(i) - offset) > 6) {
         // EW center line
-        const dashEW = new THREE.Mesh(dashGeo, stripeMat);
-        dashEW.position.set(i, 0.03, 0);
+        const dashEW = new THREE.Mesh(dashGeo, yellowStripeMat);
+        dashEW.position.set(i, 0.032, 0);
         this.group.add(dashEW);
 
         // NS center line
-        const dashNS = new THREE.Mesh(dashGeo, stripeMat);
+        const dashNS = new THREE.Mesh(dashGeo, yellowStripeMat);
         dashNS.rotation.y = Math.PI * 0.5;
-        dashNS.position.set(0, 0.03, i);
+        dashNS.position.set(0, 0.032, i);
         this.group.add(dashNS);
       }
+    }
+
+    // Zebra Crosswalk stripes around center plaza
+    const zebraGeo = new THREE.PlaneGeometry(2.2, 0.7);
+    zebraGeo.rotateX(-Math.PI * 0.5);
+    for (let s = -4.5; s <= 4.5; s += 1.8) {
+      const cwN = new THREE.Mesh(zebraGeo, stripeMat);
+      cwN.rotation.y = Math.PI * 0.5;
+      cwN.position.set(s, 0.034, -8.5);
+      this.group.add(cwN);
+
+      const cwS = new THREE.Mesh(zebraGeo, stripeMat);
+      cwS.rotation.y = Math.PI * 0.5;
+      cwS.position.set(s, 0.034, 8.5);
+      this.group.add(cwS);
+
+      const cwE = new THREE.Mesh(zebraGeo, stripeMat);
+      cwE.position.set(8.5, 0.034, s);
+      this.group.add(cwE);
+
+      const cwW = new THREE.Mesh(zebraGeo, stripeMat);
+      cwW.position.set(-8.5, 0.034, s);
+      this.group.add(cwW);
     }
   }
 

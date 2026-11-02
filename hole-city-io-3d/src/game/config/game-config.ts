@@ -5,14 +5,68 @@ export interface BotConfig {
   ringColor: string;
 }
 
+export interface EvolutionStage {
+  stage: number;
+  title: string;
+  minRadius: number;
+  unlockLabel: string;
+  accentColor: string;
+  accentHex: number;
+}
+
 export const GAME_CONFIG = {
   arenaSize: 140, // 140m x 140m bounded city
   matchDurationSec: 90,
   baseHoleRadius: 1.15,
-  maxHoleRadius: 7.5,
-  baseSpeed: 14.5,
-  turboSpeedMultiplier: 1.45,
+  maxHoleRadius: 7.8,
+  baseSpeed: 8.2,
+  botSpeedMultiplier: 0.88,
+  turboSpeedMultiplier: 1.38,
   magnetRangeMultiplier: 2.8,
+
+  // Evolution Stages for strong progression feedback
+  evolutionStages: [
+    {
+      stage: 1,
+      title: 'SOKAK YUTUCU',
+      minRadius: 1.15,
+      unlockLabel: 'Koniler & Hidrantlar',
+      accentColor: '#06b6d4',
+      accentHex: 0x06b6d4,
+    },
+    {
+      stage: 2,
+      title: 'ARAÇ AVCISI',
+      minRadius: 1.65,
+      unlockLabel: 'Otomobiller & Ağaçlar',
+      accentColor: '#10b981',
+      accentHex: 0x10b981,
+    },
+    {
+      stage: 3,
+      title: 'BULVAR DEVİ',
+      minRadius: 2.45,
+      unlockLabel: 'Şehir Otobüsleri',
+      accentColor: '#f59e0b',
+      accentHex: 0xf59e0b,
+    },
+    {
+      stage: 4,
+      title: 'BLOK YIKICI',
+      minRadius: 3.6,
+      unlockLabel: 'Binalar & Mağazalar',
+      accentColor: '#ec4899',
+      accentHex: 0xec4899,
+    },
+    {
+      stage: 5,
+      title: 'MEGA TEKİLLİK',
+      minRadius: 4.9,
+      unlockLabel: 'Dev Gökdelenler!',
+      accentColor: '#8b5cf6',
+      accentHex: 0x8b5cf6,
+    },
+  ] as EvolutionStage[],
 
   // Boosters
   boosterMagnetDurationSec: 12,

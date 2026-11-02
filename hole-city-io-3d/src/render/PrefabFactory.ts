@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { ProceduralMeshBuilder } from './procedural-mesh-builder';
 
 export interface PropPrefabData {
   group: THREE.Group;
@@ -20,9 +21,6 @@ export class PrefabFactory {
   private static matTreeTrunk = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
   private static matFoliage1 = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.5 });
   private static matFoliage2 = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.5 });
-  private static matCarYellow = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.45 });
-  private static matCarRed = new THREE.MeshStandardMaterial({ color: 0xf43f5e, roughness: 0.45 });
-  private static matCarCyan = new THREE.MeshStandardMaterial({ color: 0x06b6d4, roughness: 0.45 });
   private static matCarGlass = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2, metalness: 0.5 });
   private static matTire = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 });
   private static matBusBody = new THREE.MeshStandardMaterial({ color: 0x3b82f6, roughness: 0.45 });
@@ -219,36 +217,26 @@ export class PrefabFactory {
     };
   }
 
-  // 5. Sedan Car (Tier 2, required radius >= 1.6)
+  // 5. Sedan Car (Tier 2, required radius >= 1.65)
   public static createSedanCar(colorVariant = 0): PropPrefabData {
-    const group = new THREE.Group();
-    const bodyMat = colorVariant === 0 ? this.matCarYellow : colorVariant === 1 ? this.matCarRed : this.matCarCyan;
+    const primaryHex = colorVariant === 0 ? 0xfacc15 : colorVariant === 1 ? 0xf43f5e : 0x06b6d4;
+    const secondaryHex = colorVariant === 0 ? 0xd97706 : colorVariant === 1 ? 0xbe123c : 0x0284c7;
+    const group = ProceduralMeshBuilder.createCarChassis(2.8, 1.45, 0.72, {
+      baseColorHex: primaryHex,
+      stripeColorHex: 0xffffff,
+      accentColorHex: secondaryHex,
+      numberText: String((colorVariant + 1) * 11),
+      hasCarbonHood: false,
+    });
 
-    // Main chassis body
-    const bodyGeo = new THREE.BoxGeometry(1.6, 0.5, 3.2);
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
-    body.position.y = 0.5;
-    body.castShadow = true;
-    group.add(body);
-
-    // Cabin glass
-    const cabinGeo = new THREE.BoxGeometry(1.35, 0.45, 1.7);
-    const cabin = new THREE.Mesh(cabinGeo, this.matCarGlass);
-    cabin.position.set(0, 0.95, -0.15);
-    cabin.castShadow = true;
-    group.add(cabin);
-
-    // 4 Wheels
-    const wheelGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.25, 10);
+    const wheelGeo = new THREE.CylinderGeometry(0.28, 0.28, 0.24, 12);
     wheelGeo.rotateZ(Math.PI * 0.5);
-
     const wheelPositions = [
-      [-0.85, 0.3, 1.0],
-      [0.85, 0.3, 1.0],
-      [-0.85, 0.3, -1.0],
-      [0.85, 0.3, -1.0],
+      [-0.78, 0.28, 0.9],
+      [0.78, 0.28, 0.9],
+      [-0.78, 0.28, -0.9],
+      [0.78, 0.28, -0.9],
     ];
-
     wheelPositions.forEach(([x, y, z]) => {
       const w = new THREE.Mesh(wheelGeo, this.matTire);
       w.position.set(x, y, z);
@@ -318,65 +306,94 @@ export class PrefabFactory {
     };
   }
 
-  // 7. Townhouse / Shop (Tier 4, required radius >= 3.8)
+  // 7. Townhouse / Shop (Tier 4, required radius >= 3.6)
   public static createTownhouse(variant = 0): PropPrefabData {
     const group = new THREE.Group();
     const wallMat = variant === 0 ? this.matBuildingCream : variant === 1 ? this.matBuildingPastelBlue : this.matBuildingMint;
 
     // Building body
-    const bldgGeo = new THREE.BoxGeometry(4.2, 4.6, 4.2);
+    const bldgGeo = new THREE.BoxGeometry(4.2, 4.8, 4.2);
     const bldg = new THREE.Mesh(bldgGeo, wallMat);
-    bldg.position.y = 2.3;
+    bldg.position.y = 2.4;
     bldg.castShadow = true;
     group.add(bldg);
 
-    // Slanted Roof
+    // Architectural window rows (Front & Back)
+    const winGeo = new THREE.BoxGeometry(1.1, 0.85, 4.28);
+    for (let row = 0; row < 2; row++) {
+      for (let col = -1; col <= 1; col += 2) {
+        const win = new THREE.Mesh(winGeo, this.matSkyscraperGlass);
+        win.position.set(col * 1.05, 2.6 + row * 1.35, 0);
+        group.add(win);
+      }
+    }
+
+    // Slanted Roof + Chimney
     const roofGeo = new THREE.ConeGeometry(3.6, 1.6, 4);
     roofGeo.rotateY(Math.PI * 0.25);
     const roof = new THREE.Mesh(roofGeo, this.matRoofTile);
-    roof.position.y = 5.4;
+    roof.position.y = 5.6;
     roof.castShadow = true;
     group.add(roof);
 
-    // Ground Shop Awning
-    const awningGeo = new THREE.BoxGeometry(3.6, 0.3, 1.0);
-    awningGeo.rotateX(0.2);
-    const awning = new THREE.Mesh(awningGeo, this.matOrangeCone);
-    awning.position.set(0, 1.9, 2.3);
+    // Ground Shop Awning + Entrance Door
+    const awningGeo = new THREE.BoxGeometry(3.6, 0.32, 1.1);
+    awningGeo.rotateX(0.22);
+    const awning = new THREE.Mesh(awningGeo, variant === 1 ? this.matRedHydrant : this.matOrangeCone);
+    awning.position.set(0, 1.85, 2.35);
     group.add(awning);
+
+    const doorGeo = new THREE.BoxGeometry(1.2, 1.5, 0.15);
+    const door = new THREE.Mesh(doorGeo, this.matDarkMetal);
+    door.position.set(0, 0.75, 2.12);
+    group.add(door);
 
     return {
       group,
       type: 'townhouse',
       tier: 4,
       radius: 3.2,
-      height: 6.2,
+      height: 6.4,
       points: 130,
     };
   }
 
-  // 8. Modern Skyscraper (Tier 5, required radius >= 5.0)
+  // 8. Modern Skyscraper (Tier 5, required radius >= 4.9)
   public static createSkyscraper(): PropPrefabData {
     const group = new THREE.Group();
 
     // Tower base
-    const baseGeo = new THREE.BoxGeometry(5.2, 9.0, 5.2);
+    const baseGeo = new THREE.BoxGeometry(5.4, 9.0, 5.4);
     const base = new THREE.Mesh(baseGeo, this.matBuildingCoral);
     base.position.y = 4.5;
     base.castShadow = true;
     group.add(base);
 
+    // Wrap-around glass window bands on base tower
+    const bandGeo = new THREE.BoxGeometry(5.52, 0.9, 5.52);
+    for (let b = 0; b < 4; b++) {
+      const band = new THREE.Mesh(bandGeo, this.matSkyscraperGlass);
+      band.position.y = 2.0 + b * 2.0;
+      group.add(band);
+    }
+
     // Tower middle glass tier
-    const midGeo = new THREE.BoxGeometry(4.0, 7.0, 4.0);
+    const midGeo = new THREE.BoxGeometry(4.1, 7.0, 4.1);
     const mid = new THREE.Mesh(midGeo, this.matSkyscraperGlass);
     mid.position.y = 12.5;
     mid.castShadow = true;
     group.add(mid);
 
+    // White architectural crown frame
+    const crownGeo = new THREE.BoxGeometry(4.35, 0.65, 4.35);
+    const crown = new THREE.Mesh(crownGeo, this.matWhiteStripe);
+    crown.position.y = 16.0;
+    group.add(crown);
+
     // Rooftop Spire
     const spireGeo = new THREE.CylinderGeometry(0.1, 0.35, 3.5, 8);
     const spire = new THREE.Mesh(spireGeo, this.matGoldMetal);
-    spire.position.y = 17.5;
+    spire.position.y = 17.8;
     group.add(spire);
 
     return {
@@ -384,7 +401,7 @@ export class PrefabFactory {
       type: 'skyscraper',
       tier: 5,
       radius: 4.5,
-      height: 19.0,
+      height: 19.5,
       points: 380,
     };
   }

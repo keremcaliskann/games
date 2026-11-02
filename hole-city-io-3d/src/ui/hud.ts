@@ -1,3 +1,4 @@
+import { EvolutionStage } from '../game/config/game-config';
 import { LeaderboardEntry } from '../game/systems/leaderboard';
 
 export class Hud {
@@ -6,10 +7,17 @@ export class Hud {
   private scoreEl!: HTMLElement;
   private rankBadgeEl!: HTMLElement;
   private leaderboardListEl!: HTMLElement;
+  private evoStageLabelEl!: HTMLElement;
+  private evoSizeValEl!: HTMLElement;
+  private evoFillEl!: HTMLElement;
+  private evoNextHintEl!: HTMLElement;
+  private stageBannerEl!: HTMLElement;
+  private floatingLayerEl!: HTMLElement;
   private boosterMagnetBtn!: HTMLButtonElement;
   private boosterTurboBtn!: HTMLButtonElement;
   private boosterSizeBtn!: HTMLButtonElement;
   private modalContainer!: HTMLElement;
+  private bannerTimeoutId: number = 0;
 
   // Multiplier needle animation state
   private needleAnimId: number = 0;
@@ -244,29 +252,139 @@ export class Hud {
           border-radius: 3px;
           transition: left 0.05s linear;
         }
+        /* Live Evolution & Size Progress Panel */
+        .hud-evo-panel {
+          align-self: center;
+          background: rgba(15, 23, 42, 0.9);
+          backdrop-filter: blur(8px);
+          border: 1.5px solid rgba(56, 189, 248, 0.45);
+          border-radius: 16px;
+          padding: 7px 14px;
+          min-width: 240px;
+          max-width: 320px;
+          color: #fff;
+          box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+          margin-top: -6px;
+        }
+        .hud-evo-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 11px;
+          font-weight: 900;
+          letter-spacing: 0.6px;
+          margin-bottom: 4px;
+        }
+        .hud-evo-stage {
+          color: #38bdf8;
+        }
+        .hud-evo-size {
+          color: #fbbf24;
+          font-weight: 900;
+        }
+        .hud-evo-track {
+          width: 100%;
+          height: 8px;
+          background: rgba(255, 255, 255, 0.14);
+          border-radius: 6px;
+          overflow: hidden;
+          margin-bottom: 4px;
+        }
+        .hud-evo-fill {
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(90deg, #06b6d4, #10b981, #f59e0b);
+          border-radius: 6px;
+          transition: width 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .hud-evo-next {
+          font-size: 10px;
+          font-weight: 700;
+          color: #cbd5e1;
+          text-align: center;
+        }
+        .hud-stage-banner {
+          position: absolute;
+          top: 128px;
+          left: 50%;
+          transform: translateX(-50%) scale(0.9);
+          background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+          border: 2px solid #ffffff;
+          color: #ffffff;
+          padding: 10px 22px;
+          border-radius: 24px;
+          font-weight: 900;
+          font-size: 14px;
+          letter-spacing: 0.8px;
+          box-shadow: 0 10px 28px rgba(139, 92, 246, 0.55);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+          z-index: 40;
+          text-align: center;
+          white-space: nowrap;
+        }
+        .hud-stage-banner.active {
+          opacity: 1;
+          transform: translateX(-50%) scale(1.0);
+        }
+        .hud-eat-popup {
+          position: absolute;
+          left: 50%;
+          top: 52%;
+          transform: translate(-50%, -50%);
+          color: #fde047;
+          font-weight: 900;
+          font-size: 15px;
+          text-shadow: 0 2px 6px rgba(0,0,0,0.75);
+          pointer-events: none;
+          animation: hudFloatUp 0.75s ease-out forwards;
+        }
+        @keyframes hudFloatUp {
+          0% { opacity: 1; transform: translate(-50%, 0) scale(0.85); }
+          40% { opacity: 1; transform: translate(-50%, -22px) scale(1.1); }
+          100% { opacity: 0; transform: translate(-50%, -44px) scale(0.95); }
+        }
       </style>
 
       <div class="hud-wrapper">
         <!-- Top Stats -->
-        <div class="hud-top-bar">
-          <div class="hud-stat-pill">
-            <span style="font-size: 18px;">⏱️</span>
-            <span id="hud-timer" class="hud-timer-val">01:30</span>
-          </div>
-
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <div id="hud-rank" class="hud-rank-pill">#8</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+          <div class="hud-top-bar">
             <div class="hud-stat-pill">
-              <span style="font-size: 16px;">🏆</span>
-              <span id="hud-score" class="hud-score-val">0</span>
+              <span style="font-size: 18px;">⏱️</span>
+              <span id="hud-timer" class="hud-timer-val">01:30</span>
+            </div>
+
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <div id="hud-rank" class="hud-rank-pill">#8</div>
+              <div class="hud-stat-pill">
+                <span style="font-size: 16px;">🏆</span>
+                <span id="hud-score" class="hud-score-val">0</span>
+              </div>
+            </div>
+
+            <div class="hud-leaderboard">
+              <div class="hud-lb-title">LİDERLİK TABLOSU</div>
+              <div id="hud-lb-list"></div>
             </div>
           </div>
 
-          <div class="hud-leaderboard">
-            <div class="hud-lb-title">LİDERLİK TABLOSU</div>
-            <div id="hud-lb-list"></div>
+          <!-- Evolution & Size Progress Bar -->
+          <div class="hud-evo-panel">
+            <div class="hud-evo-header">
+              <span id="hud-evo-stage" class="hud-evo-stage">SEVİYE 1 • SOKAK YUTUCU</span>
+              <span id="hud-evo-size" class="hud-evo-size">Ø 2.3m</span>
+            </div>
+            <div class="hud-evo-track">
+              <div id="hud-evo-fill" class="hud-evo-fill"></div>
+            </div>
+            <div id="hud-evo-next" class="hud-evo-next">Hedef: Otomobiller & Ağaçlar</div>
           </div>
         </div>
+
+        <div id="hud-stage-banner" class="hud-stage-banner"></div>
+        <div id="hud-floating-layer" style="position:absolute;inset:0;pointer-events:none;overflow:hidden;"></div>
 
         <!-- Bottom Tactical Boosters (3 Mandatory Revenue Hooks) -->
         <div class="hud-bottom-bar">
@@ -297,10 +415,56 @@ export class Hud {
     this.scoreEl = this.container.querySelector('#hud-score')!;
     this.rankBadgeEl = this.container.querySelector('#hud-rank')!;
     this.leaderboardListEl = this.container.querySelector('#hud-lb-list')!;
+    this.evoStageLabelEl = this.container.querySelector('#hud-evo-stage')!;
+    this.evoSizeValEl = this.container.querySelector('#hud-evo-size')!;
+    this.evoFillEl = this.container.querySelector('#hud-evo-fill')!;
+    this.evoNextHintEl = this.container.querySelector('#hud-evo-next')!;
+    this.stageBannerEl = this.container.querySelector('#hud-stage-banner')!;
+    this.floatingLayerEl = this.container.querySelector('#hud-floating-layer')!;
     this.boosterMagnetBtn = this.container.querySelector('#btn-booster-magnet')!;
     this.boosterTurboBtn = this.container.querySelector('#btn-booster-turbo')!;
     this.boosterSizeBtn = this.container.querySelector('#btn-booster-size')!;
     this.modalContainer = this.container.querySelector('#hud-modal-container')!;
+  }
+
+  public updateEvolutionProgress(
+    radius: number,
+    current: EvolutionStage,
+    next: EvolutionStage | null,
+    progress01: number
+  ): void {
+    this.evoStageLabelEl.textContent = `SEVİYE ${current.stage} • ${current.title}`;
+    this.evoStageLabelEl.style.color = current.accentColor;
+    this.evoSizeValEl.textContent = `Ø ${(radius * 2).toFixed(1)}m`;
+    this.evoFillEl.style.width = `${Math.round(progress01 * 100)}%`;
+
+    if (next) {
+      this.evoNextHintEl.textContent = `Sonraki Seviye (%${Math.round(progress01 * 100)}): ${next.unlockLabel}`;
+    } else {
+      this.evoNextHintEl.textContent = `MAKSİMUM EVRİM: Tüm Şehri Yutabilirsin!`;
+    }
+  }
+
+  public showStageUpBanner(stage: EvolutionStage): void {
+    if (this.bannerTimeoutId) window.clearTimeout(this.bannerTimeoutId);
+    this.stageBannerEl.innerHTML = `🚀 SEVİYE ${stage.stage}: ${stage.title}!<br/><span style="font-size:11px;font-weight:700;opacity:0.92;">Açıldı: ${stage.unlockLabel}</span>`;
+    this.stageBannerEl.classList.add('active');
+    this.bannerTimeoutId = window.setTimeout(() => {
+      this.stageBannerEl.classList.remove('active');
+    }, 2600);
+  }
+
+  public spawnEatPopup(points: number, tier: number): void {
+    if (tier < 2 && Math.random() > 0.35) return; // Keep screen clean on tiny props
+    const el = document.createElement('div');
+    el.className = 'hud-eat-popup';
+    const offsetX = (Math.random() - 0.5) * 70;
+    el.style.marginLeft = `${offsetX}px`;
+    el.textContent = tier >= 3 ? `+${points} 🔥 BÜYÜDÜN!` : `+${points}`;
+    this.floatingLayerEl.appendChild(el);
+    window.setTimeout(() => {
+      el.remove();
+    }, 750);
   }
 
   public updateTimer(secondsRemaining: number): void {
