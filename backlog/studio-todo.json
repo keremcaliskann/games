@@ -1,5 +1,63 @@
 [
   {
+    "id": "ragdoll-cannon-blitz-3d-zero-alloc-update-loop",
+    "gameId": "ragdoll-cannon-blitz-3d",
+    "priority": "P1",
+    "priorityScore": 95,
+    "status": "ready",
+    "type": "performance",
+    "title": "Eliminate Per-Frame Array & Vector3 Allocations in Projectile Update and Cluster Split",
+    "description": "Replace per-frame toRemove array allocation in ProjectileManager.update() with a reusable class-level scratch array and replace new THREE.Vector3 allocations in splitCluster() with pre-allocated scratch vectors.",
+    "targetFiles": [
+      "ragdoll-cannon-blitz-3d/src/game/entities/projectile.ts"
+    ],
+    "createdAt": "2026-11-02"
+  },
+  {
+    "id": "bumper-smash-io-3d-hybrid-kart-chassis-upgrade",
+    "gameId": "bumper-smash-io-3d",
+    "priority": "P1",
+    "priorityScore": 92,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Upgrade Bumper Karts to Dual-Path Hybrid 3D Chassis & Spoke Wheels",
+    "description": "Integrate AssetResolver.resolveHybridModel and ProceduralMeshBuilder.createCarChassis/createDetailedWheel into bumper-smash-io-3d PrefabFactory so karts render multi-spoke rims, racing liveries, and optional GLB overrides.",
+    "targetFiles": [
+      "bumper-smash-io-3d/src/render/PrefabFactory.ts"
+    ],
+    "createdAt": "2026-11-02"
+  },
+  {
+    "id": "bridge-rush-io-3d-tier-gate-arches-and-step-pop",
+    "gameId": "bridge-rush-io-3d",
+    "priority": "P1",
+    "priorityScore": 91,
+    "status": "ready",
+    "type": "visual-polish",
+    "title": "Add 3D Tier Checkpoints Archways & Stair Completion Confetti Burst",
+    "description": "Place high-contrast 3D checkpoint archways at the top of each staircase transition (z=28, z=64, z=98) and trigger a celebratory particle burst + chime when the player crosses onto a new island tier.",
+    "targetFiles": [
+      "bridge-rush-io-3d/src/game/systems/bridge-race-manager.ts",
+      "bridge-rush-io-3d/src/render/PrefabFactory.ts"
+    ],
+    "createdAt": "2026-11-02"
+  },
+  {
+    "id": "smash-karts-brawl-3d-lockon-reticle-and-drift-sparks",
+    "gameId": "smash-karts-brawl-3d",
+    "priority": "P2",
+    "priorityScore": 89,
+    "status": "ready",
+    "type": "mechanic",
+    "title": "Add 3D Auto-Aim Target Lock Reticle Ring & Sharp Drift Tire Sparks",
+    "description": "Render a pulsing red 3D target lock ring underneath the rival kart currently targeted by the player turret, and spawn golden drift sparks from rear wheels during high-angle turns.",
+    "targetFiles": [
+      "smash-karts-brawl-3d/src/game/systems/brawl-arena-manager.ts",
+      "smash-karts-brawl-3d/src/render/effects.ts"
+    ],
+    "createdAt": "2026-11-02"
+  },
+  {
     "id": "bridge-rush-io-3d-backpack-stack-sway-and-pickup-pop",
     "gameId": "bridge-rush-io-3d",
     "priority": "P1",
