@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="kart" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </linearGradient>
+    <linearGradient id="rocket" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)" />
+  <circle cx="256" cy="256" r="196" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="14" stroke-dasharray="28 18" />
+  <!-- Explosion Starburst -->
+  <polygon points="256,54 288,118 358,92 332,162 404,192 342,238 386,304 310,308 298,382 256,326 214,382 202,308 126,304 170,238 108,192 180,162 154,92 224,118" fill="#fef08a" opacity="0.32" />
+  <!-- Rocket Pod Top -->
+  <g transform="translate(0, -14)">
+    <rect x="184" y="138" width="144" height="52" rx="22" fill="#1e293b" stroke="#ffffff" stroke-width="8" />
+    <path d="M310 144 L374 164 L310 184 Z" fill="url(#rocket)" stroke="#ffffff" stroke-width="6" />
+    <circle cx="164" cy="164" r="24" fill="#fb923c" />
+  </g>
+  <!-- Armored Kart Body -->
+  <rect x="108" y="216" width="296" height="106" rx="44" fill="url(#kart)" stroke="#ffffff" stroke-width="12" />
+  <rect x="164" y="182" width="148" height="56" rx="24" fill="#e0f2fe" stroke="#ffffff" stroke-width="10" />
+  <!-- Front Bumper Shield -->
+  <rect x="372" y="226" width="44" height="88" rx="16" fill="#facc15" stroke="#ffffff" stroke-width="8" />
+  <!-- Wheels -->
+  <circle cx="170" cy="340" r="52" fill="#0f172a" stroke="#ffffff" stroke-width="12" />
+  <circle cx="170" cy="340" r="22" fill="#facc15" />
+  <circle cx="342" cy="340" r="52" fill="#0f172a" stroke="#ffffff" stroke-width="12" />
+  <circle cx="342" cy="340" r="22" fill="#facc15" />
+</svg>

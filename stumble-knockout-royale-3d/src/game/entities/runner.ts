@@ -13,6 +13,8 @@ export class RunnerEntity {
 
   public isGrounded = true;
   public hasDiveAvailable = false;
+  public isDiving = false;
+  public justLanded = false;
   public qualified = false;
   public finishOrder = 99;
   public stunTimer = 0;
@@ -80,12 +82,14 @@ export class RunnerEntity {
 
     if (this.isGrounded) {
       this.isGrounded = false;
+      this.isDiving = false;
       this.hasDiveAvailable = true;
       const bootMult = this.speedBootsTimer > 0 ? 1.18 : 1.0;
       this.vel.y = 11.2 * this.jumpUpgradeMult * bootMult;
       return 'jump';
     } else if (this.hasDiveAvailable) {
       this.hasDiveAvailable = false;
+      this.isDiving = true;
       this.vel.y = Math.max(this.vel.y, 4.2);
       this.vel.z += 7.5 * this.jumpUpgradeMult;
       this.rig.bodyPivot.rotation.x = 0.55;
@@ -100,11 +104,13 @@ export class RunnerEntity {
     this.vel.z = nz * force;
     this.vel.y = 6.5;
     this.isGrounded = false;
+    this.isDiving = false;
     this.canRecoveryRoll = true;
     this.stunTimer = Math.max(0.15, 0.45 * this.stabilityUpgradeMult);
   }
 
   public update(dt: number, trackHalfWidth: number, finishZ: number): boolean {
+    this.justLanded = false;
     if (this.qualified) {
       this.animPhase += dt * 8.0;
       this.rig.bodyPivot.position.y = Math.abs(Math.sin(this.animPhase)) * 0.35;
@@ -149,6 +155,8 @@ export class RunnerEntity {
           this.pos.y = 0;
           this.vel.y = 0;
           this.isGrounded = true;
+          this.justLanded = true;
+          this.isDiving = false;
           this.hasDiveAvailable = false;
           this.rig.bodyPivot.rotation.x = 0;
         }

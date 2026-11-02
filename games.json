@@ -1,5 +1,24 @@
 [
   {
+    "id": "smash-karts-brawl-3d",
+    "title": "SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO",
+    "description": "Drive and drift an armored combat kart against 11 AI battle karts! Smash Mystery Weapon Crates, fire homing rockets & twin gatlings, collect Power Cubes, and survive the closing storm.",
+    "path": "./smash-karts-brawl-3d/",
+    "tags": [
+      ".io Royale",
+      "Kart Combat",
+      "12 Players",
+      "Weapon Crates",
+      "60 FPS"
+    ],
+    "date": "2026-11-02",
+    "icon": "./smash-karts-brawl-3d/icon.svg",
+    "iconEmoji": "🏎️",
+    "featured": true,
+    "themeColor": "#ef4444",
+    "accentGradient": "linear-gradient(135deg, #ef4444, #f59e0b)"
+  },
+  {
     "id": "bridge-rush-io-3d",
     "title": "BRIDGE RACE 3D // STAIR BUILDER .IO",
     "description": "Race 11 AI rivals across 3 tiered sky islands! Collect color bricks to stack a towering spine on your back, tackle smaller rivals, and build stair bridges to the Golden Trophy Podium.",

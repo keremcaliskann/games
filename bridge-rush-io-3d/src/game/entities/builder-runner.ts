@@ -34,6 +34,9 @@ export class BuilderRunnerEntity {
   public aiTargetZ = 0;
 
   private animPhase = 0;
+  private prevVelX = 0;
+  private stackLeanX = 0;
+  private pickupPopTimer = 0;
 
   constructor(
     scene: THREE.Scene,
@@ -68,10 +71,17 @@ export class BuilderRunnerEntity {
   }
 
   public setBrickCount(count: number): void {
-    this.brickCount = Math.max(0, Math.min(60, Math.floor(count)));
+    const clamped = Math.max(0, Math.min(60, Math.floor(count)));
+    if (clamped > this.brickCount) {
+      this.pickupPopTimer = 0.16;
+    }
+    this.brickCount = clamped;
     const visibleSlots = Math.min(this.rig.backpackSlots.length, this.brickCount);
     for (let i = 0; i < this.rig.backpackSlots.length; i++) {
       this.rig.backpackSlots[i].visible = i < visibleSlots;
+      if (i >= visibleSlots) {
+        this.rig.backpackSlots[i].scale.setScalar(1.0);
+      }
     }
   }
 
@@ -134,11 +144,32 @@ export class BuilderRunnerEntity {
     this.rig.leftArm.rotation.x = -swing * 0.7;
     this.rig.rightArm.rotation.x = swing * 0.7;
 
-    // Gentle spine sway on backpack bricks
-    const swayBase = Math.sin(this.animPhase * 0.5) * 0.015 * Math.min(1.0, speed / 6.0);
+    if (this.pickupPopTimer > 0) {
+      this.pickupPopTimer = Math.max(0, this.pickupPopTimer - dt);
+    }
+
+    // Physics backpack stack sway wobble & lateral inertia lean (scales past 15 bricks)
+    const accelX = dt > 0.0001 ? (this.vel.x - this.prevVelX) / dt : 0;
+    this.prevVelX = this.vel.x;
+    const targetLean = THREE.MathUtils.clamp(-accelX * 0.0035, -0.06, 0.06);
+    this.stackLeanX = THREE.MathUtils.lerp(this.stackLeanX, targetLean, Math.min(1.0, dt * 8.0));
+
+    const heavyWobbleMult = this.brickCount > 15 ? 1.0 + (this.brickCount - 15) * 0.045 : 1.0;
+    const swayBase =
+      Math.sin(this.animPhase * 0.5) * 0.015 * Math.min(1.0, speed / 6.0) * heavyWobbleMult +
+      this.stackLeanX;
     const visCount = Math.min(this.rig.backpackSlots.length, this.brickCount);
     for (let i = 0; i < visCount; i++) {
-      this.rig.backpackSlots[i].position.x = swayBase * i;
+      const slot = this.rig.backpackSlots[i];
+      const heightFactor = i * (1.0 + i * 0.035);
+      slot.position.x = swayBase * heightFactor;
+      slot.rotation.z = -swayBase * i * 0.14;
+      if (i === visCount - 1 && this.pickupPopTimer > 0) {
+        const popScale = 1.0 + Math.sin((this.pickupPopTimer / 0.16) * Math.PI) * 0.38;
+        slot.scale.setScalar(popScale);
+      } else {
+        slot.scale.setScalar(1.0);
+      }
     }
 
     this.rig.root.position.copy(this.pos);

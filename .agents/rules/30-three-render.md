@@ -37,11 +37,14 @@ description: "Three.js renderer, scenes, materials, lighting, shadows, asset loa
 - Non-color data maps (normal, roughness, metalness, AO, height): keep linear (do not assign sRGB).
 - Leave `renderer.outputColorSpace` at default sRGB.
 
-## Asset Pipeline
-- Primary format: glTF 2.0 (`.glb`) compressed with Meshopt (`MeshoptDecoder`) and KTX2 textures (`KTX2Loader`).
+## Dual-Path Hybrid 3D Asset Pipeline
+- **Hybrid Resolver & Fallback Invariant (`AssetResolver` & `ProceduralMeshBuilder`):** All gameplay entities and hero meshes must use `AssetResolver.resolveHybridModel()`. A synchronous compound procedural fallback (from `ProceduralMeshBuilder` with bevels, multi-part assemblies, dynamic livery canvas textures, and contact shadows) displays immediately on frame 1 (`ytgame.game.firstFrameReady()`).
+- **Asynchronous GLB Hot-Swap:** When an external `.glb` is provided in `public/models/`, `AssetResolver` loads it asynchronously via `GLTFLoader`, auto-normalizes its bounding box to the specified target size, grounds its pivot to `min.y = 0`, calibrates all PBR materials to Stylized Soft Daylight (`roughness: 0.45–0.55`, `metalness: 0.05–0.15`), and replaces the procedural placeholder without hitch or frame drop.
+- **Zero Raw Primitive Blocks:** Never render single-box or raw cylinder "programmer art" placeholders for vehicles, characters, or hero props. Use `ProceduralMeshBuilder` compound hierarchies if `.glb` is absent.
+- **GLTF Optimization:** glTF 2.0 (`.glb`) compressed with Meshopt (`MeshoptDecoder`) and KTX2 textures (`KTX2Loader`). Files strictly capped to `< 3 MB` each (total game bundle `< 50 MB`).
 - Import Three.js addons from `three/addons/...` (e.g., `three/addons/loaders/GLTFLoader.js`).
-- Host decoders/transcoders in `public/` and resolve paths via `import.meta.env.BASE_URL` (essential for Capacitor relative paths).
-- Manage loaders inside a centralized `AssetManager`. Do not instantiate new loaders per asset load.
+- Host decoders/transcoders and `.glb` models in `public/` and resolve paths via `import.meta.env.BASE_URL` (essential for Capacitor relative paths).
+- Manage loaders inside a centralized `AssetManager` / `AssetResolver`. Do not instantiate new loaders per asset load.
 - Resource ownership: The module that loaded or instantiated a resource is responsible for calling its `dispose()`.
 
 ## GPU Resource Disposal

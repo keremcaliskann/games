@@ -66,8 +66,10 @@ Enforces all 7 technical domain checkpoints:
 3. **3D Camera & Line-of-Sight Ergonomics (Mandatory):**
    - **Zero ground/pedestal occlusion:** Never place decorative ground planes, pedestals, or props that obstruct viewing the puzzle/entities from underneath or extreme angles.
    - Dynamic FOV/distance scaling for both **9:16 portrait** (YouTube mobile app) and **16:9 landscape** (desktop).
-4. **Compound Procedural 3D Prefabs & Hot-Swap Loader (`render/`):**
-   - Multi-part hierarchical `THREE.Group` models (`ExtrudeGeometry`, `LatheGeometry`, procedural textures) + `public/models/` hot-swap `.glb` check + `ASSETS_NEEDED.md` specification.
+4. **Dual-Path Hybrid 3D Prefabs (`AssetResolver` + `ProceduralMeshBuilder`):**
+   - **Mandatory Hybrid Architecture:** Every entity uses `AssetResolver.resolveHybridModel(options)`:
+     1. Synchronous fallback: Rich compound procedural model from `ProceduralMeshBuilder` (beveled geometries, wheel assemblies with brake calipers, dynamic canvas liveries, contact shadows). Zero raw primitive boxes.
+     2. Asynchronous loader: Fetches optimized `.glb` from `public/models/`, auto-normalizes bounding dimensions, aligns pivot to `min.y = 0`, applies Daylight PBR calibration (`roughness: 0.45–0.55`), and seamlessly hot-swaps onto the scene graph.
    - Sunlit daylight environment (`HemisphereLight` + `DirectionalLight`) and high-saturation vibrant colors.
 5. **Procedural ASMR Web Audio (`core/audio.ts`):** Zero-asset Web Audio synthesis strictly governed by `ytgame.system.onAudioEnabledChange`.
 6. **3 Mandatory Revenue Loops (`ui/`, `game/`):** Working In-Level Boosters, Near-Miss Revive modal, and Victory Moving Multiplier bar.

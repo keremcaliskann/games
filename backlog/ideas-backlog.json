@@ -68,6 +68,74 @@
     }
   },
   {
+    "id": "rally-horizon-3d",
+    "title": "RALLY HORIZON 3D // TIME ATTACK & DRIFT",
+    "category": "3d-physics-rally",
+    "status": "ready",
+    "rank": 1,
+    "revenueScore": 98,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 19
+    },
+    "createdAt": "2026-11-02",
+    "lastValidatedAt": "2026-11-02",
+    "validationNote": "Rank #1 High-Retention 3D Sim-Cade Rally & Drift Game (Art of Rally, Colin McRae & PolyTrack benchmark). Features Raycast suspension physics, Pacejka tire slip model, multi-surface friction (Tarmac, Gravel, Mud), checkpoint ghost time-attack, and persistent Rally Garage.",
+    "coreLoop": "Pilot responsive rally cars across winding 3D mountain stages featuring banked hairpin turns, crest jumps, and surface transitions. Master weight-transfer braking and Scandinavian flick power-slides, race against dynamic ghost rivals across split-time sectors, and beat gold medal stage targets!",
+    "solvableMathSpec": "Deterministic Raycast suspension spring-damper equations coupled with simplified Pacejka slip-angle curves; road width, banking angles, and jump clearances mathematically calibrated for controllable high-speed drifting without unrecoverable wall stalls.",
+    "cameraErgonomics": "Elevated dynamic chase camera tilted at 38° with centrifugal drift yaw lag and look-ahead pitch matching road slope; unobstructed horizon sightlines in 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Twin-Turbo Nitro Surge (+40% acceleration and top speed with blue flame exhaust for 8s via Rewarded Ad)",
+        "Gravel Grip Compound Tires (100% traction on loose dirt and mud eliminating traction loss via Rewarded Ad)",
+        "Precision Co-Driver HUD (Visual pace-note corner prompts and ideal dynamic braking racing line via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When flying off a cliff or missing gold target time by <3 seconds, prompt 'Stage Stalled! Watch Ad to Rewind 5s onto Road with Full Turbo Surge'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x medal coin multiplier needle on Stage Finish screen + persistent Suspension, Turbo & Tire Tuning Garage."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural + Spline Road Ribbon",
+      "proceduralPrefabs": "Multi-part stylized rally cars (chassis, rear spoiler, roll-cage, mudflaps, 4 articulated raycast wheels), extruded Catmull-Rom spline road meshes, checkpoint timing gates, tire smoke particles, and fading skid ribbon meshes.",
+      "optionalUserGlb": "public/models/rally_car.glb (Optional <4k tris low-poly rally car)"
+    }
+  },
+  {
+    "id": "offroad-expedition-3d",
+    "title": "OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER",
+    "category": "3d-physics-crawler",
+    "status": "ready",
+    "rank": 2,
+    "revenueScore": 97,
+    "scoreBreakdown": {
+      "rewardedAdScore": 35,
+      "retentionScore": 25,
+      "ergonomicsScore": 19,
+      "webglFeasibilityScore": 18
+    },
+    "createdAt": "2026-11-02",
+    "lastValidatedAt": "2026-11-02",
+    "validationNote": "Rank #2 High-Retention 3D Heavy Physics Rock Crawling & Mud Expedition (Spintires, MudRunner & Offroad Outlaws benchmark). Features independent high-travel axle articulation, low-range differential locks, dynamic physics winch anchor, water/mud drag resistance, and persistent Expedition Garage.",
+    "coreLoop": "Navigate rugged 4x4 offroad trucks and trophy crawlers across steep boulder ravines, mud bogs, and suspended log bridges. Manage throttle, low-gear torque, and axle articulation to climb extreme inclines without flipping; shoot the winch cable onto sturdy trees to hoist out of deep mud, and deliver fragile expedition cargo safely to the base camp!",
+    "solvableMathSpec": "Rapier rigid-body mass center offset combined with independent 4-point raycast axle suspension ensures realistic chassis tilt and roll stability; path elevations and boulder spacing mathematically verified for solvable axle clearance and winch reach thresholds.",
+    "cameraErgonomics": "Orbiting 3/4 elevated follow camera with auto-pitch matching steep mountain slopes and smart zoom-out when winching; zero terrain occlusion in 9:16 portrait and 16:9 landscape.",
+    "revenueHooks": {
+      "inLevelBoosters": [
+        "Hydraulic Winch Super-Pull (2.5x cable winch hoist strength via Rewarded Ad)",
+        "All-Terrain Mud Monster Tires (Zero mud-pit wheel sink and 100% rock traction for 15s via Rewarded Ad)",
+        "Diff-Lock & Low-Torque Overdrive (Doubles wheel torque without engine stall on 60° inclines via Rewarded Ad)"
+      ],
+      "nearMissRevive": "When vehicle flips over or cargo is dropped near destination, prompt 'Truck Overturned! Watch Ad to Auto-Right Vehicle onto Trail with Full Winch Power'.",
+      "victoryMultiplier": "Oscillating 1.5x / 2x / 3x / 5x cargo delivery coin multiplier bar + persistent Axle Lift, Winch Strength & Offroad Tire Garage."
+    },
+    "assetSpec": {
+      "complexity": "Tier-1 Compound Procedural + Rapier Trimesh Terrain",
+      "proceduralPrefabs": "Compound procedural 4x4 crawler truck (cab, snorkel, roof rack, roll-cage, winching hook, 4 high-clearance knobby tires with live suspension struts), boulders, mud pits, wooden log bridges, and cargo crates.",
+      "optionalUserGlb": "public/models/crawler_truck.glb (Optional <4.5k tris low-poly 4x4 truck)"
+    }
+  },
+  {
     "id": "smash-karts-brawl-3d",
     "title": "SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO",
     "category": "io-brawl-battle-royale",

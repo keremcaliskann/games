@@ -8,10 +8,28 @@ interface ParticleSlot {
   active: boolean;
 }
 
+interface DustRingSlot {
+  mesh: THREE.Mesh;
+  mat: THREE.MeshBasicMaterial;
+  life: number;
+  maxLife: number;
+  active: boolean;
+}
+
+interface WindStreakSlot {
+  mesh: THREE.Mesh;
+  mat: THREE.MeshBasicMaterial;
+  life: number;
+  maxLife: number;
+  active: boolean;
+}
+
 const CONFETTI_COLORS = [0xfacc15, 0xec4899, 0x38bdf8, 0x4ade80, 0xa855f7];
 
 export class ParticleEffects {
   private readonly pool: ParticleSlot[] = [];
+  private readonly ringPool: DustRingSlot[] = [];
+  private readonly streakPool: WindStreakSlot[] = [];
 
   constructor(scene: THREE.Scene) {
     const geo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
@@ -31,6 +49,80 @@ export class ParticleEffects {
         maxLife: 0.5,
         active: false,
       });
+    }
+
+    const ringGeo = new THREE.RingGeometry(0.28, 0.48, 20);
+    ringGeo.rotateX(-Math.PI / 2);
+    for (let i = 0; i < 16; i++) {
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.75,
+        depthWrite: false,
+      });
+      const mesh = new THREE.Mesh(ringGeo, mat);
+      mesh.visible = false;
+      scene.add(mesh);
+      this.ringPool.push({
+        mesh,
+        mat,
+        life: 0,
+        maxLife: 0.35,
+        active: false,
+      });
+    }
+
+    const streakGeo = new THREE.BoxGeometry(0.06, 0.06, 1.35);
+    for (let i = 0; i < 24; i++) {
+      const mat = new THREE.MeshBasicMaterial({
+        color: 0xe0f2fe,
+        transparent: true,
+        opacity: 0.8,
+        depthWrite: false,
+      });
+      const mesh = new THREE.Mesh(streakGeo, mat);
+      mesh.visible = false;
+      scene.add(mesh);
+      this.streakPool.push({
+        mesh,
+        mat,
+        life: 0,
+        maxLife: 0.22,
+        active: false,
+      });
+    }
+  }
+
+  public spawnTouchdownRing(pos: THREE.Vector3): void {
+    for (let i = 0; i < this.ringPool.length; i++) {
+      const r = this.ringPool[i];
+      if (r.active) continue;
+      r.active = true;
+      r.maxLife = 0.34;
+      r.life = r.maxLife;
+      r.mesh.position.set(pos.x, 0.05, pos.z);
+      r.mesh.scale.setScalar(0.55);
+      r.mat.opacity = 0.78;
+      r.mesh.visible = true;
+      return;
+    }
+  }
+
+  public spawnDiveWindStreak(pos: THREE.Vector3): void {
+    for (let i = 0; i < this.streakPool.length; i++) {
+      const s = this.streakPool[i];
+      if (s.active) continue;
+      s.active = true;
+      s.maxLife = 0.2;
+      s.life = s.maxLife;
+      s.mesh.position.set(
+        pos.x + (Math.random() - 0.5) * 0.7,
+        pos.y + 0.45 + Math.random() * 0.5,
+        pos.z - 0.4
+      );
+      s.mat.opacity = 0.75;
+      s.mesh.visible = true;
+      return;
     }
   }
 
@@ -95,6 +187,33 @@ export class ParticleEffects {
       p.mesh.rotation.y += dt * 5.0;
       const s = Math.max(0.01, p.life / p.maxLife);
       p.mesh.scale.setScalar(s);
+    }
+
+    for (let i = 0; i < this.ringPool.length; i++) {
+      const r = this.ringPool[i];
+      if (!r.active) continue;
+      r.life -= dt;
+      if (r.life <= 0) {
+        r.active = false;
+        r.mesh.visible = false;
+        continue;
+      }
+      const progress = 1.0 - r.life / r.maxLife;
+      r.mesh.scale.setScalar(0.55 + progress * 2.1);
+      r.mat.opacity = (1.0 - progress) * 0.78;
+    }
+
+    for (let i = 0; i < this.streakPool.length; i++) {
+      const s = this.streakPool[i];
+      if (!s.active) continue;
+      s.life -= dt;
+      if (s.life <= 0) {
+        s.active = false;
+        s.mesh.visible = false;
+        continue;
+      }
+      s.mesh.position.z -= 8.0 * dt;
+      s.mat.opacity = (s.life / s.maxLife) * 0.75;
     }
   }
 }

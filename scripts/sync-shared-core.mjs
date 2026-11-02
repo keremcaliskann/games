@@ -18,6 +18,8 @@ const sharedAdsContent = fs.readFileSync(path.join(rootDir, 'shared/platform/ads
 const sharedShellContent = fs.readFileSync(path.join(rootDir, 'shared/ui/shell-controller.ts'), 'utf8');
 const sharedCssContent = fs.readFileSync(path.join(rootDir, 'shared/ui/arcade-shell.css'), 'utf8');
 const sharedVisualContent = fs.readFileSync(path.join(rootDir, 'shared/render/visual-enhancer.ts'), 'utf8');
+const sharedProceduralContent = fs.readFileSync(path.join(rootDir, 'shared/render/procedural-mesh-builder.ts'), 'utf8');
+const sharedResolverContent = fs.readFileSync(path.join(rootDir, 'shared/render/asset-resolver.ts'), 'utf8');
 const sharedInputContent = fs.readFileSync(path.join(rootDir, 'shared/input/ergonomic-input.ts'), 'utf8');
 
 function buildLeftSidebarHtml() {
@@ -161,6 +163,8 @@ for (const gameMeta of catalog) {
   const adsPath = path.join(gameDir, 'src/platform/ads.ts');
   const shellPath = path.join(gameDir, 'src/ui/shell-controller.ts');
   const visualPath = path.join(gameDir, 'src/render/visual-enhancer.ts');
+  const proceduralPath = path.join(gameDir, 'src/render/procedural-mesh-builder.ts');
+  const resolverPath = path.join(gameDir, 'src/render/asset-resolver.ts');
   const ergonomicInputPath = path.join(gameDir, 'src/input/ergonomic-input.ts');
   const inputManagerPath = path.join(gameDir, 'src/input/input-manager.ts');
   const kbMousePath = path.join(gameDir, 'src/input/keyboard-mouse.ts');
@@ -172,10 +176,14 @@ for (const gameMeta of catalog) {
     fs.mkdirSync(path.dirname(adsPath), { recursive: true });
     fs.mkdirSync(path.dirname(shellPath), { recursive: true });
     fs.mkdirSync(path.dirname(visualPath), { recursive: true });
+    fs.mkdirSync(path.dirname(proceduralPath), { recursive: true });
+    fs.mkdirSync(path.dirname(resolverPath), { recursive: true });
     fs.mkdirSync(path.dirname(ergonomicInputPath), { recursive: true });
     fs.writeFileSync(adsPath, sharedAdsContent, 'utf8');
     fs.writeFileSync(shellPath, sharedShellContent, 'utf8');
     fs.writeFileSync(visualPath, sharedVisualContent, 'utf8');
+    fs.writeFileSync(proceduralPath, sharedProceduralContent, 'utf8');
+    fs.writeFileSync(resolverPath, sharedResolverContent, 'utf8');
     fs.writeFileSync(ergonomicInputPath, sharedInputContent, 'utf8');
 
     if (fs.existsSync(lightingPath)) {
@@ -235,11 +243,16 @@ for (const gameMeta of catalog) {
   const hasYtSdk = finalHtml.includes('https://www.youtube.com/game_api/v1');
   const hasIcon = fs.existsSync(path.join(gameDir, 'public/icon.svg'));
 
+  const finalProcedural = fs.existsSync(proceduralPath) ? fs.readFileSync(proceduralPath, 'utf8') : '';
+  const finalResolver = fs.existsSync(resolverPath) ? fs.readFileSync(resolverPath, 'utf8') : '';
+  const hybridOk = finalProcedural === sharedProceduralContent && finalResolver === sharedResolverContent;
+
   report.push({
     game: g,
     ads: adsSynced ? 'SYNCED' : 'DRIFT',
     shellCtrl: shellSynced ? 'SYNCED' : 'DRIFT',
     visualIBL: visualSynced ? 'SYNCED' : 'DRIFT',
+    hybrid3D: hybridOk ? 'SYNCED' : 'DRIFT',
     inputCtrl: inputErgonomicOk ? 'SYNCED' : 'DRIFT',
     shellDom: hasShellDom ? 'OK' : 'MISSING',
     ytSdk: hasYtSdk ? 'OK' : 'MISSING',
@@ -254,6 +267,7 @@ const failed = report.filter(
     r.ads !== 'SYNCED' ||
     r.shellCtrl !== 'SYNCED' ||
     r.visualIBL !== 'SYNCED' ||
+    r.hybrid3D !== 'SYNCED' ||
     r.inputCtrl !== 'SYNCED' ||
     r.shellDom !== 'OK' ||
     r.ytSdk !== 'OK' ||

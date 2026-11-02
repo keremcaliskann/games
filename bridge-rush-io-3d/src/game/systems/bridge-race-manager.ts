@@ -582,6 +582,7 @@ export class BridgeRaceManager {
         b.respawnTimer = 1.2 + Math.random() * 0.8;
         r.setBrickCount(r.brickCount + 1);
         if (r.isPlayer) {
+          this.particles.spawnPickupPop(r.pos, r.colorHex);
           this.audio.playBrickPickup(r.brickCount);
         }
       }

@@ -47,6 +47,7 @@ interface TrampolineHazard {
   x: number;
   z: number;
   radius: number;
+  squashTimer: number;
 }
 
 export interface TournamentCallbacks {
@@ -280,6 +281,7 @@ export class TournamentManager {
         x: tx,
         z,
         radius: 1.35,
+        squashTimer: 0,
       });
     }
   }
@@ -327,6 +329,18 @@ export class TournamentManager {
       s.group.rotation.y = s.angleRad;
     }
 
+    // Animate trampoline squash-and-stretch
+    for (let i = 0; i < this.trampolines.length; i++) {
+      const pad = this.trampolines[i];
+      if (pad.squashTimer > 0) {
+        pad.squashTimer = Math.max(0, pad.squashTimer - dt);
+        const squash = Math.sin((pad.squashTimer / 0.28) * Math.PI);
+        pad.group.scale.set(1.0 + squash * 0.26, 1.0 - squash * 0.42, 1.0 + squash * 0.26);
+      } else {
+        pad.group.scale.set(1, 1, 1);
+      }
+    }
+
     if (this.player && !this.player.qualified && !this.roundEnded) {
       this.player.steerX = steerX;
       this.player.steerZ = steerZ;
@@ -345,6 +359,12 @@ export class TournamentManager {
       }
 
       const newlyQualified = r.update(dt, this.trackHalfWidth, this.finishZ);
+      if (r.justLanded && r.isPlayer) {
+        this.particles.spawnTouchdownRing(r.pos);
+      }
+      if (r.isDiving && r.isPlayer && Math.random() < 0.45) {
+        this.particles.spawnDiveWindStreak(r.pos);
+      }
       if (newlyQualified) {
         this.qualifiedCount++;
         r.finishOrder = this.qualifiedCount;
@@ -433,6 +453,7 @@ export class TournamentManager {
             r.isGrounded = false;
             r.vel.y = 15.5;
             r.vel.z = 14.5;
+            pad.squashTimer = 0.28;
             if (r.isPlayer) {
               _BURST_POS.copy(r.pos);
               this.particles.spawnBurst(_BURST_POS, 0x22c55e, 14);
