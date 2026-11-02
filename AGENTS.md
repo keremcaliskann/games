@@ -82,7 +82,7 @@ A task is complete only when:
 4. No memory allocations, `console.log`, or debug remnants in hot paths.
 5. Code committed with a clean English Conventional Commit and pushed to the repository upon reaching a stable milestone.
 6. Automated GitHub Pages deployment prepared and verified for target URL `https://keremcaliskann.github.io/games/<game-name>/` with relative base path (`base: './'`).
-7. 3-Column Arcade Shell compliant: Always renders the 3-column Arcade Shell (Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail, zero fullscreen toggle/collapse) and includes verified `public/icon.svg`.
+7. 3-Column Arcade Shell & Start Menu compliant: Always renders the 3-column Arcade Shell (Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail, zero fullscreen toggle/collapse), verified `public/icon.svg`, and the Minimalist Theme-Matched Start Menu Overlay (`#shell-start-menu` with `backdrop-filter: blur(12px)`, `MENU` state lock `!shell.isMenuOpen` until `OYNA` is clicked, `Kolay / Normal / Zor` difficulty selection, and `ESC` / `⏸` pause toggle).
 8. Game Director 4-Filter Critique Pass: Evaluated across (A) 360° camera line-of-sight, 9:16/16:9 ergonomics & camera-relative input (`50-input-abstraction.md` / `universal-input-ergonomics`), (B) daylight palette & Compound Procedural Prefabs (`ASSETS_NEEDED.md`), (C) YouTube Playables SDK & 3 Revenue Hooks, and (D) 60 FPS QA before final push.
 
 ## 8. Rules & Skills Directory

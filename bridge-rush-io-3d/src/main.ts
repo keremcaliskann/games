@@ -101,10 +101,11 @@ async function bootstrap(): Promise<void> {
     const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) * 0.001));
     lastTime = now;
 
-    if (!isPaused) {
+    if (!isPaused && !shell.isMenuOpen) {
+      const simDt = dt * shell.getDifficultyMultiplier();
       input.update();
-      race.update(dt, input.steerX, input.steerZ);
-      particles.update(dt);
+      race.update(simDt, input.steerX, input.steerZ);
+      particles.update(simDt);
       if (race.player) {
         cameraRig.update(dt, race.player.pos, race.player.brickCount);
       }

@@ -100,10 +100,11 @@ async function bootstrap(): Promise<void> {
     const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) * 0.001));
     lastTime = now;
 
-    if (!isPaused) {
+    if (!isPaused && !shell.isMenuOpen) {
+      const simDt = dt * shell.getDifficultyMultiplier();
       input.update();
-      arena.update(dt, input.steerX, input.steerZ, input.consumeFireRequest());
-      particles.update(dt);
+      arena.update(simDt, input.steerX, input.steerZ, input.consumeFireRequest());
+      particles.update(simDt);
       if (arena.player) {
         cameraRig.update(dt, arena.player.pos, arena.player.powerCubes);
       }

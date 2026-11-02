@@ -106,12 +106,21 @@ document.getElementById('shell-restart-btn')?.addEventListener('click', () => {
 ### 4.2 Dynamic "Diğer Oyunlar" Discovery List
 The sidebar dynamically requests `../games.json` and renders all active sibling games (`active !== false`) with their SVG icons (`../${g.id}/icon.svg`).
 
-### 4.3 Universal Start Menu Invariant (`#shell-start-menu`)
-Every game MUST begin with the standardized **Toony Soft Daylight Start Menu Overlay** (`#shell-start-menu`), automatically mounted and managed by `ShellController`:
-1. **Live 3D Attract Background:** On boot, the 3D scene renders behind the blurred frosted-glass Start Menu card so `ytgame.game.firstFrameReady()` fires immediately.
-2. **Card Contents:** Game Icon (`./icon.svg`), Genre Subtitle Badge, Title, Short 2-line Description, Controls Quick-Guide (`WASD / Ok Tuşları`, `Mouse / Dokunmatik`), and the tactile green **"▶ HEMEN OYNA"** CTA button (`#shell-start-play-btn`).
-3. **Pointer Isolation & Fresh Start:** Pointer events on `#shell-start-menu` are isolated from bleeding into the canvas. Clicking **"▶ HEMEN OYNA"** hides the overlay and invokes `onRestart()` so the match begins cleanly at tick 0.
-4. **Sidebar Re-Entry:** Clicking `#shell-menu-btn` (`🏠 Başlangıç Menüsü`) in the Left Navigation Rail re-opens the Start Menu at any time.
+### 4.3 Universal Minimalist Start Menu & `MENU` State Lock Invariant (`#shell-start-menu`)
+Every current and future game MUST begin with the standardized **Minimalist Theme-Matched Start Menu Overlay** (`#shell-start-menu`), automatically mounted and managed by `ShellController`:
+1. **Theme Harmony (`--menu-theme-color`, `--menu-accent-gradient`, `--menu-glow-rgba`):**
+   - The menu card's top accent bar, icon crest, active difficulty pill, and **`OYNA`** button dynamically adopt the exact color palette and gradient of the host game (from `GAME_THEMES` and `../games.json`).
+2. **Dynamic Blurred Live 3D Background (`backdrop-filter: blur(12px)`):**
+   - While the menu is open (`shell.isMenuOpen === true`), `#shell-stage` has class `.is-menu-locked` (which hides `#hud` / `#hud-root` so there is zero UI clutter) while the live 3D WebGL scene continues rendering behind `backdrop-filter: blur(12px)`.
+3. **Minimalist Menu Structure:**
+   - Centered **Game Icon** (`./icon.svg`) + **Game Title** (`#shell-start-title`).
+   - **Difficulty Selector (`Kolay` / `Normal` / `Zor`)** segmented pill bar (`easy: 0.78x`, `normal: 1.0x`, `hard: 1.28x` via `shell.getDifficultyMultiplier()`).
+   - Prominent **`▶ OYNA`** button (`#shell-start-play-btn`).
+   - **Optional Minimal Icon Buttons Only When Applicable:** Do not render extra settings/sub-menu clutter. Only render the minimal sound icon (`#shell-menu-sound-btn` `🔊`/`🔇`) if the game already provides an audio toggle in its DOM, plus a minimal reset icon (`#shell-menu-reset-btn` `🔄`) when paused mid-session.
+4. **Game Loop & State Management (`MENU` State Lock, Fade-Out Transition, Pause):**
+   - **Initial `MENU` Lock:** On page load, `shell.isMenuOpen` starts as `true`. Until the player clicks **`OYNA`**, game physics, match timers, enemy/obstacle spawning, and player controls MUST remain passive (`if (!this.isPaused && !this.shell.isMenuOpen)`). Only the 3D scene/camera rendering runs.
+   - **Smooth Fade-Out Transition to Play:** Clicking **`OYNA`** applies the selected difficulty (`shell.getDifficultyMultiplier()`), smoothly fades out `#shell-start-menu` (`opacity: 0; visibility: hidden; transition: opacity 0.32s`), and starts gameplay at that exact moment.
+   - **Pause / Re-Open (`ESC` & Top-Right `⏸` Button):** Pressing `ESC` or clicking `#shell-stage-pause-btn` (`⏸` in the top-right of `#shell-stage`) pauses gameplay (`shell.isMenuOpen = true`) and re-opens `#shell-start-menu` (or allows a clean reset via `🔄` / difficulty change).
 
 ---
 

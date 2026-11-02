@@ -306,7 +306,8 @@ class HoleCityApp {
     const dt = Math.min((time - this.lastTime) / 1000, 0.1);
     this.lastTime = time;
 
-    if (this.isMatchRunning) {
+    if (this.isMatchRunning && !this.shell.isMenuOpen) {
+      const simDt = dt * this.shell.getDifficultyMultiplier();
       // 1. Tick match clock
       this.matchTimeRemaining -= dt;
       if (this.matchTimeRemaining <= 0) {
@@ -319,7 +320,7 @@ class HoleCityApp {
       if (this.matchTimeRemaining <= 30.0) {
         this.arena.activateTornado();
         this.hud.showTornadoAlert(true);
-        this.arena.updateTornado(dt);
+        this.arena.updateTornado(simDt);
       } else {
         this.hud.showTornadoAlert(false);
       }
@@ -330,7 +331,7 @@ class HoleCityApp {
       this.playerHole.update(dt);
 
       // 3. AI Bots Steering & Updates
-      this.botAi.update(dt, time / 1000);
+      this.botAi.update(simDt, time / 1000);
 
       // 4. Props Suction Physics
       this.updateSuctionPhysics(dt);

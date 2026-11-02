@@ -561,7 +561,7 @@
         z-index: 5;
       }
     </style>
-                                                                                                          <style id="shared-arcade-shell-css">
+                                                                                                                  <style id="shared-arcade-shell-css">
 /* ==========================================================================
    SHARED ARCADE 3-COLUMN SHELL CSS (LEFT NAV + CENTER STAGE + RIGHT AD RAIL)
    Single Source of Truth across all HTML5 3D Arcade Games
@@ -806,11 +806,61 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   pointer-events: none;
   z-index: 20;
   overflow: hidden;
+  transition: opacity 0.25s ease;
+}
+
+#shell-stage.is-menu-locked #hud,
+#shell-stage.is-menu-locked #hud-root,
+#shell-stage.is-menu-locked .game-hud-overlay {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Top-Right Minimal Pause Trigger inside Stage (visible during active gameplay) */
+.shell-stage-pause-btn {
+  position: absolute !important;
+  top: 14px !important;
+  right: 14px !important;
+  z-index: 88 !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  background: rgba(15, 23, 42, 0.55) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  color: #ffffff !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28) !important;
+  transition: transform 0.14s ease, background 0.14s ease, opacity 0.2s ease !important;
+}
+
+.shell-stage-pause-btn:hover {
+  transform: scale(1.06) !important;
+  background: rgba(15, 23, 42, 0.78) !important;
+}
+
+#shell-stage.is-menu-locked .shell-stage-pause-btn {
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* ==========================================================================
-   STANDARDIZED START MENU OVERLAY (Universal across all Arcade 3D Games)
+   MINIMALIST THEME-MATCHED START MENU OVERLAY (#shell-start-menu)
    ========================================================================== */
+#shell-stage {
+  --menu-theme-color: #2563eb;
+  --menu-accent-gradient: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
+  --menu-glow-rgba: rgba(37, 99, 235, 0.34);
+  --menu-tint-bg: rgba(224, 242, 254, 0.85);
+}
+
 .shell-start-menu-overlay {
   position: absolute !important;
   inset: 0 !important;
@@ -819,156 +869,182 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   align-items: center !important;
   justify-content: center !important;
   padding: 20px !important;
-  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.62) 100%) !important;
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
+  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.18) 0%, rgba(15, 23, 42, 0.54) 100%) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  transition: opacity 0.22s ease !important;
+  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s ease !important;
 }
 
 .shell-start-menu-overlay.is-hidden {
   opacity: 0 !important;
-  pointer-events: none !important;
   visibility: hidden !important;
-  display: none !important;
+  pointer-events: none !important;
 }
 
 .shell-start-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.96) 100%);
-  border: 3px solid #ffffff;
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 250, 252, 0.94) 100%);
+  border: 2.5px solid rgba(255, 255, 255, 0.95);
   border-radius: 28px;
-  padding: 28px 26px 24px;
-  max-width: 400px;
+  padding: 30px 26px 26px;
+  max-width: 360px;
   width: 100%;
   text-align: center;
   color: #0f172a;
   box-shadow:
-    0 24px 55px rgba(15, 23, 42, 0.35),
-    0 0 0 1px rgba(148, 163, 184, 0.25),
+    0 24px 55px rgba(15, 23, 42, 0.34),
+    0 0 0 1px rgba(148, 163, 184, 0.22),
+    0 12px 32px var(--menu-glow-rgba),
     inset 0 2px 0 #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  animation: shellStartPopIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  gap: 16px;
+  overflow: hidden;
+  transform: scale(1) translateY(0);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes shellStartPopIn {
-  from {
-    opacity: 0;
-    transform: scale(0.88) translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
+.shell-start-menu-overlay.is-hidden .shell-start-card {
+  transform: scale(0.92) translateY(10px);
+}
+
+.shell-start-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--menu-accent-gradient);
+}
+
+/* Optional Minimal Quick Icons (Top-Right of Card: Sound / Reset) */
+.shell-start-mini-tools {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shell-mini-icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: rgba(241, 245, 249, 0.9);
+  color: #334155;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+}
+
+.shell-mini-icon-btn:hover {
+  background: #ffffff;
+  border-color: var(--menu-theme-color);
+  transform: translateY(-1px);
 }
 
 .shell-start-icon-wrap {
-  width: 78px;
-  height: 78px;
+  width: 74px;
+  height: 74px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 2px solid #bae6fd;
-  box-shadow: 0 10px 24px rgba(2, 132, 199, 0.18);
+  background: var(--menu-tint-bg);
+  border: 2px solid var(--menu-theme-color);
+  box-shadow: 0 10px 24px var(--menu-glow-rgba);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2px;
   overflow: hidden;
 }
 
 .shell-start-icon {
-  width: 62px;
-  height: 62px;
+  width: 58px;
+  height: 58px;
   object-fit: contain;
 }
 
-.shell-start-badge {
-  display: inline-block;
-  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
-  border: 1px solid #7dd3fc;
-  color: #0369a1;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  padding: 4px 12px;
-  border-radius: 999px;
-}
-
 .shell-start-title {
-  font-size: 26px;
+  font-size: 25px;
   font-weight: 900;
-  line-height: 1.12;
+  line-height: 1.14;
   letter-spacing: -0.5px;
   color: #0f172a;
   margin: 0;
 }
 
-.shell-start-desc {
-  font-size: 13.5px;
-  line-height: 1.45;
-  color: #475569;
-  margin: 2px 0 6px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.shell-start-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+/* Difficulty Selector (Kolay / Normal / Zor) */
+.shell-difficulty-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
   width: 100%;
-  margin-bottom: 6px;
+  background: #f1f5f9;
+  padding: 5px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
 }
 
-.shell-control-pill {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #334155;
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 6px 11px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
+.shell-diff-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 9px 6px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.shell-diff-btn:hover {
+  color: #0f172a;
+}
+
+.shell-diff-btn.is-active {
+  background: var(--menu-accent-gradient);
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--menu-glow-rgba);
 }
 
 .shell-start-play-btn {
   width: 100%;
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  background: var(--menu-accent-gradient);
   color: #ffffff;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 900;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   padding: 15px 24px;
   border-radius: 16px;
   border: none;
   cursor: pointer;
-  box-shadow: 0 5px 0 #15803d, 0 12px 24px rgba(22, 163, 74, 0.35);
+  box-shadow: 0 5px 0 rgba(15, 23, 42, 0.26), 0 12px 26px var(--menu-glow-rgba);
   transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  margin-top: 4px;
 }
 
 .shell-start-play-btn:hover {
   filter: brightness(1.06);
   transform: translateY(-2px);
-  box-shadow: 0 7px 0 #15803d, 0 16px 28px rgba(22, 163, 74, 0.42);
+  box-shadow: 0 7px 0 rgba(15, 23, 42, 0.28), 0 16px 30px var(--menu-glow-rgba);
 }
 
 .shell-start-play-btn:active {
   transform: translateY(3px);
-  box-shadow: 0 2px 0 #15803d, 0 6px 12px rgba(22, 163, 74, 0.25);
+  box-shadow: 0 2px 0 rgba(15, 23, 42, 0.26), 0 6px 12px var(--menu-glow-rgba);
 }
 
 /* Right Ad Rail — Always Visible & Identical on Desktop */
@@ -1113,7 +1189,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   </head>
   <body>
     <div id="arcade-shell" class="arcade-shell">
-                                                                                                      <!-- Left Navigation Rail -->
+                                                                                                                  <!-- Left Navigation Rail -->
       <aside class="shell-sidebar shell-sidebar-left">
         <div class="shell-brand">
           <a href="../" class="shell-brand-link">
@@ -1149,7 +1225,7 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
         <div class="controls-hint">👆 DOKUN: OKU FIRLAT &nbsp;|&nbsp; 🔄 SÜRÜKLE: 3D DÖNDÜR</div>
       </main>
 
-                                                                                                      <!-- Right Advertising Rail -->
+                                                                                                                  <!-- Right Advertising Rail -->
       <aside class="shell-sidebar shell-sidebar-right">
         <div class="ad-rail-wrapper">
           <span class="ad-header-tag">SPONSOR // REKLAM</span>

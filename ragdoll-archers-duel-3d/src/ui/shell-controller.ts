@@ -1,21 +1,102 @@
 /**
- * Standardized 3-Column Arcade Shell Controller & Universal Start Menu (Single Source of Truth across all Arcade 3D games).
- * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app/#game-container and #hud/#hud-root
- *   so the inner game is 100% independent of the outer screen layout.
- * - Permanently displays Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail.
- * - Automatically mounts the Universal Start Menu Overlay (#shell-start-menu) on boot so every game begins with a clean,
- *   stylized Toony Soft Daylight start screen over the live 3D scene.
- * - Zero fullscreen mode or sidebar hiding.
- * - Observes stage container with ResizeObserver so canvas & camera aspect ratio always match #shell-stage.
+ * Standardized 3-Column Arcade Shell Controller & Minimalist Theme-Matched Start Menu
+ * (Single Source of Truth across all active & future Arcade 3D games).
+ * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app/#game-container and #hud/#hud-root.
+ * - Permanently displays Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail (zero fullscreen toggle).
+ * - Enforces MENU State Lock on boot (`isMenuOpen = true`): gameplay physics, timers, bots, and player controls remain
+ *   passive while the live 3D scene renders behind a `backdrop-filter: blur(12px)` glass overlay.
+ * - Minimalist Start Menu Card: Game Title, Difficulty Selector (Kolay / Normal / Zor), prominent OYNA button,
+ *   and optional minimal icon button for sound (only if the game already provides an audio toggle).
+ * - Supports ESC key & top-right ⏸ button to pause gameplay and re-open the menu at any time.
  */
+
+export type GameDifficulty = 'easy' | 'normal' | 'hard';
 
 export interface ShellControllerOptions {
   currentGameId: string;
   onRestart: () => void;
   onResize?: (width: number, height: number) => void;
+  onDifficultyChange?: (difficulty: GameDifficulty, multiplier: number) => void;
 }
 
 export type ShellOptions = ShellControllerOptions;
+
+interface GameThemePalette {
+  themeColor: string;
+  accentGradient: string;
+  glowRgba: string;
+  tintBg: string;
+}
+
+const GAME_THEMES: Record<string, GameThemePalette> = {
+  'smash-karts-brawl-3d': {
+    themeColor: '#ef4444',
+    accentGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
+    glowRgba: 'rgba(239, 68, 68, 0.34)',
+    tintBg: 'rgba(254, 226, 226, 0.88)',
+  },
+  'bridge-rush-io-3d': {
+    themeColor: '#2563eb',
+    accentGradient: 'linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)',
+    glowRgba: 'rgba(37, 99, 235, 0.34)',
+    tintBg: 'rgba(224, 242, 254, 0.88)',
+  },
+  'stumble-knockout-royale-3d': {
+    themeColor: '#ec4899',
+    accentGradient: 'linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%)',
+    glowRgba: 'rgba(236, 72, 153, 0.34)',
+    tintBg: 'rgba(252, 231, 243, 0.88)',
+  },
+  'bumper-smash-io-3d': {
+    themeColor: '#f97316',
+    accentGradient: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+    glowRgba: 'rgba(249, 115, 22, 0.34)',
+    tintBg: 'rgba(255, 237, 213, 0.88)',
+  },
+  'ragdoll-archers-duel-3d': {
+    themeColor: '#2563eb',
+    accentGradient: 'linear-gradient(135deg, #2563eb 0%, #f59e0b 100%)',
+    glowRgba: 'rgba(37, 99, 235, 0.34)',
+    tintBg: 'rgba(219, 234, 254, 0.88)',
+  },
+  'physics-drop-merge-3d': {
+    themeColor: '#22c55e',
+    accentGradient: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+    glowRgba: 'rgba(34, 197, 94, 0.34)',
+    tintBg: 'rgba(220, 252, 231, 0.88)',
+  },
+  'voxel-craft-smash-3d': {
+    themeColor: '#f97316',
+    accentGradient: 'linear-gradient(135deg, #f97316 0%, #eab308 100%)',
+    glowRgba: 'rgba(249, 115, 22, 0.34)',
+    tintBg: 'rgba(254, 243, 199, 0.88)',
+  },
+  'hole-city-io-3d': {
+    themeColor: '#06b6d4',
+    accentGradient: 'linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%)',
+    glowRgba: 'rgba(6, 182, 212, 0.34)',
+    tintBg: 'rgba(207, 250, 254, 0.88)',
+  },
+  'hexa-sort-3d': {
+    themeColor: '#f59e0b',
+    accentGradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)',
+    glowRgba: 'rgba(245, 158, 11, 0.34)',
+    tintBg: 'rgba(254, 243, 199, 0.88)',
+  },
+  'cyber-arrow-3d': {
+    themeColor: '#6366f1',
+    accentGradient: 'linear-gradient(135deg, #818cf8 0%, #4f46e5 100%)',
+    glowRgba: 'rgba(99, 102, 241, 0.34)',
+    tintBg: 'rgba(224, 231, 255, 0.88)',
+  },
+};
+
+const DEFAULT_THEME: GameThemePalette = {
+  themeColor: '#2563eb',
+  accentGradient: 'linear-gradient(135deg, #38bdf8 0%, #2563eb 100%)',
+  glowRgba: 'rgba(37, 99, 235, 0.34)',
+  tintBg: 'rgba(224, 242, 254, 0.88)',
+};
 
 export function applyDualModeShell(): boolean {
   if (typeof document !== 'undefined') {
@@ -27,8 +108,16 @@ export function applyDualModeShell(): boolean {
 
 export class ShellController {
   private readonly options: ShellControllerOptions;
+  public isMenuOpen = true;
+  public difficulty: GameDifficulty = 'normal';
+
+  private hasStartedOnce = false;
+  private difficultyChangedWhileOpen = false;
+
+  private stageEl: HTMLElement | null = null;
   private restartBtn: HTMLElement | null = null;
   private menuBtn: HTMLElement | null = null;
+  private stagePauseBtn: HTMLElement | null = null;
   private startMenuEl: HTMLElement | null = null;
   private otherGamesList: HTMLElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
@@ -37,6 +126,18 @@ export class ShellController {
   private lastObservedHeight = 0;
 
   private readonly onArcadeRestartBound = () => this.triggerRestart();
+  private readonly onKeyDownBound = (e: KeyboardEvent) => {
+    if (e.code === 'Escape') {
+      e.preventDefault();
+      if (this.isMenuOpen) {
+        if (this.hasStartedOnce) {
+          this.hideStartMenuAndPlay();
+        }
+      } else {
+        this.showStartMenu();
+      }
+    }
+  };
 
   constructor(options: ShellControllerOptions) {
     this.options = options;
@@ -52,8 +153,20 @@ export class ShellController {
   }
 
   /**
+   * Returns the pacing/challenge multiplier for the currently selected difficulty:
+   * - Kolay ('easy'): 0.78
+   * - Normal ('normal'): 1.0
+   * - Zor ('hard'): 1.28
+   */
+  public getDifficultyMultiplier(): number {
+    if (this.difficulty === 'easy') return 0.78;
+    if (this.difficulty === 'hard') return 1.28;
+    return 1.0;
+  }
+
+  /**
    * Ensures the outer 3-Column Arcade Shell (#arcade-shell -> Left Nav + #shell-stage + Right Ad Rail)
-   * and Universal Start Menu (#shell-start-menu) are 100% identical across all games.
+   * and Minimalist Start Menu (#shell-start-menu) are 100% identical across all games.
    */
   private ensureCanonicalShellDom(): void {
     if (typeof document === 'undefined') return;
@@ -75,14 +188,20 @@ export class ShellController {
     }
     shellEl.className = 'arcade-shell';
 
-    let stageEl = document.getElementById('shell-stage') || (shellEl.querySelector('.shell-stage') as HTMLElement | null);
+    let stageEl =
+      document.getElementById('shell-stage') ||
+      (shellEl.querySelector('.shell-stage') as HTMLElement | null);
     if (!stageEl) {
       stageEl = document.createElement('main');
       stageEl.appendChild(appEl);
       if (hudEl) stageEl.appendChild(hudEl);
     }
     stageEl.id = 'shell-stage';
-    stageEl.className = 'shell-stage';
+    stageEl.className = 'shell-stage is-menu-locked';
+    this.stageEl = stageEl;
+
+    // Apply game-specific theme palette variables immediately
+    this.applyThemePalette(GAME_THEMES[this.options.currentGameId] || DEFAULT_THEME);
 
     // Remove any legacy fullscreen elements
     document.getElementById('shell-fullscreen-btn')?.remove();
@@ -124,7 +243,26 @@ export class ShellController {
       shellEl.appendChild(stageEl);
     }
 
-    // Mount Universal Start Menu Overlay inside #shell-stage
+    // Mount Top-Right Minimal Pause Button inside #shell-stage
+    let pauseBtn = document.getElementById('shell-stage-pause-btn') as HTMLButtonElement | null;
+    if (!pauseBtn) {
+      pauseBtn = document.createElement('button');
+      pauseBtn.id = 'shell-stage-pause-btn';
+      pauseBtn.type = 'button';
+      stageEl.appendChild(pauseBtn);
+    }
+    pauseBtn.className = 'shell-stage-pause-btn';
+    pauseBtn.title = 'Menü / Duraklat (ESC)';
+    pauseBtn.setAttribute('data-hud-interactive', 'true');
+    pauseBtn.textContent = '⏸';
+    pauseBtn.addEventListener('pointerdown', (e) => e.stopPropagation());
+    pauseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.showStartMenu();
+    });
+    this.stagePauseBtn = pauseBtn;
+
+    // Mount Universal Minimalist Start Menu Overlay inside #shell-stage
     this.mountStartMenu(stageEl);
 
     // Ensure canonical Right Sponsor Ad Rail
@@ -150,6 +288,21 @@ export class ShellController {
     `;
   }
 
+  private applyThemePalette(palette: GameThemePalette): void {
+    if (!this.stageEl) return;
+    this.stageEl.style.setProperty('--menu-theme-color', palette.themeColor);
+    this.stageEl.style.setProperty('--menu-accent-gradient', palette.accentGradient);
+    this.stageEl.style.setProperty('--menu-glow-rgba', palette.glowRgba);
+    this.stageEl.style.setProperty('--menu-tint-bg', palette.tintBg);
+  }
+
+  private findNativeSoundButton(): HTMLElement | null {
+    if (typeof document === 'undefined') return null;
+    return document.querySelector<HTMLElement>(
+      '#sk-mute-btn, #btn-sound, #sound-btn, #hud-sound-btn, [id*="mute"], [id*="sound"]'
+    );
+  }
+
   private mountStartMenu(stageEl: HTMLElement): void {
     let menuEl = document.getElementById('shell-start-menu');
     if (!menuEl) {
@@ -162,25 +315,24 @@ export class ShellController {
 
     const titleParts = document.title.split('//');
     const mainTitle = (titleParts[0] || '3D ARCADE').trim();
-    const subBadge = (titleParts[1] || '60 FPS WEBGL 3D').trim();
-    const metaDesc =
-      document.querySelector('meta[name="description"]')?.getAttribute('content') ||
-      'Hemen oyna! Yüksek tempolu 60 FPS 3B arcade deneyimi.';
 
     menuEl.innerHTML = `
       <div class="shell-start-card" data-hud-interactive="true">
+        <div class="shell-start-mini-tools" id="shell-start-mini-tools">
+          <button id="shell-menu-sound-btn" class="shell-mini-icon-btn" type="button" title="Ses Aç/Kapat" style="display:none" data-hud-interactive="true">🔊</button>
+          <button id="shell-menu-reset-btn" class="shell-mini-icon-btn" type="button" title="Sıfırdan Başlat" style="display:none" data-hud-interactive="true">🔄</button>
+        </div>
         <div class="shell-start-icon-wrap">
           <img src="./icon.svg" alt="${mainTitle}" class="shell-start-icon" onerror="this.style.display='none'" />
         </div>
-        <span class="shell-start-badge" id="shell-start-badge">${subBadge}</span>
         <h1 class="shell-start-title" id="shell-start-title">${mainTitle}</h1>
-        <p class="shell-start-desc" id="shell-start-desc">${metaDesc}</p>
-        <div class="shell-start-controls">
-          <span class="shell-control-pill">⌨️ WASD / Ok Tuşları</span>
-          <span class="shell-control-pill">🖱️ Mouse / Dokunmatik</span>
+        <div class="shell-difficulty-group" role="radiogroup" aria-label="Zorluk Seçimi" data-hud-interactive="true">
+          <button type="button" class="shell-diff-btn" data-difficulty="easy" data-hud-interactive="true">Kolay</button>
+          <button type="button" class="shell-diff-btn is-active" data-difficulty="normal" data-hud-interactive="true">Normal</button>
+          <button type="button" class="shell-diff-btn" data-difficulty="hard" data-hud-interactive="true">Zor</button>
         </div>
         <button id="shell-start-play-btn" class="shell-start-play-btn" type="button" data-hud-interactive="true">
-          <span>▶</span> HEMEN OYNA
+          <span>▶</span> <span id="shell-start-play-label">OYNA</span>
         </button>
       </div>
     `;
@@ -195,6 +347,63 @@ export class ShellController {
     menuEl.addEventListener('mousedown', stopBleed);
     menuEl.addEventListener('touchstart', stopBleed, { passive: true });
 
+    // Wire Difficulty Selection buttons
+    const diffButtons = menuEl.querySelectorAll<HTMLButtonElement>('.shell-diff-btn');
+    diffButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const selected = (btn.getAttribute('data-difficulty') as GameDifficulty) || 'normal';
+        if (selected !== this.difficulty) {
+          this.difficulty = selected;
+          this.difficultyChangedWhileOpen = true;
+        }
+        diffButtons.forEach((b) => b.classList.toggle('is-active', b === btn));
+        const mult = this.getDifficultyMultiplier();
+        this.options.onDifficultyChange?.(this.difficulty, mult);
+        window.dispatchEvent(
+          new CustomEvent('arcade:difficulty', {
+            detail: { difficulty: this.difficulty, multiplier: mult },
+          })
+        );
+      });
+    });
+
+    // Wire Optional Minimal Sound Icon Button (only shown if the game HUD has a sound toggle)
+    const soundBtn = menuEl.querySelector<HTMLButtonElement>('#shell-menu-sound-btn');
+    const syncSoundIcon = () => {
+      if (!soundBtn) return;
+      const nativeSound = this.findNativeSoundButton();
+      if (nativeSound) {
+        soundBtn.style.display = 'inline-flex';
+        const txt = nativeSound.textContent?.trim() || '';
+        soundBtn.textContent = txt.includes('🔇') ? '🔇' : '🔊';
+      } else {
+        soundBtn.style.display = 'none';
+      }
+    };
+    setTimeout(syncSoundIcon, 60);
+
+    if (soundBtn) {
+      soundBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const nativeSound = this.findNativeSoundButton();
+        if (nativeSound) {
+          nativeSound.click();
+          syncSoundIcon();
+        }
+      });
+    }
+
+    // Wire Minimal Reset Icon Button (for clean reset from pause menu)
+    const resetBtn = menuEl.querySelector<HTMLButtonElement>('#shell-menu-reset-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.difficultyChangedWhileOpen = true;
+        this.hideStartMenuAndPlay();
+      });
+    }
+
     const playBtn = menuEl.querySelector('#shell-start-play-btn') as HTMLButtonElement | null;
     if (playBtn) {
       playBtn.addEventListener('click', (e) => {
@@ -208,23 +417,49 @@ export class ShellController {
 
   public showStartMenu(): void {
     if (!this.startMenuEl) return;
+    this.isMenuOpen = true;
+    this.difficultyChangedWhileOpen = false;
+    this.stageEl?.classList.add('is-menu-locked');
     this.startMenuEl.classList.remove('is-hidden');
+
+    // Sync optional sound & reset buttons
+    const resetBtn = this.startMenuEl.querySelector<HTMLButtonElement>('#shell-menu-reset-btn');
+    if (resetBtn) {
+      resetBtn.style.display = this.hasStartedOnce ? 'inline-flex' : 'none';
+    }
+    const soundBtn = this.startMenuEl.querySelector<HTMLButtonElement>('#shell-menu-sound-btn');
+    const nativeSound = this.findNativeSoundButton();
+    if (soundBtn && nativeSound) {
+      soundBtn.style.display = 'inline-flex';
+      const txt = nativeSound.textContent?.trim() || '';
+      soundBtn.textContent = txt.includes('🔇') ? '🔇' : '🔊';
+    }
   }
 
   public hideStartMenuAndPlay(): void {
     if (!this.startMenuEl) return;
-    const wasVisible = !this.startMenuEl.classList.contains('is-hidden');
+    const wasVisible = this.isMenuOpen || !this.startMenuEl.classList.contains('is-hidden');
+    this.isMenuOpen = false;
+    this.stageEl?.classList.remove('is-menu-locked');
     this.startMenuEl.classList.add('is-hidden');
-    if (wasVisible) {
+
+    if (wasVisible && (!this.hasStartedOnce || this.difficultyChangedWhileOpen)) {
+      this.hasStartedOnce = true;
+      this.difficultyChangedWhileOpen = false;
       this.triggerRestart();
     }
   }
 
   private init(): void {
     window.addEventListener('arcade:restart', this.onArcadeRestartBound);
+    window.addEventListener('keydown', this.onKeyDownBound);
 
     if (this.restartBtn) {
       this.restartBtn.addEventListener('click', () => {
+        this.isMenuOpen = false;
+        this.hasStartedOnce = true;
+        this.difficultyChangedWhileOpen = false;
+        this.stageEl?.classList.remove('is-menu-locked');
         this.startMenuEl?.classList.add('is-hidden');
         window.dispatchEvent(new CustomEvent('arcade:restart'));
       });
@@ -279,6 +514,16 @@ export class ShellController {
       const res = await fetch('../games.json');
       if (!res.ok) return;
       const catalog = await res.json();
+
+      // Hydrate current game's theme palette from games.json if present
+      const currentEntry = catalog.find(
+        (g: { id: string }) => g.id === this.options.currentGameId
+      );
+      if (currentEntry && currentEntry.themeColor && currentEntry.accentGradient && this.stageEl) {
+        this.stageEl.style.setProperty('--menu-theme-color', currentEntry.themeColor);
+        this.stageEl.style.setProperty('--menu-accent-gradient', currentEntry.accentGradient);
+      }
+
       const others = catalog.filter(
         (g: { id: string; active?: boolean }) =>
           g.id !== this.options.currentGameId && g.active !== false
@@ -304,6 +549,8 @@ export class ShellController {
 
   public dispose(): void {
     window.removeEventListener('arcade:restart', this.onArcadeRestartBound);
+    window.removeEventListener('keydown', this.onKeyDownBound);
     this.resizeObserver?.disconnect();
+    void this.stagePauseBtn;
   }
 }

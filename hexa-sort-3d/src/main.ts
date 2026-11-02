@@ -222,6 +222,7 @@ class HexaSortApp {
   }
 
   private handleStackPlaced(cell: HexCell): void {
+    if (this.shell.isMenuOpen) return;
     // Evaluate domino arc flip cascades starting from target cell
     this.cascade.evaluateCascades(cell);
   }
@@ -406,8 +407,13 @@ class HexaSortApp {
   }
 
   private update(dt: number): void {
+    if (this.shell.isMenuOpen) {
+      this.cameraRig.update(dt);
+      return;
+    }
+    const diffMult = this.shell.getDifficultyMultiplier();
     if (this.feverTimer > 0) {
-      this.feverTimer = Math.max(0, this.feverTimer - dt);
+      this.feverTimer = Math.max(0, this.feverTimer - dt * diffMult);
       if (this.feverTimer === 0) {
         this.feverMeter = 0;
         this.hud.updateFever(0, false);

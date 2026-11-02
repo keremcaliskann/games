@@ -198,14 +198,15 @@ export class ArcherDuelApp {
     this.lastTimeMs = nowMs;
     const dt = Math.min(0.05, Math.max(0.001, rawDt));
 
-    if (!this.isPaused) {
+    if (!this.isPaused && !this.shell.isMenuOpen) {
+      const simDt = dt * this.shell.getDifficultyMultiplier();
       this.duel.updateAimPreview(
         this.input.aim.isAiming,
         this.input.aim.angleRad,
         this.input.aim.power01
       );
-      this.duel.update(dt);
-      this.particles.update(dt);
+      this.duel.update(simDt);
+      this.particles.update(simDt);
       this.lighting.update(dt);
       this.cameraRig.update(dt);
     }

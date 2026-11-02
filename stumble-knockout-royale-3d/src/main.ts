@@ -261,13 +261,14 @@ export class PartyKnockoutApp {
     this.lastTimeMs = nowMs;
     const dt = Math.min(0.05, Math.max(0.001, rawDt));
 
-    if (!this.isPaused) {
+    if (!this.isPaused && !this.shell.isMenuOpen) {
+      const simDt = dt * this.shell.getDifficultyMultiplier();
       this.tournament.update(
-        dt,
+        simDt,
         this.input.state.steerX,
         this.input.state.steerZ
       );
-      this.particles.update(dt);
+      this.particles.update(simDt);
       const p = this.tournament.player;
       const px = p ? p.pos.x : 0;
       const py = p ? p.pos.y : 0;

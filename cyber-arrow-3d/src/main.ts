@@ -181,13 +181,18 @@ class GameApp {
     this.streakCount = 0;
     this.hud.setStreak(0);
     this.hud.setHammerActive(false);
-    this.movesRemaining = calculateMoveBudget(this.grid.getRemainingCount());
+    const baseMoves = calculateMoveBudget(this.grid.getRemainingCount());
+    const diffMult = this.shell ? this.shell.getDifficultyMultiplier() : 1.0;
+    this.movesRemaining = Math.max(
+      this.grid.getRemainingCount(),
+      Math.round(baseMoves / diffMult)
+    );
     this.hud.updateHeader(lvl, this.grid.getRemainingCount(), this.economy.getCoins());
     this.hud.setMoves(this.movesRemaining);
   }
 
   private handleTap(raycaster: THREE.Raycaster): void {
-    if (this.isGameOver) return;
+    if (this.isGameOver || this.shell.isMenuOpen) return;
 
     const targets = this.grid.getRaycastTargets();
     const hits = raycaster.intersectObjects(targets, false);
@@ -328,7 +333,9 @@ class GameApp {
 
   private update(delta: number): void {
     this.cameraRig.update(delta);
-    this.grid.update(delta);
+    if (!this.shell.isMenuOpen) {
+      this.grid.update(delta);
+    }
     this.particles.update(delta);
   }
 

@@ -256,10 +256,11 @@ class VoxelSmashApp {
     const dt = Math.min((time - this.lastTime) / 1000, 0.1);
     this.lastTime = time;
 
-    if (this.isWaveRunning) {
+    if (this.isWaveRunning && !this.shell.isMenuOpen) {
+      const simDt = dt * this.shell.getDifficultyMultiplier();
       // 1. Turret Aiming & Auto-Firing
       this.turret.aimAt(this.input.aimPosition);
-      this.turret.update(dt);
+      this.turret.update(simDt);
 
       if (this.input.isFiring && this.turret.canFire()) {
         const shots = this.turret.fire();
@@ -270,7 +271,7 @@ class VoxelSmashApp {
       }
 
       // 2. Projectile Movement & Collision Check
-      this.projectiles.update(dt, (pos, radius) => {
+      this.projectiles.update(simDt, (pos, radius) => {
         // Hit check against voxels
         if (this.voxelWorld.checkProjectileHit(pos, radius, 1)) {
           return true;
@@ -301,7 +302,7 @@ class VoxelSmashApp {
       const targetZ = this.turret.position.z;
       for (const g of this.golems) {
         if (!g.isAlive) continue;
-        const reachedBase = g.update(dt, targetZ);
+        const reachedBase = g.update(simDt, targetZ);
         if (reachedBase) {
           this.turret.takeDamage(25);
           g.takeDamage(999);

@@ -189,14 +189,15 @@ export class BumperSmashApp {
     this.lastTimeMs = nowMs;
     const dt = Math.min(0.05, Math.max(0.001, rawDt));
 
-    if (!this.isPaused) {
+    if (!this.isPaused && !this.shell.isMenuOpen) {
+      const simDt = dt * this.shell.getDifficultyMultiplier();
       this.arena.update(
-        dt,
+        simDt,
         this.input.steer.active,
         this.input.steer.dx,
         this.input.steer.dz
       );
-      this.particles.update(dt);
+      this.particles.update(simDt);
       const p = this.arena.player;
       this.cameraRig.update(
         dt,

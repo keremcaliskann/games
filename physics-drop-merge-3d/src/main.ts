@@ -209,8 +209,9 @@ class DropMergeApp {
   }
 
   private dropActiveSphere(x: number): void {
+    if (this.shell.isMenuOpen) return;
     if (this.dropCooldown > 0) return;
-    this.dropCooldown = 0.45; // Prevent rapid-tap spam
+    this.dropCooldown = 0.45 * (1 / this.shell.getDifficultyMultiplier()); // Prevent rapid-tap spam
 
     this.hud.hideAimHint();
     const tierToDrop = this.dropper.primedTier;
@@ -289,6 +290,7 @@ class DropMergeApp {
   }
 
   private fixedUpdate(dt: number): void {
+    if (this.shell.isMenuOpen) return;
     if (this.state === GameState.REVIVE_PROMPT) return;
 
     if (this.dropCooldown > 0) {
