@@ -124,4 +124,5 @@ A task is complete only when:
 | `skills/studio` | slash_command | `/studio` — Autonomous 3-Phase Studio Squad for #1 backlog game |
 | `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
 | `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (studio-todo, ideas-backlog) with zero fluff |
+| `skills/inspect` | slash_command | `/inspect <oyun-adı>` (or `/inpect <oyun-adı>`) — Deeply inspects a single game for bugs, logic flaws, and visual upgrades, presents a categorized "Yapılması Gerekenler" list, and adds to `backlog/studio-todo.json` upon user approval |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |
