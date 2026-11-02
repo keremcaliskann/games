@@ -29,6 +29,12 @@ interface GameThemePalette {
 }
 
 const GAME_THEMES: Record<string, GameThemePalette> = {
+  'offroad-expedition-3d': {
+    themeColor: '#d97706',
+    accentGradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    glowRgba: 'rgba(217, 119, 6, 0.34)',
+    tintBg: 'rgba(254, 243, 199, 0.88)',
+  },
   'rally-horizon-3d': {
     themeColor: '#0284c7',
     accentGradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',

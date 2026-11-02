@@ -1,5 +1,24 @@
 [
   {
+    "id": "offroad-expedition-3d",
+    "title": "OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER",
+    "description": "3D 4x4 Rock Crawler & Mud Expedition! Navigate boulder ravines and mud bogs, shoot your hydraulic winch cable onto trees, and deliver cargo to Base Camp.",
+    "path": "./offroad-expedition-3d/",
+    "tags": [
+      "3D Physics",
+      "4x4 Crawler",
+      "Winch & Mud",
+      "Expedition",
+      "60 FPS"
+    ],
+    "date": "2026-11-02",
+    "icon": "./offroad-expedition-3d/icon.svg",
+    "iconEmoji": "🛻",
+    "featured": true,
+    "themeColor": "#d97706",
+    "accentGradient": "linear-gradient(135deg, #f59e0b, #d97706)"
+  },
+  {
     "id": "rally-horizon-3d",
     "title": "RALLY HORIZON 3D // TIME ATTACK & DRIFT",
     "description": "3D Sim-Cade Rally & Time-Attack Drift! Power-slide across Alpine Tarmac, Canyon Gravel, and Nordic Snow stages against rival ghosts and upgrade your Rally Garage.",

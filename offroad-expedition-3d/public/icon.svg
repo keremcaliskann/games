@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="50%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="truck" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22c55e" />
+      <stop offset="100%" stop-color="#15803d" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#sky)" />
+  <!-- Sun & Pine Mountains -->
+  <circle cx="130" cy="120" r="54" fill="#fef08a" opacity="0.92" />
+  <polygon points="30,360 185,175 340,360" fill="#92400e" opacity="0.88" />
+  <polygon points="210,360 365,165 500,360" fill="#78350f" opacity="0.94" />
+  <!-- Boulders & Mud Slope -->
+  <path d="M 0 390 L 512 290 L 512 512 L 0 512 Z" fill="#451a03" />
+  <circle cx="380" cy="340" r="46" fill="#64748b" />
+  <circle cx="150" cy="400" r="38" fill="#475569" />
+  <!-- Winch Cable Line -->
+  <line x1="340" y1="265" x2="465" y2="195" stroke="#38bdf8" stroke-width="8" stroke-dasharray="12 6" />
+  <!-- Lifted 4x4 Crawler Truck -->
+  <g transform="translate(248, 285) rotate(-14)">
+    <!-- Roof Rack & Cargo Crate -->
+    <rect x="-56" y="-86" width="84" height="24" rx="5" fill="#f97316" stroke="#ffffff" stroke-width="4" />
+    <!-- Snorkel -->
+    <path d="M 55 -30 L 68 -78 L 80 -78" fill="none" stroke="#0f172a" stroke-width="10" stroke-linecap="round" />
+    <!-- Truck Body -->
+    <rect x="-112" y="-34" width="224" height="58" rx="14" fill="url(#truck)" stroke="#ffffff" stroke-width="6" />
+    <!-- Cabin -->
+    <path d="M -58 -32 L -32 -70 L 42 -70 L 64 -32 Z" fill="#0f172a" stroke="#ffffff" stroke-width="5" />
+    <!-- Suspension Struts -->
+    <line x1="-68" y1="22" x2="-68" y2="54" stroke="#facc15" stroke-width="10" />
+    <line x1="68" y1="22" x2="68" y2="54" stroke="#facc15" stroke-width="10" />
+    <!-- Giant Knobby Offroad Tires -->
+    <circle cx="-68" cy="56" r="42" fill="#0f172a" stroke="#cbd5e1" stroke-width="7" />
+    <circle cx="-68" cy="56" r="18" fill="#facc15" />
+    <circle cx="68" cy="56" r="42" fill="#0f172a" stroke="#cbd5e1" stroke-width="7" />
+    <circle cx="68" cy="56" r="18" fill="#facc15" />
+  </g>
+</svg>

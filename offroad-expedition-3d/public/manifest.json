@@ -1,0 +1,18 @@
+{
+  "name": "OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER",
+  "short_name": "Offroad 4x4 3D",
+  "description": "3D 4x4 Rock Crawler & Mud Expedition! Climb boulders, fire your hydraulic winch cable, lock differentials, and deliver cargo to Base Camp.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#cfe8f7",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
