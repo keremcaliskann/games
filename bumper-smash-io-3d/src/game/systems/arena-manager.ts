@@ -32,6 +32,13 @@ export interface ArenaCallbacks {
   onPlayerKnockedOut: (rank: number, aliveRivals: number) => void;
 }
 
+export const ARENA_MAPS = [
+  { name: '🏝️ TROPİK ADA', grip: 3.1, calloutColor: '#facc15' },
+  { name: '❄️ BUZUL GLASİYERİ', grip: 1.72, calloutColor: '#38bdf8' },
+  { name: '🌋 MAGMA KRATERİ', grip: 3.35, calloutColor: '#ef4444' },
+  { name: '⚡ SİBER SEKİZGEN', grip: 2.95, calloutColor: '#c084fc' },
+];
+
 export class ArenaManager {
   public readonly arenaRig: ArenaIslandRig;
   public player: KartEntity | null = null;
@@ -39,6 +46,8 @@ export class ArenaManager {
   private readonly orbs: EnergyOrbSlot[] = [];
 
   public arenaNumber = 1;
+  public mapIndex = 0;
+  private mapOverride: number | null = null;
   public initialRadius = 15.0;
   public currentRadius = 15.0;
   public minRadius = 6.5;
@@ -89,9 +98,22 @@ export class ArenaManager {
     orb.active = true;
   }
 
+  public cycleNextMap(): void {
+    this.mapOverride = ((this.mapIndex + 1) % ARENA_MAPS.length);
+    this.startMatch(this.arenaNumber);
+  }
+
   public startMatch(arenaNum: number): void {
     this.clearKarts();
     this.arenaNumber = arenaNum;
+    this.mapIndex =
+      this.mapOverride !== null
+        ? this.mapOverride
+        : (Math.max(1, arenaNum) - 1) % ARENA_MAPS.length;
+    this.mapOverride = null;
+
+    PrefabFactory.applyArenaTheme(this.arenaRig, this.mapIndex);
+
     this.currentRadius = this.initialRadius;
     this.arenaRig.platformGroup.scale.set(this.currentRadius, 1, this.currentRadius);
     this.timeRemaining = this.matchDuration;
@@ -101,6 +123,9 @@ export class ArenaManager {
     this.matchEnded = false;
     this.pendingOutcome = null;
     this.endDelayTimer = 0;
+
+    const mapSpec = ARENA_MAPS[this.mapIndex];
+    this.callbacks.onCallout(`🗺️ HARİTA: ${mapSpec.name}`, mapSpec.calloutColor);
 
     // Spawn Player + 7 AI Bots in a balanced perimeter ring
     const spawnDist = 8.8;
@@ -248,7 +273,50 @@ export class ArenaManager {
         }
       }
 
-      const newlyEliminated = k.update(dt, this.currentRadius);
+      const currentGrip = ARENA_MAPS[this.mapIndex]?.grip ?? 3.1;
+      const newlyEliminated = k.update(dt, this.currentRadius, currentGrip);
+
+      // Map-specific interactive arena hazards
+      if (k.isAlive && !k.isFallingInSea) {
+        if (this.mapIndex === 2) {
+          // Magma Crater central lava geyser repulsor
+          const distCenter = Math.hypot(k.pos.x, k.pos.z);
+          if (distCenter < 2.25) {
+            const nx = distCenter > 0.01 ? k.pos.x / distCenter : 1;
+            const nz = distCenter > 0.01 ? k.pos.z / distCenter : 0;
+            k.vel.x = nx * 16.5;
+            k.vel.z = nz * 16.5;
+            k.triggerBumpSquash();
+            _BURST_POS.set(k.pos.x, 0.3, k.pos.z);
+            this.particles.spawnBurst(_BURST_POS, 0xef4444, 10);
+          }
+        } else if (this.mapIndex === 3) {
+          // Cyber Octagon 4 Pinball Bumper Pillars
+          const bCoords: [number, number][] = [
+            [4.5, 0],
+            [-4.5, 0],
+            [0, 4.5],
+            [0, -4.5],
+          ];
+          for (let bIdx = 0; bIdx < bCoords.length; bIdx++) {
+            const [bx, bz] = bCoords[bIdx];
+            const dx = k.pos.x - bx;
+            const dz = k.pos.z - bz;
+            const d = Math.hypot(dx, dz);
+            if (d < 0.85 + k.radius && d > 0.001) {
+              const nx = dx / d;
+              const nz = dz / d;
+              k.pos.x = bx + nx * (0.88 + k.radius);
+              k.pos.z = bz + nz * (0.88 + k.radius);
+              k.vel.x = nx * 17.5;
+              k.vel.z = nz * 17.5;
+              k.triggerBumpSquash();
+              _BURST_POS.set(bx, 0.5, bz);
+              this.particles.spawnBurst(_BURST_POS, 0xfacc15, 10);
+            }
+          }
+        }
+      }
       if (
         canSpawnSkid &&
         k.isAlive &&

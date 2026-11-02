@@ -116,22 +116,17 @@ export class BridgeRaceManager {
   }
 
   private buildThreeTierIslandsAndBridges(): void {
-    const gridTex = VisualEnhancer.createMicroTexture('grid');
-    if (gridTex) {
-      gridTex.repeat.set(8, 8);
-    }
+    // Tier 1 Island (z: -12 to +14, y: 0, width: 28) — High-Contrast Slate Turf Deck
+    this.addIslandDeck(0, 0, 1, 28, 26, 0x475569, 0x22c55e, null);
 
-    // Tier 1 Island (z: -12 to +14, y: 0, width: 28)
-    this.addIslandDeck(0, 0, 1, 28, 26, 0xfcf8ee, 0x38bdf8, gridTex);
+    // Tier 2 Island (z: 28 to 50, y: 2.8, width: 24) — Deep Azure Sky Deck
+    this.addIslandDeck(0, 2.8, 39, 24, 22, 0x334155, 0x38bdf8, null);
 
-    // Tier 2 Island (z: 28 to 50, y: 2.8, width: 24)
-    this.addIslandDeck(0, 2.8, 39, 24, 22, 0xf0f9ff, 0x8b5cf6, gridTex);
+    // Tier 3 Island (z: 64 to 84, y: 5.6, width: 20) — Royal Amethyst Sunset Deck
+    this.addIslandDeck(0, 5.6, 74, 20, 20, 0x3b0764, 0xf97316, null);
 
-    // Tier 3 Island (z: 64 to 84, y: 5.6, width: 20)
-    this.addIslandDeck(0, 5.6, 74, 20, 20, 0xfef3c7, 0xf59e0b, gridTex);
-
-    // Final Trophy Podium Platform (z: 98 to 108, y: 8.6, width: 12)
-    this.addIslandDeck(0, 8.6, 103, 12, 10, 0xfef08a, 0xeab308, gridTex);
+    // Final Trophy Podium Platform (z: 98 to 108, y: 8.6, width: 12) — Champion Gold Deck
+    this.addIslandDeck(0, 8.6, 103, 12, 10, 0xb45309, 0xfacc15, null);
 
     this.trophyPodium = PrefabFactory.createGoldenTrophyPodium();
     this.trophyPodium.position.set(0, 8.6, 103.5);
@@ -598,7 +593,7 @@ export class BridgeRaceManager {
       const br = this.bridges[i];
       if (
         r.pos.z >= br.startZ - 0.5 &&
-        r.pos.z <= br.endZ + 0.5 &&
+        r.pos.z < br.endZ - 0.05 &&
         Math.abs(r.pos.x - br.x) <= br.width * 0.58
       ) {
         r.pos.x = THREE.MathUtils.clamp(
@@ -609,6 +604,7 @@ export class BridgeRaceManager {
 
         // Determine highest passable step index for this runner
         let maxPassableStep = br.steps.length - 1;
+        let stepsBuiltThisTick = 0;
         for (let sIdx = 0; sIdx < br.steps.length; sIdx++) {
           const step = br.steps[sIdx];
           if (step.ownerTeamId !== r.teamId) {
@@ -618,11 +614,17 @@ export class BridgeRaceManager {
               br.endZ,
               (sIdx + 0.5) / br.steps.length
             );
-            if (r.pos.z >= stepZ - 0.65 && r.brickCount > 0 && canBuildStep) {
+            if (
+              r.pos.z >= stepZ - 0.85 &&
+              r.brickCount > 0 &&
+              (canBuildStep || stepsBuiltThisTick < 1) &&
+              stepsBuiltThisTick < 2
+            ) {
               step.ownerTeamId = r.teamId;
               (step.mesh.material as THREE.MeshStandardMaterial).color.setHex(r.colorHex);
               r.setBrickCount(r.brickCount - 1);
               r.totalStepsBuilt++;
+              stepsBuiltThisTick++;
               if (r.isPlayer) {
                 this.audio.playBridgeStepPlace(sIdx);
               }
@@ -634,20 +636,31 @@ export class BridgeRaceManager {
           }
         }
 
+        const bridgeCompleted = maxPassableStep >= br.steps.length - 1;
         const maxAllowedZ =
           maxPassableStep < 0
             ? br.startZ + 0.2
-            : THREE.MathUtils.lerp(
-                br.startZ,
-                br.endZ,
-                (maxPassableStep + 1) / br.steps.length
-              );
+            : bridgeCompleted
+              ? br.endZ + 2.5
+              : THREE.MathUtils.lerp(
+                  br.startZ,
+                  br.endZ,
+                  (maxPassableStep + 1) / br.steps.length
+                );
 
         if (r.pos.z > maxAllowedZ) {
           r.pos.z = maxAllowedZ;
           if (!r.isPlayer && r.brickCount <= 0) {
             r.aiMode = 'gather';
           }
+        }
+
+        // Seamless transition onto the upper island when bridge is completed and runner reaches top
+        if (bridgeCompleted && r.pos.z >= br.endZ - 0.35) {
+          r.pos.z = Math.max(r.pos.z, br.endZ + 0.25);
+          r.pos.y = br.endY;
+          r.currentTier = Math.min(3, br.fromTier + 1);
+          break;
         }
 
         const progress = THREE.MathUtils.clamp(
@@ -657,7 +670,7 @@ export class BridgeRaceManager {
         );
         r.pos.y = THREE.MathUtils.lerp(br.startY, br.endY, progress);
 
-        if (progress >= 0.96) {
+        if (progress >= 0.94) {
           r.currentTier = Math.min(3, br.fromTier + 1);
         } else if (progress <= 0.05) {
           r.currentTier = br.fromTier;
@@ -666,22 +679,30 @@ export class BridgeRaceManager {
       }
     }
 
-    // Constrain to current Island Tier bounds
+    // Constrain to current Island Tier bounds (allowing entry into bridge mouth)
     if (r.pos.z < 14.5) {
       r.currentTier = 1;
       r.pos.y = 0;
       r.pos.x = THREE.MathUtils.clamp(r.pos.x, -13.2, 13.2);
-      r.pos.z = THREE.MathUtils.clamp(r.pos.z, -11.2, 14.0);
+      const nearBridge1 =
+        Math.abs(r.pos.x - -8.4) <= 1.35 ||
+        Math.abs(r.pos.x - -2.8) <= 1.35 ||
+        Math.abs(r.pos.x - 2.8) <= 1.35 ||
+        Math.abs(r.pos.x - 8.4) <= 1.35;
+      r.pos.z = THREE.MathUtils.clamp(r.pos.z, -11.2, nearBridge1 ? 14.4 : 13.8);
     } else if (r.pos.z >= 27.5 && r.pos.z < 50.5) {
       r.currentTier = 2;
       r.pos.y = 2.8;
       r.pos.x = THREE.MathUtils.clamp(r.pos.x, -11.2, 11.2);
-      r.pos.z = THREE.MathUtils.clamp(r.pos.z, 28.0, 50.0);
+      const nearBridge2 =
+        Math.abs(r.pos.x - -4.5) <= 1.45 || Math.abs(r.pos.x - 4.5) <= 1.45;
+      r.pos.z = THREE.MathUtils.clamp(r.pos.z, 28.0, nearBridge2 ? 50.4 : 49.8);
     } else if (r.pos.z >= 63.5 && r.pos.z < 84.5) {
       r.currentTier = 3;
       r.pos.y = 5.6;
       r.pos.x = THREE.MathUtils.clamp(r.pos.x, -9.2, 9.2);
-      r.pos.z = THREE.MathUtils.clamp(r.pos.z, 64.0, 84.0);
+      const nearBridge3 = Math.abs(r.pos.x) <= 1.75;
+      r.pos.z = THREE.MathUtils.clamp(r.pos.z, 64.0, nearBridge3 ? 84.4 : 83.8);
     } else if (r.pos.z >= 97.5) {
       r.pos.y = 8.6;
       r.pos.x = THREE.MathUtils.clamp(r.pos.x, -5.2, 5.2);

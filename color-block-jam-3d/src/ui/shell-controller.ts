@@ -1,10 +1,12 @@
 /**
- * Standardized 3-Column Arcade Shell Controller (Single Source of Truth across all Arcade 3D games).
- * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app and #hud
- *   so the inner game (#app + #hud) is 100% independent of the outer screen layout.
+ * Standardized 3-Column Arcade Shell Controller & Universal Start Menu (Single Source of Truth across all Arcade 3D games).
+ * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app/#game-container and #hud/#hud-root
+ *   so the inner game is 100% independent of the outer screen layout.
  * - Permanently displays Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail.
+ * - Automatically mounts the Universal Start Menu Overlay (#shell-start-menu) on boot so every game begins with a clean,
+ *   stylized Toony Soft Daylight start screen over the live 3D scene.
  * - Zero fullscreen mode or sidebar hiding.
- * - Observes #app with ResizeObserver so canvas & camera aspect ratio always match #shell-stage.
+ * - Observes stage container with ResizeObserver so canvas & camera aspect ratio always match #shell-stage.
  */
 
 export interface ShellControllerOptions {
@@ -26,6 +28,8 @@ export function applyDualModeShell(): boolean {
 export class ShellController {
   private readonly options: ShellControllerOptions;
   private restartBtn: HTMLElement | null = null;
+  private menuBtn: HTMLElement | null = null;
+  private startMenuEl: HTMLElement | null = null;
   private otherGamesList: HTMLElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private lastRestartTimestamp = 0;
@@ -41,6 +45,7 @@ export class ShellController {
     this.ensureCanonicalShellDom();
 
     this.restartBtn = document.getElementById('shell-restart-btn');
+    this.menuBtn = document.getElementById('shell-menu-btn');
     this.otherGamesList = document.getElementById('shell-other-games-list');
 
     this.init();
@@ -48,13 +53,13 @@ export class ShellController {
 
   /**
    * Ensures the outer 3-Column Arcade Shell (#arcade-shell -> Left Nav + #shell-stage + Right Ad Rail)
-   * is 100% identical across all games, while keeping #app and #hud untouched inside #shell-stage.
+   * and Universal Start Menu (#shell-start-menu) are 100% identical across all games.
    */
   private ensureCanonicalShellDom(): void {
     if (typeof document === 'undefined') return;
 
-    const appEl = document.getElementById('app');
-    const hudEl = document.getElementById('hud');
+    const appEl = document.getElementById('app') || document.getElementById('game-container');
+    const hudEl = document.getElementById('hud') || document.getElementById('hud-root');
     if (!appEl) return;
 
     appEl.classList.add('game-canvas-container');
@@ -70,7 +75,7 @@ export class ShellController {
     }
     shellEl.className = 'arcade-shell';
 
-    let stageEl = document.getElementById('shell-stage') || shellEl.querySelector('.shell-stage') as HTMLElement | null;
+    let stageEl = document.getElementById('shell-stage') || (shellEl.querySelector('.shell-stage') as HTMLElement | null);
     if (!stageEl) {
       stageEl = document.createElement('main');
       stageEl.appendChild(appEl);
@@ -101,6 +106,9 @@ export class ShellController {
         <a href="../" class="shell-btn shell-btn-portal" title="Return to Central Arcade Portal">
           <span class="btn-icon">←</span> Portala Dön
         </a>
+        <button id="shell-menu-btn" class="shell-btn shell-btn-menu" type="button">
+          <span class="btn-icon">🏠</span> Başlangıç Menüsü
+        </button>
         <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
           <span class="btn-icon">🔄</span> Yeniden Başlat
         </button>
@@ -115,6 +123,9 @@ export class ShellController {
     if (stageEl.parentElement !== shellEl) {
       shellEl.appendChild(stageEl);
     }
+
+    // Mount Universal Start Menu Overlay inside #shell-stage
+    this.mountStartMenu(stageEl);
 
     // Ensure canonical Right Sponsor Ad Rail
     let rightEl = shellEl.querySelector('.shell-sidebar-right') as HTMLElement | null;
@@ -139,12 +150,89 @@ export class ShellController {
     `;
   }
 
+  private mountStartMenu(stageEl: HTMLElement): void {
+    let menuEl = document.getElementById('shell-start-menu');
+    if (!menuEl) {
+      menuEl = document.createElement('div');
+      menuEl.id = 'shell-start-menu';
+      stageEl.appendChild(menuEl);
+    }
+    menuEl.className = 'shell-start-menu-overlay';
+    menuEl.setAttribute('data-hud-interactive', 'true');
+
+    const titleParts = document.title.split('//');
+    const mainTitle = (titleParts[0] || '3D ARCADE').trim();
+    const subBadge = (titleParts[1] || '60 FPS WEBGL 3D').trim();
+    const metaDesc =
+      document.querySelector('meta[name="description"]')?.getAttribute('content') ||
+      'Hemen oyna! Yüksek tempolu 60 FPS 3B arcade deneyimi.';
+
+    menuEl.innerHTML = `
+      <div class="shell-start-card" data-hud-interactive="true">
+        <div class="shell-start-icon-wrap">
+          <img src="./icon.svg" alt="${mainTitle}" class="shell-start-icon" onerror="this.style.display='none'" />
+        </div>
+        <span class="shell-start-badge" id="shell-start-badge">${subBadge}</span>
+        <h1 class="shell-start-title" id="shell-start-title">${mainTitle}</h1>
+        <p class="shell-start-desc" id="shell-start-desc">${metaDesc}</p>
+        <div class="shell-start-controls">
+          <span class="shell-control-pill">⌨️ WASD / Ok Tuşları</span>
+          <span class="shell-control-pill">🖱️ Mouse / Dokunmatik</span>
+        </div>
+        <button id="shell-start-play-btn" class="shell-start-play-btn" type="button" data-hud-interactive="true">
+          <span>▶</span> HEMEN OYNA
+        </button>
+      </div>
+    `;
+
+    // Prevent pointer events on the start menu from bleeding into the 3D canvas
+    const stopBleed = (e: Event) => {
+      e.stopPropagation();
+    };
+    menuEl.addEventListener('pointerdown', stopBleed);
+    menuEl.addEventListener('pointermove', stopBleed);
+    menuEl.addEventListener('pointerup', stopBleed);
+    menuEl.addEventListener('mousedown', stopBleed);
+    menuEl.addEventListener('touchstart', stopBleed, { passive: true });
+
+    const playBtn = menuEl.querySelector('#shell-start-play-btn') as HTMLButtonElement | null;
+    if (playBtn) {
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.hideStartMenuAndPlay();
+      });
+    }
+
+    this.startMenuEl = menuEl;
+  }
+
+  public showStartMenu(): void {
+    if (!this.startMenuEl) return;
+    this.startMenuEl.classList.remove('is-hidden');
+  }
+
+  public hideStartMenuAndPlay(): void {
+    if (!this.startMenuEl) return;
+    const wasVisible = !this.startMenuEl.classList.contains('is-hidden');
+    this.startMenuEl.classList.add('is-hidden');
+    if (wasVisible) {
+      this.triggerRestart();
+    }
+  }
+
   private init(): void {
     window.addEventListener('arcade:restart', this.onArcadeRestartBound);
 
     if (this.restartBtn) {
       this.restartBtn.addEventListener('click', () => {
+        this.startMenuEl?.classList.add('is-hidden');
         window.dispatchEvent(new CustomEvent('arcade:restart'));
+      });
+    }
+
+    if (this.menuBtn) {
+      this.menuBtn.addEventListener('click', () => {
+        this.showStartMenu();
       });
     }
 
@@ -160,7 +248,10 @@ export class ShellController {
   }
 
   private setupResizeObserver(): void {
-    const appEl = document.getElementById('app');
+    const appEl =
+      document.getElementById('app') ||
+      document.getElementById('game-container') ||
+      document.getElementById('shell-stage');
     if (!appEl || typeof ResizeObserver === 'undefined') return;
 
     this.resizeObserver = new ResizeObserver((entries) => {
@@ -188,7 +279,10 @@ export class ShellController {
       const res = await fetch('../games.json');
       if (!res.ok) return;
       const catalog = await res.json();
-      const others = catalog.filter((g: { id: string }) => g.id !== this.options.currentGameId);
+      const others = catalog.filter(
+        (g: { id: string; active?: boolean }) =>
+          g.id !== this.options.currentGameId && g.active !== false
+      );
 
       this.otherGamesList.innerHTML = others
         .map(

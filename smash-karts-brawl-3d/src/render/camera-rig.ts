@@ -12,8 +12,10 @@ export class CameraRig {
   constructor(aspect: number) {
     this.camera = new THREE.PerspectiveCamera(48, aspect, 0.5, 220);
     this.resize(aspect);
-    this.camera.position.set(0, 16, -16);
-    this.camera.lookAt(0, 0, 2);
+    // Standard Three.js camera at +Z looking toward -Z:
+    // Screen Right = +X, Screen Left = -X, Screen Up = -Z, Screen Down = +Z
+    this.camera.position.set(0, 16, 35);
+    this.camera.lookAt(0, 0, 18);
   }
 
   public resize(aspect: number): void {
@@ -35,17 +37,17 @@ export class CameraRig {
     const sy = Math.cos(this.elapsed * 51.0) * shake;
 
     const zoomBonus = Math.min(4.0, powerCubes * 0.25);
-    const distZ = (this.isPortrait ? 17.5 : 15.2) + zoomBonus * 0.6;
-    const heightY = (this.isPortrait ? 15.5 : 13.5) + zoomBonus * 0.55;
+    const distZ = (this.isPortrait ? 18.0 : 15.5) + zoomBonus * 0.6;
+    const heightY = (this.isPortrait ? 16.0 : 14.0) + zoomBonus * 0.55;
 
     _TARGET_POS.set(
-      playerPos.x * 0.88 + sx,
+      playerPos.x * 0.92 + sx,
       playerPos.y + heightY + sy,
-      playerPos.z - distZ
+      playerPos.z + distZ
     );
-    this.camera.position.lerp(_TARGET_POS, Math.min(1.0, dt * 8.0));
+    this.camera.position.lerp(_TARGET_POS, Math.min(1.0, dt * 8.5));
 
-    _LOOK_AT.set(playerPos.x * 0.92, playerPos.y + 0.8, playerPos.z + 3.2);
+    _LOOK_AT.set(playerPos.x * 0.95, playerPos.y + 0.6, playerPos.z - 2.2);
     this.camera.lookAt(_LOOK_AT);
   }
 }

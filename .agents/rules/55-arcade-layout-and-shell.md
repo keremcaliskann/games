@@ -104,7 +104,14 @@ document.getElementById('shell-restart-btn')?.addEventListener('click', () => {
 ```
 
 ### 4.2 Dynamic "Diğer Oyunlar" Discovery List
-The sidebar dynamically requests `../games.json` and renders all sibling games with their SVG icons (`../${g.id}/icon.svg`).
+The sidebar dynamically requests `../games.json` and renders all active sibling games (`active !== false`) with their SVG icons (`../${g.id}/icon.svg`).
+
+### 4.3 Universal Start Menu Invariant (`#shell-start-menu`)
+Every game MUST begin with the standardized **Toony Soft Daylight Start Menu Overlay** (`#shell-start-menu`), automatically mounted and managed by `ShellController`:
+1. **Live 3D Attract Background:** On boot, the 3D scene renders behind the blurred frosted-glass Start Menu card so `ytgame.game.firstFrameReady()` fires immediately.
+2. **Card Contents:** Game Icon (`./icon.svg`), Genre Subtitle Badge, Title, Short 2-line Description, Controls Quick-Guide (`WASD / Ok Tuşları`, `Mouse / Dokunmatik`), and the tactile green **"▶ HEMEN OYNA"** CTA button (`#shell-start-play-btn`).
+3. **Pointer Isolation & Fresh Start:** Pointer events on `#shell-start-menu` are isolated from bleeding into the canvas. Clicking **"▶ HEMEN OYNA"** hides the overlay and invokes `onRestart()` so the match begins cleanly at tick 0.
+4. **Sidebar Re-Entry:** Clicking `#shell-menu-btn` (`🏠 Başlangıç Menüsü`) in the Left Navigation Rail re-opens the Start Menu at any time.
 
 ---
 

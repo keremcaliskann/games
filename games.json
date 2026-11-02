@@ -96,6 +96,7 @@
   },
   {
     "id": "bus-escape-jam-3d",
+    "active": false,
     "title": "BUS ESCAPE 3D // PASSENGER JAM",
     "description": "Tactile 3D traffic jam & passenger conga color sorting puzzle! Tap angled buses in a congested lot to drive them into loading bays and board matching passengers.",
     "path": "./bus-escape-jam-3d/",

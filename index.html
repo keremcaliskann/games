@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="tr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-    <title>KEREM'S 3D HTML5 ARCADE // Game Portal</title>
-    <meta name="description" content="High-performance, 60 FPS HTML5 3D browser games built with Three.js, Rapier.js and Vite." />
-    <meta name="theme-color" content="#f8fafc" />
-    <link rel="icon" type="image/svg+xml" href="./cyber-arrow-3d/icon.svg" />
+    <title>ARCADE 3D // HTML5 WebGL Oyun Portalı</title>
+    <meta name="description" content="Anında oynanabilir 60 FPS 3B WebGL oyun portalı. İndirme yok, kurulum yok!" />
+    <meta name="theme-color" content="#f1f5f9" />
+    <link rel="icon" type="image/svg+xml" href="./smash-karts-brawl-3d/icon.svg" />
 
     <!-- Mobile Web App Capability -->
     <meta name="mobile-web-app-capable" content="yes" />
@@ -15,680 +15,793 @@
 
     <!-- OpenGraph Social Metadata -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="KEREM'S 3D HTML5 ARCADE // Game Portal" />
-    <meta property="og:description" content="High-performance, 60 FPS HTML5 3D browser games built with Three.js, Rapier.js and Vite." />
+    <meta property="og:title" content="ARCADE 3D // HTML5 WebGL Oyun Portalı" />
+    <meta property="og:description" content="Anında oynanabilir 60 FPS 3B WebGL oyun portalı." />
     <meta property="og:url" content="https://keremcaliskann.github.io/games/" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="KEREM'S 3D HTML5 ARCADE // Game Portal" />
     <style>
       :root {
-        --primary: #4f46e5;
-        --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-        --accent-cyan: #0284c7;
+        --bg-page: #f1f5f9;
+        --bg-header: rgba(255, 255, 255, 0.92);
         --text-main: #0f172a;
         --text-muted: #475569;
-        --text-sub: #64748b;
-        --card-bg: #ffffff;
-        --card-border: rgba(226, 232, 240, 0.8);
-        --tag-bg: #f1f5f9;
-        --tag-border: #e2e8f0;
-        --tag-text: #334155;
+        --accent: #2563eb;
+        --play-green: #22c55e;
       }
+
       * {
         box-sizing: border-box;
-      }
-      body {
         margin: 0;
         padding: 0;
-        background: linear-gradient(135deg, #f0f7ff 0%, #faf5ff 45%, #fff7ed 100%);
+      }
+
+      body {
+        background: linear-gradient(180deg, #e2e8f0 0%, #f1f5f9 35%, #f8fafc 100%);
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        color: #0f172a;
+        color: var(--text-main);
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+        overflow-x: hidden;
       }
-      header {
-        text-align: center;
-        padding: 48px 20px 24px 20px;
-        position: relative;
+
+      /* Yandex Games Style Sticky Top Navbar */
+      .yg-navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: var(--bg-header);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+        padding: 12px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
       }
-      .badge {
-        display: inline-block;
-        padding: 6px 14px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: 1.5px;
-        color: #ffffff;
-        background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
-        border-radius: 20px;
-        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-        margin-bottom: 8px;
-        text-transform: uppercase;
+
+      .yg-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: inherit;
       }
-      h1 {
-        font-size: clamp(32px, 6vw, 52px);
-        font-weight: 900;
-        letter-spacing: -0.5px;
-        margin: 12px 0 0 0;
-        background: linear-gradient(135deg, #0f172a 20%, #312e81 60%, #0284c7 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+
+      .yg-brand-logo {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #ef4444, #f59e0b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 6px 14px rgba(239, 68, 68, 0.3);
       }
-      p.subtitle {
-        color: #475569;
-        font-size: 15px;
-        max-width: 580px;
-        margin: 12px auto 0 auto;
-        line-height: 1.6;
-      }
-      .container {
-        max-width: 1100px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 20px 20px 60px 20px;
-        flex: 1;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 24px;
-      }
-      .game-card {
-        background: #ffffff;
-        border: 1px solid rgba(226, 232, 240, 0.8);
-        border-radius: 22px;
-        padding: 24px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 25px -5px rgba(0, 0, 0, 0.04);
-        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s;
+
+      .yg-brand-text {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        position: relative;
-        overflow: hidden;
       }
-      .game-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 35px -10px rgba(99, 102, 241, 0.2);
-        border-color: #818cf8;
-      }
-      .game-card.featured {
-        border: 2px solid #6366f1;
-        box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.18);
-      }
-      .game-card.featured:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 40px -8px rgba(99, 102, 241, 0.3);
-        border-color: #4f46e5;
-      }
-      .featured-badge {
-        display: inline-block;
-        font-size: 10px;
-        font-weight: 800;
-        letter-spacing: 1px;
-        color: #ffffff;
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        padding: 4px 10px;
-        border-radius: 12px;
-        margin-left: auto;
-        text-transform: uppercase;
-        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
-      }
-      .card-header {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 16px;
-      }
-      .game-icon {
-        width: 58px;
-        height: 58px;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
-        border: 1px solid rgba(99, 102, 241, 0.15);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), 0 4px 8px rgba(0, 0, 0, 0.04);
-        flex-shrink: 0;
-        overflow: hidden;
-      }
-      .game-icon-img {
-        width: 44px;
-        height: 44px;
-        object-fit: contain;
-        transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
-      }
-      .game-card:hover .game-icon-img {
-        transform: scale(1.08);
-      }
-      .card-title {
-        font-size: 20px;
-        font-weight: 800;
-        margin: 0;
+
+      .yg-brand-title {
+        font-size: 19px;
+        font-weight: 900;
+        letter-spacing: -0.5px;
         color: #0f172a;
-        letter-spacing: 0.5px;
+        line-height: 1.1;
       }
-      .card-date {
+
+      .yg-brand-sub {
         font-size: 11px;
-        font-weight: 600;
+        font-weight: 700;
         color: #64748b;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
       }
-      .card-desc {
-        color: #475569;
-        font-size: 13.5px;
-        line-height: 1.55;
-        margin: 0 0 20px 0;
+
+      /* Category Pills */
+      .yg-categories {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0;
+      }
+
+      .yg-cat-btn {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        color: #334155;
+        padding: 8px 15px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.16s ease;
+      }
+
+      .yg-cat-btn:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
+
+      .yg-cat-btn.active {
+        background: #0f172a;
+        border-color: #0f172a;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+      }
+
+      /* Search Box */
+      .yg-search-wrap {
+        position: relative;
+        min-width: 220px;
+      }
+
+      .yg-search-input {
+        width: 100%;
+        padding: 9px 14px 9px 34px;
+        border-radius: 999px;
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        font-size: 13px;
+        font-weight: 600;
+        color: #0f172a;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .yg-search-input:focus {
+        border-color: #3b82f6;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+      }
+
+      .yg-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: #64748b;
+        pointer-events: none;
+      }
+
+      /* Main Catalog Container */
+      .yg-container {
+        max-width: 1440px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 26px 28px 64px;
         flex: 1;
       }
-      .tags {
+
+      .yg-section-header {
         display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 20px;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 18px;
       }
-      .tag {
-        font-size: 11px;
-        font-weight: 600;
+
+      .yg-section-title {
+        font-size: 22px;
+        font-weight: 900;
+        letter-spacing: -0.4px;
+        color: #0f172a;
+      }
+
+      .yg-section-count {
+        font-size: 13px;
+        font-weight: 700;
+        color: #64748b;
+      }
+
+      /* Yandex Games Full-Bleed Visual Poster Grid */
+      .yg-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 22px;
+      }
+
+      /* Game Card — Full Size Visual with Hover Expansion */
+      .yg-card {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        border-radius: 22px;
+        overflow: hidden;
+        text-decoration: none;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-shadow:
+          0 10px 25px -5px rgba(15, 23, 42, 0.14),
+          0 0 0 1px rgba(15, 23, 42, 0.06);
+        transition:
+          transform 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+          z-index 0s;
+        z-index: 1;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .yg-card:hover,
+      .yg-card:focus-visible {
+        transform: scale(1.06) translateY(-6px);
+        z-index: 30;
+        box-shadow:
+          0 26px 55px -8px rgba(15, 23, 42, 0.35),
+          0 0 0 3px #ffffff;
+      }
+
+      /* Full-Bleed Artwork Background */
+      .yg-poster-bg {
+        position: absolute;
+        inset: 0;
+        background: var(--card-gradient, linear-gradient(135deg, #2563eb, #38bdf8));
+        z-index: 1;
+        transition: transform 0.35s ease, filter 0.35s ease;
+      }
+
+      /* Subtle Geometric Pattern & Sunlit Radial Glow on Poster */
+      .yg-poster-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.32) 0%, transparent 62%),
+          repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.04) 0px,
+            rgba(255, 255, 255, 0.04) 12px,
+            transparent 12px,
+            transparent 24px
+          );
+      }
+
+      .yg-card:hover .yg-poster-bg {
+        transform: scale(1.08);
+        filter: brightness(0.92);
+      }
+
+      /* Top Badges Row */
+      .yg-top-badges {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .yg-genre-pill {
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
         padding: 4px 10px;
-        border-radius: 12px;
-        background: #f1f5f9;
-        color: #334155;
-        border: 1px solid #e2e8f0;
+        border-radius: 999px;
       }
-      .play-btn {
+
+      .yg-hot-badge {
+        background: linear-gradient(135deg, #facc15, #f97316);
+        color: #0f172a;
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: 0.7px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Center Full-Scale Hero Visual Icon */
+      .yg-hero-art {
+        position: absolute;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        z-index: 2;
+        padding-bottom: 18px;
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .yg-hero-img {
+        width: 104px;
+        height: 104px;
+        object-fit: contain;
+        filter: drop-shadow(0 14px 20px rgba(15, 23, 42, 0.35));
+        transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .yg-hero-emoji {
+        font-size: 72px;
+        filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.32));
+      }
+
+      .yg-card:hover .yg-hero-art {
+        transform: translateY(-34px) scale(0.76);
+      }
+
+      /* Bottom Scrim & Expandable Info Drawer */
+      .yg-card-overlay {
+        position: relative;
+        z-index: 3;
+        background: linear-gradient(
+          180deg,
+          transparent 0%,
+          rgba(15, 23, 42, 0.68) 38%,
+          rgba(15, 23, 42, 0.94) 100%
+        );
+        padding: 28px 16px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        transition: background 0.25s ease;
+      }
+
+      .yg-card-title {
+        font-size: 17px;
+        font-weight: 900;
+        letter-spacing: -0.3px;
+        line-height: 1.15;
         color: #ffffff;
-        text-decoration: none;
-        padding: 14px 22px;
-        border-radius: 14px;
-        font-size: 14px;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
       }
-      .play-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 22px rgba(79, 70, 229, 0.45);
+
+      /* Hidden Details Drawer that Expands on Hover */
+      .yg-hover-details {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(8px);
+        transition:
+          max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.22s ease,
+          transform 0.24s ease,
+          margin-top 0.24s ease;
       }
-      .play-btn:active {
-        transform: scale(0.98);
+
+      .yg-card:hover .yg-hover-details,
+      .yg-card:focus-visible .yg-hover-details {
+        max-height: 130px;
+        opacity: 1;
+        transform: translateY(0);
+        margin-top: 7px;
       }
+
+      .yg-short-desc {
+        font-size: 12px;
+        line-height: 1.35;
+        color: #e2e8f0;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin-bottom: 8px;
+      }
+
+      .yg-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .yg-mini-tags {
+        display: flex;
+        gap: 5px;
+        overflow: hidden;
+      }
+
+      .yg-mini-tag {
+        background: rgba(255, 255, 255, 0.16);
+        color: #f8fafc;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 7px;
+        border-radius: 6px;
+        white-space: nowrap;
+      }
+
+      .yg-play-pill {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: #ffffff;
+        font-size: 11.5px;
+        font-weight: 900;
+        letter-spacing: 0.6px;
+        padding: 6px 13px;
+        border-radius: 999px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.45);
+      }
+
       footer {
         text-align: center;
-        padding: 24px;
-        font-size: 12px;
+        padding: 24px 20px;
+        font-size: 13px;
         color: #64748b;
-        border-top: 1px solid #e2e8f0;
+        border-top: 1px solid rgba(148, 163, 184, 0.2);
+        background: rgba(255, 255, 255, 0.6);
       }
+
       footer a {
-        color: #4f46e5;
+        color: #2563eb;
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
       }
-      footer a:hover {
-        text-decoration: underline;
+
+      @media (max-width: 768px) {
+        .yg-navbar {
+          padding: 12px 16px;
+        }
+        .yg-container {
+          padding: 18px 16px 44px;
+        }
+        .yg-grid {
+          grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+          gap: 14px;
+        }
+        .yg-hero-img {
+          width: 76px;
+          height: 76px;
+        }
+        .yg-card-title {
+          font-size: 14px;
+        }
       }
     </style>
   </head>
   <body>
-    <header>
-      <div class="badge">AUTONOMOUS GAME ENGINE ARCADE</div>
-      <h1>3D HTML5 GAMES</h1>
-      <p class="subtitle">High-performance WebGL games powered by Three.js, Rapier.js physics, and Vite. Instant zero-install play across desktop and mobile.</p>
+    <!-- Top Sticky Bar (Yandex Games Style) -->
+    <header class="yg-navbar">
+      <a href="./" class="yg-brand">
+        <div class="yg-brand-logo">🎮</div>
+        <div class="yg-brand-text">
+          <span class="yg-brand-title">ARCADE 3D</span>
+          <span class="yg-brand-sub">Anında Oyna • 60 FPS WebGL</span>
+        </div>
+      </a>
+
+      <div class="yg-categories" id="yg-categories">
+        <button class="yg-cat-btn active" data-cat="all" type="button">🔥 Tüm Oyunlar</button>
+        <button class="yg-cat-btn" data-cat="io" type="button">🏎️ .io &amp; Arena</button>
+        <button class="yg-cat-btn" data-cat="physics" type="button">💥 3D Fizik &amp; Aksiyon</button>
+        <button class="yg-cat-btn" data-cat="puzzle" type="button">🧩 3D ASMR Bulmaca</button>
+      </div>
+
+      <div class="yg-search-wrap">
+        <span class="yg-search-icon">🔍</span>
+        <input
+          type="search"
+          id="yg-search"
+          class="yg-search-input"
+          placeholder="Oyun ara..."
+          aria-label="Oyun ara"
+        />
+      </div>
     </header>
 
-    <div class="container">
-      <div class="grid" id="games-grid">
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./smash-karts-brawl-3d/icon.svg" alt="SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🏎️';" />
-              </div>
-              <div>
-                <h2 class="card-title">SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO</h2>
-                <span class="card-date">2026-11-02</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Drive and drift an armored combat kart against 11 AI battle karts! Smash Mystery Weapon Crates, fire homing rockets & twin gatlings, collect Power Cubes, and survive the closing storm.</p>
-            <div class="tags">
-              <span class="tag">.io Royale</span>
-              <span class="tag">Kart Combat</span>
-              <span class="tag">12 Players</span>
-              <span class="tag">Weapon Crates</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./smash-karts-brawl-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./bridge-rush-io-3d/icon.svg" alt="BRIDGE RACE 3D // STAIR BUILDER .IO" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🧱';" />
-              </div>
-              <div>
-                <h2 class="card-title">BRIDGE RACE 3D // STAIR BUILDER .IO</h2>
-                <span class="card-date">2026-10-28</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Race 11 AI rivals across 3 tiered sky islands! Collect color bricks to stack a towering spine on your back, tackle smaller rivals, and build stair bridges to the Golden Trophy Podium.</p>
-            <div class="tags">
-              <span class="tag">.io Race</span>
-              <span class="tag">Bridge Builder</span>
-              <span class="tag">12 Players</span>
-              <span class="tag">3-Tier Islands</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./bridge-rush-io-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./stumble-knockout-royale-3d/icon.svg" alt="PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='👑';" />
-              </div>
-              <div>
-                <h2 class="card-title">PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO</h2>
-                <span class="card-date">2026-10-28</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Sprint, jump, and dive against 15 AI rivals across a 3-round sky obstacle tournament! Dodge spinning hammers, qualify through Round 1 &amp; 2, unlock 6 runner skins, and claim the Golden Crown.</p>
-            <div class="tags">
-              <span class="tag">.io Royale</span>
-              <span class="tag">3-Round Tournament</span>
-              <span class="tag">16 Players</span>
-              <span class="tag">3D Obstacle Course</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./stumble-knockout-royale-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./bumper-smash-io-3d/icon.svg" alt="BUMPER SMASH 3D // ARENA KNOCKOUT .IO" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🏎️';" />
-              </div>
-              <div>
-                <h2 class="card-title">BUMPER SMASH 3D // ARENA KNOCKOUT .IO</h2>
-                <span class="card-date">2026-10-28</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Steer a bouncy 3D spring-bumper kart across a shrinking sunlit arena! Ram 7 AI rivals into the sea, grow your kart, and claim the #1 Knockout Crown.</p>
-            <div class="tags">
-              <span class="tag">.io Arena</span>
-              <span class="tag">Bumper Knockout</span>
-              <span class="tag">Fake Multiplayer</span>
-              <span class="tag">3D Physics</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./bumper-smash-io-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./ragdoll-archers-duel-3d/icon.svg" alt="ARCHER DUEL 3D // RAGDOLL SHOWDOWN" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🏹';" />
-              </div>
-              <div>
-                <h2 class="card-title">ARCHER DUEL 3D // RAGDOLL SHOWDOWN</h2>
-                <span class="card-date">2026-10-27</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">1-finger ballistic bow showdown across sunlit floating castle bastions! Land 3x critical headshots, trigger hilarious ragdoll physics, and shoot flying apples.</p>
-            <div class="tags">
-              <span class="tag">3D Physics</span>
-              <span class="tag">Ragdoll Archery</span>
-              <span class="tag">Ballistic Duel</span>
-              <span class="tag">Casual Action</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./ragdoll-archers-duel-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./bus-escape-jam-3d/icon.svg" alt="BUS ESCAPE 3D // PASSENGER JAM" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🚌';" />
-              </div>
-              <div>
-                <h2 class="card-title">BUS ESCAPE 3D // PASSENGER JAM</h2>
-                <span class="card-date">2026-10-27</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Tactile 3D traffic jam &amp; passenger conga color sorting puzzle! Tap angled buses in a congested lot to drive them into loading bays and board matching passengers.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Traffic Jam</span>
-              <span class="tag">Bus Escape</span>
-              <span class="tag">Color Sort</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./bus-escape-jam-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./conveyor-marble-sort-3d/icon.svg" alt="CONVEYOR FLOW 3D // MARBLE FACTORY" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🔄';" />
-              </div>
-              <div>
-                <h2 class="card-title">CONVEYOR FLOW 3D // MARBLE FACTORY</h2>
-                <span class="card-date">2026-10-27</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Tactile 3D conveyor loop marble sorting ASMR puzzle! Release glossy color-coded marbles from hoppers onto the circulating track to fulfill crate orders.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Conveyor Flow</span>
-              <span class="tag">Marble Sort</span>
-              <span class="tag">Casual ASMR</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./conveyor-marble-sort-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./physics-drop-merge-3d/icon.svg" alt="DROP MERGE 3D // SPHERE SUIKA" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🍉';" />
-              </div>
-              <div>
-                <h2 class="card-title">DROP MERGE 3D // SPHERE SUIKA</h2>
-                <span class="card-date">2026-10-26</span>
-              </div>
-              <span class="featured-badge">NEW</span>
-            </div>
-            <p class="card-desc">Bouncy 3D physics fruit merge puzzle! Aim and drop juicy spheres into the translucent jar, merge identical pairs, and chain reactions to unlock the Giant Golden Sun Core.</p>
-            <div class="tags">
-              <span class="tag">3D Physics</span>
-              <span class="tag">Suika Merge</span>
-              <span class="tag">Rapier.js</span>
-              <span class="tag">Casual ASMR</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./physics-drop-merge-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./goods-sort-3d/icon.svg" alt="GOODS SORT 3D // SHELF TIDY MASTER" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🗄️';" />
-              </div>
-              <div>
-                <h2 class="card-title">GOODS SORT 3D // SHELF TIDY MASTER</h2>
-                <span class="card-date">2026-10-26</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Tactile 3D shelf organization and match-3 puzzle! Sort colorful soda cans, snack boxes, and jam jars into matching compartments to trigger satisfying ASMR pops.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Goods Sort</span>
-              <span class="tag">ASMR Match-3</span>
-              <span class="tag">Shelf Tidy</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./goods-sort-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./ragdoll-cannon-blitz-3d/icon.svg" alt="CANNON BLITZ 3D // PHYSICS DEMOLITION" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='💣';" />
-              </div>
-              <div>
-                <h2 class="card-title">CANNON BLITZ 3D // PHYSICS DEMOLITION</h2>
-                <span class="card-date">2026-10-26</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Aim and fire physics cannonballs at precarious island fortresses! Trigger chain-reaction TNT explosions, topple block towers, and knock target dummies into the sea.</p>
-            <div class="tags">
-              <span class="tag">3D Physics</span>
-              <span class="tag">Casual Demolition</span>
-              <span class="tag">Rapier.js</span>
-              <span class="tag">FPS Cannon</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./ragdoll-cannon-blitz-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./voxel-craft-smash-3d/icon.svg" alt="VOXEL SMASH 3D // BLOCK MINER & TURRET" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🧱';" />
-              </div>
-              <div>
-                <h2 class="card-title">VOXEL SMASH 3D // BLOCK MINER & TURRET</h2>
-                <span class="card-date">2026-10-25</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Tactile 3D voxel fortress destruction ASMR! Demolish procedural castles, chain-react TNT powder kegs, fend off marching golems, and vacuum glowing loot cubes.</p>
-            <div class="tags">
-              <span class="tag">Voxel Sandbox</span>
-              <span class="tag">ASMR Destruction</span>
-              <span class="tag">Turret Defense</span>
-              <span class="tag">Instanced Mesh</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./voxel-craft-smash-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./hole-city-io-3d/icon.svg" alt="HOLE SWALLOW 3D // CITY ARENA .IO" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🕳️';" />
-              </div>
-              <div>
-                <h2 class="card-title">HOLE SWALLOW 3D // CITY ARENA .IO</h2>
-                <span class="card-date">2026-10-24</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Steer a hungry 3D black hole across a miniature sunlit city. Swallow props, cars, and skyscrapers, eliminate rival bots, and top the live 8-player leaderboard!</p>
-            <div class="tags">
-              <span class="tag">.io Arena</span>
-              <span class="tag">Fake Multiplayer</span>
-              <span class="tag">3D Physics</span>
-              <span class="tag">Casual Action</span>
-              <span class="tag">60 FPS</span>
-            </div>
-          </div>
-          <a href="./hole-city-io-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./hexa-sort-3d/icon.svg" alt="HEXA SORT 3D // CASCADE STACK" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🔷';" />
-              </div>
-              <div>
-                <h2 class="card-title">HEXA SORT 3D // CASCADE STACK</h2>
-                <span class="card-date">2026-10-22</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Tactile 3D hexagonal tile sorting ASMR puzzle! Stack, match colors, and trigger satisfying domino cascade clears on a floating honeycomb grid under warm daylight.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Hexa Sort</span>
-              <span class="tag">ASMR Cascade</span>
-              <span class="tag">Spatial Logic</span>
-              <span class="tag">Casual</span>
-            </div>
-          </div>
-          <a href="./hexa-sort-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./screw-jam-3d/icon.svg" alt="SCREW JAM 3D // HYPER UNBOLT" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🔩';" />
-              </div>
-              <div>
-                <h2 class="card-title">SCREW JAM 3D // HYPER UNBOLT</h2>
-                <span class="card-date">2026-10-21</span>
-              </div>
-              <span class="featured-badge">HOT</span>
-            </div>
-            <p class="card-desc">Tactile 3D pin-unscrew ASMR puzzle! Unbolt colorful translucent acrylic plates, match screws into 3-slot color toolboxes, and manage the buffer dock under warm daylight.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Pin Unscrew</span>
-              <span class="tag">ASMR Jam</span>
-              <span class="tag">Spatial Logic</span>
-              <span class="tag">Casual</span>
-            </div>
-          </div>
-          <a href="./screw-jam-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card featured">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./color-block-jam-3d/icon.svg" alt="COLOR BLOCK JAM 3D // SHREDDER ESCAPE" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🧩';" />
-              </div>
-              <div>
-                <h2 class="card-title">COLOR BLOCK JAM 3D // SHREDDER ESCAPE</h2>
-                <span class="card-date">2026-10-21</span>
-              </div>
-              <span class="featured-badge">FEATURED</span>
-            </div>
-            <p class="card-desc">Tactile 3D polyomino puzzle. Slide colorful blocks across a floating grid into matching perimeter shredder gates with satisfying ASMR voxel bursts!</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Spatial Jam</span>
-              <span class="tag">Shredder Escape</span>
-              <span class="tag">ASMR</span>
-              <span class="tag">Casual</span>
-            </div>
-          </div>
-          <a href="./color-block-jam-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./cyber-arrow-3d/icon.svg" alt="CYBER ARROW 3D" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='🎯';" />
-              </div>
-              <div>
-                <h2 class="card-title">CYBER ARROW 3D</h2>
-                <span class="card-date">2026-10-20</span>
-              </div>
-            </div>
-            <p class="card-desc">Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.</p>
-            <div class="tags">
-              <span class="tag">3D Puzzle</span>
-              <span class="tag">Spatial Logic</span>
-              <span class="tag">ASMR Escape</span>
-              <span class="tag">Three.js</span>
-              <span class="tag">Casual</span>
-            </div>
-          </div>
-          <a href="./cyber-arrow-3d/" class="play-btn">PLAY GAME ➔</a>
-        </div>
-        <div class="game-card">
-          <div>
-            <div class="card-header">
-              <div class="game-icon">
-                <img src="./cyber-flap/icon.svg" alt="CYBER FLAP // 2099" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='⚡';" />
-              </div>
-              <div>
-                <h2 class="card-title">CYBER FLAP // 2099</h2>
-                <span class="card-date">2026-10-19</span>
-              </div>
-            </div>
-            <p class="card-desc">High-energy 3D aerobatic drone runner. Soar through sunlit city skies, thread precision aerial rings, and dodge dynamic obstacles with responsive 60 FPS controls.</p>
-            <div class="tags">
-              <span class="tag">3D Sky Runner</span>
-              <span class="tag">Aerobatic Flight</span>
-              <span class="tag">Physics</span>
-              <span class="tag">60 FPS</span>
-              <span class="tag">Arcade</span>
-            </div>
-          </div>
-          <a href="./cyber-flap/" class="play-btn">PLAY GAME ➔</a>
-        </div>
+    <!-- Main Games Grid -->
+    <main class="yg-container">
+      <div class="yg-section-header">
+        <h1 class="yg-section-title" id="yg-section-title">Popüler 3D Oyunlar</h1>
+        <span class="yg-section-count" id="yg-game-count">16 Oyun</span>
       </div>
-    </div>
+
+      <div class="yg-grid" id="games-grid">
+        <!-- Pre-rendered fallback cards; hydrated dynamically from games.json -->
+      </div>
+    </main>
 
     <footer>
-      Crafted with precision by <a href="https://github.com/keremcaliskann" target="_blank">Kerem Çalışkan</a> // 60 FPS HTML5 Engine
+      Crafted by <a href="https://github.com/keremcaliskann" target="_blank" rel="noopener">Kerem Çalışkan</a> // 60 FPS Three.js &amp; Rapier 3D Engine
     </footer>
 
     <script>
-      function renderIcon(iconPath, title, fallbackEmoji) {
-        const fb = fallbackEmoji || '🎮';
-        if (!iconPath) return fb;
-        if (iconPath.endsWith('.svg') || iconPath.endsWith('.png') || iconPath.startsWith('./') || iconPath.startsWith('/')) {
-          return `<img src="${iconPath}" alt="${title}" class="game-icon-img" width="44" height="44" onerror="this.onerror=null; this.parentElement.textContent='${fb}';" />`;
+      const FALLBACK_GAMES = [
+        {
+          id: 'smash-karts-brawl-3d',
+          title: 'SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO',
+          description: 'Zırhlı kartınla drift yap, gizemli silah kutularını kır ve 11 rakibe karşı roketlerle hayatta kal!',
+          path: './smash-karts-brawl-3d/',
+          tags: ['.io Royale', 'Kart Combat', '60 FPS'],
+          icon: './smash-karts-brawl-3d/icon.svg',
+          iconEmoji: '🏎️',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #ef4444, #f59e0b)'
+        },
+        {
+          id: 'bridge-rush-io-3d',
+          title: 'BRIDGE RACE 3D // STAIR BUILDER .IO',
+          description: 'Kendi rengindeki tuğlaları topla, rakipleri devir ve 3 katlı adalarda merdivenleri ilk sen tamamla!',
+          path: './bridge-rush-io-3d/',
+          tags: ['.io Race', 'Bridge Builder', '60 FPS'],
+          icon: './bridge-rush-io-3d/icon.svg',
+          iconEmoji: '🧱',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #2563eb, #38bdf8)'
+        },
+        {
+          id: 'stumble-knockout-royale-3d',
+          title: 'PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO',
+          description: '15 rakibe karşı 3 turlu çılgın parkurda koş, dönen çekiçlerden kaç ve altın tacı kazan!',
+          path: './stumble-knockout-royale-3d/',
+          tags: ['.io Royale', 'Obstacle Course', '60 FPS'],
+          icon: './stumble-knockout-royale-3d/icon.svg',
+          iconEmoji: '👑',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #ec4899, #8b5cf6)'
+        },
+        {
+          id: 'bumper-smash-io-3d',
+          title: 'BUMPER SMASH 3D // ARENA KNOCKOUT .IO',
+          description: '4 farklı arenada rakiplerine çarpıp denize uçur, aracını büyüt ve son kalan şampiyon ol!',
+          path: './bumper-smash-io-3d/',
+          tags: ['.io Arena', 'Bumper Knockout', '60 FPS'],
+          icon: './bumper-smash-io-3d/icon.svg',
+          iconEmoji: '🛞',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #f97316, #ea580c)'
+        },
+        {
+          id: 'ragdoll-archers-duel-3d',
+          title: 'ARCHER DUEL 3D // RAGDOLL SHOWDOWN',
+          description: 'Kuleler arası balistik okçuluk düellosu! Kafadan vuruşlarla rakipleri ragdoll fiziğiyle uçur.',
+          path: './ragdoll-archers-duel-3d/',
+          tags: ['3D Physics', 'Ragdoll Archery', '60 FPS'],
+          icon: './ragdoll-archers-duel-3d/icon.svg',
+          iconEmoji: '🏹',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #2563eb, #f59e0b)'
+        },
+        {
+          id: 'conveyor-marble-sort-3d',
+          title: 'CONVEYOR FLOW 3D // MARBLE FACTORY',
+          description: 'Renkli bilyeleri konveyör bandına bırakarak kutu siparişlerini eksiksiz tamamla!',
+          path: './conveyor-marble-sort-3d/',
+          tags: ['3D Puzzle', 'Marble Sort', 'ASMR'],
+          icon: './conveyor-marble-sort-3d/icon.svg',
+          iconEmoji: '🔄',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #0284c7, #38bdf8)'
+        },
+        {
+          id: 'physics-drop-merge-3d',
+          title: 'DROP MERGE 3D // SPHERE SUIKA',
+          description: 'Aynı renkteki 3B küreleri cam fanusa bırakıp birleştirerek dev Güneş çekirdeğine ulaş!',
+          path: './physics-drop-merge-3d/',
+          tags: ['3D Physics', 'Suika Merge', '60 FPS'],
+          icon: './physics-drop-merge-3d/icon.svg',
+          iconEmoji: '🍉',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #22c55e, #16a34a)'
+        },
+        {
+          id: 'goods-sort-3d',
+          title: 'GOODS SORT 3D // SHELF TIDY MASTER',
+          description: 'Market raflarındaki ürünleri 3’lü eşleştirerek rafları düzenle ve kombo puanları topla!',
+          path: './goods-sort-3d/',
+          tags: ['3D Puzzle', 'Goods Sort', 'ASMR'],
+          icon: './goods-sort-3d/icon.svg',
+          iconEmoji: '🗄️',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #d97706, #f59e0b)'
+        },
+        {
+          id: 'ragdoll-cannon-blitz-3d',
+          title: 'CANNON BLITZ 3D // PHYSICS DEMOLITION',
+          description: 'Top gülleleriyle ada kalelerini yık, TNT fıçılarını patlat ve hedefleri denize devir!',
+          path: './ragdoll-cannon-blitz-3d/',
+          tags: ['3D Physics', 'Demolition', '60 FPS'],
+          icon: './ragdoll-cannon-blitz-3d/icon.svg',
+          iconEmoji: '💣',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #ea580c, #f59e0b)'
+        },
+        {
+          id: 'voxel-craft-smash-3d',
+          title: 'VOXEL SMASH 3D // BLOCK MINER & TURRET',
+          description: 'Voksel kalelerini parçala, yürüyen golemleri durdur ve parlayan ganimet küplerini topla!',
+          path: './voxel-craft-smash-3d/',
+          tags: ['Voxel Sandbox', 'Destruction', '60 FPS'],
+          icon: './voxel-craft-smash-3d/icon.svg',
+          iconEmoji: '⛏️',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #f97316, #eab308)'
+        },
+        {
+          id: 'hole-city-io-3d',
+          title: 'HOLE SWALLOW 3D // CITY ARENA .IO',
+          description: 'Kara deliğinle şehirdeki araçları ve binaları yutarak büyü, rakiplerini içine çek!',
+          path: './hole-city-io-3d/',
+          tags: ['.io Arena', '3D Physics', '60 FPS'],
+          icon: './hole-city-io-3d/icon.svg',
+          iconEmoji: '🕳️',
+          featured: true,
+          accentGradient: 'linear-gradient(135deg, #06b6d4, #8b5cf6)'
+        },
+        {
+          id: 'hexa-sort-3d',
+          title: 'HEXA SORT 3D // CASCADE STACK',
+          description: 'Altıgen taşları petek ızgaraya yerleştir, renkleri eşleştir ve ASMR domino serileri yakala!',
+          path: './hexa-sort-3d/',
+          tags: ['3D Puzzle', 'Hexa Sort', 'ASMR'],
+          icon: './hexa-sort-3d/icon.svg',
+          iconEmoji: '🔷',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #f59e0b, #f97316)'
+        },
+        {
+          id: 'screw-jam-3d',
+          title: 'SCREW JAM 3D // HYPER UNBOLT',
+          description: 'Renkli vidaları doğru alet kutularına sökerek şeffaf plakaları serbest bırak!',
+          path: './screw-jam-3d/',
+          tags: ['3D Puzzle', 'Pin Unscrew', 'ASMR'],
+          icon: './screw-jam-3d/icon.svg',
+          iconEmoji: '🔩',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #0284c7, #f59e0b)'
+        },
+        {
+          id: 'color-block-jam-3d',
+          title: 'COLOR BLOCK JAM 3D // SHREDDER ESCAPE',
+          description: 'Renkli blokları ızgarada kaydırarak kendi rengindeki öğütücü kapılardan geçir!',
+          path: './color-block-jam-3d/',
+          tags: ['3D Puzzle', 'Block Jam', 'ASMR'],
+          icon: './color-block-jam-3d/icon.svg',
+          iconEmoji: '🧩',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #0ea5e9, #2563eb)'
+        },
+        {
+          id: 'cyber-arrow-3d',
+          title: 'CYBER ARROW 3D // SPATIAL ESCAPE',
+          description: '3B yapıyı döndür, önü açık ok bloklarına dokunarak yapıyı tamamen çöz!',
+          path: './cyber-arrow-3d/',
+          tags: ['3D Puzzle', 'Spatial Logic', 'ASMR'],
+          icon: './cyber-arrow-3d/icon.svg',
+          iconEmoji: '🎯',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #6366f1, #4f46e5)'
+        },
+        {
+          id: 'cyber-flap',
+          title: 'CYBER FLAP // SKY DRONE 3D',
+          description: 'Akrobatik 3B dron ile gökyüzü halkalarının içinden geç ve engellerden sıyrıl!',
+          path: './cyber-flap/',
+          tags: ['3D Sky Runner', 'Flight', '60 FPS'],
+          icon: './cyber-flap/icon.svg',
+          iconEmoji: '⚡',
+          featured: false,
+          accentGradient: 'linear-gradient(135deg, #0284c7, #38bdf8)'
         }
-        return iconPath;
+      ];
+
+      let allGames = [...FALLBACK_GAMES];
+      let activeCategory = 'all';
+      let searchQuery = '';
+
+      function classifyCategory(g) {
+        const str = ((g.title || '') + ' ' + (g.tags || []).join(' ')).toLowerCase();
+        if (str.includes('.io') || str.includes('royale') || str.includes('race')) return 'io';
+        if (str.includes('puzzle') || str.includes('sort') || str.includes('jam') || str.includes('arrow')) return 'puzzle';
+        return 'physics';
       }
 
       function renderCard(g) {
-        const isFeatured = Boolean(g.featured);
-        const iconContent = renderIcon(g.icon, g.title, g.iconEmoji);
+        const parts = (g.title || '').split('//');
+        const mainTitle = parts[0].trim();
+        const genreTag = (parts[1] || g.tags?.[0] || '3D OYUN').trim();
+        const grad = g.accentGradient || 'linear-gradient(135deg, #2563eb, #38bdf8)';
+        const fb = g.iconEmoji || '🎮';
+        const shortDesc = (g.description || '').slice(0, 115);
+        const miniTags = (g.tags || []).slice(0, 2);
+
         return `
-          <div class="game-card${isFeatured ? ' featured' : ''}">
-            <div>
-              <div class="card-header">
-                <div class="game-icon">${iconContent}</div>
-                <div>
-                  <h2 class="card-title">${g.title}</h2>
-                  <span class="card-date">${g.date}</span>
+          <a href="${g.path}" class="yg-card" style="--card-gradient: ${grad};">
+            <div class="yg-poster-bg"></div>
+            <div class="yg-top-badges">
+              <span class="yg-genre-pill">${genreTag}</span>
+              ${g.featured ? '<span class="yg-hot-badge">🔥 POPÜLER</span>' : ''}
+            </div>
+            <div class="yg-hero-art">
+              <img
+                src="${g.icon}"
+                alt="${mainTitle}"
+                class="yg-hero-img"
+                onerror="this.onerror=null; this.outerHTML='<span class=\\'yg-hero-emoji\\'>${fb}</span>';"
+              />
+            </div>
+            <div class="yg-card-overlay">
+              <h2 class="yg-card-title">${mainTitle}</h2>
+              <div class="yg-hover-details">
+                <p class="yg-short-desc">${shortDesc}</p>
+                <div class="yg-card-footer">
+                  <div class="yg-mini-tags">
+                    ${miniTags.map((t) => `<span class="yg-mini-tag">${t}</span>`).join('')}
+                  </div>
+                  <span class="yg-play-pill">▶ OYNA</span>
                 </div>
-                ${isFeatured ? '<span class="featured-badge">FEATURED</span>' : ''}
-              </div>
-              <p class="card-desc">${g.description}</p>
-              <div class="tags">
-                ${(g.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
               </div>
             </div>
-            <a href="${g.path}" class="play-btn">PLAY GAME ➔</a>
-          </div>
+          </a>
         `;
       }
 
-      async function loadGames() {
+      function updateGrid() {
         const grid = document.getElementById('games-grid');
-        try {
-          const res = await fetch('./games.json');
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const games = await res.json();
-          if (Array.isArray(games) && games.length > 0) {
-            grid.innerHTML = games.map(renderCard).join('');
+        const countEl = document.getElementById('yg-game-count');
+        const filtered = allGames.filter((g) => {
+          if (g.active === false || g.id === 'bus-escape-jam-3d') return false;
+          if (activeCategory !== 'all' && classifyCategory(g) !== activeCategory) return false;
+          if (searchQuery) {
+            const hay = ((g.title || '') + ' ' + (g.description || '') + ' ' + (g.tags || []).join(' ')).toLowerCase();
+            if (!hay.includes(searchQuery)) return false;
           }
-        } catch (e) {
-          // Graceful fallback: pre-rendered markup already visible in DOM (e.g. offline / file://)
-          console.info('Central Arcade Portal: using pre-rendered catalog cards', e);
+          return true;
+        });
+
+        grid.innerHTML = filtered.map(renderCard).join('');
+        if (countEl) {
+          countEl.textContent = `${filtered.length} Oyun`;
         }
       }
-      loadGames();
+
+      // Bind category buttons
+      document.getElementById('yg-categories')?.addEventListener('click', (e) => {
+        const btn = e.target.closest('.yg-cat-btn');
+        if (!btn) return;
+        document.querySelectorAll('.yg-cat-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-cat') || 'all';
+        updateGrid();
+      });
+
+      // Bind search input
+      document.getElementById('yg-search')?.addEventListener('input', (e) => {
+        searchQuery = (e.target.value || '').trim().toLowerCase();
+        updateGrid();
+      });
+
+      async function loadCatalog() {
+        updateGrid();
+        try {
+          const res = await fetch('./games.json');
+          if (!res.ok) return;
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            // Merge concise Turkish descriptions from FALLBACK_GAMES where matching
+            const descMap = new Map(FALLBACK_GAMES.map((f) => [f.id, f.description]));
+            allGames = data
+              .filter((g) => g.active !== false && g.id !== 'bus-escape-jam-3d')
+              .map((g) => ({
+                ...g,
+                description: descMap.get(g.id) || g.description
+              }));
+            updateGrid();
+          }
+        } catch {
+          // Offline / file:// fallback already rendered
+        }
+      }
+
+      loadCatalog();
     </script>
   </body>
 </html>

@@ -214,23 +214,34 @@ export class BrawlArenaManager {
   }
 
   private buildStadiumGeometry(): void {
-    // Sunlit Warm Biscuit Circular Stadium Platform
+    // High-Contrast Sunlit Racing Asphalt & Warm Sandstone Arena Deck
     const floorGeo = new THREE.CylinderGeometry(32.5, 33.8, 1.8, 48);
     const floorMat = new THREE.MeshStandardMaterial({
-      color: 0xfcf8ee,
+      color: 0x64748b,
       roughness: 0.52,
-      metalness: 0.04,
+      metalness: 0.06,
     });
     const floor = new THREE.Mesh(floorGeo, floorMat);
     floor.position.set(0, -0.9, 0);
     floor.receiveShadow = true;
     this.arenaGroup.add(floor);
 
+    // Outer Sunlit Turf Curb Ring
+    const curbGeo = new THREE.RingGeometry(30.8, 32.5, 48);
+    curbGeo.rotateX(-Math.PI / 2);
+    const curbMat = new THREE.MeshBasicMaterial({
+      color: 0xf59e0b,
+      side: THREE.DoubleSide,
+    });
+    const curbRing = new THREE.Mesh(curbGeo, curbMat);
+    curbRing.position.y = 0.015;
+    this.arenaGroup.add(curbRing);
+
     // Inner Decorative Combat Ring Markings
-    const innerRingGeo = new THREE.RingGeometry(11.8, 12.3, 40);
+    const innerRingGeo = new THREE.RingGeometry(11.8, 12.4, 40);
     innerRingGeo.rotateX(-Math.PI / 2);
     const innerRingMat = new THREE.MeshBasicMaterial({
-      color: 0xe2e8f0,
+      color: 0x38bdf8,
       side: THREE.DoubleSide,
     });
     const innerRing = new THREE.Mesh(innerRingGeo, innerRingMat);
@@ -304,8 +315,9 @@ export class BrawlArenaManager {
     const playerSkin = KART_SKINS[selectedSkinId % KART_SKINS.length];
 
     for (let i = 0; i < 12; i++) {
-      const angle = (i / 12) * Math.PI * 2;
-      const spawnRadius = 22.5;
+      // Place i=0 (Player) at angle = +PI/2 (x = 0, z = +21.0) facing inward toward -Z
+      const angle = Math.PI * 0.5 + (i / 12) * Math.PI * 2;
+      const spawnRadius = 21.0;
       const sx = Math.cos(angle) * spawnRadius;
       const sz = Math.sin(angle) * spawnRadius;
 
@@ -317,14 +329,16 @@ export class BrawlArenaManager {
           true,
           playerSkin.chassisHex,
           playerSkin.accentHex,
-          0,
-          -20
+          sx,
+          sz
         );
         this.player.armorUpgradeMult = 1.0 + (armorLvl - 1) * 0.12;
         this.player.turboUpgradeMult = 1.0 + (turboLvl - 1) * 0.07;
         this.player.weaponUpgradeMult = 1.0 + (weaponLvl - 1) * 0.12;
-        this.player.maxHp = Math.round(100 * this.player.armorUpgradeMult);
+        this.player.maxHp = Math.round(120 * this.player.armorUpgradeMult);
         this.player.hp = this.player.maxHp;
+        this.player.weaponAmmo = 3; // Player starts with 3 rockets for instant action
+        this.player.shieldTimer = 4.0; // 4s spawn invulnerability shield
         this.karts.push(this.player);
       } else {
         const botSkin = KART_SKINS[i % KART_SKINS.length];
@@ -338,8 +352,10 @@ export class BrawlArenaManager {
           sx,
           sz
         );
-        const levelScale = Math.min(1.25, 0.9 + this.levelNumber * 0.03);
+        const levelScale = Math.min(1.2, 0.88 + this.levelNumber * 0.03);
         bot.turboUpgradeMult = levelScale;
+        bot.weaponAmmo = 0; // Bots start unarmed and must smash Mystery Crates first
+        bot.fireCooldown = 2.5 + Math.random() * 2.0;
         bot.aiTargetX = (Math.random() - 0.5) * 18;
         bot.aiTargetZ = (Math.random() - 0.5) * 18;
         this.karts.push(bot);
@@ -590,28 +606,33 @@ export class BrawlArenaManager {
       k.turretYawRad = k.headingRad;
     }
 
+    const hasAmmo = k.mechaTimer > 0 || k.weaponAmmo > 0;
     const shouldFire =
-      forceFire ||
-      (nearest !== null && (k.mechaTimer > 0 || (k.weaponAmmo > 0 && bestDist < 18.5)));
+      hasAmmo &&
+      (forceFire || (nearest !== null && (k.mechaTimer > 0 || bestDist < (k.isPlayer ? 19.5 : 15.0))));
 
     if (!shouldFire || k.fireCooldown > 0) return;
 
+    const botFairnessMult = k.isPlayer ? 1.0 : 0.52;
     const dmgScale =
-      k.weaponUpgradeMult * (1.0 + k.powerCubes * 0.12) * (k.mechaTimer > 0 ? 1.65 : 1.0);
+      botFairnessMult *
+      k.weaponUpgradeMult *
+      (1.0 + k.powerCubes * 0.12) *
+      (k.mechaTimer > 0 ? 1.65 : 1.0);
 
     if (k.mechaTimer > 0 || k.activeWeapon === 'rockets') {
-      this.spawnProjectile(k, nearest, 22.5, Math.round(42 * dmgScale), true);
-      k.fireCooldown = k.mechaTimer > 0 ? 0.42 : 0.65;
+      this.spawnProjectile(k, nearest, 22.5, Math.round(44 * dmgScale), true);
+      k.fireCooldown = k.mechaTimer > 0 ? 0.42 : k.isPlayer ? 0.62 : 1.45;
       if (k.mechaTimer <= 0) k.weaponAmmo = Math.max(0, k.weaponAmmo - 1);
       if (k.isPlayer) this.audio.playRocketLaunch();
     } else if (k.activeWeapon === 'gatling') {
-      this.spawnProjectile(k, nearest, 28.0, Math.round(13 * dmgScale), false);
-      k.fireCooldown = 0.14;
+      this.spawnProjectile(k, nearest, 28.0, Math.round(14 * dmgScale), false);
+      k.fireCooldown = k.isPlayer ? 0.13 : 0.28;
       k.weaponAmmo = Math.max(0, k.weaponAmmo - 1);
       if (k.isPlayer) this.audio.playGatlingShot();
     } else if (k.activeWeapon === 'mines') {
       this.spawnMine(k, Math.round(62 * dmgScale));
-      k.fireCooldown = 0.75;
+      k.fireCooldown = k.isPlayer ? 0.75 : 1.5;
       k.weaponAmmo = Math.max(0, k.weaponAmmo - 1);
       if (k.isPlayer) this.audio.playRocketLaunch();
     }

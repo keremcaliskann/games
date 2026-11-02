@@ -37,7 +37,7 @@ jobs:
           node -e '
             const fs = require("fs");
             const { execSync } = require("child_process");
-            const games = JSON.parse(fs.readFileSync("games.json", "utf8"));
+            const games = JSON.parse(fs.readFileSync("games.json", "utf8")).filter(g => g.active !== false);
             for (const g of games) {
               console.log("=== Building " + g.id + " ===");
               execSync("npm install --no-audit --no-fund && npm run build", { cwd: g.id, stdio: "inherit" });

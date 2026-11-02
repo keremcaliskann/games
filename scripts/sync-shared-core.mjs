@@ -36,6 +36,9 @@ function buildLeftSidebarHtml() {
           <a href="../" class="shell-btn shell-btn-portal" title="Return to Central Arcade Portal">
             <span class="btn-icon">←</span> Portala Dön
           </a>
+          <button id="shell-menu-btn" class="shell-btn shell-btn-menu" type="button">
+            <span class="btn-icon">🏠</span> Başlangıç Menüsü
+          </button>
           <button id="shell-restart-btn" class="shell-btn shell-btn-restart" type="button">
             <span class="btn-icon">🔄</span> Yeniden Başlat
           </button>

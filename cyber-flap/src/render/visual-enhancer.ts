@@ -62,9 +62,7 @@ export class VisualEnhancer {
   public static enhanceRendererAndIBL(renderer: THREE.WebGLRenderer, scene: THREE.Scene): void {
     try {
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      if (renderer.toneMappingExposure > 1.08 || renderer.toneMappingExposure < 0.85) {
-        renderer.toneMappingExposure = 1.0;
-      }
+      renderer.toneMappingExposure = 0.88;
       if (renderer.shadowMap) {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -82,6 +80,10 @@ export class VisualEnhancer {
           pmremGenerator.dispose();
         }
         scene.environment = this.cachedEnvMap;
+      }
+      // Prevent RoomEnvironment from overexposing scenes that already have Directional + Hemisphere lights
+      if ('environmentIntensity' in scene) {
+        (scene as THREE.Scene & { environmentIntensity: number }).environmentIntensity = 0.28;
       }
     } catch {
       // Graceful fallback if WebGL context is mocked or constrained
@@ -119,11 +121,11 @@ export class VisualEnhancer {
 
     // Enhance studio reflection presence without blowing out highlights
     if (std.envMapIntensity === undefined || std.envMapIntensity === 1) {
-      std.envMapIntensity = 0.65;
+      std.envMapIntensity = 0.35;
     }
 
     if (addRim && !std.transparent) {
-      this.applyRimLight(std, 0xfff8eb, 0.22);
+      this.applyRimLight(std, 0xfff8eb, 0.14);
     }
   }
 

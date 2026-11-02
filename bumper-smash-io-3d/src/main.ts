@@ -89,6 +89,10 @@ export class BumperSmashApp {
         this.input.setEnabled(true);
         this.arena.startMatch(this.arena.arenaNumber);
       },
+      onCycleMap: () => {
+        this.input.setEnabled(true);
+        this.arena.cycleNextMap();
+      },
       onToggleSound: () => this.audio.toggleUserMute(),
       onActivateBooster: (type) => {
         this.arena.activateBooster(type);

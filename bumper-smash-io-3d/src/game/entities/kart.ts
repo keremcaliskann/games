@@ -80,7 +80,7 @@ export class KartEntity {
     this.nitroTimer = 4.0;
   }
 
-  public update(dt: number, currentArenaRadius: number): boolean {
+  public update(dt: number, currentArenaRadius: number, gripDamping = 3.1): boolean {
     if (!this.isAlive) return false;
 
     if (this.lastHitTimer > 0) {
@@ -128,8 +128,8 @@ export class KartEntity {
     this.vel.x += this.steerDirX * accel * dt;
     this.vel.z += this.steerDirZ * accel * dt;
 
-    // Damping / tire grip
-    const damping = Math.exp(-3.1 * dt);
+    // Damping / tire grip (varies by arena surface: Ice vs Sand vs Basalt)
+    const damping = Math.exp(-gripDamping * dt);
     this.vel.x *= damping;
     this.vel.z *= damping;
 

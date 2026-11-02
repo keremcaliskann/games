@@ -26,7 +26,9 @@ export class InputManager {
       const target = e.target as HTMLElement | null;
       if (
         target &&
-        target.closest('[data-hud-interactive="true"], button, .sk-modal-overlay, .shell-sidebar')
+        target.closest(
+          '[data-hud-interactive="true"], button, .sk-modal-overlay, .shell-sidebar, .shell-start-menu-overlay'
+        )
       ) {
         return;
       }
@@ -58,10 +60,11 @@ export class InputManager {
         const normX = dx / dist;
         const normY = dy / dist;
 
-        // Camera looks toward +Z: Screen Right (+dx) is World -X, Screen Up (-dy) is World +Z
-        const strength = Math.max(0.45, clampedDist / maxRadius);
-        this.steerX = -normX * strength;
-        this.steerZ = -normY * strength;
+        // Standard Camera at +Z looking toward -Z:
+        // Screen Right (+dx) -> World +X; Screen Up (-dy) -> World -Z; Screen Down (+dy) -> World +Z
+        const strength = Math.max(0.5, clampedDist / maxRadius);
+        this.steerX = normX * strength;
+        this.steerZ = normY * strength;
 
         if (dist > maxRadius) {
           this.startX = e.clientX - normX * maxRadius;
@@ -101,16 +104,16 @@ export class InputManager {
 
   private applyHoldSteerFromPosition(clientX: number, clientY: number, rect: DOMRect): void {
     const cx = rect.left + rect.width * 0.5;
-    const cy = rect.top + rect.height * 0.58;
+    const cy = rect.top + rect.height * 0.56;
     const ox = clientX - cx;
     const oy = clientY - cy;
     const len = Math.hypot(ox, oy);
     if (len > 12) {
-      this.steerX = -(ox / len);
-      this.steerZ = -(oy / len);
+      this.steerX = ox / len;
+      this.steerZ = oy / len;
     } else {
       this.steerX = 0;
-      this.steerZ = 1;
+      this.steerZ = -1;
     }
   }
 
@@ -123,13 +126,14 @@ export class InputManager {
   }
 
   public update(): void {
-    // Camera looks toward +Z: Screen Right (D/ArrowRight) is World -X, Screen Left (A/ArrowLeft) is World +X
+    // Standard Camera at +Z looking toward -Z:
+    // Right (D/ArrowRight) = +X, Left (A/ArrowLeft) = -X, Up (W/ArrowUp) = -Z, Down (S/ArrowDown) = +Z
     let kx = 0;
     let kz = 0;
-    if (this.keys.has('KeyA') || this.keys.has('ArrowLeft')) kx += 1;
-    if (this.keys.has('KeyD') || this.keys.has('ArrowRight')) kx -= 1;
-    if (this.keys.has('KeyW') || this.keys.has('ArrowUp')) kz += 1;
-    if (this.keys.has('KeyS') || this.keys.has('ArrowDown')) kz -= 1;
+    if (this.keys.has('KeyD') || this.keys.has('ArrowRight')) kx += 1;
+    if (this.keys.has('KeyA') || this.keys.has('ArrowLeft')) kx -= 1;
+    if (this.keys.has('KeyW') || this.keys.has('ArrowUp')) kz -= 1;
+    if (this.keys.has('KeyS') || this.keys.has('ArrowDown')) kz += 1;
 
     if (kx !== 0 || kz !== 0) {
       const len = Math.hypot(kx, kz);

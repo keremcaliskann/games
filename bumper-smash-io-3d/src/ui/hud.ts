@@ -3,6 +3,7 @@ import { KartEntity } from '../game/entities/kart';
 
 export interface HudActions {
   onRestart: () => void;
+  onCycleMap?: () => void;
   onToggleSound: () => boolean;
   onActivateBooster: (type: 'nitro' | 'vortex' | 'spikes') => void;
   onReviveAccepted: () => void;
@@ -64,6 +65,23 @@ export class HudController {
       this.closeModal();
       this.actions.onRestart();
     });
+
+    if (this.restartBtn.parentElement && !document.getElementById('map-switch-btn')) {
+      const mapBtn = document.createElement('button');
+      mapBtn.id = 'map-switch-btn';
+      mapBtn.className = this.restartBtn.className;
+      mapBtn.type = 'button';
+      mapBtn.title = 'Harita Değiştir (4 Arena)';
+      mapBtn.textContent = '🗺️';
+      mapBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.closeModal();
+        if (this.actions.onCycleMap) {
+          this.actions.onCycleMap();
+        }
+      });
+      this.restartBtn.parentElement.insertBefore(mapBtn, this.restartBtn);
+    }
 
     this.boosterNitroBtn.addEventListener('click', async (e) => {
       e.stopPropagation();

@@ -194,8 +194,8 @@ export class PrefabFactory {
   public static createBridgeStepMesh(width = 2.5): THREE.Mesh {
     const geo = VisualEnhancer.createBeveledBox(width, 0.24, 0.92, 0.04, 1);
     const mat = new THREE.MeshStandardMaterial({
-      color: 0xcbd5e1,
-      roughness: 0.5,
+      color: 0x475569,
+      roughness: 0.55,
       metalness: 0.08,
     });
     const mesh = new THREE.Mesh(geo, mat);

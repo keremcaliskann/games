@@ -15,8 +15,10 @@ export interface BumperKartRig {
 export interface ArenaIslandRig {
   root: THREE.Group;
   platformGroup: THREE.Group;
+  topMesh: THREE.Mesh;
   dangerRing: THREE.Mesh;
   seaMesh: THREE.Mesh;
+  themePropsGroup: THREE.Group;
 }
 
 export class PrefabFactory {
@@ -210,16 +212,9 @@ export class PrefabFactory {
     const platformGroup = new THREE.Group();
     root.add(platformGroup);
 
-    // Unit-radius cylinder scaled dynamically by currentRadius
-    const gridTex = VisualEnhancer.createMicroTexture('grid');
-    if (gridTex) {
-      gridTex.repeat.set(8, 8);
-    }
-
     const topGeo = new THREE.CylinderGeometry(1.0, 0.94, 1.2, 40);
     const topMat = new THREE.MeshStandardMaterial({
-      color: 0xfcf8ee,
-      map: gridTex,
+      color: 0xd97706,
       roughness: 0.52,
       metalness: 0.05,
     });
@@ -228,7 +223,7 @@ export class PrefabFactory {
     topMesh.receiveShadow = true;
     platformGroup.add(topMesh);
 
-    // Perimeter yellow/orange warning curb
+    // Perimeter warning curb
     const curbGeo = new THREE.TorusGeometry(0.985, 0.04, 10, 48);
     curbGeo.rotateX(Math.PI / 2);
     const curbMat = new THREE.MeshStandardMaterial({
@@ -240,13 +235,16 @@ export class PrefabFactory {
     dangerRing.position.y = 0.02;
     platformGroup.add(dangerRing);
 
+    const themePropsGroup = new THREE.Group();
+    root.add(themePropsGroup);
+
     platformGroup.scale.set(initialRadius, 1, initialRadius);
 
-    // Sparkling pastel turquoise sea below
+    // Sparkling sea below
     const seaGeo = new THREE.PlaneGeometry(180, 180);
     seaGeo.rotateX(-Math.PI / 2);
     const seaMat = new THREE.MeshStandardMaterial({
-      color: 0x7dd3fc,
+      color: 0x38bdf8,
       roughness: 0.45,
       metalness: 0.08,
     });
@@ -258,9 +256,94 @@ export class PrefabFactory {
     return {
       root,
       platformGroup,
+      topMesh,
       dangerRing,
       seaMesh,
+      themePropsGroup,
     };
+  }
+
+  public static applyArenaTheme(rig: ArenaIslandRig, mapIndex: number): void {
+    while (rig.themePropsGroup.children.length > 0) {
+      rig.themePropsGroup.remove(rig.themePropsGroup.children[0]);
+    }
+
+    const topMat = rig.topMesh.material as THREE.MeshStandardMaterial;
+    const curbMat = rig.dangerRing.material as THREE.MeshStandardMaterial;
+    const seaMat = rig.seaMesh.material as THREE.MeshStandardMaterial;
+
+    const theme = ((mapIndex % 4) + 4) % 4;
+    if (theme === 0) {
+      // Map 0: Tropik Kum Adası (Warm Sandstone & Coral Reef)
+      topMat.color.setHex(0xd97706);
+      topMat.roughness = 0.55;
+      curbMat.color.setHex(0xfacc15);
+      seaMat.color.setHex(0x0ea5e9);
+
+      const ringGeo = new THREE.RingGeometry(4.2, 4.65, 36);
+      ringGeo.rotateX(-Math.PI / 2);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0xfef08a, side: THREE.DoubleSide });
+      const innerRing = new THREE.Mesh(ringGeo, ringMat);
+      innerRing.position.y = 0.02;
+      rig.themePropsGroup.add(innerRing);
+    } else if (theme === 1) {
+      // Map 1: Buzul Glasiyeri (Slippery Arctic Ice Deck)
+      topMat.color.setHex(0x0284c7);
+      topMat.roughness = 0.22;
+      curbMat.color.setHex(0x38bdf8);
+      seaMat.color.setHex(0x1e3a8a);
+
+      const iceRingGeo = new THREE.RingGeometry(3.8, 4.4, 6);
+      iceRingGeo.rotateX(-Math.PI / 2);
+      const iceRingMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe, side: THREE.DoubleSide });
+      const iceRing = new THREE.Mesh(iceRingGeo, iceRingMat);
+      iceRing.position.y = 0.02;
+      rig.themePropsGroup.add(iceRing);
+    } else if (theme === 2) {
+      // Map 2: Magma Krateri (Volcanic Basalt & Central Lava Core)
+      topMat.color.setHex(0x334155);
+      topMat.roughness = 0.62;
+      curbMat.color.setHex(0xef4444);
+      seaMat.color.setHex(0xea580c);
+
+      const lavaCoreGeo = new THREE.CylinderGeometry(2.1, 2.3, 0.16, 28);
+      const lavaCoreMat = new THREE.MeshStandardMaterial({
+        color: 0xef4444,
+        emissive: 0xf97316,
+        emissiveIntensity: 0.65,
+        roughness: 0.3,
+      });
+      const lavaCore = new THREE.Mesh(lavaCoreGeo, lavaCoreMat);
+      lavaCore.position.y = 0.06;
+      rig.themePropsGroup.add(lavaCore);
+    } else {
+      // Map 3: Siber Sekizgen (Cyber Pinball Bumper Arena)
+      topMat.color.setHex(0x4c1d95);
+      topMat.roughness = 0.42;
+      curbMat.color.setHex(0xfacc15);
+      seaMat.color.setHex(0x312e81);
+
+      const bumperCoords: [number, number][] = [
+        [4.5, 0],
+        [-4.5, 0],
+        [0, 4.5],
+        [0, -4.5],
+      ];
+      const cylGeo = new THREE.CylinderGeometry(0.85, 0.85, 0.9, 20);
+      const cylMat = new THREE.MeshStandardMaterial({
+        color: 0xfacc15,
+        emissive: 0xd97706,
+        emissiveIntensity: 0.4,
+        roughness: 0.25,
+      });
+      for (let i = 0; i < bumperCoords.length; i++) {
+        const [bx, bz] = bumperCoords[i];
+        const bMesh = new THREE.Mesh(cylGeo, cylMat);
+        bMesh.position.set(bx, 0.45, bz);
+        bMesh.castShadow = true;
+        rig.themePropsGroup.add(bMesh);
+      }
+    }
   }
 
   public static createEnergyOrb(): THREE.Group {

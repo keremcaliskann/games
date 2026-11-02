@@ -20,7 +20,7 @@ export class BattleKartEntity {
   public finishRank = 12;
 
   public activeWeapon: WeaponType = 'rockets';
-  public weaponAmmo = 3;
+  public weaponAmmo = 0;
   public fireCooldown = 0;
   public stunTimer = 0;
 
@@ -52,6 +52,9 @@ export class BattleKartEntity {
   ) {
     this.rig = PrefabFactory.createBattleKart(colorHex, accentHex, isPlayer);
     this.pos.set(startX, 0, startZ);
+    this.headingRad = Math.atan2(-startX, -startZ);
+    this.turretYawRad = this.headingRad;
+    this.rig.bodyPivot.rotation.y = this.headingRad;
     this.rig.root.position.copy(this.pos);
     scene.add(this.rig.root);
   }
