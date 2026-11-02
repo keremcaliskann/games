@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="55%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="road" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="carBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#facc15" />
+      <stop offset="100%" stop-color="#f97316" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="110" fill="url(#bg)" />
+  <!-- Sun & Mountain Peaks -->
+  <circle cx="380" cy="118" r="52" fill="#fef08a" opacity="0.92" />
+  <polygon points="40,310 175,145 310,310" fill="#e0f2fe" opacity="0.85" />
+  <polygon points="195,310 335,160 475,310" fill="#bae6fd" opacity="0.9" />
+  <!-- Winding Rally Road -->
+  <path d="M 80 490 Q 210 355 256 290 Q 300 235 430 215 L 470 255 Q 355 285 330 345 Q 295 420 220 490 Z" fill="url(#road)" stroke="#f8fafc" stroke-width="8" />
+  <!-- Drift Smoke Plume -->
+  <circle cx="145" cy="395" r="34" fill="#ffffff" opacity="0.75" />
+  <circle cx="115" cy="415" r="26" fill="#f1f5f9" opacity="0.65" />
+  <!-- Stylized Rally Car -->
+  <g transform="translate(256, 330) rotate(-14)">
+    <!-- Rear Spoiler -->
+    <rect x="-112" y="-58" width="24" height="44" rx="6" fill="#0f172a" />
+    <rect x="-124" y="-66" width="38" height="14" rx="5" fill="#ef4444" />
+    <!-- Chassis -->
+    <rect x="-105" y="-26" width="210" height="56" rx="18" fill="url(#carBody)" stroke="#ffffff" stroke-width="6" />
+    <!-- Cabin & Windshield -->
+    <path d="M -52 -24 L -18 -64 L 54 -64 L 82 -24 Z" fill="#0f172a" stroke="#ffffff" stroke-width="5" />
+    <!-- Racing Stripe -->
+    <rect x="-25" y="-23" width="44" height="50" fill="#2563eb" />
+    <!-- Headlights -->
+    <circle cx="102" cy="-6" r="11" fill="#fef08a" />
+    <!-- Wheels -->
+    <circle cx="-62" cy="32" r="30" fill="#0f172a" stroke="#cbd5e1" stroke-width="6" />
+    <circle cx="-62" cy="32" r="13" fill="#facc15" />
+    <circle cx="62" cy="32" r="30" fill="#0f172a" stroke="#cbd5e1" stroke-width="6" />
+    <circle cx="62" cy="32" r="13" fill="#facc15" />
+  </g>
+</svg>

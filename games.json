@@ -1,5 +1,24 @@
 [
   {
+    "id": "rally-horizon-3d",
+    "title": "RALLY HORIZON 3D // TIME ATTACK & DRIFT",
+    "description": "3D Sim-Cade Rally & Time-Attack Drift! Power-slide across Alpine Tarmac, Canyon Gravel, and Nordic Snow stages against rival ghosts and upgrade your Rally Garage.",
+    "path": "./rally-horizon-3d/",
+    "tags": [
+      "3D Rally",
+      "Time Attack",
+      "Drift Physics",
+      "Multi-Surface",
+      "60 FPS"
+    ],
+    "date": "2026-11-02",
+    "icon": "./rally-horizon-3d/icon.svg",
+    "iconEmoji": "🏎️",
+    "featured": true,
+    "themeColor": "#0284c7",
+    "accentGradient": "linear-gradient(135deg, #38bdf8, #0284c7)"
+  },
+  {
     "id": "smash-karts-brawl-3d",
     "title": "SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO",
     "description": "Drive and drift an armored combat kart against 11 AI battle karts! Smash Mystery Weapon Crates, fire homing rockets & twin gatlings, collect Power Cubes, and survive the closing storm.",

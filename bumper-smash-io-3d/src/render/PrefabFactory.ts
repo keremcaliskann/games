@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { AssetResolver } from './asset-resolver';
+import { ProceduralMeshBuilder } from './procedural-mesh-builder';
 import { VisualEnhancer } from './visual-enhancer';
 
 export interface BumperKartRig {
@@ -9,7 +11,7 @@ export interface BumperKartRig {
   nitroFlame: THREE.Mesh;
   vortexRing: THREE.Mesh;
   antennaGroup: THREE.Group;
-  wheels: THREE.Mesh[];
+  wheels: THREE.Object3D[];
 }
 
 export interface ArenaIslandRig {
@@ -46,53 +48,44 @@ export class PrefabFactory {
     bumperRing.receiveShadow = true;
     bodyGroup.add(bumperRing);
 
-    // 3. Beveled Kart Chassis
-    const chassisGeo = VisualEnhancer.createBeveledBox(1.15, 0.46, 1.42, 0.12, 3);
-    const chassisMat = new THREE.MeshStandardMaterial({
-      color: colorHex,
-      roughness: 0.38,
-      metalness: 0.12,
+    // 3. Dual-Path Hybrid 3D Kart Chassis (ProceduralMeshBuilder + optional GLB override)
+    const chassis = AssetResolver.resolveHybridModel({
+      modelUrl: 'models/bumper_kart.glb',
+      targetSize: { maxDim: 1.4 },
+      tintColorHex: colorHex,
+      proceduralFallback: () =>
+        ProceduralMeshBuilder.createCarChassis(1.38, 1.08, 0.56, {
+          baseColorHex: colorHex,
+          accentColorHex: isPlayer ? 0xfacc15 : 0xffffff,
+          stripeColorHex: 0xffffff,
+        }),
     });
-    VisualEnhancer.applyRimLight(chassisMat, 0xffffff, 0.3);
-    const chassis = new THREE.Mesh(chassisGeo, chassisMat);
-    chassis.position.y = 0.42;
-    chassis.castShadow = true;
-    chassis.receiveShadow = true;
+    chassis.position.y = 0.22;
     bodyGroup.add(chassis);
 
-    // 4. White racing hood stripe
-    const stripeGeo = VisualEnhancer.createBeveledBox(0.32, 0.48, 1.44, 0.04, 2);
-    const stripeMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      roughness: 0.4,
-    });
-    const stripe = new THREE.Mesh(stripeGeo, stripeMat);
-    stripe.position.y = 0.43;
-    bodyGroup.add(stripe);
-
-    // 5. Driver Helmet & Visor
-    const helmetGeo = new THREE.SphereGeometry(0.34, 16, 14);
+    // 4. Driver Helmet & Visor
+    const helmetGeo = new THREE.SphereGeometry(0.32, 16, 14);
     const helmetMat = new THREE.MeshStandardMaterial({
       color: isPlayer ? 0xffffff : colorHex,
       roughness: 0.3,
       metalness: 0.15,
     });
     const helmet = new THREE.Mesh(helmetGeo, helmetMat);
-    helmet.position.set(0, 0.85, -0.05);
+    helmet.position.set(0, 0.88, -0.05);
     helmet.castShadow = true;
     bodyGroup.add(helmet);
 
-    const visorGeo = VisualEnhancer.createBeveledBox(0.46, 0.18, 0.26, 0.05, 2);
+    const visorGeo = VisualEnhancer.createBeveledBox(0.44, 0.17, 0.24, 0.05, 2);
     const visorMat = new THREE.MeshStandardMaterial({
       color: 0x0f172a,
       roughness: 0.15,
       metalness: 0.8,
     });
     const visor = new THREE.Mesh(visorGeo, visorMat);
-    visor.position.set(0, 0.87, 0.2);
+    visor.position.set(0, 0.9, 0.19);
     bodyGroup.add(visor);
 
-    // 6. Crown on Player Kart
+    // 5. Crown on Player Kart
     if (isPlayer) {
       const crownGeo = new THREE.ConeGeometry(0.22, 0.26, 6);
       const crownMat = new THREE.MeshStandardMaterial({
@@ -101,11 +94,11 @@ export class PrefabFactory {
         metalness: 0.65,
       });
       const crown = new THREE.Mesh(crownGeo, crownMat);
-      crown.position.set(0, 1.26, -0.05);
+      crown.position.set(0, 1.28, -0.05);
       bodyGroup.add(crown);
     }
 
-    // 7. Spring Antenna + Flag at rear
+    // 6. Spring Antenna + Flag at rear
     const antennaGroup = new THREE.Group();
     antennaGroup.position.set(0, 0.62, -0.62);
     const rodGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.75, 8);
@@ -127,14 +120,8 @@ export class PrefabFactory {
     antennaGroup.add(tip);
     bodyGroup.add(antennaGroup);
 
-    // 8. 4 Wheels
-    const wheels: THREE.Mesh[] = [];
-    const wheelGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.18, 12);
-    wheelGeo.rotateZ(Math.PI / 2);
-    const wheelMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      roughness: 0.6,
-    });
+    // 7. 4 Multi-Spoke Detailed Wheels
+    const wheels: THREE.Object3D[] = [];
     const wheelOffsets: Array<[number, number]> = [
       [-0.58, 0.45],
       [0.58, 0.45],
@@ -143,10 +130,10 @@ export class PrefabFactory {
     ];
     for (let i = 0; i < wheelOffsets.length; i++) {
       const [wx, wz] = wheelOffsets[i];
-      const w = new THREE.Mesh(wheelGeo, wheelMat);
-      w.position.set(wx, 0.22, wz);
-      bodyGroup.add(w);
-      wheels.push(w);
+      const wRig = ProceduralMeshBuilder.createDetailedWheel(0.22, 0.18, 6);
+      wRig.group.position.set(wx, 0.22, wz);
+      bodyGroup.add(wRig.group);
+      wheels.push(wRig.group);
     }
 
     // 9. Deployable Spike Armor Ring (hidden by default)

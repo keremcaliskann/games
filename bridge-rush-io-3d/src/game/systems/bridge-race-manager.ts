@@ -72,6 +72,7 @@ export class BridgeRaceManager {
   private readonly floorBricks: FloorBrickSlot[] = [];
   private readonly bridges: BridgeStructure[] = [];
   private trophyPodium: THREE.Group | null = null;
+  private playerHighestReachedTier = 1;
   private buildTickAccumulator = 0;
   private hudSyncTimer = 0;
   private pendingEndTimer = 0;
@@ -98,6 +99,7 @@ export class BridgeRaceManager {
     this.levelNumber = levelNum;
     this.matchEnded = false;
     this.reviveUsedThisMatch = false;
+    this.playerHighestReachedTier = 1;
     this.pendingWinner = null;
     this.pendingEndTimer = 0;
 
@@ -131,6 +133,15 @@ export class BridgeRaceManager {
     this.trophyPodium = PrefabFactory.createGoldenTrophyPodium();
     this.trophyPodium.position.set(0, 8.6, 103.5);
     this.courseGroup.add(this.trophyPodium);
+
+    // 3D Tier Checkpoint Archways at staircase landings (z=28, z=64, z=98)
+    const archTier2 = PrefabFactory.createCheckpointArchway(22, 0x38bdf8);
+    archTier2.position.set(0, 2.8, 28.4);
+    const archTier3 = PrefabFactory.createCheckpointArchway(18, 0xf97316);
+    archTier3.position.set(0, 5.6, 64.4);
+    const archPodium = PrefabFactory.createCheckpointArchway(10, 0xfacc15);
+    archPodium.position.set(0, 8.6, 98.4);
+    this.courseGroup.add(archTier2, archTier3, archPodium);
 
     // 4 Bridges from Tier 1 (z: 14, y: 0) -> Tier 2 (z: 28, y: 2.8)
     const tier1BridgeXs = [-8.4, -2.8, 2.8, 8.4];
@@ -455,6 +466,18 @@ export class BridgeRaceManager {
       r.update(dt);
       this.constrainRunnerToCourseAndBridges(r, canBuildStep);
       this.collectMatchingBricks(r, dt);
+
+      // Celebratory confetti burst & chime when player crosses onto a new island tier
+      if (r.isPlayer && r.currentTier > this.playerHighestReachedTier) {
+        this.playerHighestReachedTier = r.currentTier;
+        _BURST_POS.set(r.pos.x, r.pos.y + 1.2, r.pos.z);
+        this.particles.spawnBurst(_BURST_POS, 0xfacc15, 22);
+        this.audio.playBoosterActivate();
+        this.callbacks.onCallout(
+          `✨ TIER ${r.currentTier} ISLAND UNLOCKED! KEEP BUILDING!`,
+          '#38bdf8'
+        );
+      }
 
       // Check if reached the Golden Trophy Podium at z >= 98.2
       if (!this.matchEnded && r.pos.z >= 98.2) {

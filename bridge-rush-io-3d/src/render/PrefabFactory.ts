@@ -234,4 +234,43 @@ export class PrefabFactory {
 
     return group;
   }
+
+  public static createCheckpointArchway(width: number, accentHex: number): THREE.Group {
+    const group = new THREE.Group();
+    const pillarGeo = VisualEnhancer.createBeveledBox(0.65, 4.4, 0.65, 0.08, 2);
+    const pillarMat = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      roughness: 0.35,
+      metalness: 0.12,
+    });
+
+    const leftPillar = new THREE.Mesh(pillarGeo, pillarMat);
+    leftPillar.position.set(-width * 0.5, 2.2, 0);
+    leftPillar.castShadow = true;
+    const rightPillar = new THREE.Mesh(pillarGeo, pillarMat);
+    rightPillar.position.set(width * 0.5, 2.2, 0);
+    rightPillar.castShadow = true;
+
+    const beamGeo = VisualEnhancer.createBeveledBox(width + 1.2, 0.85, 0.85, 0.1, 2);
+    const beamMat = new THREE.MeshStandardMaterial({
+      color: accentHex,
+      emissive: accentHex,
+      emissiveIntensity: 0.22,
+      roughness: 0.32,
+      metalness: 0.2,
+    });
+    const beam = new THREE.Mesh(beamGeo, beamMat);
+    beam.position.set(0, 4.4, 0);
+    beam.castShadow = true;
+
+    const orbGeo = new THREE.SphereGeometry(0.38, 12, 12);
+    const orbMat = new THREE.MeshBasicMaterial({ color: 0xfacc15 });
+    const leftOrb = new THREE.Mesh(orbGeo, orbMat);
+    leftOrb.position.set(-width * 0.5, 4.95, 0);
+    const rightOrb = new THREE.Mesh(orbGeo, orbMat);
+    rightOrb.position.set(width * 0.5, 4.95, 0);
+
+    group.add(leftPillar, rightPillar, beam, leftOrb, rightOrb);
+    return group;
+  }
 }

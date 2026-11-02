@@ -29,6 +29,12 @@ interface GameThemePalette {
 }
 
 const GAME_THEMES: Record<string, GameThemePalette> = {
+  'rally-horizon-3d': {
+    themeColor: '#0284c7',
+    accentGradient: 'linear-gradient(135deg, #38bdf8 0%, #0284c7 100%)',
+    glowRgba: 'rgba(2, 132, 199, 0.34)',
+    tintBg: 'rgba(224, 242, 254, 0.88)',
+  },
   'smash-karts-brawl-3d': {
     themeColor: '#ef4444',
     accentGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
