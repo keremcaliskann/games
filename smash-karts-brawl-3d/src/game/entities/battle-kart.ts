@@ -39,6 +39,7 @@ export class BattleKartEntity {
   public aiTargetZ = 0;
 
   private wheelSpinRad = 0;
+  private hitPulseTimer = 0;
 
   constructor(
     scene: THREE.Scene,
@@ -92,9 +93,8 @@ export class BattleKartEntity {
   public addPowerCube(): void {
     this.powerCubes = Math.min(15, this.powerCubes + 1);
     this.maxHp = Math.round(100 * this.armorUpgradeMult + this.powerCubes * 22);
-    this.hp = Math.min(this.maxHp, this.hp + 30);
-    const scale = 1.0 + Math.min(0.45, this.powerCubes * 0.035);
-    this.rig.bodyPivot.scale.setScalar(scale);
+    this.hp = Math.min(this.maxHp, this.hp + 35);
+    this.updateHealthBar();
   }
 
   public takeDamage(rawDamage: number, knockNx: number, knockNz: number): boolean {
@@ -104,8 +104,32 @@ export class BattleKartEntity {
     this.hp = Math.max(0, this.hp - actual);
     this.vel.x += knockNx * 9.5;
     this.vel.z += knockNz * 9.5;
-    this.stunTimer = 0.22;
+    this.stunTimer = 0.18;
+    this.hitPulseTimer = 0.14;
+    this.updateHealthBar();
     return this.hp <= 0;
+  }
+
+  public eliminate(): void {
+    this.eliminated = true;
+    this.hp = 0;
+    this.vel.set(0, 0, 0);
+    this.pos.set(0, -100, 0);
+    this.rig.root.position.set(0, -100, 0);
+    this.rig.root.visible = false;
+    this.rig.shieldDome.visible = false;
+    this.rig.mechaCannonGroup.visible = false;
+    this.rig.hpBarGroup.visible = false;
+  }
+
+  public updateHealthBar(): void {
+    const ratio = Math.max(0.001, Math.min(1.0, this.hp / Math.max(1, this.maxHp)));
+    this.rig.hpFillMesh.scale.x = ratio;
+    if (this.isPlayer) {
+      this.rig.hpFillMat.color.setHex(ratio > 0.35 ? 0x4ade80 : 0xfacc15);
+    } else {
+      this.rig.hpFillMat.color.setHex(ratio > 0.35 ? 0xf43f5e : 0xf97316);
+    }
   }
 
   public update(dt: number): void {
@@ -115,12 +139,19 @@ export class BattleKartEntity {
     }
 
     if (this.stunTimer > 0) this.stunTimer = Math.max(0, this.stunTimer - dt);
+    if (this.hitPulseTimer > 0) this.hitPulseTimer = Math.max(0, this.hitPulseTimer - dt);
     if (this.fireCooldown > 0) this.fireCooldown = Math.max(0, this.fireCooldown - dt);
     if (this.mechaTimer > 0) this.mechaTimer = Math.max(0, this.mechaTimer - dt);
     if (this.shieldTimer > 0) this.shieldTimer = Math.max(0, this.shieldTimer - dt);
 
+    const baseScale = 1.0 + Math.min(0.45, this.powerCubes * 0.035);
+    const pulse = this.hitPulseTimer > 0 ? 1.14 : 1.0;
+    this.rig.bodyPivot.scale.setScalar(baseScale * pulse);
+
     this.rig.mechaCannonGroup.visible = this.mechaTimer > 0;
     this.rig.shieldDome.visible = this.shieldTimer > 0;
+    this.rig.hpBarGroup.visible = true;
+    this.updateHealthBar();
 
     const baseSpeed =
       (this.isPlayer ? 12.2 : 10.6) *

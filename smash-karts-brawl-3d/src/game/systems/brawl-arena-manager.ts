@@ -93,8 +93,15 @@ export class BrawlArenaManager {
   private readonly projectiles: ProjectileSlot[] = [];
   private readonly mines: MineSlot[] = [];
   private readonly boostPads: BoostPadSlot[] = [];
+  private readonly coverPillars: [number, number, number][] = [
+    [-9.5, -9.5, 1.25],
+    [9.5, -9.5, 1.25],
+    [-9.5, 9.5, 1.25],
+    [9.5, 9.5, 1.25],
+  ];
 
   private stormRingMesh: THREE.Mesh | null = null;
+  private targetReticle!: THREE.Group;
   private hudSyncTimer = 0;
   private stormDamageTick = 0;
 
@@ -110,6 +117,10 @@ export class BrawlArenaManager {
   }
 
   private initPools(): void {
+    this.targetReticle = PrefabFactory.createTargetReticle();
+    this.targetReticle.visible = false;
+    this.scene.add(this.targetReticle);
+
     for (let i = 0; i < 36; i++) {
       const mesh = PrefabFactory.createProjectileMesh();
       mesh.visible = false;
@@ -284,6 +295,47 @@ export class BrawlArenaManager {
       this.arenaGroup.add(pad);
       this.boostPads.push({ x: px, z: pz, dirX: dx, dirZ: dz });
     }
+
+    // 4 Tactical Cover Pillars inside the combat ring
+    const pillarGeo = new THREE.CylinderGeometry(1.15, 1.28, 2.2, 16);
+    const pillarMat = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      roughness: 0.45,
+      metalness: 0.1,
+    });
+    const pillarTrimGeo = new THREE.CylinderGeometry(1.22, 1.22, 0.35, 16);
+    const pillarTrimMat = new THREE.MeshStandardMaterial({
+      color: 0xf59e0b,
+      roughness: 0.35,
+    });
+    for (let i = 0; i < this.coverPillars.length; i++) {
+      const [cx, cz] = this.coverPillars[i];
+      const pGroup = new THREE.Group();
+      const body = new THREE.Mesh(pillarGeo, pillarMat);
+      body.position.y = 1.1;
+      body.castShadow = true;
+      body.receiveShadow = true;
+      const trim = new THREE.Mesh(pillarTrimGeo, pillarTrimMat);
+      trim.position.y = 1.9;
+      pGroup.add(body, trim);
+      pGroup.position.set(cx, 0, cz);
+      this.arenaGroup.add(pGroup);
+    }
+
+    // 24 Alternating Red/White 3D Stadium Perimeter Barrier Blocks
+    const barrierGeo = new THREE.BoxGeometry(2.6, 0.85, 0.9);
+    const redBarrierMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.45 });
+    const whiteBarrierMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45 });
+    for (let i = 0; i < 24; i++) {
+      const angle = (i / 24) * Math.PI * 2;
+      const bx = Math.cos(angle) * 31.8;
+      const bz = Math.sin(angle) * 31.8;
+      const barrier = new THREE.Mesh(barrierGeo, i % 2 === 0 ? redBarrierMat : whiteBarrierMat);
+      barrier.position.set(bx, 0.42, bz);
+      barrier.rotation.y = -angle + Math.PI * 0.5;
+      barrier.castShadow = true;
+      this.arenaGroup.add(barrier);
+    }
   }
 
   private spawnMysteryCrates(): void {
@@ -390,11 +442,14 @@ export class BrawlArenaManager {
     this.matchEnded = false;
     this.player.eliminated = false;
     this.player.rig.root.visible = true;
+    this.player.rig.hpBarGroup.visible = true;
     this.player.pos.set(0, 2.5, 0);
+    this.player.rig.root.position.copy(this.player.pos);
     this.player.vel.set(0, 0, 0);
     this.player.hp = this.player.maxHp;
     this.player.mechaTimer = 12.0;
     this.player.shieldTimer = 8.0;
+    this.player.updateHealthBar();
     this.aliveCount = this.countAliveKarts();
 
     _BURST_POS.copy(this.player.pos);
@@ -467,10 +522,23 @@ export class BrawlArenaManager {
 
       // Keep inside stadium outer rim (radius 31.5)
       const distFromCenter = Math.hypot(k.pos.x, k.pos.z);
-      if (distFromCenter > 31.2) {
-        const inv = 31.2 / distFromCenter;
+      if (distFromCenter > 30.8) {
+        const inv = 30.8 / distFromCenter;
         k.pos.x *= inv;
         k.pos.z *= inv;
+      }
+
+      // Collide against 4 Tactical Cover Pillars
+      for (let pIdx = 0; pIdx < this.coverPillars.length; pIdx++) {
+        const [px, pz, pr] = this.coverPillars[pIdx];
+        const dx = k.pos.x - px;
+        const dz = k.pos.z - pz;
+        const dist = Math.hypot(dx, dz);
+        const minDist = pr + 0.78;
+        if (dist < minDist && dist > 0.001) {
+          k.pos.x = px + (dx / dist) * minDist;
+          k.pos.z = pz + (dz / dist) * minDist;
+        }
       }
 
       // Storm damage if outside stormRadius
@@ -602,8 +670,16 @@ export class BrawlArenaManager {
 
     if (nearest) {
       k.turretYawRad = Math.atan2(nearest.pos.x - k.pos.x, nearest.pos.z - k.pos.z);
+      if (k.isPlayer) {
+        this.targetReticle.visible = true;
+        this.targetReticle.position.set(nearest.pos.x, 0.06, nearest.pos.z);
+        this.targetReticle.rotation.y += 0.08;
+      }
     } else {
       k.turretYawRad = k.headingRad;
+      if (k.isPlayer) {
+        this.targetReticle.visible = false;
+      }
     }
 
     const hasAmmo = k.mechaTimer > 0 || k.weaponAmmo > 0;
@@ -723,6 +799,21 @@ export class BrawlArenaManager {
       p.z += p.vz * dt;
       p.mesh.position.set(p.x, p.y, p.z);
 
+      // Check collision with Tactical Cover Pillars
+      let hitPillar = false;
+      for (let pIdx = 0; pIdx < this.coverPillars.length; pIdx++) {
+        const [px, pz, pr] = this.coverPillars[pIdx];
+        if (Math.hypot(p.x - px, p.z - pz) < pr + 0.2) {
+          p.active = false;
+          p.mesh.visible = false;
+          _BURST_POS.set(p.x, 0.7, p.z);
+          this.particles.spawnBurst(_BURST_POS, 0x94a3b8, 8);
+          hitPillar = true;
+          break;
+        }
+      }
+      if (hitPillar) continue;
+
       for (let kIdx = 0; kIdx < this.karts.length; kIdx++) {
         const k = this.karts[kIdx];
         if (k === p.owner || k.eliminated) continue;
@@ -792,42 +883,61 @@ export class BrawlArenaManager {
 
   private handleKartEliminated(victim: BattleKartEntity, killer: BattleKartEntity | null): void {
     if (victim.eliminated) return;
-    victim.eliminated = true;
+    const wreckX = victim.pos.x;
+    const wreckZ = victim.pos.z;
+
+    victim.eliminate();
+    if (!victim.isPlayer) {
+      victim.dispose(this.scene);
+    }
+
     victim.finishRank = this.aliveCount;
     this.aliveCount = Math.max(1, this.aliveCount - 1);
+
+    // Clear any projectiles locking onto the eliminated kart
+    for (let i = 0; i < this.projectiles.length; i++) {
+      if (this.projectiles[i].target === victim) {
+        this.projectiles[i].target = null;
+      }
+    }
 
     if (killer && !killer.eliminated) {
       killer.kills++;
       if (killer.isPlayer) {
         this.callbacks.onCallout(`💥 WRECKED ${victim.name}! (${this.aliveCount} LEFT)`, '#facc15');
+        this.cameraRig.addTrauma(0.35);
       }
     }
 
-    // Spawn 2 Power Cubes at victim position
+    // Spawn 2 Power Cubes at victim wreck coordinates
     let dropped = 0;
     for (let i = 0; i < this.powerCubes.length && dropped < 2; i++) {
       const pc = this.powerCubes[i];
       if (pc.active) continue;
       pc.active = true;
-      pc.x = victim.pos.x + (dropped === 0 ? -0.6 : 0.6);
-      pc.z = victim.pos.z;
+      pc.x = wreckX + (dropped === 0 ? -0.65 : 0.65);
+      pc.z = wreckZ;
       pc.group.position.set(pc.x, 0.55, pc.z);
       pc.group.visible = true;
       dropped++;
     }
 
-    _BURST_POS.copy(victim.pos);
-    this.particles.spawnBurst(_BURST_POS, victim.colorHex, 22);
+    _BURST_POS.set(wreckX, 0.5, wreckZ);
+    this.particles.spawnBurst(_BURST_POS, victim.colorHex, 24);
+    this.particles.spawnBurst(_BURST_POS, 0xf97316, 18);
     this.particles.spawnShockwaveRing(_BURST_POS, 0xfacc15);
+    this.audio.playExplosion(victim.isPlayer || Boolean(killer?.isPlayer));
     this.callbacks.onHudUpdate();
 
     if (victim.isPlayer) {
+      this.targetReticle.visible = false;
       this.matchEnded = true;
       this.callbacks.onPlayerWrecked(victim.finishRank, killer ? killer.name : 'STORM RING');
       return;
     }
 
     if (this.aliveCount <= 1 && this.player && !this.player.eliminated) {
+      this.targetReticle.visible = false;
       this.matchEnded = true;
       this.audio.playVictoryFanfare();
       const baseCoins = 120 + this.levelNumber * 25 + this.player.kills * 20;

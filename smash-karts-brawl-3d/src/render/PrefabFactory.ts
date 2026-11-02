@@ -29,6 +29,9 @@ export interface BattleKartRig {
   wheels: THREE.Mesh[];
   mechaCannonGroup: THREE.Group;
   shieldDome: THREE.Mesh;
+  hpBarGroup: THREE.Group;
+  hpFillMesh: THREE.Mesh;
+  hpFillMat: THREE.MeshBasicMaterial;
 }
 
 export class PrefabFactory {
@@ -160,6 +163,30 @@ export class PrefabFactory {
       root.add(playerRing);
     }
 
+    // 7. Floating 3D Health Bar above Kart
+    const hpBarGroup = new THREE.Group();
+    hpBarGroup.position.set(0, 1.75, 0);
+    hpBarGroup.rotation.x = -0.55; // Tilted toward camera at +Z
+    root.add(hpBarGroup);
+
+    const bgGeo = new THREE.PlaneGeometry(1.36, 0.2);
+    const bgMat = new THREE.MeshBasicMaterial({
+      color: 0x0f172a,
+      side: THREE.DoubleSide,
+    });
+    const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+    hpBarGroup.add(bgMesh);
+
+    const fillGeo = new THREE.PlaneGeometry(1.28, 0.13);
+    fillGeo.translate(0.64, 0, 0); // Left-anchored for clean X scaling
+    const hpFillMat = new THREE.MeshBasicMaterial({
+      color: isPlayer ? 0x4ade80 : 0xf43f5e,
+      side: THREE.DoubleSide,
+    });
+    const hpFillMesh = new THREE.Mesh(fillGeo, hpFillMat);
+    hpFillMesh.position.set(-0.64, 0, 0.01);
+    hpBarGroup.add(hpFillMesh);
+
     return {
       root,
       bodyPivot,
@@ -169,7 +196,26 @@ export class PrefabFactory {
       wheels,
       mechaCannonGroup,
       shieldDome,
+      hpBarGroup,
+      hpFillMesh,
+      hpFillMat,
     };
+  }
+
+  public static createTargetReticle(): THREE.Group {
+    const group = new THREE.Group();
+    const ringGeo = new THREE.RingGeometry(1.18, 1.38, 28);
+    ringGeo.rotateX(-Math.PI / 2);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0xef4444,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9,
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.position.y = 0.05;
+    group.add(ring);
+    return group;
   }
 
   public static createMysteryCrate(): THREE.Group {
