@@ -13,7 +13,9 @@ const rootDir = path.resolve(__dirname, '..');
 
 const checkOnly = process.argv.includes('--check');
 
-const catalog = JSON.parse(fs.readFileSync(path.join(rootDir, 'games.json'), 'utf8'));
+const catalog = JSON.parse(fs.readFileSync(path.join(rootDir, 'games.json'), 'utf8')).filter(
+  (g) => g.active !== false
+);
 const sharedAdsContent = fs.readFileSync(path.join(rootDir, 'shared/platform/ads.ts'), 'utf8');
 const sharedShellContent = fs.readFileSync(path.join(rootDir, 'shared/ui/shell-controller.ts'), 'utf8');
 const sharedCssContent = fs.readFileSync(path.join(rootDir, 'shared/ui/arcade-shell.css'), 'utf8');

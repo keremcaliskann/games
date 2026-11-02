@@ -19,14 +19,17 @@ const ideasBacklog = fs.existsSync(ideasBacklogPath)
   : [];
 
 const gamesCatalog = fs.existsSync(gamesCatalogPath)
-  ? JSON.parse(fs.readFileSync(gamesCatalogPath, 'utf8'))
+  ? JSON.parse(fs.readFileSync(gamesCatalogPath, 'utf8')).filter(g => g.active !== false)
   : [];
+const activeGameIds = new Set(gamesCatalog.map(g => g.id));
 
 console.log(`\n===============================================================`);
 console.log(`🎮 STUDIO GÖREV VE GELİŞTİRME LİSTELERİ (/tasks)`);
 console.log(`===============================================================\n`);
 
-const activeStudioTodo = studioTodo.filter(t => t.status === 'ready' || t.status === 'in_progress');
+const activeStudioTodo = studioTodo.filter(
+  t => (t.status === 'ready' || t.status === 'in_progress') && activeGameIds.has(t.gameId)
+);
 const completedStudioTodo = studioTodo.filter(t => t.status === 'completed');
 
 console.log(`📌 1. AKTİF OYUN İYİLEŞTİRME & HATA LİSTESİ (backlog/studio-todo.json):`);

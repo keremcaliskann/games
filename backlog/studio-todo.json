@@ -1,19 +1,5 @@
 [
   {
-    "id": "ragdoll-cannon-blitz-3d-zero-alloc-update-loop",
-    "gameId": "ragdoll-cannon-blitz-3d",
-    "priority": "P1",
-    "priorityScore": 95,
-    "status": "ready",
-    "type": "performance",
-    "title": "Eliminate Per-Frame Array & Vector3 Allocations in Projectile Update and Cluster Split",
-    "description": "Replace per-frame toRemove array allocation in ProjectileManager.update() with a reusable class-level scratch array and replace new THREE.Vector3 allocations in splitCluster() with pre-allocated scratch vectors.",
-    "targetFiles": [
-      "ragdoll-cannon-blitz-3d/src/game/entities/projectile.ts"
-    ],
-    "createdAt": "2026-11-02"
-  },
-  {
     "id": "bumper-smash-io-3d-hybrid-kart-chassis-upgrade",
     "gameId": "bumper-smash-io-3d",
     "priority": "P1",
@@ -47,7 +33,7 @@
     "gameId": "smash-karts-brawl-3d",
     "priority": "P2",
     "priorityScore": 89,
-    "status": "ready",
+    "status": "completed",
     "type": "mechanic",
     "title": "Add 3D Auto-Aim Target Lock Reticle Ring & Sharp Drift Tire Sparks",
     "description": "Render a pulsing red 3D target lock ring underneath the rival kart currently targeted by the player turret, and spawn golden drift sparks from rear wheels during high-angle turns.",

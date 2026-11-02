@@ -8,8 +8,9 @@ description: >-
 
 # /audit — Full Workspace Quality & Gameplay Audit (Read-Only Inspector & Queueing)
 
-Conducts an automated health check, rule verification, performance inspection, and design critique across all active games dynamically registered in root `games.json`.
+Conducts an automated health check, rule verification, performance inspection, and design critique across all **active** games (`active !== false`) dynamically registered in root `games.json`.
 
+> **PASSIVE GAMES EXCLUSION:** Strictly ignore any game marked `"active": false` in `games.json`. Do not read, typecheck, build, sync, or queue tasks for passive games.
 > **STRICT AUDIT POLICY (QUEUE ONLY):** The audit pass is strictly an inspector and producer. It **DOES NOT modify game code directly**. All identified bugs, performance optimizations, visual juice, and mechanical depth upgrades must **ONLY be logged into `backlog/studio-todo.json`** for the Studio Executor (`/studio`) to implement.
 
 ## Audit Steps
