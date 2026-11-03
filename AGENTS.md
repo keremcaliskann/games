@@ -5,7 +5,7 @@
 
 ## 1. Project & Workspace Architecture
 
-- **Scope:** This workspace hosts multiple independent HTML5 3D game projects, dedicated per-game design folders under `backlog/game-plans/<game-id>/` (`STATUS.json`, `DESIGN.md`, `SPEC.json` created interactively with the user via `/design` / `/fikir`), and `backlog/studio-todo.json` (prioritized bugfixes and feedback upgrades for existing games). Each game lives in its own dedicated subdirectory.
+- **Scope:** This workspace hosts multiple independent HTML5 3D game projects, dedicated per-game design folders under `backlog/game-plans/<game-id>/` (`STATUS.json`, `DESIGN.md`, `SPEC.json` created interactively with the user via `/design`), and `backlog/studio-todo.json` (prioritized bugfixes and feedback upgrades for existing games). Each game lives in its own dedicated subdirectory.
 - **Passive / Archived Games Policy (`"active": false` in `games.json`):** Games marked with `"active": false` in root `games.json` (`bus-escape-jam-3d`, `cyber-flap`, `color-block-jam-3d`, `screw-jam-3d`, `ragdoll-cannon-blitz-3d`, `goods-sort-3d`, `conveyor-marble-sort-3d`) are **strictly passive/archived**. Never modify their files, never run shared sync/builds/typechecks on them, never queue tasks for them in `backlog/studio-todo.json`, and exclude them from the Arcade Portal and left navigation rails. Only operate on active games (`active !== false`).
 - **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 50 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
@@ -126,6 +126,6 @@ A task is complete only when:
 | `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (`studio-todo.json` & `backlog/game-plans/`) with zero fluff |
 | `skills/inspect` | slash_command | `/inspect <oyun-adı>` (or `/inpect <oyun-adı>`) — Deeply inspects a single game for bugs, logic flaws, and visual upgrades, presents a categorized "Yapılması Gerekenler" list, and adds to `backlog/studio-todo.json` upon user approval |
 | `skills/feedback` | slash_command | `/feedback <oyun-adı> <notlar>` — Plans and applies user feedback directly to the specified game (or queues into `studio-todo.json`) |
-| `skills/design` | slash_command | `/design <oyun-fikri>` (or `/fikir <oyun-fikri>`) — Unrestricted 6-stage Q&A Game Design Workshop that saves complete game plans in `backlog/game-plans/<game-id>/` (`STATUS.json` + `DESIGN.md` + `SPEC.json`) |
+| `skills/design` | slash_command | `/design <oyun-fikri>` — Unrestricted 6-stage Q&A Game Design Workshop that saves complete game plans in `backlog/game-plans/<game-id>/` (`STATUS.json` + `DESIGN.md` + `SPEC.json`) |
 | `skills/seo` | slash_command | `/seo` — Audits and synchronizes Technical SEO (`Schema.org/VideoGame` JSON-LD, `sitemap.xml`), Portal Store ASO (`keywords`, `shortHookTr`), and AI Search GEO (`llms.txt`, `robots.txt`) across all active games |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |

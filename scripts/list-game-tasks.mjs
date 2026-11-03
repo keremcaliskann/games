@@ -60,7 +60,7 @@ const readyPlans = gamePlans
   .sort((a, b) => (a.priority ?? 99) - (b.priority ?? 99));
 
 if (readyPlans.length === 0) {
-  console.log(`  (Henüz bekleyen planlanmış oyun yok. '/fikir <oyun fikri>' ile yeni oyun planlayabilirsiniz.)`);
+  console.log(`  (Henüz bekleyen planlanmış oyun yok. '/design <oyun fikri>' ile yeni oyun planlayabilirsiniz.)`);
 } else {
   for (const p of readyPlans) {
     console.log(`  • [#${p.priority ?? 1}] [${p.status.toUpperCase()}] ${p.title} (backlog/game-plans/${p.id}/)`);

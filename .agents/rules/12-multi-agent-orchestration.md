@@ -11,7 +11,7 @@ All multi-step studio workflows (`/studio`, `/feedback`, `/audit`, `/inspect`, a
 
 1. **MetaGPT Pattern (`Code = SOP(Team)` — Typed Artifact Handoffs):**
    - Subagents never pass unstructured conversational walls to one another.
-   - All inter-agent communication occurs via **structured files on disk** created in `backlog/game-plans/<game-id>/` (during `/design` / `/fikir`) and copied into `<game-name>/`:
+   - All inter-agent communication occurs via **structured files on disk** created in `backlog/game-plans/<game-id>/` (during `/design`) and copied into `<game-name>/`:
      - `STATUS.json` (Lifecycle state: `"draft"` | `"ready"` | `"in_progress"` | `"completed"`)
      - `DESIGN.md` (Unabridged human-readable design, maps, AI behavior, and math brief)
      - `SPEC.json` (Strict machine-readable interface contract between 3D Artist and Gameplay Engineer)

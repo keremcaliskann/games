@@ -6,12 +6,12 @@ description: >-
   thorough stage-by-stage Q&A (using ask_question) covering every single mechanic, rule,
   map, AI behavior, progression table, 3D model, and UI element, and saves the complete
   specification in its own folder under backlog/game-plans/<game-id>/ (STATUS.json + DESIGN.md + SPEC.json).
-  Use when the user types /design, /fikir, or wants to plan a new game idea in full detail.
+  Use when the user types /design or wants to plan a new game idea in full detail.
 metadata:
   icon: architecture
 ---
 
-# /design (`/fikir`) — Detaylı & Limitsiz İnteraktif Oyun Planlama Atölyesi
+# /design — Detaylı & Limitsiz İnteraktif Oyun Planlama Atölyesi
 
 Kullanıcının verdiği oyun fikrini **sıfır dış pazar araştırması** ile, **hiçbir soru veya tur sınırı olmadan**, oyunun en ince detayına kadar adım adım soru-cevap (`ask_question`) şeklinde planlar ve her oyunu kendi özel klasörüne (**`backlog/game-plans/<game-id>/`**) kaydeder.
 

@@ -1,6 +1,6 @@
 # 📁 `backlog/game-plans/<game-id>/` — Kullanıcı Odaklı Detaylı Oyun Planları Klasörü
 
-Bu klasör, `/design` veya `/fikir` yeteneği ile adım adım planlanan her oyunun tüm tasarım ve teknik mimari dosyalarını kendi alt klasöründe (`backlog/game-plans/<game-id>/`) barındırır.
+Bu klasör, `/design` yeteneği ile adım adım planlanan her oyunun tüm tasarım ve teknik mimari dosyalarını kendi alt klasöründe (`backlog/game-plans/<game-id>/`) barındırır.
 
 ## Klasör Yapısı (Her Oyun İçin Ayrı Klasör)
 

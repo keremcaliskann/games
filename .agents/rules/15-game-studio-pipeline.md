@@ -9,7 +9,7 @@ description: "User-driven folder-per-game planning (backlog/game-plans/<game-id>
 
 The studio operates with **zero automated external market research**. All new game concepts and existing game feedback originate from the user and flow into **one unified Multi-Agent Studio Executor**:
 
-1. **`backlog/game-plans/<game-id>/`** — Dedicated Per-Game Blueprint Folders (created interactively via `/design` or `/fikir` with zero question limits):
+1. **`backlog/game-plans/<game-id>/`** — Dedicated Per-Game Blueprint Folders (created interactively via `/design` with zero question limits):
    - `STATUS.json`: `{ "id": "<game-id>", "title": "...", "status": "ready" | "in_progress" | "completed" | "draft", "priority": 1 }`
    - `DESIGN.md`: Exhaustive Game Design Document containing every mechanic, formula, map, AI rule, progression table, and UI layout agreed with the user.
    - `SPEC.json`: Machine-readable MetaGPT contract consumed by the 4 Studio Subagents.
@@ -17,8 +17,8 @@ The studio operates with **zero automated external market research**. All new ga
 
 ```
 +-----------------------------------------------------------------------------------------+
-| INTERACTIVE USER DESIGN (`/design` or `/fikir`) & FEEDBACK (`/feedback <oyun-adı>`)     |
-| - `/design` (`/fikir`): 6-stage unrestricted Q&A workshop -> saves complete game plan   |
+| INTERACTIVE USER DESIGN (`/design`) & FEEDBACK (`/feedback <oyun-adı>`)                 |
+| - `/design`: 6-stage unrestricted Q&A workshop -> saves complete game plan into         |
 |   into `backlog/game-plans/<game-id>/` (`STATUS.json` + `DESIGN.md` + `SPEC.json`)      |
 | - `/feedback <oyun-adı>`: Investigates root causes, clarifies choices, plans & applies  |
 |   fixes directly to the game (or queues into `backlog/studio-todo.json`)                |
