@@ -32,6 +32,9 @@ Define the 4 specialist subagents via `define_subagent` (`EnableWriteTools: true
 
 ### Gate 1: `studio-architect` Subagent (`DESIGN.md` + `SPEC.json` + Project Configs)
 Invoke `studio-architect` on **Argon High** (`Model: "pro"`) to create `<game-name>/` and write:
+0. **Pre-Built User Blueprint Check (`backlog/blueprints/<game-name>/`):**
+   - If `backlog/blueprints/<game-name>/DESIGN.md` and `backlog/blueprints/<game-name>/SPEC.json` exist (created interactively via `/design` or `/fikir`), copy them directly into `<game-name>/DESIGN.md` and `<game-name>/SPEC.json` verbatim — preserving 100% of the user's custom design decisions!
+   - Otherwise, generate `DESIGN.md` and `SPEC.json` from the `backlog/ideas-backlog.json` entry:
 1. **`<game-name>/DESIGN.md`:** Core loop, 2-second hook, deterministic level/bot AI math, 360° camera spec, and 3 mandatory Rewarded Ad hooks.
 2. **`<game-name>/SPEC.json` (MetaGPT SOP Contract):**
    - Exact `PrefabFactory` method signatures (`name`, `params`, `returns`, child hierarchy notes).

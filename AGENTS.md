@@ -127,5 +127,6 @@ A task is complete only when:
 | `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
 | `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (studio-todo, ideas-backlog) with zero fluff |
 | `skills/inspect` | slash_command | `/inspect <oyun-adı>` (or `/inpect <oyun-adı>`) — Deeply inspects a single game for bugs, logic flaws, and visual upgrades, presents a categorized "Yapılması Gerekenler" list, and adds to `backlog/studio-todo.json` upon user approval |
+| `skills/design` | slash_command | `/design <oyun-fikri>` (or `/fikir <oyun-fikri>`) — Interactive step-by-step Q&A Game Blueprint Architect that researches, interviews the user via `ask_question`, and saves `backlog/blueprints/<game-id>/DESIGN.md` + `SPEC.json` ready for `/studio` |
 | `skills/seo` | slash_command | `/seo` — Audits and synchronizes Technical SEO (`Schema.org/VideoGame` JSON-LD, `sitemap.xml`), Portal Store ASO (`keywords`, `shortHookTr`), and AI Search GEO (`llms.txt`, `robots.txt`) across all active games |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |
