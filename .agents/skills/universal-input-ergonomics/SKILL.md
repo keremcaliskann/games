@@ -46,10 +46,10 @@ Every game receives `src/input/ergonomic-input.ts` automatically via `node scrip
 
 ### Law E — Dual-Mode Puzzle Manipulation (All Sorting & Grid Puzzles)
 - **Rule:**
-  1. Every sorting/grid puzzle (`hexa-sort-3d`, `goods-sort-3d`, `color-block-jam-3d`) must support **BOTH**:
+  1. Every sorting/grid puzzle (`hexa-sort-3d`) must support **BOTH**:
      - **Direct Drag-and-Drop** (with a slight forward/upward visual offset so the finger never obscures the target slot), AND
      - **Tap-to-Select -> Tap-to-Place** (tapping a piece selects/elevates it; tapping a destination slot moves it there).
-  2. Sliding block puzzles (`color-block-jam-3d`) must reset the swipe anchor after each grid step (`dist >= 12px`) so players can slide a block across multiple turns in a single continuous stroke without lifting their finger.
+  2. Sliding grid puzzles must reset the swipe anchor after each grid step (`dist >= 12px`) so players can slide a block across multiple turns in a single continuous stroke without lifting their finger.
 
 ### Law F — Window Blur & HUD Isolation Invariants
 - **Rule:**

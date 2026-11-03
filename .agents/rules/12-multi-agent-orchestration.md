@@ -25,7 +25,7 @@ All multi-step studio workflows (`/studio`, `/feedback`, `/audit`, `/inspect`, a
 4. **CrewAI Pattern (Role Specialization & Argon High/Medium Model Hierarchy):**
    - **Zero Flash Policy:** Never spawn subagents with `Model: "flash"` or `"flash_lite"`.
    - **Manager & Critical Tier (Argon High — `Model: "pro"`):** Reserved for the **Lead Orchestrator**, **Systems & Math Architect (`studio-architect`)**, **Adversarial QA Critic (`studio-qa-critic`)**, and critical `P0` root-cause debugging.
-   - **Specialist Worker Tier (Argon Medium — `Model: "inherit"`):** Used for domain builders (`studio-3d-artist`, `studio-gameplay-engineer`), parallel batch QA auditors (`/audit`, `game-director-qa-architect`), dual-lens game inspectors (`/inspect`), and market trend scouts (`/trend`).
+   - **Specialist Worker Tier (Argon Medium — `Model: "inherit"`):** Used for domain builders (`studio-3d-artist`, `studio-gameplay-engineer`), parallel batch QA auditors (`/audit`, `game-director-qa-architect`), dual-lens game inspectors (`/inspect`), and feedback research (`/feedback`).
 
 ---
 
@@ -37,8 +37,8 @@ When building a new game or executing major upgrades in `/studio`, the Lead Orch
 |---|---|---|---|---|
 | **`studio-architect`** | **Argon High** (`Model: "pro"`) | Systems & Math Architect: Translates backlog blueprint into deterministic level/AI math and exact TypeScript module contracts. | `EnableWriteTools: true` | `<game>/DESIGN.md`, `<game>/SPEC.json`, `<game>/package.json`, `<game>/tsconfig.json`, `<game>/vite.config.ts`, `<game>/.gitignore`, `<game>/public/manifest.json` |
 | **`studio-3d-artist`** | **Argon Medium** (`Model: "inherit"`) | 3D Technical Artist: Implements Stylized Soft Daylight lighting, camera rig, particle effects, and hybrid/compound procedural 3D prefabs matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/src/render/lighting.ts`, `<game>/src/render/camera-rig.ts`, `<game>/src/render/effects.ts`, `<game>/src/render/PrefabFactory.ts`, `<game>/public/icon.svg`, `<game>/ASSETS_NEEDED.md` |
-| **`studio-gameplay-engineer`** | **Argon Medium** (`Model: "inherit"`) | Gameplay, Physics & UI Engineer: Implements 12–20 named AI bots, multi-stage progression, Garage/Upgrade shop, Web Audio, HUD, and 3 Rewarded Ad hooks matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/index.html`, `<game>/src/platform/sdk.ts`, `<game>/src/core/audio.ts`, `<game>/src/input/input-manager.ts`, `<game>/src/game/**`, `<game>/src/ui/hud.ts`, `<game>/src/main.ts` |
-| **`studio-qa-critic`** | **Argon High** (`Model: "pro"`) | Adversarial QA Critic: Runs `sync-shared-core.mjs`, `npm install`, `typecheck`, `build`, and 4-Filter Game Director inspection; patches any compiler/rule defects. | `EnableWriteTools: true` | `<game>/CRITIQUE.md` + surgical defect fixes if `typecheck` or 4-Filter audit fails |
+| **`studio-gameplay-engineer`** | **Argon Medium** (`Model: "inherit"`) | Gameplay, Physics & UI Engineer: Implements the exact genre-specific mechanics, entities, AI/systems, progression, Web Audio, HUD, and 3 Rewarded Ad hooks defined in `DESIGN.md` and `SPEC.json`. | `EnableWriteTools: true` | `<game>/index.html`, `<game>/src/platform/sdk.ts`, `<game>/src/core/audio.ts`, `<game>/src/input/input-manager.ts`, `<game>/src/game/**`, `<game>/src/ui/hud.ts`, `<game>/src/main.ts` |
+| **`studio-qa-critic`** | **Argon High** (`Model: "pro"`) | Adversarial QA Critic: Runs `sync-shared-core.mjs`, `verify-game-quality.mjs`, `npm install`, `typecheck`, `build`, and 4-Filter Game Director inspection; patches any compiler/rule defects. | `EnableWriteTools: true` | `<game>/CRITIQUE.md` + surgical defect fixes if `typecheck` or 4-Filter audit fails |
 
 > **Parallel Execution Rule:** Once `studio-architect` completes `<game>/SPEC.json` and project config scaffolding, `studio-3d-artist` and `studio-gameplay-engineer` have **100% disjoint file ownership** and may be invoked **in parallel**!
 

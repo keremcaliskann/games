@@ -1,12 +1,12 @@
 ---
 trigger: model_decision
-description: "YouTube Playables SDK (ytgame) integration, universal multi-portal bridge (Yandex Games, CrazyGames, Poki), CSP & bundle budget, dual-mode viewport shell, and hot-swap 3D asset pipeline."
+description: "YouTube Playables SDK (ytgame) integration, universal multi-portal bridge (Yandex Games, CrazyGames, Poki), CSP & < 100 MB bundle budget, permanent 3-column arcade shell, and hot-swap 3D asset pipeline."
 ---
 
 # YouTube Playables & Multi-Portal Architecture Policy
 
 ## 1. Primary Target & Universal Compatibility Principle
-All games in this workspace are engineered **first and foremost for YouTube Playables (`ytgame` SDK)**. Because YouTube Playables enforces the strictest technical constraints in the HTML5 gaming ecosystem (strict zero-external-network CSP, `< 50 MB` initial load target, mandatory audio/pause lifecycle hooks, and responsive 9:16 portrait + 16:9 landscape ergonomics), every game built to this standard is **simultaneously compatible with Yandex Games, CrazyGames, Poki, and GitHub Pages** via a single `src/platform/` adapter.
+All games in this workspace are engineered **first and foremost for YouTube Playables (`ytgame` SDK)**. Because YouTube Playables enforces the strictest technical constraints in the HTML5 gaming ecosystem (strict zero-external-network CSP, `< 100 MB` total bundle ceiling, mandatory audio/pause lifecycle hooks, and responsive 9:16 portrait + 16:9 landscape ergonomics), every game built to this standard is **simultaneously compatible with Yandex Games, CrazyGames, Poki, and GitHub Pages** via a single `src/platform/` adapter.
 
 ---
 

@@ -40,7 +40,7 @@ To maximize context efficiency and eliminate AI conversational fluff:
   - **RETURN TO SERVICE:** Exact verification command and measured outcome.
 
 ## Subagent Model Tiering & Context Isolation
-- **Argon High + Argon Medium Hierarchy (Zero Flash Policy):** Never set `Model: "flash"` or `"flash_lite"`. Use **Argon High** (`Model: "pro"` / `"inherit"`) for Lead Orchestrator, architecture (`studio-architect`), and critical QA verification (`studio-qa-critic`). Use **Argon Medium** (`Model: "inherit"`) for domain implementation (`studio-3d-artist`, `studio-gameplay-engineer`), auditing (`/audit`, `/inspect`), and trend scouting (`/trend`).
+- **Argon High + Argon Medium Hierarchy (Zero Flash Policy):** Never set `Model: "flash"` or `"flash_lite"`. Use **Argon High** (`Model: "pro"` / `"inherit"`) for Lead Orchestrator, architecture (`studio-architect`), and critical QA verification (`studio-qa-critic`). Use **Argon Medium** (`Model: "inherit"`) for domain implementation (`studio-3d-artist`, `studio-gameplay-engineer`), auditing (`/audit`, `/inspect`), and feedback analysis (`/feedback`).
 - **Context Isolation:** Subagents run in isolated scratchpads. They must return concise structured summaries (≤ 25 lines) via `send_message`, preventing raw multi-turn traces from polluting parent context.
 - **Ephemeral Lifecycle:** Terminate (`kill`) finished subagents immediately to release system resources.
 

@@ -43,7 +43,7 @@ Every active game's `index.html` and the root Portal `index.html` must include m
 ## 2. Portal Store ASO Metadata (`games.json`)
 Every active game entry in root `games.json` must maintain:
 - `title`: High-contrast uppercase brand + sub-genre hook (`<BRAND> 3D // <SUB-GENRE>`).
-- `description`: Action-first English store description (`120–160 chars`) highlighting core loop, bot count, and progression.
+- `description`: Action-first English store description (`120–160 chars`) highlighting core loop, signature mechanics, and progression.
 - `shortHookTr`: Conversion-optimized Turkish one-liner (`80–120 chars`) for portal hover cards and Yandex/local store listings.
 - `keywords`: Comma-separated bilingual (`EN + TR`) search keywords targeting Google Search, YouTube Playables, CrazyGames, Poki, and Yandex Games.
 
@@ -54,4 +54,4 @@ Every active game entry in root `games.json` must maintain:
 3. **`llms.txt`:** Follows the `llms.txt` standard to provide ChatGPT, Claude, Perplexity, and Gemini with a structured markdown catalog of all active 3D WebGL games, their direct play URLs, mechanics, and bilingual summaries.
 
 ## 4. Web App Manifest (`public/manifest.json`)
-Every project must contain a valid `public/manifest.json` with `display: "fullscreen"` and relative `start_url: "./"`.
+Every project must contain a valid `public/manifest.json` with `display: "standalone"` and relative `start_url: "./"`.

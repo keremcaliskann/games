@@ -7,7 +7,7 @@ metadata:
 
 # Game Director QA & To-Do Architect (`game-director-qa-architect`)
 
-This skill operates **Producer B** of the autonomous multi-agent studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). Rather than reading 12+ games sequentially in one context window, the **Argon High** Lead QA Architect dispatches **parallel `research` subagents on Argon Medium (`Model: "inherit"`)** across 3–4 game batches, aggregates their findings, and queues prioritized `P0 / P1 / P2` tickets into **`backlog/studio-todo.json`**.
+This skill operates as the **Batch Parallel QA Inspector** of the multi-agent studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). Rather than reading 12+ games sequentially in one context window, the **Argon High** Lead QA Architect dispatches **parallel `research` subagents on Argon Medium (`Model: "inherit"`)** across 3–4 game batches, aggregates their findings, and queues prioritized `P0 / P1 / P2` tickets into **`backlog/studio-todo.json`**.
 
 > **STRICT PRODUCER ROLE (QUEUE ONLY — ZERO DIRECT CODE EDITS):** The QA Architect's sole purpose is to inspect, audit, critique, and add prioritized `P0 / P1 / P2` tasks to `backlog/studio-todo.json`. It **DOES NOT write or modify game code directly**. All coding and implementation work is reserved strictly for the Consumer (`/studio`).
 
@@ -17,10 +17,10 @@ This skill operates **Producer B** of the autonomous multi-agent studio pipeline
 
 1. **Rule Compliance Verification:**
    - `10-code-quality.md`: Strict TypeScript, zero orphans.
-   - `20-performance-budget.md`: 60 FPS, `< 50 MB` bundle, zero hot-path heap allocations.
+   - `20-performance-budget.md`: 60 FPS, `< 100 MB` bundle, zero hot-path heap allocations.
    - `25-defensive-gameplay-and-hardening.md`: `data-hud-interactive="true"`, state transition idempotency latches, `!shell.isMenuOpen` Start Menu lock.
-   - `32-daylight-and-lighting.md`: Stylized Toony Soft Daylight (`0xcfe8f7` sky, warm sunlight `0xfff6e5`, biscuit ground `0xfcf8ee`, `toneMappingExposure <= 0.90`, `environmentIntensity <= 0.30`).
-   - `55-arcade-layout-and-shell.md`: 3-column `#arcade-shell` + Minimalist Theme-Matched Start Menu Overlay (`#shell-start-menu`).
+   - `32-daylight-and-lighting.md`: Stylized Toony Soft Daylight (`0xcfe8f7` sky, warm sunlight `0xfff6e5`, biscuit ground `0xfcf8ee`, `toneMappingExposure <= 0.92`, `environmentIntensity <= 0.35`).
+   - `55-arcade-layout-and-shell.md`: Permanent 3-column `#arcade-shell` (Left Sidebar + Center Stage + Right Ad Rail, zero fullscreen) + Full-Cover Start Menu (`#shell-start-menu`) with zero background execution before `OYNA`.
    - `65-monetization-ads.md`: Shared `UniversalAdProvider` + all 3 Rewarded Ad revenue hooks.
 2. **Feature & Gameplay Health Verification (`P0` / `P1`):**
    - Spawn invulnerability, AI bot unstuck steering, stage transition triggers, camera-relative input projection, and audio mute sync.

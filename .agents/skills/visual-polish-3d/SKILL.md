@@ -5,7 +5,7 @@ description: Applies zero-external-asset 60 FPS Three.js visual polish across HT
 
 # 3D Visual Polish & Zero-Asset Shader Enhancement (`visual-polish-3d`)
 
-This skill defines the standard 60 FPS visual upgrade pipeline for Three.js WebGL games under the `< 50 MB` bundle and zero external network call constraints (`32-daylight-and-lighting.md` & `30-three-render.md`).
+This skill defines the standard 60 FPS visual upgrade pipeline for Three.js WebGL games under the `< 100 MB` bundle and zero external network call constraints (`32-daylight-and-lighting.md` & `30-three-render.md`).
 
 ---
 
@@ -17,7 +17,7 @@ All games in the monorepo receive `src/render/visual-enhancer.ts` (synchronized 
 
 1. **Procedural Studio IBL Reflections (`PMREMGenerator` + `RoomEnvironment`):**
    - Uses `RoomEnvironment` (`three/addons/environments/RoomEnvironment.js`) with `THREE.PMREMGenerator` or a procedural 2D equirectangular studio reflection `DataTexture` / `CanvasTexture` so `scene.environment` is populated at startup in `< 4 ms` with `0 KB` external `.hdr` downloads.
-   - Automatically hooked via `VisualEnhancer.enhanceScene(scene)` inside `src/render/lighting.ts`, utilizing `scene.onBeforeRender` on frame 1 to bind the active `WebGLRenderer`, set `ACESFilmicToneMapping` (`toneMappingExposure = 1.0`), bake the PMREM studio environment map once, and self-detach.
+   - Automatically hooked via `VisualEnhancer.enhanceScene(scene)` inside `src/render/lighting.ts`, utilizing `scene.onBeforeRender` on frame 1 to bind the active `WebGLRenderer`, set `ACESFilmicToneMapping` (`toneMappingExposure = 0.85`), bake the PMREM studio environment map once, and self-detach.
 
 2. **Beveled Toy / Vinyl Geometry (`RoundedBoxGeometry`):**
    - Sharp 90-degree `THREE.BoxGeometry` edges never catch specular highlights along their borders.
@@ -65,4 +65,4 @@ VisualEnhancer.applyRimLight(blockMat, 0xfff8eb, 0.28);
 ## 3. Synchronization & Verification
 
 1. Run `node scripts/sync-shared-core.mjs` to propagate `shared/render/visual-enhancer.ts` and hook `VisualEnhancer.enhanceScene(scene)` into `src/render/lighting.ts` across all games in `games.json`.
-2. Verify TypeScript compilation and bundle budgets (`< 50 MB`) across all games.
+2. Verify TypeScript compilation and bundle budgets (`< 100 MB`) across all games.

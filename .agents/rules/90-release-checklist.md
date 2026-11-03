@@ -19,7 +19,7 @@ Run through this verification checklist before preparing a production build or r
 - [ ] Touch emulation: virtual joystick, camera pan, action buttons.
 - [ ] Tab switching: audio suspends and game clock resumes cleanly when switching browser tabs.
 - [ ] Window resizing: projection matrix and aspect ratio adapt without distortion.
-- [ ] Art Direction (`30-three-render`): Uses vibrant colors and a bright, well-lit environment by default (unless a dark theme was explicitly requested).
+- [ ] Art Direction (`30-three-render`, `32-daylight-and-lighting`): Adheres strictly to Stylized Toony Soft Daylight (`toneMappingExposure <= 0.92`, zero dark voids, zero hospital-white glare).
 
 ## 3. Performance & Memory Audits
 - [ ] Frame time remains within the 16.6 ms budget in typical and complex gameplay scenes.
@@ -44,9 +44,10 @@ Run through this verification checklist before preparing a production build or r
 - [ ] `.github/workflows/deploy.yml` exists and is configured for automated build and publish.
 - [ ] Live target URL verified: `https://keremcaliskann.github.io/games/<game-name>/`.
 
-## 7. Arcade Shell & Portal Compliance (55-arcade-layout-and-shell)
-- [ ] Dual-Mode Shell auto-hides sidebars when inside YouTube Playables / Yandex / CrazyGames / `?embed=1`, and renders 3-column Arcade Shell on GitHub Pages.
-- [ ] Left sidebar navigation verified: Portal return link (`../`), Restart button, Fullscreen toggle, and dynamic "Other Games" list.
+## 7. 3-Column Arcade Shell & Full-Cover Start Menu Compliance (55-arcade-layout-and-shell)
+- [ ] Permanent 3-Column Arcade Shell rendered at all times: Left Navigation Sidebar (`.shell-sidebar-left`), Center 3D Stage (`#shell-stage`), and Right Advertising Rail (`.shell-sidebar-right`). Zero fullscreen button or sidebar-hiding mode.
+- [ ] Left sidebar navigation verified: Portal return link (`../`), Start Menu button, Restart button, and dynamic "Other Games" list (active games only).
+- [ ] Full-Cover Start Menu (`#shell-start-menu`) covers 100% of `#shell-stage` with an opaque theme-matched background, hides `#app` and `#hud` while open, and enforces zero background execution (`shell.isMenuOpen` + RAF gate) until `OYNA` is clicked.
 - [ ] Three.js canvas resizes dynamically via `ResizeObserver` on container in both 9:16 portrait and 16:9 landscape without distortion.
 - [ ] Mandatory `public/icon.svg` exists, is valid SVG, and renders in portal, game cards, and favicon.
 
@@ -56,7 +57,7 @@ Run through this verification checklist before preparing a production build or r
 - [ ] `ytgame.system.onPause`, `onResume`, and `onAudioEnabledChange` are wired to `GameClock` and `SoundController`.
 - [ ] `ytgame.game.loadData()` is awaited prior to `saveData()`, with `localStorage` fallback outside YouTube Playables.
 - [ ] All 3 Mandatory Revenue Hooks function cleanly: (1) In-Level Rescue Boosters, (2) Near-Miss Revive Modal, (3) Victory 2x/3x/5x Moving Multiplier Bar.
-- [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 50 MB`.
+- [ ] Zero external network fetches (fonts, audio, analytics) and total `dist/` bundle size `< 100 MB`.
 - [ ] Compound Procedural 3D Prefabs used (no raw primitive placeholders), with `ASSETS_NEEDED.md` generated if optional `.glb` overrides apply.
 
 ## 9. Multi-Platform Export Packages (`npm run export:all`)
@@ -65,5 +66,5 @@ Run through this verification checklist before preparing a production build or r
   - `<game>-yandex.zip`: Bundles `<script src="https://yandex.ru/games/sdk/v2"></script>`.
   - `<game>-crazygames.zip`: Bundles `<script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>`.
   - `<game>-poki.zip`: Bundles `<script src="https://game-cdn.poki.com/scripts/v2/poki-sdk.js"></script>`.
-- [ ] All generated packages verified `< 50 MB` with `index.html` at archive root ready for direct console upload.
+- [ ] All generated packages verified `< 100 MB` with `index.html` at archive root ready for direct console upload.
 

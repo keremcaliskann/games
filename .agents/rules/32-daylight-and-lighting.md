@@ -20,7 +20,7 @@ description: "Stylized Toony Soft Daylight Art Direction: warm sun key, soft sky
 | Sin | Symptom | Correction |
 |---|---|---|
 | **The Dark Void** | `#000000` / `#0f172a` background, dark ground bounce, black floor grids | Soft pastel daylight sky (`#cfe8f7`), warm ground bounce (`0xf5e6ca`), light board |
-| **The Hospital Room** | Blown-out `#ffffff` surfaces, sun light > 2.0, exposure > 1.2 | Sun light `1.2–1.35`, exposure `1.0`, warm biscuit/cream foundations (`0xfcf8ee`) |
+| **The Hospital Room** | Blown-out `#ffffff` surfaces, sun light > 2.0, exposure > 0.92 | Sun light `1.2–1.30`, exposure `0.85–0.90` (`<= 0.92`), warm biscuit/cream foundations (`0xfcf8ee`) |
 | **The Plastic Glare** | `roughness < 0.25`, blinding white specular spots on entities | Matte toy / vinyl finish: `roughness: 0.45–0.55`, `metalness: 0.04` |
 
 ---
@@ -97,7 +97,7 @@ export class LightingSetup {
 ### 3.1 Renderer Tone Mapping
 ```ts
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0; // Clean, natural exposure baseline (never blown-out)
+renderer.toneMappingExposure = 0.85; // Balanced Soft Daylight exposure (strictly <= 0.92, never blown-out)
 ```
 
 ---
@@ -147,7 +147,7 @@ HUD overlays should feel light, modern, and tactile:
 
 Before committing or releasing any game:
 1. [ ] **No Dark Voids:** `scene.background` is $\ge \text{0xcfe8f7}$ soft pastel daylight.
-2. [ ] **No Hospital Glare:** Sun light intensity $\le 1.4$, hemisphere intensity $\le 1.0$, tone mapping exposure $= 1.0$.
+2. [ ] **No Hospital Glare:** Sun light intensity $\le 1.35$, hemisphere intensity $\le 0.90$, tone mapping exposure $\le 0.92$ (`0.85–0.90`).
 3. [ ] **Figure-Ground Separation:** Board and floor use warm biscuit/cream tones (`0xfcf8ee`), never stark `#ffffff`.
 4. [ ] **Tactile Matte Finish:** Entity materials use `roughness: 0.45–0.55` (no blown-out specular highlights).
 5. [ ] **Warm Ground Bounce:** Hemisphere light ground color is warm biscuit/sand (`0xf5e6ca`).

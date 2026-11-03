@@ -26,13 +26,13 @@ Every game receives `src/input/ergonomic-input.ts` (`ErgonomicInput`) via `node 
 - **Direct Target Mapping:** In cannon, archery, turret, and Suika drop games, touching or moving the cursor anywhere on the stage must aim directly at that screen/world coordinate (`pointerdown`, `pointermove` drag, and desktop `mouse` hover). Never require blind relative pull-back deltas from an arbitrary start point as the sole aiming method.
 - **Keyboard Parity:** Always bind `WASD / Arrow` keys for aim adjustment and `Space / Enter` for firing/dropping.
 
-### 2.4 Immediate `pointerdown` Response & Magnetic Raycast Assist (Tap & Unbolt Games)
-- **Generous Tap Tolerance:** When distinguishing taps from 3D camera orbit drags (`screw-jam-3d`, `cyber-arrow-3d`), `dragThreshold` must be `>= 18px` (never `8px`, which causes slight mobile thumb roll to cancel taps). Where camera orbit is not used (`bus-escape-jam-3d`, `conveyor-marble-sort-3d`), trigger selection immediately on `pointerdown`.
-- **Magnetic Tap Assist:** If a raycast against 3D meshes returns 0 hits, fall back to `ErgonomicInput.findMagneticRayTarget` (or ground-plane proximity `< 0.5m–2.2m`) so tapping slightly beside a screw, block, bus, or dispenser still triggers the nearest valid target.
+### 2.4 Immediate `pointerdown` Response & Magnetic Raycast Assist (Tap & Spatial Puzzle Games)
+- **Generous Tap Tolerance:** When distinguishing taps from 3D camera orbit drags (`cyber-arrow-3d`), `dragThreshold` must be `>= 18px` (never `8px`, which causes slight mobile thumb roll to cancel taps). Where camera orbit is not used, trigger selection immediately on `pointerdown`.
+- **Magnetic Tap Assist:** If a raycast against 3D meshes returns 0 hits, fall back to `ErgonomicInput.findMagneticRayTarget` (or ground-plane proximity `< 0.5m–2.2m`) so tapping slightly beside an interactive 3D target still triggers the nearest valid entity.
 
-### 2.5 Dual-Mode Puzzle Manipulation (Sorting & Block Slide Games)
-- **Tap-to-Place + Drag-and-Drop:** Sorting games (`hexa-sort-3d`, `goods-sort-3d`) must support **both** dragging an item to a target slot AND tapping an item to select it followed by tapping the target slot to place it.
-- **Continuous Multi-Step Sliding:** Block jam puzzles (`color-block-jam-3d`) must use a responsive `12px` swipe threshold and reset the drag anchor after each slide so players can guide a block through multiple turns in a single continuous finger stroke.
+### 2.5 Dual-Mode Puzzle Manipulation (Sorting & Grid Placement Games)
+- **Tap-to-Place + Drag-and-Drop:** Sorting and placement games (`hexa-sort-3d`) must support **both** dragging an item to a target slot AND tapping an item to select it followed by tapping the target slot to place it.
+- **Continuous Multi-Step Sliding:** Grid-sliding puzzles must use a responsive `12px` swipe threshold and reset the drag anchor after each slide so players can guide an entity through multiple turns in a single continuous finger stroke.
 
 ### 2.6 HUD Isolation & Focus Reset
 - Every canvas/window pointer listener must ignore interactive UI elements via `ErgonomicInput.isHudElement(e.target)` (`[data-hud-interactive="true"], button, a, .modal-overlay, .shell-sidebar`).
