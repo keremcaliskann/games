@@ -5,7 +5,7 @@
 
 ## 1. Project & Workspace Architecture
 
-- **Scope:** This workspace hosts multiple independent HTML5 3D game projects and two central studio queues: `backlog/ideas-backlog.json` (new game blueprints across `.io`, 3D physics, casual FPS, and voxel genres) and `backlog/studio-todo.json` (prioritized bugfixes and mechanical/visual upgrades for existing games). Each game lives in its own dedicated subdirectory.
+- **Scope:** This workspace hosts multiple independent HTML5 3D game projects, dedicated per-game design folders under `backlog/game-plans/<game-id>/` (`STATUS.json`, `DESIGN.md`, `SPEC.json` created interactively with the user via `/design` / `/fikir`), and `backlog/studio-todo.json` (prioritized bugfixes and feedback upgrades for existing games). Each game lives in its own dedicated subdirectory.
 - **Passive / Archived Games Policy (`"active": false` in `games.json`):** Games marked with `"active": false` in root `games.json` (`bus-escape-jam-3d`, `cyber-flap`, `color-block-jam-3d`, `screw-jam-3d`, `ragdoll-cannon-blitz-3d`, `goods-sort-3d`, `conveyor-marble-sort-3d`) are **strictly passive/archived**. Never modify their files, never run shared sync/builds/typechecks on them, never queue tasks for them in `backlog/studio-todo.json`, and exclude them from the Arcade Portal and left navigation rails. Only operate on active games (`active !== false`).
 - **Primary Target & Goal:** Revenue-maximized, 60 FPS HTML5 3D games engineered **first for YouTube Playables (`ytgame` SDK, `< 50 MB`, zero external network CSP)** and simultaneously compatible with **Yandex Games, CrazyGames, Poki, GitHub Pages, and Android/iOS (Capacitor)** via a universal `src/platform/` bridge.
 - **Approved Stack:** Vite · Three.js (WebGL) · Rapier.js (`@dimforge/rapier3d-compat`, Wasm) · YouTube Playables SDK (`ytgame`) · Capacitor · TypeScript (strict).
@@ -28,7 +28,7 @@
   - **Medium** (2–4 files) → outline a 3–6 line plan in chat, then implement.
   - **Large / Ambiguous** (new system, architectural shift, 4+ files, new dependency) → prepare an Implementation Plan artifact, **do not write code without user approval**. Follow the `plan-then-implement` skill.
 - Explicitly state assumptions ("Assumption: ...").
-- Clarify ambiguous requirements before writing code: max 3 questions per message, each with a recommended default.
+- Clarify ambiguous requirements before writing code using `ask_question` with recommended defaults (zero artificial question limit during game design planning).
 - If a simpler solution exists, propose it. If library APIs are uncertain, verify in `node_modules/<package>/**/*.d.ts`.
 
 ### 3.2 Simplicity (YAGNI)
@@ -65,7 +65,7 @@
 - Search first (`grep` / file search), then read only the relevant line range. Do not reread unchanged files.
 - Truncate terminal outputs (`| tail -n 40`, `--silent`). Never dump `dist/`, `node_modules/`, `*.glb`, `*.wasm`, or lockfiles into context.
 - Keep delivery summaries concise (≤ 6 lines) using the Aircraft Maintenance Log schema (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / VERIFICATION`).
-- **Multi-Agent Model Hierarchy (`12-multi-agent-orchestration.md`):** Never use `flash` or `flash_lite` for studio subagents. Lead Orchestrator, `studio-architect`, and critical QA (`studio-qa-critic`) run on **Argon High** (`Model: "pro"` / `"inherit"`). Domain builders (`studio-3d-artist`, `studio-gameplay-engineer`), auditors (`/audit`, `/inspect`), and scouts (`/trend`) run on **Argon Medium** (`Model: "inherit"`).
+- **Multi-Agent Model Hierarchy (`12-multi-agent-orchestration.md`):** Never use `flash` or `flash_lite` for studio subagents. Lead Orchestrator, `studio-architect`, and critical QA (`studio-qa-critic`) run on **Argon High** (`Model: "pro"` / `"inherit"`). Domain builders (`studio-3d-artist`, `studio-gameplay-engineer`) and auditors (`/audit`, `/inspect`, `/feedback`) run on **Argon Medium** (`Model: "inherit"`).
 - Compress multi-turn context using `/compact` after completing major milestones.
 
 ## 6. Performance Reflex
@@ -91,7 +91,7 @@ A task is complete only when:
 |---|---|---|
 | `rules/10-code-quality.md` | glob | Triggered when editing `**/src/**/*.ts` |
 | `rules/12-multi-agent-orchestration.md` | model_decision | Multi-agent subagent orchestration (`SPEC.json` SOP contract, BMAD domain sharding, ChatDev QA gate, Argon High/Medium model hierarchy) |
-| `rules/15-game-studio-pipeline.md` | model_decision | 3-automation Producer-Consumer pipeline, 4-Subagent Studio Squad, 4-Filter Game Director critique |
+| `rules/15-game-studio-pipeline.md` | model_decision | User-driven `backlog/game-plans/<game-id>/` pipeline, 4-Subagent Studio Squad, 4-Filter Game Director critique |
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
 | `rules/25-defensive-gameplay-and-hardening.md` | model_decision | Defensive programming, HUD pointer isolation, state idempotency, procedural feasibility, SDK invariants |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
@@ -107,9 +107,8 @@ A task is complete only when:
 | `rules/70-token-context.md` | model_decision | Large file reads, token economy |
 | `rules/80-dependencies-and-git.md` | model_decision | Package additions, Git repos, commit & push |
 | `rules/90-release-checklist.md` | manual | Triggered exclusively via `@90-release-checklist` |
-| `skills/yt-playable-trend-scout` | skill | 90-day market scan (3+ diverse genres: `.io`, FPS/physics, voxel), 100-pt Matrix & concise report |
 | `skills/game-director-qa-architect` | skill | Audits all active games, populates/prioritizes `backlog/studio-todo.json` (`P0 > P1 > P2`) & concise report |
-| `skills/game-studio-pipeline` | skill | Dual-Queue Executor (`studio-todo.json` + `ideas-backlog.json`) & 3-Phase Studio Squad |
+| `skills/game-studio-pipeline` | skill | Multi-Agent Executor (`studio-todo.json` + `backlog/game-plans/<game-id>/`) & 4-Subagent Studio Squad |
 | `skills/asset-integrator` | skill | Integrates user-supplied `.glb` 3D models/textures into `PrefabFactory` (`ASSETS_NEEDED.md`) |
 | `skills/html5-game-development` | skill | Core 3D game development workflow |
 | `skills/game-performance-audit` | skill | FPS drops, jank, memory audits |
@@ -122,11 +121,11 @@ A task is complete only when:
 | `skills/games-portal-catalog` | skill | Central arcade portal index management |
 | `skills/zip` | slash_command | `/zip` — Multi-platform ZIP packaging (Yandex, CrazyGames, YouTube, Poki) |
 | `skills/audit` | slash_command | `/audit` — Typecheck, build, 60 FPS, and defensive gameplay audit |
-| `skills/trend` | slash_command | `/trend` — 90-day market scan and ideas backlog re-scoring |
-| `skills/studio` | slash_command | `/studio` — Autonomous 3-Phase Studio Squad for #1 backlog game |
+| `skills/studio` | slash_command | `/studio` — Autonomous 4-Subagent Studio Squad for `backlog/game-plans/<game-id>/` and `studio-todo.json` |
 | `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
-| `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (studio-todo, ideas-backlog) with zero fluff |
+| `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (`studio-todo.json` & `backlog/game-plans/`) with zero fluff |
 | `skills/inspect` | slash_command | `/inspect <oyun-adı>` (or `/inpect <oyun-adı>`) — Deeply inspects a single game for bugs, logic flaws, and visual upgrades, presents a categorized "Yapılması Gerekenler" list, and adds to `backlog/studio-todo.json` upon user approval |
-| `skills/design` | slash_command | `/design <oyun-fikri>` (or `/fikir <oyun-fikri>`) — Interactive step-by-step Q&A Game Blueprint Architect that researches, interviews the user via `ask_question`, and saves `backlog/blueprints/<game-id>/DESIGN.md` + `SPEC.json` ready for `/studio` |
+| `skills/feedback` | slash_command | `/feedback <oyun-adı> <notlar>` — Plans and applies user feedback directly to the specified game (or queues into `studio-todo.json`) |
+| `skills/design` | slash_command | `/design <oyun-fikri>` (or `/fikir <oyun-fikri>`) — Unrestricted 6-stage Q&A Game Design Workshop that saves complete game plans in `backlog/game-plans/<game-id>/` (`STATUS.json` + `DESIGN.md` + `SPEC.json`) |
 | `skills/seo` | slash_command | `/seo` — Audits and synchronizes Technical SEO (`Schema.org/VideoGame` JSON-LD, `sitemap.xml`), Portal Store ASO (`keywords`, `shortHookTr`), and AI Search GEO (`llms.txt`, `robots.txt`) across all active games |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |

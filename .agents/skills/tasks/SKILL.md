@@ -1,33 +1,21 @@
 ---
 name: tasks
 description: >-
-  Displays all studio task lists and queues from backlog/studio-todo.json and
-  backlog/ideas-backlog.json with zero conversational padding. Use when the user types /tasks or asks to see task lists.
+  Displays all studio task lists and planned game folders from backlog/studio-todo.json
+  and backlog/game-plans/*/STATUS.json with zero conversational padding.
+  Use when the user types /tasks or asks to see task lists.
 ---
 
-# /tasks — Studio Task & Backlog Lists
+# /tasks — Studio Task & Planned Games Lists
 
-Displays all studio task lists, pending upgrades, bugfixes, and queued game ideas with zero conversational padding or extraneous commentary.
+Displays all pending feedback tasks (`backlog/studio-todo.json`), planned game folders (`backlog/game-plans/<game-id>/`), and active published games (`games.json`) with zero conversational padding.
 
 ## Execution Guide
 
-When `/tasks` is invoked or the user asks to inspect task lists:
-
 1. **Read Task Data:**
-   - Run `node scripts/list-game-tasks.mjs` or read `backlog/studio-todo.json` and `backlog/ideas-backlog.json`.
-
+   - Run `node scripts/list-game-tasks.mjs` or read `backlog/studio-todo.json` and `backlog/game-plans/*/STATUS.json`.
 2. **Output Rule (Strict List Only — No Fluff):**
-   - Output **ONLY** the structured markdown tables / lists.
-   - Do **NOT** output conversational intros, conclusions, explanatory guides, or commentary.
-
-### Output Structure:
-
-#### 1. Aktif Oyun İyileştirme & Hata Listesi (`backlog/studio-todo.json`)
-Tablo halinde: Öncelik (`P0`/`P1`/`P2`), Oyun (`gameId`), Görev Başlığı, Tür, Skor.
-*(Eğer bekleyen aktif görev yoksa: "Aktif bekleyen görev yok.")*
-
-#### 2. Yeni Oyun Geliştirme Kuyruğu (`backlog/ideas-backlog.json`)
-Tablo halinde: Sıra (`#1`, `#2`...), Oyun Adı, Kategori, Skor.
-
-#### 3. Yayındaki Oyunlar (`games.json`)
-Tamamlanmış ve portala eklenmiş oyunların kısa listesi.
+   - Output **ONLY** the structured markdown tables / lists:
+     1. **Aktif Oyun Geri Bildirim & Düzeltme Listesi (`backlog/studio-todo.json`)**
+     2. **Planlanmış Yeni Oyun Klasörleri (`backlog/game-plans/<game-id>/`)**
+     3. **Yayındaki Aktif Oyunlar (`games.json`)**

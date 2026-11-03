@@ -7,14 +7,15 @@ description: "Multi-agent studio orchestration (MetaGPT SOP SPEC.json contracts,
 
 ## 1. Core Architectural Patterns (Adapted from Top GitHub Multi-Agent Systems)
 
-All multi-step studio workflows (`/studio`, `/audit`, `/inspect`, `/trend`, and scheduled automations) operate as a **Hierarchical Orchestrator + Specialized Ephemeral Subagents** system combining four proven open-source patterns:
+All multi-step studio workflows (`/studio`, `/feedback`, `/audit`, `/inspect`, and the single scheduled Studio Executor automation) operate as a **Hierarchical Orchestrator + Specialized Ephemeral Subagents** system combining four proven open-source patterns:
 
 1. **MetaGPT Pattern (`Code = SOP(Team)` — Typed Artifact Handoffs):**
    - Subagents never pass unstructured conversational walls to one another.
-   - All inter-agent communication occurs via **structured files on disk**:
-     - `<game-name>/DESIGN.md` (Human-readable design & solvable math brief)
-     - `<game-name>/SPEC.json` (Strict machine-readable interface contract between 3D Artist and Gameplay Engineer)
-     - `<game-name>/CRITIQUE.md` (4-Filter Adversarial QA verification report)
+   - All inter-agent communication occurs via **structured files on disk** created in `backlog/game-plans/<game-id>/` (during `/design` / `/fikir`) and copied into `<game-name>/`:
+     - `STATUS.json` (Lifecycle state: `"draft"` | `"ready"` | `"in_progress"` | `"completed"`)
+     - `DESIGN.md` (Unabridged human-readable design, maps, AI behavior, and math brief)
+     - `SPEC.json` (Strict machine-readable interface contract between 3D Artist and Gameplay Engineer)
+     - `CRITIQUE.md` (4-Filter Adversarial QA verification report)
 2. **BMAD-Method Pattern (Domain Sharding & File Ownership Isolation):**
    - Work is sharded by architectural boundary so each subagent loads only 25–30% of rules/files and never overwrites another subagent's files.
    - **Strict File-Lock Rule:** Two write-enabled subagents must **NEVER** edit the same file concurrently.
@@ -100,16 +101,16 @@ When building a new game or executing major upgrades in `/studio`, the Lead Orch
 
 ---
 
-## 4. Parallel Subagent Dispatch Rules for `/audit`, `/inspect`, and `/trend` (Argon Medium + Argon High Lead)
+## 4. Parallel Subagent Dispatch Rules for `/feedback`, `/audit`, and `/inspect` (Argon Medium + Argon High Lead)
 
-1. **`/audit` & `game-director-qa-architect` (Batch Parallel QA):**
+1. **`/feedback <game-name>` (User Feedback Planning & Adaptation):**
+   - Spawn an **Argon Medium** `research` subagent (`Model: "inherit"`) to locate the exact root causes and target files for the user's feedback points, clarify any design options via `ask_question`, and apply surgical fixes or dispatch `studio-3d-artist` / `studio-gameplay-engineer` subagents.
+2. **`/audit` & `game-director-qa-architect` (Batch Parallel QA):**
    - Partition active games (`active !== false` in `games.json`) into batches of 3–4 games.
    - Launch parallel `research` subagents on **Argon Medium** (`Model: "inherit"`) — one per batch — to inspect rule compliance, hot-path allocations, gameplay bugs, and visual quality.
    - The **Argon High** Lead Orchestrator aggregates their findings, deduplicates and ranks `P0 > P1 > P2` tickets, and writes `backlog/studio-todo.json`.
-2. **`/inspect <game-name>` (Dual-Lens Deep Inspection):**
+3. **`/inspect <game-name>` (Dual-Lens Deep Inspection):**
    - Spawn 2 parallel `research` subagents on **Argon Medium** (`Model: "inherit"`):
      - **Subagent A (`Mechanics & AI Inspector`):** Audits `src/game/`, `src/input/`, `src/main.ts` for P0 bugs (spawn death, AI stuck loops, state latches) and P1 gameplay/progression depth.
      - **Subagent B (`Visual & 3D Art Inspector`):** Audits `src/render/`, `src/ui/`, `index.html` for Soft Daylight compliance, color contrast, `ProceduralMeshBuilder` prefab quality, and HUD ergonomics.
    - The Lead Orchestrator synthesizes both reports into the Turkish **"Yapılması Gerekenler Listesi"** and awaits user approval.
-3. **`/trend` & `yt-playable-trend-scout` (Parallel Genre Scouting):**
-   - Spawn 2–3 parallel `research` subagents on **Argon Medium** (`Model: "inherit"`) across the priority `.io` sub-genres in `backlog/scout-directives.json`, then the **Argon High** Lead Orchestrator scores candidates on the 100-point Revenue Matrix and updates `backlog/ideas-backlog.json`.
