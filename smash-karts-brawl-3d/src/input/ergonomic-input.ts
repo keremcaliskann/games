@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 
 const _TEMP_POS = new THREE.Vector3();
+const _NDC = new THREE.Vector2();
+const _RAYCASTER = new THREE.Raycaster();
+const _GROUND_PLANE = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 
 export interface FloatingJoystickUI {
   baseEl: HTMLDivElement;
@@ -10,20 +13,37 @@ export interface FloatingJoystickUI {
   hide: () => void;
 }
 
+export interface DynamicJoystickState {
+  active: boolean;
+  pointerId: number;
+  anchorX: number;
+  anchorY: number;
+  normX: number;
+  normY: number;
+  offsetX: number;
+  offsetY: number;
+}
+
 /**
- * Shared Universal Input & Camera-Relative Ergonomics Toolkit.
- * Synchronized across all studio games via scripts/sync-shared-core.mjs.
- * Prevents inverted camera axes, laggy fixed-anchor joysticks, missed mobile taps, and HUD click-bleeding.
+ * Genre-Agnostic Universal Input & Camera-Relative Ergonomics Toolkit.
+ * Synchronized across all active games via scripts/sync-shared-core.mjs.
+ * Provides:
+ * - HUD / Modal / Form click-bleed isolation (`isHudElement`)
+ * - Camera-relative 3D ground movement projection (`screenToCameraWorldXZ`)
+ * - Zero-allocation screen-to-world horizontal plane intersection (`screenToGroundPlane`)
+ * - Visual floating thumbstick + dynamic following anchor math (`createFloatingJoystick`, `updateDynamicJoystick`)
+ * - Magnetic 3D raycast tap-assist fallback (`findMagneticRayTarget`)
+ * - Focus-safe Keyboard Axis & Single-Shot Action tracker (`KeyboardTracker`)
  */
 export class ErgonomicInput {
   /**
-   * Checks whether an event target belongs to an interactive HUD button, modal, or Arcade Shell sidebar.
+   * Checks whether an event target belongs to any interactive HUD control, modal, form input, or Arcade Shell element.
    */
   public static isHudElement(target: EventTarget | null): boolean {
     if (!(target instanceof Element)) return false;
     return Boolean(
       target.closest(
-        '[data-hud-interactive="true"], [data-hud-interactive], button, a, .hud-btn, .booster-btn, .modal-card, .modal-overlay, .br-modal-overlay, .shell-sidebar'
+        '[data-hud-interactive="true"], [data-hud-interactive], button, a, input, select, textarea, label, [role="button"], .hud-btn, .booster-btn, .modal-card, .modal-overlay, .br-modal-overlay, .shell-sidebar, .shell-start-menu-overlay, .shell-stage-pause-btn'
       )
     );
   }
@@ -31,7 +51,7 @@ export class ErgonomicInput {
   /**
    * Projects 2D screen input deltas (screenRight = +1 right, screenUp = +1 up on screen)
    * onto the 3D XZ ground plane relative to the active camera's true viewing orientation.
-   * Eliminates inverted Left/Right or Up/Down controls regardless of camera position or angle.
+   * Eliminates inverted Left/Right or Up/Down controls regardless of camera position or orbit angle.
    */
   public static screenToCameraWorldXZ(
     screenRight: number,
@@ -72,6 +92,68 @@ export class ErgonomicInput {
   }
 
   /**
+   * Projects a screen pointer coordinate (clientX, clientY) onto a horizontal world plane (y = planeY)
+   * with zero heap allocations. Returns true if the ray intersects the plane in front of the camera.
+   */
+  public static screenToGroundPlane(
+    clientX: number,
+    clientY: number,
+    container: HTMLElement,
+    camera: THREE.Camera,
+    planeY: number,
+    outWorldPos: THREE.Vector3
+  ): boolean {
+    const rect = container.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return false;
+    _NDC.x = ((clientX - rect.left) / rect.width) * 2 - 1;
+    _NDC.y = -((clientY - rect.top) / rect.height) * 2 + 1;
+    _RAYCASTER.setFromCamera(_NDC, camera);
+    _GROUND_PLANE.constant = -planeY;
+    const hit = _RAYCASTER.ray.intersectPlane(_GROUND_PLANE, outWorldPos);
+    return hit !== null;
+  }
+
+  /**
+   * Updates a dynamic-anchor virtual joystick state from pointer coordinates.
+   * Pulls the anchor along with the finger when `maxRadiusPx` is exceeded so direction reversals are instantaneous.
+   */
+  public static updateDynamicJoystick(
+    localX: number,
+    localY: number,
+    state: DynamicJoystickState,
+    maxRadiusPx = 46,
+    deadzonePx = 4
+  ): void {
+    const dx = localX - state.anchorX;
+    const dy = localY - state.anchorY;
+    const dist = Math.hypot(dx, dy);
+
+    if (dist <= deadzonePx) {
+      state.normX = 0;
+      state.normY = 0;
+      state.offsetX = 0;
+      state.offsetY = 0;
+      return;
+    }
+
+    const dirX = dx / dist;
+    const dirY = dy / dist;
+
+    if (dist > maxRadiusPx) {
+      const excess = dist - maxRadiusPx;
+      state.anchorX += dirX * excess;
+      state.anchorY += dirY * excess;
+    }
+
+    const clampedDist = Math.min(dist, maxRadiusPx);
+    const mag = clampedDist / maxRadiusPx;
+    state.normX = dirX * mag;
+    state.normY = dirY * mag;
+    state.offsetX = dirX * clampedDist;
+    state.offsetY = dirY * clampedDist;
+  }
+
+  /**
    * Creates a responsive visual Floating Virtual Thumbstick overlay inside the given stage container.
    */
   public static createFloatingJoystick(
@@ -107,8 +189,7 @@ export class ErgonomicInput {
   }
 
   /**
-   * Finds the closest candidate entity to a 3D ray within `maxRadiusMeters` when a direct mesh raycast misses.
-   * Ideal for small screws, arrow blocks, buses, or dispensers on mobile touchscreens.
+   * Finds the closest candidate 3D entity to a ray within `maxRadiusMeters` when a direct mesh raycast misses.
    */
   public static findMagneticRayTarget<T>(
     ray: THREE.Ray,
@@ -130,5 +211,83 @@ export class ErgonomicInput {
       }
     }
     return best;
+  }
+}
+
+/**
+ * Genre-Agnostic Keyboard Axis & Action Trigger Tracker.
+ * Automatically clears held keys on window blur or visibility loss.
+ */
+export class KeyboardTracker {
+  private readonly heldCodes = new Set<string>();
+  private readonly justPressedCodes = new Set<string>();
+
+  private readonly onKeyDown = (e: KeyboardEvent): void => {
+    if (ErgonomicInput.isHudElement(e.target)) return;
+    if (!this.heldCodes.has(e.code)) {
+      this.justPressedCodes.add(e.code);
+    }
+    this.heldCodes.add(e.code);
+  };
+
+  private readonly onKeyUp = (e: KeyboardEvent): void => {
+    this.heldCodes.delete(e.code);
+  };
+
+  private readonly onReset = (): void => {
+    this.heldCodes.clear();
+    this.justPressedCodes.clear();
+  };
+
+  constructor() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', this.onKeyDown);
+      window.addEventListener('keyup', this.onKeyUp);
+      window.addEventListener('blur', this.onReset);
+      document.addEventListener('visibilitychange', this.onReset);
+    }
+  }
+
+  public isHeld(code: string): boolean {
+    return this.heldCodes.has(code);
+  }
+
+  /**
+   * Returns true once per keydown press (ideal for toggle keys like Camera `KeyC`, Diff-Lock `KeyE`, Lights `KeyL`, Reset `KeyR`).
+   */
+  public consumePress(code: string): boolean {
+    if (this.justPressedCodes.has(code)) {
+      this.justPressedCodes.delete(code);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Reads standard WASD + Arrow key axes into `out` (`x`: -1 left .. +1 right, `y`: -1 down/brake .. +1 up/throttle).
+   */
+  public readAxes(out: { x: number; y: number }): { x: number; y: number } {
+    let x = 0;
+    let y = 0;
+    if (this.heldCodes.has('KeyA') || this.heldCodes.has('ArrowLeft')) x -= 1;
+    if (this.heldCodes.has('KeyD') || this.heldCodes.has('ArrowRight')) x += 1;
+    if (this.heldCodes.has('KeyS') || this.heldCodes.has('ArrowDown')) y -= 1;
+    if (this.heldCodes.has('KeyW') || this.heldCodes.has('ArrowUp')) y += 1;
+    out.x = x;
+    out.y = y;
+    return out;
+  }
+
+  public clear(): void {
+    this.onReset();
+  }
+
+  public dispose(): void {
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.onKeyDown);
+      window.removeEventListener('keyup', this.onKeyUp);
+      window.removeEventListener('blur', this.onReset);
+      document.removeEventListener('visibilitychange', this.onReset);
+    }
   }
 }
