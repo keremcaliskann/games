@@ -1,0 +1,27 @@
+# ARCADE 3D // HTML5 WebGL Game Portal — SEO & GEO Crawler Policy
+User-agent: *
+Allow: /
+
+# AI Answer Engine & LLM Discovery Crawlers (GEO Enabled)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: https://keremcaliskann.github.io/games/sitemap.xml

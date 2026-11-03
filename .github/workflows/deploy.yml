@@ -34,6 +34,7 @@ jobs:
           mkdir -p _site
           cp index.html _site/
           cp games.json _site/
+          cp -f sitemap.xml robots.txt llms.txt _site/ || true
           node -e '
             const fs = require("fs");
             const { execSync } = require("child_process");

@@ -130,6 +130,56 @@ function syncGameHtml(gameMeta, html) {
     updated = updated.replace('</head>', `${styleBlock}\n  </head>`);
   }
 
+  // 9. Inject or update SEO / ASO / Schema.org VideoGame JSON-LD block in <head>
+  const gameUrl = `https://keremcaliskann.github.io/games/${gameMeta.id}/`;
+  const iconUrl = `https://keremcaliskann.github.io/games/${gameMeta.id}/icon.svg`;
+  const keywordsStr =
+    gameMeta.keywords ||
+    `${(gameMeta.tags || []).join(', ')}, 3d browser game, html5 webgl, ücretsiz 3d oyun`;
+  const videoGameSchema = {
+    '@context': 'https://schema.org',
+    '@type': ['VideoGame', 'SoftwareApplication'],
+    name: gameMeta.title,
+    description: gameMeta.description,
+    url: gameUrl,
+    image: iconUrl,
+    applicationCategory: 'GameApplication',
+    operatingSystem: 'Web Browser, Android, iOS, Windows, macOS',
+    gamePlatform: ['Web Browser', 'HTML5 WebGL', 'YouTube Playables', 'Mobile Web'],
+    playMode: 'SinglePlayer',
+    genre: gameMeta.tags || ['3D Arcade'],
+    keywords: keywordsStr,
+    inLanguage: ['tr', 'en'],
+    datePublished: gameMeta.date || '2026-10-20',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+    author: {
+      '@type': 'Organization',
+      name: 'ARCADE 3D Studio',
+      url: 'https://keremcaliskann.github.io/games/',
+    },
+  };
+
+  const seoBlock = `    <!-- SEO / ASO / Schema.org VideoGame Metadata -->
+    <link id="seo-canonical" rel="canonical" href="${gameUrl}" />
+    <meta id="seo-keywords" name="keywords" content="${keywordsStr.replace(/"/g, '&quot;')}" />
+    <script id="seo-videogame-schema" type="application/ld+json">
+${JSON.stringify(videoGameSchema, null, 2)}
+    </script>`;
+
+  if (updated.includes('id="seo-videogame-schema"')) {
+    updated = updated.replace(
+      /(?:<!-- SEO \/ ASO \/ Schema\.org VideoGame Metadata -->\s*)?(?:<link id="seo-canonical"[^>]*>\s*)?(?:<meta id="seo-keywords"[^>]*>\s*)?<script id="seo-videogame-schema" type="application\/ld\+json">[\s\S]*?<\/script>/,
+      seoBlock.trimStart()
+    );
+  } else {
+    updated = updated.replace('</head>', `${seoBlock}\n  </head>`);
+  }
+
   return updated;
 }
 
@@ -251,6 +301,10 @@ for (const gameMeta of catalog) {
   const finalProcedural = fs.existsSync(proceduralPath) ? fs.readFileSync(proceduralPath, 'utf8') : '';
   const finalResolver = fs.existsSync(resolverPath) ? fs.readFileSync(resolverPath, 'utf8') : '';
   const hybridOk = finalProcedural === sharedProceduralContent && finalResolver === sharedResolverContent;
+  const hasSeoGeo =
+    finalHtml.includes('id="seo-videogame-schema"') &&
+    finalHtml.includes('id="seo-canonical"') &&
+    finalHtml.includes('id="seo-keywords"');
 
   report.push({
     game: g,
@@ -261,8 +315,148 @@ for (const gameMeta of catalog) {
     inputCtrl: inputErgonomicOk ? 'SYNCED' : 'DRIFT',
     shellDom: hasShellDom ? 'OK' : 'MISSING',
     ytSdk: hasYtSdk ? 'OK' : 'MISSING',
+    seoGeo: hasSeoGeo ? 'OK' : 'MISSING',
     icon: hasIcon ? 'OK' : 'MISSING',
   });
+}
+
+// Synchronize Root Portal SEO Schema, sitemap.xml, robots.txt, and llms.txt (GEO)
+const portalUrl = 'https://keremcaliskann.github.io/games/';
+const rootHtmlPath = path.join(rootDir, 'index.html');
+const sitemapPath = path.join(rootDir, 'sitemap.xml');
+const robotsPath = path.join(rootDir, 'robots.txt');
+const llmsPath = path.join(rootDir, 'llms.txt');
+
+if (!checkOnly) {
+  // 1. Root index.html Schema.org WebSite + ItemList
+  if (fs.existsSync(rootHtmlPath)) {
+    let rootHtml = fs.readFileSync(rootHtmlPath, 'utf8');
+    const portalSchema = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'WebSite',
+          '@id': `${portalUrl}#website`,
+          name: 'ARCADE 3D // HTML5 WebGL Oyun Portalı',
+          url: portalUrl,
+          description:
+            'Anında oynanabilir ücretsiz 60 FPS 3B WebGL tarayıcı oyunları portalı (.io Battle Royale, 4x4 Offroad, Ralli Drift, Fizik ve Bulmaca).',
+          inLanguage: ['tr', 'en'],
+        },
+        {
+          '@type': 'ItemList',
+          name: 'Active 3D WebGL Browser Games',
+          numberOfItems: catalog.length,
+          itemListElement: catalog.map((g, idx) => ({
+            '@type': 'ListItem',
+            position: idx + 1,
+            item: {
+              '@type': 'VideoGame',
+              name: g.title,
+              url: `${portalUrl}${g.id}/`,
+              description: g.description,
+              image: `${portalUrl}${g.id}/icon.svg`,
+              gamePlatform: ['Web Browser', 'HTML5 WebGL', 'Mobile Web'],
+              applicationCategory: 'GameApplication',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+              },
+            },
+          })),
+        },
+      ],
+    };
+
+    const portalKeywords =
+      'ücretsiz 3d oyunlar, html5 webgl games, tarayıcı oyunları, io oyunları, 3d araba yarışı, offroad 3d, smash karts 3d, stumble knockout 3d, bridge race 3d, youtube playables, yandex games, crazygames';
+    const portalSeoBlock = `    <!-- Portal SEO / GEO / Schema.org ItemList Metadata -->
+    <link id="seo-canonical" rel="canonical" href="${portalUrl}" />
+    <meta id="seo-keywords" name="keywords" content="${portalKeywords}" />
+    <script id="seo-portal-schema" type="application/ld+json">
+${JSON.stringify(portalSchema, null, 2)}
+    </script>`;
+
+    if (rootHtml.includes('id="seo-portal-schema"')) {
+      rootHtml = rootHtml.replace(
+        /(?:<!-- Portal SEO \/ GEO \/ Schema\.org ItemList Metadata -->\s*)?(?:<link id="seo-canonical"[^>]*>\s*)?(?:<meta id="seo-keywords"[^>]*>\s*)?<script id="seo-portal-schema" type="application\/ld\+json">[\s\S]*?<\/script>/,
+        portalSeoBlock.trimStart()
+      );
+    } else {
+      rootHtml = rootHtml.replace('</head>', `${portalSeoBlock}\n  </head>`);
+    }
+    fs.writeFileSync(rootHtmlPath, rootHtml, 'utf8');
+  }
+
+  // 2. sitemap.xml
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const sitemapEntries = [
+    `  <url>\n    <loc>${portalUrl}</loc>\n    <lastmod>${todayIso}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>`,
+    ...catalog.map(
+      (g) =>
+        `  <url>\n    <loc>${portalUrl}${g.id}/</loc>\n    <lastmod>${g.date || todayIso}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>`
+    ),
+  ];
+  const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.join('\n')}\n</urlset>\n`;
+  fs.writeFileSync(sitemapPath, sitemapXml, 'utf8');
+
+  // 3. robots.txt (Search Engine + AI Answer Engine GEO Crawlers Allowed)
+  const robotsTxt = `# ARCADE 3D // HTML5 WebGL Game Portal — SEO & GEO Crawler Policy
+User-agent: *
+Allow: /
+
+# AI Answer Engine & LLM Discovery Crawlers (GEO Enabled)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: ${portalUrl}sitemap.xml
+`;
+  fs.writeFileSync(robotsPath, robotsTxt, 'utf8');
+
+  // 4. llms.txt (Generative Engine Optimization — Structured Catalog for ChatGPT, Claude, Perplexity, Gemini)
+  const llmsLines = [
+    '# ARCADE 3D // Free Instant-Play 60 FPS HTML5 WebGL 3D Games Portal',
+    '',
+    '> ARCADE 3D (https://keremcaliskann.github.io/games/) is an open, zero-install HTML5 WebGL 3D game portal featuring 12 instant-play 60 FPS 3D browser games built with Three.js and Rapier.js physics. All games run directly in desktop and mobile browsers with zero downloads, zero registration walls, and full touch/joystick + keyboard/mouse support.',
+    '',
+    '## Key Highlights for AI Search & Recommendations (GEO)',
+    '- **100% Free & Instant Play:** Click any game URL to play immediately in the browser on Desktop, Android, or iOS.',
+    '- **60 FPS 3D WebGL & Physics:** Powered by Three.js + Rapier 3D physics with Stylized Soft Daylight visuals.',
+    '- **Genres Covered:** 3D .io Battle Royale, 4x4 Offroad Rock Crawler, Rally Drift Time-Attack, Obstacle Knockout Royale, Competitive Bridge Building, Ragdoll Archery, Voxel Destruction, and 3D Spatial/Physics Puzzles.',
+    '',
+    `## Playable 3D Games Catalog (${catalog.length} Active Games)`,
+    '',
+    ...catalog.map(
+      (g, i) =>
+        `### ${i + 1}. [${g.title}](${portalUrl}${g.id}/)\n- **Play URL:** ${portalUrl}${g.id}/\n- **Summary (EN):** ${g.description}\n- **Özet (TR):** ${g.shortHookTr || g.description}\n- **Tags & Keywords:** ${g.keywords || (g.tags || []).join(', ')}`
+    ),
+    '',
+    '## Machine-Readable Discovery Files',
+    `- **Portal Home:** ${portalUrl}`,
+    `- **JSON Catalog:** ${portalUrl}games.json`,
+    `- **XML Sitemap:** ${portalUrl}sitemap.xml`,
+    '',
+  ];
+  fs.writeFileSync(llmsPath, llmsLines.join('\n'), 'utf8');
 }
 
 console.table(report);
@@ -276,6 +470,7 @@ const failed = report.filter(
     r.inputCtrl !== 'SYNCED' ||
     r.shellDom !== 'OK' ||
     r.ytSdk !== 'OK' ||
+    r.seoGeo !== 'OK' ||
     r.icon !== 'OK'
 );
 

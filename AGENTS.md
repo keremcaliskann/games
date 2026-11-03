@@ -103,7 +103,7 @@ A task is complete only when:
 | `rules/60-mobile-capacitor.md` | model_decision | Mobile, Capacitor, WebView, safe area |
 | `rules/62-youtube-playables.md` | model_decision | YouTube Playables SDK (`ytgame`), universal portal bridge, CSP/bundle budget, hot-swap 3D assets |
 | `rules/65-monetization-ads.md` | model_decision | YouTube Playables & Multi-Portal `UniversalAdProvider` + 3 mandatory rewarded ad revenue hooks |
-| `rules/68-pwa-and-meta.md` | model_decision | PWA manifest, offline worker, OpenGraph meta |
+| `rules/68-pwa-and-meta.md` | model_decision | PWA manifest, Technical SEO (`VideoGame` JSON-LD, `sitemap.xml`), Store ASO (`games.json` keywords), and GEO (`llms.txt`, `robots.txt`) |
 | `rules/70-token-context.md` | model_decision | Large file reads, token economy |
 | `rules/80-dependencies-and-git.md` | model_decision | Package additions, Git repos, commit & push |
 | `rules/90-release-checklist.md` | manual | Triggered exclusively via `@90-release-checklist` |
@@ -127,4 +127,5 @@ A task is complete only when:
 | `skills/portal` | slash_command | `/portal` — Synchronize central Arcade Portal catalog and games.json |
 | `skills/tasks` | slash_command | `/tasks` — Display all studio task lists (studio-todo, ideas-backlog) with zero fluff |
 | `skills/inspect` | slash_command | `/inspect <oyun-adı>` (or `/inpect <oyun-adı>`) — Deeply inspects a single game for bugs, logic flaws, and visual upgrades, presents a categorized "Yapılması Gerekenler" list, and adds to `backlog/studio-todo.json` upon user approval |
+| `skills/seo` | slash_command | `/seo` — Audits and synchronizes Technical SEO (`Schema.org/VideoGame` JSON-LD, `sitemap.xml`), Portal Store ASO (`keywords`, `shortHookTr`), and AI Search GEO (`llms.txt`, `robots.txt`) across all active games |
 | `skills/deploy` | slash_command | `/deploy` — Verify, commit, and push live to GitHub Pages |

@@ -18,6 +18,7 @@ Maintains and updates the master game catalog at the workspace root (`c:\Users\k
    - Valid `public/icon.svg`.
    - Production `dist/` build.
    - Working relative link (`./<game-name>/dist/index.html` or `./<game-name>/`).
-3. Update `games.json` with the latest metadata, tags, and thumbnails.
-4. Regenerate or update the responsive 3-column card grid in root `index.html`.
-5. Deliver a summary showing all catalogued games.
+3. Update `games.json` with the latest metadata, bilingual ASO `keywords`, `shortHookTr`, tags, and thumbnails.
+4. Run `node scripts/sync-shared-core.mjs` to synchronize `Schema.org/VideoGame` JSON-LD, root `sitemap.xml`, `robots.txt`, and `llms.txt` (GEO).
+5. Regenerate or update the responsive Yandex-style visual card grid in root `index.html`.
+6. Deliver a concise summary showing all catalogued active games.
