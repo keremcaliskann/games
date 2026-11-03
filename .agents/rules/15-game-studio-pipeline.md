@@ -12,8 +12,8 @@ To protect daytime working quota (`10:00–18:00`) while preventing context bloa
 ```
 +-----------------------------------------------------------------------------------------+
 | AUTOMATION 1: TREND & GENRE SCOUT (Producer A — Every 3 Days at 18:00)                  |
-| - Spawns parallel read-only `research` subagents (Model: "flash") across the 5          |
-|   Large-Scale 3D Fake-Multiplayer (.io & Royale) sub-genres in `scout-directives.json`  |
+| - Lead Orchestrator (Argon High) spawns parallel `research` subagents (Argon Medium,    |
+|   `Model: "inherit"`) across the 5 Large-Scale 3D Fake-Multiplayer (.io) sub-genres     |
 | - Adds 3–4 mutually distinct game blueprints & re-ranks `backlog/ideas-backlog.json`    |
 | - Outputs a concise <= 6-line Turkish summary + updates `backlog/LATEST_TREND_REPORT.md`|
 +-----------------------------------------------------------------------------------------+
@@ -22,8 +22,8 @@ To protect daytime working quota (`10:00–18:00`) while preventing context bloa
 +-----------------------------------------------------------------------------------------+
 | AUTOMATION 2: GAME DIRECTOR QA ARCHITECT (Producer B — Every 2 Days at 19:00)           |
 | - Shifted to 19:00 to guarantee zero Git push collision with 18:00 Producer A           |
-| - Spawns parallel `research` subagents (Model: "flash") auditing active games in        |
-|   3–4 game batches (Rule compliance, hot-path allocations, Soft Daylight, mechanics)    |
+| - Lead QA Architect (Argon High) spawns parallel `research` subagents (Argon Medium,    |
+|   `Model: "inherit"`) auditing active games in 3–4 game batches                         |
 | - STRICT PRODUCER ROLE: ZERO direct game code edits; ONLY queues P0/P1/P2 tickets into  |
 |   `backlog/studio-todo.json` and outputs a concise Turkish summary + active task table  |
 +-----------------------------------------------------------------------------------------+
@@ -31,7 +31,7 @@ To protect daytime working quota (`10:00–18:00`) while preventing context bloa
                                            ▼ (backlog/studio-todo.json + ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
 | AUTOMATION 3: MULTI-AGENT STUDIO EXECUTOR (Consumer — Nightly at 23:00 & 04:00)         |
-| - Load-Balanced Multi-Agent Execution (`12-multi-agent-orchestration.md`):              |
+| - Argon High (Lead/Architect/QA Critic) + Argon Medium (3D Artist & Gameplay Engineer): |
 |   1) Priority 1 (Existing Games Queue): If `backlog/studio-todo.json` has `ready`       |
 |      tasks, dispatches specialist subagents to complete up to 4 tasks (`P0 -> P1 -> P2`)|
 |   2) Priority 2 (Load-Balanced New Game Build): If pending `studio-todo.json` count     |

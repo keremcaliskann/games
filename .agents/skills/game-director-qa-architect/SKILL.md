@@ -1,13 +1,13 @@
 ---
 name: game-director-qa-architect
-description: Inspects all active games in parallel batches as a Senior Game Director & Lead QA Architect using lightweight flash subagents, identifies bugs, mechanical upgrades, and visual polish tasks, prioritizes them in backlog/studio-todo.json, and outputs a concise Turkish post-run report.
+description: Inspects all active games in parallel batches as a Senior Game Director & Lead QA Architect (Argon High Lead + Argon Medium batch subagents), identifies bugs, mechanical upgrades, and visual polish tasks, prioritizes them in backlog/studio-todo.json, and outputs a concise Turkish post-run report.
 metadata:
   icon: verified
 ---
 
 # Game Director QA & To-Do Architect (`game-director-qa-architect`)
 
-This skill operates **Producer B** of the autonomous multi-agent studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). Rather than reading 12+ games sequentially in one context window, the Lead QA Architect dispatches **parallel `research` subagents (`Model: "flash"`)** across 3–4 game batches, aggregates their findings, and queues prioritized `P0 / P1 / P2` tickets into **`backlog/studio-todo.json`**.
+This skill operates **Producer B** of the autonomous multi-agent studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). Rather than reading 12+ games sequentially in one context window, the **Argon High** Lead QA Architect dispatches **parallel `research` subagents on Argon Medium (`Model: "inherit"`)** across 3–4 game batches, aggregates their findings, and queues prioritized `P0 / P1 / P2` tickets into **`backlog/studio-todo.json`**.
 
 > **STRICT PRODUCER ROLE (QUEUE ONLY — ZERO DIRECT CODE EDITS):** The QA Architect's sole purpose is to inspect, audit, critique, and add prioritized `P0 / P1 / P2` tasks to `backlog/studio-todo.json`. It **DOES NOT write or modify game code directly**. All coding and implementation work is reserved strictly for the Consumer (`/studio`).
 
@@ -42,9 +42,9 @@ This skill operates **Producer B** of the autonomous multi-agent studio pipeline
 ### Step 2: Run Shared Core Sync & Build Health
 1. Run `node scripts/sync-shared-core.mjs` to ensure universal UI/Ads/Render/Input synchronization.
 
-### Step 3: Dispatch Parallel Batch Inspector Subagents (`invoke_subagent`)
+### Step 3: Dispatch Parallel Batch Inspector Subagents (`invoke_subagent` on Argon Medium)
 1. Partition active games into batches of 3–4 games.
-2. Launch parallel `research` subagents (`Model: "flash"`) — one per batch.
+2. Launch parallel `research` subagents on **Argon Medium** (`Model: "inherit"`, never `flash`) — one per batch.
 3. Instruct each subagent to inspect its assigned games across the 5 pillars and return concrete, file-level ticket objects (`id`, `gameId`, `priority`, `score`, `type`, `title`, `description`, `targetFiles`).
 
 ### Step 4: Aggregate, Re-Rank & Push `backlog/studio-todo.json`

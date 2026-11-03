@@ -2,7 +2,7 @@
 name: inspect
 description: >-
   Deeply inspects a single specified game (/inspect <game-name> or /inpect <game-name>)
-  using 2 parallel specialist flash subagents (Mechanics/AI Inspector + Visual/3D Art Inspector),
+  using 2 parallel specialist Argon Medium subagents (Mechanics/AI Inspector + Visual/3D Art Inspector),
   presents a categorized "Yapılması Gerekenler" checklist in Turkish, and waits for user
   approval before adding approved items to backlog/studio-todo.json.
 ---
@@ -23,8 +23,8 @@ Performs a surgical, dual-agent technical and design inspection of a single targ
    - Match `<oyun-adı>` against active game directories in workspace root and `games.json` (fuzzy match supported, e.g., `hole-city` → `hole-city-io-3d`).
    - Run `npm --prefix <game-dir> run typecheck` to capture any TypeScript diagnostics.
 
-2. **Dispatch 2 Parallel `research` Subagents (`Model: "flash"`):**
-   Invoke two focused read-only subagents concurrently via `invoke_subagent`:
+2. **Dispatch 2 Parallel `research` Subagents on Argon Medium (`Model: "inherit"`):**
+   Invoke two focused read-only subagents concurrently via `invoke_subagent` (`Model: "inherit"`, never `flash`):
    - **Subagent 1 — `Mechanics, AI & Performance Inspector` (`src/game/**`, `src/input/**`, `src/core/**`, `src/main.ts`):**
      - **Hatalar & Buglar (`P0`):** Spawn-death race conditions, missing spawn invulnerability, stuck stage transitions, AI bot corner/target deadlocks, camera-relative input inversion, missing `!shell.isMenuOpen` lock, state transition double-triggers, or uncleaned explosion meshes/timers.
      - **Oynanış & Gelişim Hissiyatı (`P1`):** Speed/acceleration balance, tier/level-up progression feel, multi-map/biome variety, difficulty scaling (`Kolay / Normal / Zor`), and hot-path heap allocations (`new THREE.Vector3`, `.map()`, `.filter()` inside `update`).

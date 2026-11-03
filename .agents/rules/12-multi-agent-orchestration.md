@@ -21,10 +21,10 @@ All multi-step studio workflows (`/studio`, `/audit`, `/inspect`, `/trend`, and 
 3. **ChatDev Pattern (Dual-Agent Phase Gates & Adversarial De-Hallucination):**
    - A Builder subagent is **never allowed to sign off on its own build**.
    - An independent `studio-qa-critic` subagent runs `node scripts/sync-shared-core.mjs`, `npm run typecheck`, and `npm run build`, audits hot paths and rule compliance, and enforces a binary Pass/Fix gate.
-4. **CrewAI Pattern (Role Specialization & Quota-Safe Model Tiering):**
-   - **Lead Orchestrator (Main Agent):** Reads queues, defines/dispatches subagents, verifies phase gates, updates root portal (`games.json`, `index.html`), and runs `git commit` / `git push`.
-   - **Read-Only Scouts & Auditors (`research` subagent, `Model: "flash"`):** Used for parallel market scouting (`/trend`), multi-game batch auditing (`/audit`), and dual-lens game inspection (`/inspect`). Conserves quota and prevents 429 rate limits.
-   - **Write-Enabled Studio Builders (`define_subagent`, `Model: "inherit"` or `"flash"`):** Used for isolated code generation shards.
+4. **CrewAI Pattern (Role Specialization & Argon High/Medium Model Hierarchy):**
+   - **Zero Flash Policy:** Never spawn subagents with `Model: "flash"` or `"flash_lite"`.
+   - **Manager & Critical Tier (Argon High — `Model: "pro"`):** Reserved for the **Lead Orchestrator**, **Systems & Math Architect (`studio-architect`)**, **Adversarial QA Critic (`studio-qa-critic`)**, and critical `P0` root-cause debugging.
+   - **Specialist Worker Tier (Argon Medium — `Model: "inherit"`):** Used for domain builders (`studio-3d-artist`, `studio-gameplay-engineer`), parallel batch QA auditors (`/audit`, `game-director-qa-architect`), dual-lens game inspectors (`/inspect`), and market trend scouts (`/trend`).
 
 ---
 
@@ -32,12 +32,12 @@ All multi-step studio workflows (`/studio`, `/audit`, `/inspect`, `/trend`, and 
 
 When building a new game or executing major upgrades in `/studio`, the Lead Orchestrator defines and invokes four specialized subagents:
 
-| Subagent Name | Role & Responsibility | Write Access | Owned Files / Deliverables |
-|---|---|---|---|
-| **`studio-architect`** | Systems & Math Architect: Translates backlog blueprint into deterministic level/AI math and exact TypeScript module contracts. | `EnableWriteTools: true` | `<game>/DESIGN.md`, `<game>/SPEC.json`, `<game>/package.json`, `<game>/tsconfig.json`, `<game>/vite.config.ts`, `<game>/.gitignore`, `<game>/public/manifest.json` |
-| **`studio-3d-artist`** | 3D Technical Artist: Implements Stylized Soft Daylight lighting, camera rig, particle effects, and hybrid/compound procedural 3D prefabs matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/src/render/lighting.ts`, `<game>/src/render/camera-rig.ts`, `<game>/src/render/effects.ts`, `<game>/src/render/PrefabFactory.ts`, `<game>/public/icon.svg`, `<game>/ASSETS_NEEDED.md` |
-| **`studio-gameplay-engineer`** | Gameplay, Physics & UI Engineer: Implements 12–20 named AI bots, multi-stage progression, Garage/Upgrade shop, Web Audio, HUD, and 3 Rewarded Ad hooks matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/index.html`, `<game>/src/platform/sdk.ts`, `<game>/src/core/audio.ts`, `<game>/src/input/input-manager.ts`, `<game>/src/game/**`, `<game>/src/ui/hud.ts`, `<game>/src/main.ts` |
-| **`studio-qa-critic`** | Adversarial QA Critic: Runs `sync-shared-core.mjs`, `npm install`, `typecheck`, `build`, and 4-Filter Game Director inspection; patches any compiler/rule defects. | `EnableWriteTools: true` | `<game>/CRITIQUE.md` + surgical defect fixes if `typecheck` or 4-Filter audit fails |
+| Subagent Name | Model Tier | Role & Responsibility | Write Access | Owned Files / Deliverables |
+|---|---|---|---|---|
+| **`studio-architect`** | **Argon High** (`Model: "pro"`) | Systems & Math Architect: Translates backlog blueprint into deterministic level/AI math and exact TypeScript module contracts. | `EnableWriteTools: true` | `<game>/DESIGN.md`, `<game>/SPEC.json`, `<game>/package.json`, `<game>/tsconfig.json`, `<game>/vite.config.ts`, `<game>/.gitignore`, `<game>/public/manifest.json` |
+| **`studio-3d-artist`** | **Argon Medium** (`Model: "inherit"`) | 3D Technical Artist: Implements Stylized Soft Daylight lighting, camera rig, particle effects, and hybrid/compound procedural 3D prefabs matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/src/render/lighting.ts`, `<game>/src/render/camera-rig.ts`, `<game>/src/render/effects.ts`, `<game>/src/render/PrefabFactory.ts`, `<game>/public/icon.svg`, `<game>/ASSETS_NEEDED.md` |
+| **`studio-gameplay-engineer`** | **Argon Medium** (`Model: "inherit"`) | Gameplay, Physics & UI Engineer: Implements 12–20 named AI bots, multi-stage progression, Garage/Upgrade shop, Web Audio, HUD, and 3 Rewarded Ad hooks matching `SPEC.json`. | `EnableWriteTools: true` | `<game>/index.html`, `<game>/src/platform/sdk.ts`, `<game>/src/core/audio.ts`, `<game>/src/input/input-manager.ts`, `<game>/src/game/**`, `<game>/src/ui/hud.ts`, `<game>/src/main.ts` |
+| **`studio-qa-critic`** | **Argon High** (`Model: "pro"`) | Adversarial QA Critic: Runs `sync-shared-core.mjs`, `npm install`, `typecheck`, `build`, and 4-Filter Game Director inspection; patches any compiler/rule defects. | `EnableWriteTools: true` | `<game>/CRITIQUE.md` + surgical defect fixes if `typecheck` or 4-Filter audit fails |
 
 > **Parallel Execution Rule:** Once `studio-architect` completes `<game>/SPEC.json` and project config scaffolding, `studio-3d-artist` and `studio-gameplay-engineer` have **100% disjoint file ownership** and may be invoked **in parallel**!
 
@@ -100,16 +100,16 @@ When building a new game or executing major upgrades in `/studio`, the Lead Orch
 
 ---
 
-## 4. Parallel Subagent Dispatch Rules for `/audit`, `/inspect`, and `/trend`
+## 4. Parallel Subagent Dispatch Rules for `/audit`, `/inspect`, and `/trend` (Argon Medium + Argon High Lead)
 
 1. **`/audit` & `game-director-qa-architect` (Batch Parallel QA):**
    - Partition active games (`active !== false` in `games.json`) into batches of 3–4 games.
-   - Launch parallel `research` subagents (`Model: "flash"`) — one per batch — to inspect rule compliance, hot-path allocations, gameplay bugs, and visual quality.
-   - The Lead Orchestrator aggregates their findings, deduplicates and ranks `P0 > P1 > P2` tickets, and writes `backlog/studio-todo.json`.
+   - Launch parallel `research` subagents on **Argon Medium** (`Model: "inherit"`) — one per batch — to inspect rule compliance, hot-path allocations, gameplay bugs, and visual quality.
+   - The **Argon High** Lead Orchestrator aggregates their findings, deduplicates and ranks `P0 > P1 > P2` tickets, and writes `backlog/studio-todo.json`.
 2. **`/inspect <game-name>` (Dual-Lens Deep Inspection):**
-   - Spawn 2 parallel `research` subagents (`Model: "flash"`):
+   - Spawn 2 parallel `research` subagents on **Argon Medium** (`Model: "inherit"`):
      - **Subagent A (`Mechanics & AI Inspector`):** Audits `src/game/`, `src/input/`, `src/main.ts` for P0 bugs (spawn death, AI stuck loops, state latches) and P1 gameplay/progression depth.
      - **Subagent B (`Visual & 3D Art Inspector`):** Audits `src/render/`, `src/ui/`, `index.html` for Soft Daylight compliance, color contrast, `ProceduralMeshBuilder` prefab quality, and HUD ergonomics.
    - The Lead Orchestrator synthesizes both reports into the Turkish **"Yapılması Gerekenler Listesi"** and awaits user approval.
 3. **`/trend` & `yt-playable-trend-scout` (Parallel Genre Scouting):**
-   - Spawn 2–3 parallel `research` subagents (`Model: "flash"`) across the priority `.io` sub-genres in `backlog/scout-directives.json`, then aggregate, score on the 100-point Revenue Matrix, and update `backlog/ideas-backlog.json`.
+   - Spawn 2–3 parallel `research` subagents on **Argon Medium** (`Model: "inherit"`) across the priority `.io` sub-genres in `backlog/scout-directives.json`, then the **Argon High** Lead Orchestrator scores candidates on the 100-point Revenue Matrix and updates `backlog/ideas-backlog.json`.

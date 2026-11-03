@@ -1,14 +1,14 @@
 ---
 name: audit
 description: >-
-  Runs parallel multi-agent QA inspection (Model: flash), static analysis, TypeScript type
-  checking, production bundle builds, and defensive gameplay/performance checks across all
-  active HTML5 3D games. Use when the user types /audit or asks for a codebase quality inspection.
+  Runs parallel multi-agent QA inspection (Argon Medium subagents + Argon High lead),
+  static analysis, TypeScript type checking, production bundle builds, and defensive
+  gameplay/performance checks across all active HTML5 3D games. Use when the user types /audit.
 ---
 
 # /audit — Multi-Agent Workspace Quality & Gameplay Audit (Batch Parallel Inspector)
 
-Conducts an automated health check, rule verification, performance inspection, and design critique across all **active** games (`active !== false`) registered in root `games.json` using **parallel `research` subagents (`Model: "flash"`)**.
+Conducts an automated health check, rule verification, performance inspection, and design critique across all **active** games (`active !== false`) registered in root `games.json` using **parallel `research` subagents on Argon Medium (`Model: "inherit"`)** coordinated by the **Argon High** Lead Orchestrator.
 
 > **PASSIVE GAMES EXCLUSION:** Strictly ignore any game marked `"active": false` in `games.json`. Do not read, typecheck, build, sync, or queue tasks for passive games.
 > **STRICT AUDIT POLICY (QUEUE ONLY):** The audit pass is strictly an inspector and producer. It **DOES NOT modify game code directly**. All identified bugs, performance optimizations, visual juice, and mechanical depth upgrades must **ONLY be logged into `backlog/studio-todo.json`** for the Studio Executor (`/studio`) to implement.
@@ -19,9 +19,9 @@ Conducts an automated health check, rule verification, performance inspection, a
    - Run `node scripts/sync-shared-core.mjs` to verify synchronization of `shared/platform/ads.ts`, `shared/ui/shell-controller.ts`, `shared/ui/arcade-shell.css`, `shared/render/`, and `shared/input/`.
    - Run `npm --prefix <game-id> run typecheck --silent` across active games to verify compilation health.
 
-2. **Parallel Batch Subagent Dispatch (`invoke_subagent` with `TypeName: "research"`, `Model: "flash"`):**
+2. **Parallel Batch Subagent Dispatch (`invoke_subagent` with `TypeName: "research"`, `Model: "inherit"` — Argon Medium):**
    - Partition all active games (`active !== false` in `games.json`) into **batches of 3–4 games**.
-   - Spawn one `research` subagent (`Model: "flash"`) per batch in parallel. Each subagent inspects its assigned games across 4 pillars:
+   - Spawn one `research` subagent (`Model: "inherit"`, Argon Medium — never `flash`) per batch in parallel. Each subagent inspects its assigned games across 4 pillars:
      1. **P0 Bugs & Defensive Hardening (`25-defensive-gameplay-and-hardening.md`):** Spawn-death race conditions, AI bot stuck loops, missing `!shell.isMenuOpen` start-menu locks, missing `data-hud-interactive="true"`, camera-relative input inversion.
      2. **P1 Mechanics & Hot-Path Performance (`20-performance-budget.md`):** Progression pacing, map/biome variety, and per-frame heap allocations (`new THREE.Vector3`, `.map()`, `.filter()`, closures inside `update`/`render`).
      3. **P2 Soft Daylight & 3D Prefab Polish (`32-daylight-and-lighting.md`):** Overexposure (`toneMappingExposure > 0.92`, `environmentIntensity > 0.35`), dark voids, primitive box placeholders vs `ProceduralMeshBuilder` compound prefabs.

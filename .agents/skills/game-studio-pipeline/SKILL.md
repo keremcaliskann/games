@@ -31,15 +31,15 @@ This skill orchestrates the **Multi-Agent Consumer (Studio Executor)** of the de
 Define the 4 specialist subagents via `define_subagent` (`EnableWriteTools: true`) and execute them across 3 deterministic gates:
 
 ### Gate 1: `studio-architect` Subagent (`DESIGN.md` + `SPEC.json` + Project Configs)
-Invoke `studio-architect` (`Model: "inherit"`) to create `<game-name>/` and write:
+Invoke `studio-architect` on **Argon High** (`Model: "pro"`) to create `<game-name>/` and write:
 1. **`<game-name>/DESIGN.md`:** Core loop, 2-second hook, deterministic level/bot AI math, 360° camera spec, and 3 mandatory Rewarded Ad hooks.
 2. **`<game-name>/SPEC.json` (MetaGPT SOP Contract):**
    - Exact `PrefabFactory` method signatures (`name`, `params`, `returns`, child hierarchy notes).
    - Palette hex constants, camera FOV/offset bounds, 12–20 AI bot parameters, 3+ biome definitions, 6+ Garage skins, 3 stat upgrades, and 3 Rewarded Ad hook IDs.
 3. **Config Scaffolding:** `<game-name>/package.json`, `tsconfig.json`, `vite.config.ts` (`base: './'`), `.gitignore`, and `public/manifest.json`.
 
-### Gate 2: Parallel Domain Shards (`studio-3d-artist` + `studio-gameplay-engineer`)
-Once `<game-name>/SPEC.json` is written, invoke **`studio-3d-artist`** and **`studio-gameplay-engineer` in parallel** (strictly disjoint file ownership):
+### Gate 2: Parallel Domain Shards (`studio-3d-artist` + `studio-gameplay-engineer` on Argon Medium)
+Once `<game-name>/SPEC.json` is written, invoke **`studio-3d-artist`** and **`studio-gameplay-engineer` in parallel** on **Argon Medium** (`Model: "inherit"`, strictly disjoint file ownership):
 
 #### Shard 2A — `studio-3d-artist` Subagent
 Reads `<game-name>/SPEC.json`, `30-three-render.md`, and `32-daylight-and-lighting.md`. Exclusively writes:
@@ -58,8 +58,8 @@ Reads `<game-name>/SPEC.json`, `25-defensive-gameplay-and-hardening.md`, `55-arc
 - `src/game/**`: Entity controllers, 12–20 named AI bot competitors with unstuck recovery, 3+ biomes/stages, and Garage/Upgrade system.
 - `src/ui/hud.ts` and `src/main.ts`: Wires `initArcadeShell` with Universal Start Menu lock (`!shell.isMenuOpen`), difficulty scaling (`Kolay / Normal / Zor`), and all 3 mandatory Rewarded Ad hooks.
 
-### Gate 3: `studio-qa-critic` Subagent (ChatDev Adversarial Verification Gate)
-After both Shard 2A and Shard 2B complete, invoke `studio-qa-critic`:
+### Gate 3: `studio-qa-critic` Subagent (ChatDev Adversarial Verification Gate on Argon High)
+After both Shard 2A and Shard 2B complete, invoke `studio-qa-critic` on **Argon High** (`Model: "pro"`):
 1. Register `<game-name>` in root `games.json`, `index.html`, and `shared/ui/shell-controller.ts` (`GAME_THEMES`), then run `node scripts/sync-shared-core.mjs`.
 2. Run `npm --prefix <game-name> install --prefer-offline --no-audit --no-fund`, `npm --prefix <game-name> run typecheck`, and `npm --prefix <game-name> run build`.
 3. Audit against all **4 Game Director Filters** (Camera/Input Ergonomics, Soft Daylight & Prefabs, YouTube SDK & 3 Revenue Hooks, Zero Hot-Path Heap Allocations).

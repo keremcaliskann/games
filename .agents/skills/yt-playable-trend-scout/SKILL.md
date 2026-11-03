@@ -1,13 +1,13 @@
 ---
 name: yt-playable-trend-scout
-description: Scans the last 90 days of YouTube Playables and hybrid-casual trends using parallel flash scout subagents, scores ideas on the 100-point Revenue Matrix, re-validates and re-ranks backlog/ideas-backlog.json, and generates both a concise executive summary and a detailed trend report.
+description: Scans the last 90 days of YouTube Playables and hybrid-casual trends using parallel Argon Medium scout subagents and an Argon High Lead Evaluator, scores ideas on the 100-point Revenue Matrix, re-validates and re-ranks backlog/ideas-backlog.json, and generates both a concise executive summary and a detailed trend report.
 metadata:
   icon: trending_up
 ---
 
 # YouTube Playables Multi-Agent Trend & Revenue Scout (`yt-playable-trend-scout`)
 
-This skill operates **Producer A** of the autonomous multi-agent game studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). It reads `backlog/scout-directives.json`, dispatches **parallel `research` subagents (`Model: "flash"`)** to scan the last 90 days of web/mobile hits across diverse 3D Fake-Multiplayer (`.io` & Royale) sub-genres, scores candidates on the 100-point Revenue Matrix, and updates `backlog/ideas-backlog.json` + `backlog/LATEST_TREND_REPORT.md`.
+This skill operates **Producer A** of the autonomous multi-agent game studio pipeline (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). It reads `backlog/scout-directives.json`, dispatches **parallel `research` subagents on Argon Medium (`Model: "inherit"`)** to scan the last 90 days of web/mobile hits across diverse 3D Fake-Multiplayer (`.io` & Royale) sub-genres, scores candidates on the 100-point Revenue Matrix via the **Argon High** Lead Orchestrator, and updates `backlog/ideas-backlog.json` + `backlog/LATEST_TREND_REPORT.md`.
 
 ---
 
@@ -19,8 +19,8 @@ This skill operates **Producer A** of the autonomous multi-agent game studio pip
 2. Read `games.json` at workspace root to identify already released games (never propose duplicate mechanics).
 3. Read `backlog/ideas-backlog.json` to load all existing `ready`, `in_progress`, and `completed` blueprints.
 
-### Step 2: Parallel Subagent 90-Day Market Scan (`invoke_subagent` + `search_web`)
-1. Spawn **2 parallel `research` subagents (`Model: "flash"`)** (or pair with direct `search_web` calls) partitioning the 5 priority `.io` sub-genres from `backlog/scout-directives.json`:
+### Step 2: Parallel Subagent 90-Day Market Scan (`invoke_subagent` on Argon Medium + `search_web`)
+1. Spawn **2 parallel `research` subagents on Argon Medium (`Model: "inherit"`, never `flash`)** partitioning the 5 priority `.io` sub-genres from `backlog/scout-directives.json`:
    - **Scout Subagent A:** Researches `io-party-knockout-royale` (Fall Guys / Stumble Guys 3D obstacle knockout), `io-collect-build-race` (Bridge Race / Shortcut Run 3D competitive build race), and `io-brawl-battle-royale` (Smash Karts / Brawl Stars 3D arena battle royale).
    - **Scout Subagent B:** Researches `io-grow-evolve-arena` (Snake Clash / Snowball.io 3D 10-tier evolution) and `io-turf-mob-conquest` (Paper.io 3D / Crowd City / Mob Control turf & swarm conquest) plus emerging 3D physics/vehicle `.io` hits on YouTube Playables, CrazyGames, Poki, and Yandex Games.
 2. Enforce **Large-Scale Studio Scope** on every candidate:
