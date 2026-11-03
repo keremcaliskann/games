@@ -1,5 +1,26 @@
 [
   {
+    "id": "frontier-horizon-3d",
+    "title": "FRONTIER HORIZON 3D // ALL-TERRAIN SIMULATOR",
+    "description": "Frontier Horizon 3D: Açık Dünya 4x4 & 6x6 Arazi Simülatörü! 3 dev açık dünya biyomunda (Orman, Çöl, Dağ) 7 arazi aracını modifiye et, hedeflere ulaş ve 30 gizli öğeyi keşfet.",
+    "shortHookTr": "4x4 & 6x6 araçlarla devasa açık dünyayı keşfet, görevleri tamamla ve garajını güçlendir!",
+    "keywords": "frontier horizon 3d, 4x4 6x6 offroad simulator, open world driving game, rock crawler 3d, açık dünya arazi oyunu, 3d araba modifiye",
+    "path": "./frontier-horizon-3d/",
+    "tags": [
+      "Open-World Driving",
+      "4x4 & 6x6 Simulator",
+      "All-Terrain Physics",
+      "Exploration",
+      "60 FPS"
+    ],
+    "date": "2026-11-03",
+    "icon": "./frontier-horizon-3d/icon.svg",
+    "iconEmoji": "🚙",
+    "featured": true,
+    "themeColor": "#d97706",
+    "accentGradient": "linear-gradient(135deg, #f59e0b, #d97706)"
+  },
+  {
     "id": "offroad-expedition-3d",
     "title": "OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER",
     "description": "3D 4x4 Rock Crawler & Mud Expedition! Navigate boulder ravines and mud bogs, shoot your hydraulic winch cable onto trees, and deliver cargo to Base Camp.",

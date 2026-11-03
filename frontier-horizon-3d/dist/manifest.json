@@ -1,0 +1,16 @@
+{
+  "name": "FRONTIER HORIZON 3D // ALL-TERRAIN SIMULATOR",
+  "short_name": "FRONTIER HORIZON 3",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#cfe8f7",
+  "theme_color": "#d97706",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

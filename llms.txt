@@ -7,64 +7,69 @@
 - **60 FPS 3D WebGL & Physics:** Powered by Three.js + Rapier 3D physics with Stylized Soft Daylight visuals.
 - **Genres Covered:** 3D .io Battle Royale, 4x4 Offroad Rock Crawler, Rally Drift Time-Attack, Obstacle Knockout Royale, Competitive Bridge Building, Ragdoll Archery, Voxel Destruction, and 3D Spatial/Physics Puzzles.
 
-## Playable 3D Games Catalog (12 Active Games)
+## Playable 3D Games Catalog (13 Active Games)
 
-### 1. [OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER](https://keremcaliskann.github.io/games/offroad-expedition-3d/)
+### 1. [FRONTIER HORIZON 3D // ALL-TERRAIN SIMULATOR](https://keremcaliskann.github.io/games/frontier-horizon-3d/)
+- **Play URL:** https://keremcaliskann.github.io/games/frontier-horizon-3d/
+- **Summary (EN):** Frontier Horizon 3D: Açık Dünya 4x4 & 6x6 Arazi Simülatörü! 3 dev açık dünya biyomunda (Orman, Çöl, Dağ) 7 arazi aracını modifiye et, hedeflere ulaş ve 30 gizli öğeyi keşfet.
+- **Özet (TR):** 4x4 & 6x6 araçlarla devasa açık dünyayı keşfet, görevleri tamamla ve garajını güçlendir!
+- **Tags & Keywords:** frontier horizon 3d, 4x4 6x6 offroad simulator, open world driving game, rock crawler 3d, açık dünya arazi oyunu, 3d araba modifiye
+### 2. [OFFROAD EXPEDITION 3D // 4X4 ROCK CRAWLER](https://keremcaliskann.github.io/games/offroad-expedition-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/offroad-expedition-3d/
 - **Summary (EN):** 3D 4x4 Rock Crawler & Mud Expedition! Navigate boulder ravines and mud bogs, shoot your hydraulic winch cable onto trees, and deliver cargo to Base Camp.
 - **Özet (TR):** 4x4 arazi aracıyla kayalık kanyonları aş, vinç halatıyla çamurdan kurtul ve kargoyu kampa ulaştır!
 - **Tags & Keywords:** offroad 3d, 4x4 rock crawler, mud runner browser game, winch physics game, ücretsiz 3d arazi oyunu, kamyon simülasyonu
-### 2. [RALLY HORIZON 3D // TIME ATTACK & DRIFT](https://keremcaliskann.github.io/games/rally-horizon-3d/)
+### 3. [RALLY HORIZON 3D // TIME ATTACK & DRIFT](https://keremcaliskann.github.io/games/rally-horizon-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/rally-horizon-3d/
 - **Summary (EN):** 3D Sim-Cade Rally & Time-Attack Drift! Power-slide across Alpine Tarmac, Canyon Gravel, and Nordic Snow stages against rival ghosts and upgrade your Rally Garage.
 - **Özet (TR):** Asfalt, toprak ve karlı etaplarda drift yaparak zamana karşı yarış, garajını güçlendir!
 - **Tags & Keywords:** rally 3d, drift racing browser game, time attack car game, ücretsiz 3d araba yarışı, ralli drift oyunu
-### 3. [SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO](https://keremcaliskann.github.io/games/smash-karts-brawl-3d/)
+### 4. [SMASH KARTS 3D // ROCKET BATTLE ROYALE .IO](https://keremcaliskann.github.io/games/smash-karts-brawl-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/smash-karts-brawl-3d/
 - **Summary (EN):** Drive and drift an armored combat kart against 11 AI battle karts! Smash Mystery Weapon Crates, fire homing rockets & twin gatlings, collect Power Cubes, and survive the closing storm.
 - **Özet (TR):** Silahlı kartlarla 12 kişilik arenada roket ateşle, sandıkları kır ve fırtınada hayatta kal!
 - **Tags & Keywords:** smash karts 3d, kart battle royale io, car shooter browser game, ücretsiz 3d savaş arabası oyunu, io oyunları
-### 4. [BRIDGE RACE 3D // STAIR BUILDER .IO](https://keremcaliskann.github.io/games/bridge-rush-io-3d/)
+### 5. [BRIDGE RACE 3D // STAIR BUILDER .IO](https://keremcaliskann.github.io/games/bridge-rush-io-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/bridge-rush-io-3d/
 - **Summary (EN):** Race 11 AI rivals across 3 tiered sky islands! Collect color bricks to stack a towering spine on your back, tackle smaller rivals, and build stair bridges to the Golden Trophy Podium.
 - **Özet (TR):** Kendi rengindeki tuğlaları topla, rakiplerine çarpıp bloklarını kap ve 3 köprüyü ilk tamamla!
 - **Tags & Keywords:** bridge race 3d, stair builder io, brick runner browser game, köprü kurma oyunu 3d, ücretsiz io yarışı
-### 5. [PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO](https://keremcaliskann.github.io/games/stumble-knockout-royale-3d/)
+### 6. [PARTY KNOCKOUT 3D // OBSTACLE ROYALE .IO](https://keremcaliskann.github.io/games/stumble-knockout-royale-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/stumble-knockout-royale-3d/
 - **Summary (EN):** Sprint, jump, and dive against 15 AI rivals across a 3-round sky obstacle tournament! Dodge spinning hammers, qualify through Round 1 & 2, unlock 6 runner skins, and claim the Golden Crown.
 - **Özet (TR):** 16 kişilik 3 aşamalı kaos parkurunda dönen çekiçlerden kaç, finale kal ve altın tacı kazan!
 - **Tags & Keywords:** stumble guys 3d browser, fall guys io online, obstacle knockout royale, 3d parkur eleme oyunu, ücretsiz koşu oyunu
-### 6. [BUMPER SMASH 3D // ARENA KNOCKOUT .IO](https://keremcaliskann.github.io/games/bumper-smash-io-3d/)
+### 7. [BUMPER SMASH 3D // ARENA KNOCKOUT .IO](https://keremcaliskann.github.io/games/bumper-smash-io-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/bumper-smash-io-3d/
 - **Summary (EN):** Steer a bouncy 3D spring-bumper kart across a shrinking sunlit arena! Ram 7 AI rivals into the sea, grow your kart, and claim the #1 Knockout Crown.
 - **Özet (TR):** Daralan adada rakiplerine çarpıp denize fırlat, aracını büyüt ve arenanın tek şampiyonu ol!
 - **Tags & Keywords:** bumper.io 3d, car arena knockout, smash cars browser game, çarpışan arabalar 3d, ücretsiz io oyunu
-### 7. [ARCHER DUEL 3D // RAGDOLL SHOWDOWN](https://keremcaliskann.github.io/games/ragdoll-archers-duel-3d/)
+### 8. [ARCHER DUEL 3D // RAGDOLL SHOWDOWN](https://keremcaliskann.github.io/games/ragdoll-archers-duel-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/ragdoll-archers-duel-3d/
 - **Summary (EN):** 1-finger ballistic bow showdown across sunlit floating castle bastions! Land 3x critical headshots, trigger hilarious ragdoll physics, and shoot flying apples.
 - **Özet (TR):** Kuleler arası okçuluk düellosunda kafadan vuruşlarla ragdoll fiziğini tetikle ve elmaları vur!
 - **Tags & Keywords:** ragdoll archers 3d, bow duel browser game, archery physics game, 3d okçuluk oyunu, nişan oyunu
-### 8. [DROP MERGE 3D // SPHERE SUIKA](https://keremcaliskann.github.io/games/physics-drop-merge-3d/)
+### 9. [DROP MERGE 3D // SPHERE SUIKA](https://keremcaliskann.github.io/games/physics-drop-merge-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/physics-drop-merge-3d/
 - **Summary (EN):** Bouncy 3D physics fruit merge puzzle! Aim and drop juicy spheres into the translucent jar, merge identical pairs, and chain reactions to unlock the Giant Golden Sun Core.
 - **Özet (TR):** 3B fizik kavanozuna meyve kürelerini bırak, aynı olanları birleştirip dev altın çekirdeğe ulaş!
 - **Tags & Keywords:** suika game 3d, drop merge physics, fruit merge 3d browser, karpuz birleştirme oyunu 3d, fizik bulmaca
-### 9. [VOXEL SMASH 3D // BLOCK MINER & TURRET](https://keremcaliskann.github.io/games/voxel-craft-smash-3d/)
+### 10. [VOXEL SMASH 3D // BLOCK MINER & TURRET](https://keremcaliskann.github.io/games/voxel-craft-smash-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/voxel-craft-smash-3d/
 - **Summary (EN):** Tactile 3D voxel fortress destruction ASMR! Demolish procedural castles, chain-react TNT powder kegs, fend off marching golems, and vacuum glowing loot cubes.
 - **Özet (TR):** Voksel kaleleri TNT zincirleriyle yık, yürüyen golemleri durdur ve parlayan ganimet küplerini topla!
 - **Tags & Keywords:** voxel smash 3d, block destruction game, minecraft style browser game, küp kırma oyunu 3d, kule savunma
-### 10. [HOLE SWALLOW 3D // CITY ARENA .IO](https://keremcaliskann.github.io/games/hole-city-io-3d/)
+### 11. [HOLE SWALLOW 3D // CITY ARENA .IO](https://keremcaliskann.github.io/games/hole-city-io-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/hole-city-io-3d/
 - **Summary (EN):** Steer a hungry 3D black hole across a miniature sunlit city. Swallow props, cars, and skyscrapers, eliminate rival bots, and top the live 8-player leaderboard!
 - **Özet (TR):** Dev kara delikle şehirdeki araçları, binaları ve rakipleri yutarak liderlik tablosunda zirveye çık!
 - **Tags & Keywords:** hole.io 3d browser, black hole city game, swallow arena io, kara delik şehir yutma oyunu, ücretsiz io
-### 11. [HEXA SORT 3D // CASCADE STACK](https://keremcaliskann.github.io/games/hexa-sort-3d/)
+### 12. [HEXA SORT 3D // CASCADE STACK](https://keremcaliskann.github.io/games/hexa-sort-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/hexa-sort-3d/
 - **Summary (EN):** Tactile 3D hexagonal tile sorting ASMR puzzle! Stack, match colors, and trigger satisfying domino cascade clears on a floating honeycomb grid under warm daylight.
 - **Özet (TR):** Altıgen kuleleri renklerine göre diz, domino etkisiyle patlat ve rahatlatıcı ASMR bulmacayı çöz!
 - **Tags & Keywords:** hexa sort 3d online, hexagon stack puzzle, asmr color sort game, altıgen renk sıralama oyunu, 3d bulmaca
-### 12. [CYBER ARROW 3D](https://keremcaliskann.github.io/games/cyber-arrow-3d/)
+### 13. [CYBER ARROW 3D](https://keremcaliskann.github.io/games/cyber-arrow-3d/)
 - **Play URL:** https://keremcaliskann.github.io/games/cyber-arrow-3d/
 - **Summary (EN):** Vibrant 3D spatial untangling puzzle. Orbit the colorful floating structure, clear unobstructed arrow blocks under bright daylight, and trigger satisfying ASMR burst escapes.
 - **Özet (TR):** 3B yapıyı 360 derece döndür, önü açık ok bloklarını sırayla fırlat ve tüm düğümü çöz!
