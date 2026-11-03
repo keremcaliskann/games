@@ -1,99 +1,74 @@
 ---
 name: game-studio-pipeline
-description: Executes the Consumer stage of the autonomous studio — pulls the #1 ranked game from backlog/ideas-backlog.json and runs the 3-Phase Studio Squad (Designer -> Implementer -> Game Director Critic) with full YouTube Playables SDK and multi-portal support.
+description: Executes the Multi-Agent Consumer stage of the autonomous studio — processes backlog/studio-todo.json and builds the #1 ranked game from backlog/ideas-backlog.json using the 4-Subagent Studio Squad (studio-architect -> parallel studio-3d-artist + studio-gameplay-engineer -> studio-qa-critic).
 metadata:
   icon: groups
 ---
 
-# Autonomous Game Studio Pipeline (`game-studio-pipeline`)
+# Autonomous Multi-Agent Game Studio Pipeline (`game-studio-pipeline`)
 
-This skill orchestrates the **Consumer (Studio Executor)** automation of the decoupled game studio. On every run, it inspects **both** queues — `backlog/studio-todo.json` (existing game improvements & bugfixes) and `backlog/ideas-backlog.json` (new game blueprints) — executes the highest-priority work, deploys live to GitHub Pages, and outputs a concise Turkish post-run report.
+This skill orchestrates the **Multi-Agent Consumer (Studio Executor)** of the decoupled game studio (`12-multi-agent-orchestration.md` & `15-game-studio-pipeline.md`). Rather than overloading a single monolithic agent, the Lead Orchestrator dispatches specialized subagents via `define_subagent` and `invoke_subagent`, coordinates typed artifact handoffs (`SPEC.json`), synchronizes the shared Arcade Portal, and deploys live to GitHub Pages.
 
 ---
 
-## 1. Dual-Queue Intake & Sequential Priority Dispatcher (`studio-todo.json` -> `ideas-backlog.json`)
+## 1. Load-Balanced Dual-Queue Dispatcher (`studio-todo.json` -> `ideas-backlog.json`)
 
 1. Read **both** `backlog/studio-todo.json` and `backlog/ideas-backlog.json`.
-2. **Strict Sequential Execution Order (Every Run):**
-   - **Step 1 — Finish Existing Game Fixes & Upgrades First (`backlog/studio-todo.json`):**
-     - If `backlog/studio-todo.json` contains any item with `status === "ready"` or `status === "in_progress"`, execute **all** pending tasks in priority order (`P0` -> `P1` -> `P2`) before starting a new game.
-     - Implement the specified bugfixes, mechanical upgrades, or visual polish in `targetFiles`, run `node scripts/sync-shared-core.mjs`, verify `npm --prefix <game-id> run typecheck` and `npm --prefix <game-id> run build` for each modified game, and mark every finished task `"completed"` in `backlog/studio-todo.json`.
-   - **Step 2 — Build 1 New Game (`backlog/ideas-backlog.json`):**
-     - Immediately after all pending tasks in `backlog/studio-todo.json` are completed (or if `studio-todo.json` already has zero `"ready"` items), select **1 game** — the item with `status === "ready"` that has the **highest `revenueScore` (Rank #1)** in `backlog/ideas-backlog.json`.
-     - Update its status to `"in_progress"` and execute Phases 1, 2, and 3 below to build, synchronize (`node scripts/sync-shared-core.mjs`), verify, and publish that 1 new game from scratch.
+2. **Load-Balanced Execution Policy:**
+   - **Step 1 — Existing Game Fixes & Upgrades (`backlog/studio-todo.json`):**
+     - Count all pending items in `backlog/studio-todo.json` where `status === "ready"` or `status === "in_progress"`.
+     - If pending tasks exist, group them by `gameId` and execute up to **4 highest-priority tasks (`P0 -> P1 -> P2`)** per run.
+     - For tasks spanning 2+ distinct games, use `define_subagent` (`EnableWriteTools: true`) to dispatch one dedicated Fixer Subagent per `gameId` in parallel (strictly 1 subagent per game directory so files never collide).
+     - After subagents finish, run `node scripts/sync-shared-core.mjs`, verify `npm --prefix <game-id> run typecheck` and `npm --prefix <game-id> run build`, and mark completed tasks `"completed"` in `backlog/studio-todo.json`.
+   - **Step 2 — Load Gate for Building 1 New Game (`backlog/ideas-backlog.json`):**
+     - **If the initial pending `studio-todo.json` count was `> 2`:** Stop after completing Step 1, commit, push, and output the Maintenance Log report (protecting context depth and preventing agent fatigue).
+     - **If the initial pending `studio-todo.json` count was `<= 2` (or `0`):** Proceed immediately to build **1 new game** — the item with `status === "ready"` and the highest `revenueScore` (Rank #1) in `backlog/ideas-backlog.json` using the **4-Subagent Studio Squad** below.
 
 ---
 
-## 2. Phase 1 (New Game Mode): Studio Designer (`<game-name>/DESIGN.md`)
+## 2. The 4-Subagent Studio Squad (New Game Construction)
 
-Translate the selected backlog blueprint into `<game-name>/DESIGN.md`:
-1. **Core Loop & 2-Second Hook:** Immediate single-finger interaction within 2 seconds of `ytgame.game.gameReady()`.
-2. **100% Solvable Level Math:** Deterministic reverse-generation or verified algorithm ensuring zero impossible levels.
-3. **3 Mandatory Revenue Hooks (`65-monetization-ads`):**
-   - **Hook 1 (In-Level Rescue Boosters):** 2–3 bottom-bar power-ups purchasable via Coins or `showRewarded('booster_<type>')`.
-   - **Hook 2 (Near-Miss Revive Modal):** "So Close!" prompt on failure offering `+Moves / Clear Buffer` via `showRewarded('revive')`.
-   - **Hook 3 (Victory 2x/3x/5x Moving Multiplier Bar):** Oscillating multiplier needle on the Victory screen calling `showRewarded('victory_multiplier')`.
-4. **360° Camera & Compound Prefab Spec:** Unobstructed camera angles (zero ground/pedestal occlusion), 9:16 portrait + 16:9 landscape framing, and multi-part `THREE.Group` procedural prefabs + `ASSETS_NEEDED.md`.
+Define the 4 specialist subagents via `define_subagent` (`EnableWriteTools: true`) and execute them across 3 deterministic gates:
 
----
+### Gate 1: `studio-architect` Subagent (`DESIGN.md` + `SPEC.json` + Project Configs)
+Invoke `studio-architect` (`Model: "inherit"`) to create `<game-name>/` and write:
+1. **`<game-name>/DESIGN.md`:** Core loop, 2-second hook, deterministic level/bot AI math, 360° camera spec, and 3 mandatory Rewarded Ad hooks.
+2. **`<game-name>/SPEC.json` (MetaGPT SOP Contract):**
+   - Exact `PrefabFactory` method signatures (`name`, `params`, `returns`, child hierarchy notes).
+   - Palette hex constants, camera FOV/offset bounds, 12–20 AI bot parameters, 3+ biome definitions, 6+ Garage skins, 3 stat upgrades, and 3 Rewarded Ad hook IDs.
+3. **Config Scaffolding:** `<game-name>/package.json`, `tsconfig.json`, `vite.config.ts` (`base: './'`), `.gitignore`, and `public/manifest.json`.
 
-## 3. Phase 2: Studio Implementer
+### Gate 2: Parallel Domain Shards (`studio-3d-artist` + `studio-gameplay-engineer`)
+Once `<game-name>/SPEC.json` is written, invoke **`studio-3d-artist`** and **`studio-gameplay-engineer` in parallel** (strictly disjoint file ownership):
 
-Build the complete project inside `c:/Users/kerem/Desktop/Games/<game-name>`:
+#### Shard 2A — `studio-3d-artist` Subagent
+Reads `<game-name>/SPEC.json`, `30-three-render.md`, and `32-daylight-and-lighting.md`. Exclusively writes:
+- `src/render/lighting.ts`: Soft Daylight palette (`0xcfe8f7` sky, `0xfff6e5` sun key, `0xfcf8ee` warm ground), `VisualEnhancer.enhanceScene(scene)` (`environmentIntensity: 0.30`).
+- `src/render/camera-rig.ts`: Responsive 9:16 portrait & 16:9 landscape framing, trauma screen-shake, zero ground occlusion.
+- `src/render/effects.ts`: Pre-allocated object-pooled particle bursts & shockwave rings (zero per-frame allocations).
+- `src/render/PrefabFactory.ts`: Implements every method in `SPEC.json` using `ProceduralMeshBuilder` and `AssetResolver.resolveHybridModel(...)`.
+- `public/icon.svg` and `ASSETS_NEEDED.md`.
 
-1. **YouTube Playables SDK & Universal Portal Bridge (`src/platform/`):**
-   - Include `<script src="https://www.youtube.com/game_api/v1"></script>` first in `index.html`.
-   - Implement `src/platform/sdk.ts` (`firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `isAudioEnabled`/`onAudioEnabledChange`, `loadData` awaited before `saveData`, `sendScore`) with automatic fallback for Yandex (`YaGames`), CrazyGames (`CrazyGames.SDK`), Poki (`PokiSDK`), and `localStorage`.
-   - Implement `src/platform/ads.ts` (`UniversalAdProvider`) routing rewarded/interstitial calls to the active portal or `MockAdProvider`.
-2. **Compound Procedural 3D Prefabs & Hot-Swap (`src/render/PrefabFactory.ts`):**
-   - Build rich multi-part 3D prefabs (`ExtrudeGeometry`, `LatheGeometry`, hierarchical `THREE.Group`, procedural canvas textures).
-   - Add hot-swap support checking `public/models/` and generate `<game-name>/ASSETS_NEEDED.md` documenting optional `.glb` upgrades for the user.
-3. **3D Camera & Daylight Visuals (`src/render/`):**
-   - Bright sunlit background, `HemisphereLight` + `DirectionalLight`, vibrant high-contrast materials.
-   - Zero bottom/side camera occlusion; responsive FOV/zoom for both **9:16 portrait** and **16:9 landscape**.
-4. **Procedural ASMR Web Audio (`src/core/audio.ts`):**
-   - Zero external audio files; pitch-ramped combo clicks, pops, whooshes, and victory arpeggios synced with `ytgame.system.onAudioEnabledChange`.
-5. **3-Column Arcade Shell & Icon (`index.html`, `public/icon.svg`):**
-   - Renders the 3-column Arcade Shell (Left Navigation Sidebar, Center 3D Stage, Right Sponsor Ad Rail) with zero fullscreen toggle or sidebar hiding.
-   - Create custom `public/icon.svg` (512×512) and `public/manifest.json`.
+#### Shard 2B — `studio-gameplay-engineer` Subagent
+Reads `<game-name>/SPEC.json`, `25-defensive-gameplay-and-hardening.md`, `55-arcade-layout-and-shell.md`, and `65-monetization-ads.md`. Exclusively writes:
+- `index.html`: `<script src="https://www.youtube.com/game_api/v1"></script>`, 3-column `#arcade-shell`, HUD modals with `data-hud-interactive="true"`, and `toneMappingExposure: 0.90` styling.
+- `src/platform/sdk.ts`: Universal portal bridge (`ytgame`, `YaGames`, `CrazyGames`, `Poki`, `localStorage`).
+- `src/core/audio.ts`: Procedural Web Audio synthesizer governed by `onAudioEnabledChange`.
+- `src/input/input-manager.ts`: Camera-relative movement projection, floating joystick, and `pointerdown` handlers.
+- `src/game/**`: Entity controllers, 12–20 named AI bot competitors with unstuck recovery, 3+ biomes/stages, and Garage/Upgrade system.
+- `src/ui/hud.ts` and `src/main.ts`: Wires `initArcadeShell` with Universal Start Menu lock (`!shell.isMenuOpen`), difficulty scaling (`Kolay / Normal / Zor`), and all 3 mandatory Rewarded Ad hooks.
 
----
-
-## 4. Phase 3: Game Director & QA Critic (`<game-name>/CRITIQUE.md`)
-
-Audit the completed build across **4 Mandatory Filters**:
-
-```markdown
-### Filter A: Camera, 9:16 / 16:9 Ergonomics & Universal Input (`50-input-abstraction.md`)
-- [ ] Are bottom and side viewing angles 100% unobstructed (zero ground/pedestal blocking)?
-- [ ] Does the game play effortlessly with one hand in both 9:16 portrait and 16:9 landscape?
-- [ ] Are movement axes 100% camera-relative (dragging Right / pressing `D` moves toward Screen Right even on `+Z` cameras)?
-- [ ] Do `.io`/action games render a Floating Virtual Joystick with dynamic anchor, aiming games use Direct Point-and-Aim + hover tracking, and puzzles support both Tap-to-Place and Drag-and-Drop with Magnetic Tap Assist?
-
-### Filter B: Art Direction, Compound Prefabs & ASMR Juice
-- [ ] Is the environment bright, sunlit, and vibrant? (STRICT: scene.background >= 0xbae6fd or pastel daylight, warm Hemisphere ground bounce >= 0xd0d0d0, zero dark voids, zero black floor grids).
-- [ ] Are entities multi-part Compound Procedural Prefabs (no raw placeholder boxes) with ASSETS_NEEDED.md documented?
-- [ ] Are particle bursts, squash-and-stretch, and Web Audio ASMR feedback satisfying?
-
-### Filter C: YouTube Playables SDK & Revenue Hooks
-- [ ] Is `<script src="https://www.youtube.com/game_api/v1"></script>` first in `index.html`?
-- [ ] Are `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, and `loadData`/`saveData` wired?
-- [ ] Do all 3 Rewarded Ad hooks (In-Level Boosters, Near-Miss Revive, Victory Multiplier Bar) work end-to-end?
-- [ ] Does the 3-Column Arcade Shell render Left Navigation Sidebar and Right Ad Rail visibly with zero fullscreen toggle?
-- [ ] Zero external network fetches (CSP clean) and `dist/` bundle `< 50 MB`?
-
-### Filter D: Technical & Release Integrity
-- [ ] Zero allocations in hot paths (`update`, `fixedUpdate`, `render`).
-- [ ] `npm run typecheck` and `npm run build` exit with code 0.
-```
-
-Apply any polish fixes immediately, mark the game `"completed"` in `backlog/ideas-backlog.json`, synchronize root `games.json`, `index.html`, and `.github/workflows/deploy.yml` via `games-portal-catalog`, commit with English Conventional Commits, and push to `origin/main`.
+### Gate 3: `studio-qa-critic` Subagent (ChatDev Adversarial Verification Gate)
+After both Shard 2A and Shard 2B complete, invoke `studio-qa-critic`:
+1. Register `<game-name>` in root `games.json`, `index.html`, and `shared/ui/shell-controller.ts` (`GAME_THEMES`), then run `node scripts/sync-shared-core.mjs`.
+2. Run `npm --prefix <game-name> install --prefer-offline --no-audit --no-fund`, `npm --prefix <game-name> run typecheck`, and `npm --prefix <game-name> run build`.
+3. Audit against all **4 Game Director Filters** (Camera/Input Ergonomics, Soft Daylight & Prefabs, YouTube SDK & 3 Revenue Hooks, Zero Hot-Path Heap Allocations).
+4. Apply immediate surgical fixes if any compiler error or rule violation is found, and write `<game-name>/CRITIQUE.md`.
 
 ---
 
-## 5. Mandatory Concise Post-Run Report (ASD-STE100 / ≤ 6 Lines in Turkish)
+## 3. Portal Release, Git Push & Concise Report (Lead Orchestrator)
 
-Every execution must finish with a **very short Turkish report (`<= 6 lines`, max 20 words per sentence)** following the Aircraft Maintenance Log schema:
-- **DISCREPANCY / TASK:** `studio-todo.json` içindeki bekleyen düzeltmeler ve `ideas-backlog.json` 1 numaralı yeni oyun görevi.
-- **CORRECTIVE ACTION:** Tamamlanan mevcut oyun düzeltmeleri (`studio-todo.json`) ve sıfırdan inşa edilen 1 yeni oyun (`ideas-backlog.json`).
-- **VERIFICATION & RETURN TO SERVICE:** `sync-shared-core.mjs`, `typecheck` + `build` sonucu (`< 50 MB`), commit kodu ve canlı yayın linki.
+1. Mark the finished game `"completed"` in `backlog/ideas-backlog.json` (and re-index remaining `ready` ranks `1..N`).
+2. Stage, commit with a clean English Conventional Commit (`feat(studio): ...`), and push to `origin/main`.
+3. Output a **concise (`<= 6 lines`, max 20 words per sentence) Turkish ASD-STE100 Maintenance Log report** (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / VERIFICATION`).

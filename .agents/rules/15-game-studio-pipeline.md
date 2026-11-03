@@ -1,85 +1,77 @@
 ---
 trigger: model_decision
-description: "2-stage Producer-Consumer pipeline, token-optimized 3-Phase Studio Squad workflow, 3D camera line-of-sight ergonomics, YouTube Playables revenue hooks, and Game Director critique loop."
+description: "Decoupled 3-automation Producer-Consumer pipeline, Multi-Agent 4-Specialist Studio Squad (MetaGPT SPEC.json + BMAD Sharding + ChatDev QA Gate), 3D camera ergonomics, and 4-Filter Game Director critique loop."
 ---
 
-# Game Studio Pipeline & Critique Policy
+# Game Studio Pipeline & Multi-Agent Critique Policy
 
-## 1. Decoupled 3-Automation, Dual-Queue Studio Architecture
+## 1. Decoupled 3-Automation, Dual-Queue Multi-Agent Studio Architecture
 
-To protect the user's daytime working quota (`10:00–18:00`) across 5-hour token reset cycles while separating strategic planning (`Argon 4 High`) from hands-on execution, the studio operates as **three decoupled automations** bridged by **two prioritized queues**:
-1. **`backlog/ideas-backlog.json`** — New Game Blueprint Queue (populated by Trend Scout).
-2. **`backlog/studio-todo.json`** — Existing Games Bugfix, Mechanical Upgrade & Polish Queue (populated by Game Director QA Architect).
+To protect daytime working quota (`10:00–18:00`) while preventing context bloat and schedule collisions, the studio operates as **three decoupled automations** bridged by **two prioritized queues** (`backlog/ideas-backlog.json` and `backlog/studio-todo.json`), powered by **parallel subagents**:
 
 ```
 +-----------------------------------------------------------------------------------------+
-| AUTOMATION 1: TREND & GENRE SCOUT (Producer A — Every 3 Days at 18:00, Argon 4 High)    |
-| - Scans YouTube Playables, CrazyGames, Poki & mobile hits across diverse high-retention |
-|   genres: Fake-Multiplayer .io Arenas (Hole.io style), Casual FPS/Shooters, 3D Physics  |
-|   Demolition, and Voxel/Minecraft-style Sandbox Action (not just repetitive puzzles!)   |
-| - Adds 3+ mutually distinct game concepts per run & re-ranks backlog/ideas-backlog.json |
-| - Outputs a concise <= 6-line Turkish summary + updates backlog/LATEST_TREND_REPORT.md  |
+| AUTOMATION 1: TREND & GENRE SCOUT (Producer A — Every 3 Days at 18:00)                  |
+| - Spawns parallel read-only `research` subagents (Model: "flash") across the 5          |
+|   Large-Scale 3D Fake-Multiplayer (.io & Royale) sub-genres in `scout-directives.json`  |
+| - Adds 3–4 mutually distinct game blueprints & re-ranks `backlog/ideas-backlog.json`    |
+| - Outputs a concise <= 6-line Turkish summary + updates `backlog/LATEST_TREND_REPORT.md`|
 +-----------------------------------------------------------------------------------------+
                                            │
                                            ▼ (backlog/ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
-| AUTOMATION 2: GAME DIRECTOR QA ARCHITECT (Producer B — Every 2 Days at 18:05, Argon High)|
-| - Pure Inspector / Queueing pass (STRICT: ZERO DIRECT CODE EDITS, ONLY QUEUES TO-DO)   |
-| - Deep-audits all active games against latest rules (AGENTS.md & .agents/rules/*.md)   |
-| - Verifies working status of all core features, controls, audio, and 3 ad hooks         |
-| - Inspects code and identifies performance bottlenecks & heap allocations               |
-| - Evaluates visuals (Soft Daylight, materials, particles) and mechanics                 |
-| - Extracts design & mechanical feedback, ONLY logs P0/P1/P2 tasks to studio-todo.json   |
-| - Outputs a concise <= 6-line Turkish ASD-STE100 post-run summary                       |
+| AUTOMATION 2: GAME DIRECTOR QA ARCHITECT (Producer B — Every 2 Days at 19:00)           |
+| - Shifted to 19:00 to guarantee zero Git push collision with 18:00 Producer A           |
+| - Spawns parallel `research` subagents (Model: "flash") auditing active games in        |
+|   3–4 game batches (Rule compliance, hot-path allocations, Soft Daylight, mechanics)    |
+| - STRICT PRODUCER ROLE: ZERO direct game code edits; ONLY queues P0/P1/P2 tickets into  |
+|   `backlog/studio-todo.json` and outputs a concise Turkish summary + active task table  |
 +-----------------------------------------------------------------------------------------+
                                            │
                                            ▼ (backlog/studio-todo.json + ideas-backlog.json)
 +-----------------------------------------------------------------------------------------+
-| AUTOMATION 3: STUDIO EXECUTOR (Consumer — Nightly at 23:00 & 04:00)                     |
-| - Reads BOTH backlog/studio-todo.json and backlog/ideas-backlog.json in strict order:   |
-|   1) Priority 1 (Existing Games First): Completes ALL 'ready' / 'in_progress' tasks in  |
-|      backlog/studio-todo.json (P0 -> P1 -> P2), syncs shared UI/Ads core, and verifies  |
-|   2) Priority 2 (Then 1 New Game): Pulls Rank #1 'ready' game from ideas-backlog.json   |
-|      and builds/publishes 1 complete game end-to-end via the 3-Phase Studio Squad       |
+| AUTOMATION 3: MULTI-AGENT STUDIO EXECUTOR (Consumer — Nightly at 23:00 & 04:00)         |
+| - Load-Balanced Multi-Agent Execution (`12-multi-agent-orchestration.md`):              |
+|   1) Priority 1 (Existing Games Queue): If `backlog/studio-todo.json` has `ready`       |
+|      tasks, dispatches specialist subagents to complete up to 4 tasks (`P0 -> P1 -> P2`)|
+|   2) Priority 2 (Load-Balanced New Game Build): If pending `studio-todo.json` count     |
+|      at start of run was <= 2 (or 0), pulls Rank #1 `ready` blueprint from              |
+|      `backlog/ideas-backlog.json` and builds it via the 4-Subagent Studio Squad         |
 | - Outputs a concise <= 6-line Turkish ASD-STE100 Maintenance Log report after execution |
 +-----------------------------------------------------------------------------------------+
 ```
 
 ---
 
-## 2. Token-Optimized 3-Phase Studio Squad (Inside Builder)
+## 2. Multi-Agent 4-Subagent Studio Squad (New Game Builder)
 
-Instead of spawning a dozen disjoint subagents, the Builder executes **3 consolidated squads**:
+Instead of overloading a single monolithic agent, the Lead Orchestrator (`studio` / `game-studio-pipeline`) defines and dispatches **4 specialized subagents** via `define_subagent` and `invoke_subagent` (`12-multi-agent-orchestration.md`):
 
-### Phase 1: Studio Designer Squad (`DESIGN.md`)
-1. **Core Loop & Instant 2-Second Hook:** Zero-text tutorial; player performs the first satisfying action within 2 seconds of `ytgame.game.gameReady()`.
-2. **Deterministic Solvable Level Math:** Procedural or seeded level generator with a **100% solvability guarantee** and difficulty pacing.
-3. **Revenue & Monetization Blueprint:** Defines the exact 3 mandatory Rewarded Ad hooks (In-Level Boosters, Near-Miss Revive, Victory 2x/3x/5x Multiplier Bar) and 90–120s Interstitial cooldown.
-4. **3D Camera & Asset Spec:** Defines unobstructed 360° camera bounds, Compound Procedural 3D Prefabs, and optional `.glb` overrides for `ASSETS_NEEDED.md`.
+### Phase 1: `studio-architect` Subagent (`DESIGN.md` + `SPEC.json` + Project Configs)
+1. **Core Loop & Instant 2-Second Hook:** Zero-text tutorial; player performs the first satisfying action within 2 seconds after clicking `OYNA` on the Universal Start Menu (`#shell-start-menu`).
+2. **Typed Contract Handoff (`<game-name>/SPEC.json` — MetaGPT SOP Pattern):**
+   - Defines exact `PrefabFactory` method names/parameters, color palette constants, camera FOV/offset bounds, 12–20 named AI bot parameters, 3+ biome/stage configs, Garage/Upgrade tree, and the 3 mandatory Rewarded Ad hook IDs.
+3. **Scaffolds Project Configs:** Writes `<game-name>/package.json`, `tsconfig.json`, `vite.config.ts` (`base: './'`), `.gitignore`, and `public/manifest.json`.
 
-### Phase 2: Studio Implementer Squad
-Enforces all 7 technical domain checkpoints:
-1. **YouTube Playables & Universal Portal Bridge (`src/platform/`):**
-   - `<script src="https://www.youtube.com/game_api/v1"></script>` in `index.html`.
-   - `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, `loadData`/`saveData`, `sendScore`, and multi-portal auto-detection (`ytgame` -> `YaGames` -> `CrazyGames` -> `Poki` -> `Mock`).
-2. **Engine & Physics (`core/`, `physics/`):** Fixed 1/60s timestep, spatial grid or lightweight Rapier colliders, object pools (`Pool<T>`).
-3. **3D Camera & Line-of-Sight Ergonomics (Mandatory):**
-   - **Zero ground/pedestal occlusion:** Never place decorative ground planes, pedestals, or props that obstruct viewing the puzzle/entities from underneath or extreme angles.
-   - Dynamic FOV/distance scaling for both **9:16 portrait** (YouTube mobile app) and **16:9 landscape** (desktop).
-4. **Dual-Path Hybrid 3D Prefabs (`AssetResolver` + `ProceduralMeshBuilder`):**
-   - **Mandatory Hybrid Architecture:** Every entity uses `AssetResolver.resolveHybridModel(options)`:
-     1. Synchronous fallback: Rich compound procedural model from `ProceduralMeshBuilder` (beveled geometries, wheel assemblies with brake calipers, dynamic canvas liveries, contact shadows). Zero raw primitive boxes.
-     2. Asynchronous loader: Fetches optimized `.glb` from `public/models/`, auto-normalizes bounding dimensions, aligns pivot to `min.y = 0`, applies Daylight PBR calibration (`roughness: 0.45–0.55`), and seamlessly hot-swaps onto the scene graph.
-   - Sunlit daylight environment (`HemisphereLight` + `DirectionalLight`) and high-saturation vibrant colors.
-5. **Procedural ASMR Web Audio (`core/audio.ts`):** Zero-asset Web Audio synthesis strictly governed by `ytgame.system.onAudioEnabledChange`.
-6. **3 Mandatory Revenue Loops (`ui/`, `game/`):** Working In-Level Boosters, Near-Miss Revive modal, and Victory Moving Multiplier bar.
-7. **3-Column Arcade Shell (`ui/`, `index.html`):** Always displays the 3-column Arcade Shell (Left Navigation Sidebar, Center 3D Stage, Right Sponsor Ad Rail) with zero fullscreen toggle or sidebar hiding.
+### Phase 2A & 2B (Parallel Shards — BMAD Domain Sharding Pattern):
+Once `<game-name>/SPEC.json` exists on disk, the Lead Orchestrator dispatches **two non-overlapping specialist subagents in parallel**:
 
-### Phase 3: Game Director Critique & Polish Loop (`CRITIQUE.md`)
-Every build must pass all **4 Evaluation Filters** before deployment:
-- **Filter A (Camera & Ergonomics):** Zero occlusion from bottom/sides; effortless one-hand play in both 9:16 portrait and 16:9 landscape.
-- **Filter B (Art, Daylight & ASMR Juice):** Bright sunlit palette, multi-part 3D prefabs (no raw placeholder boxes), particle bursts, and tactile pitch-ramped audio.
-- **Filter C (YouTube Playables SDK & Revenue Hooks):** `ytgame` lifecycle hooks wired, all 3 Rewarded Ad hooks (Booster, Revive, Multiplier) functional, zero external network calls (CSP clean), bundle `< 50 MB`.
-- **Filter D (Technical & QA):** Zero per-frame heap allocations in hot paths; `npm run typecheck` and `npm run build` exit with code 0.
+#### Shard A: `studio-3d-artist` Subagent (`src/render/**` + `public/icon.svg` + `ASSETS_NEEDED.md`)
+1. **Stylized Toony Soft Daylight (`32-daylight-and-lighting.md`):** Soft pastel sky (`0xcfe8f7`), warm sun key (`0xfff6e5`), warm biscuit/cream ground (`0xfcf8ee`), `VisualEnhancer.enhanceScene(scene)` (`environmentIntensity: 0.30`), and `toneMappingExposure: 0.90`.
+2. **360° Camera & Viewport Ergonomics (`src/render/camera-rig.ts`):** Dynamic FOV/distance scaling for 9:16 portrait and 16:9 landscape; zero ground/pedestal occlusion.
+3. **Compound Procedural 3D Prefabs & Hot-Swap (`src/render/PrefabFactory.ts`):** Implements every method specified in `SPEC.json` using `ProceduralMeshBuilder` and `AssetResolver.resolveHybridModel(...)`, plus `src/render/effects.ts`, `public/icon.svg`, and `ASSETS_NEEDED.md`.
 
-If any filter finds a defect, surgical polish patches must be applied immediately prior to `git push origin main`.
+#### Shard B: `studio-gameplay-engineer` Subagent (`src/game/**` + `src/input/**` + `src/ui/**` + `src/core/**` + `src/platform/**` + `index.html`)
+1. **YouTube Playables & Universal Portal Bridge (`src/platform/sdk.ts`, `index.html`):** `<script src="https://www.youtube.com/game_api/v1"></script>`, `firstFrameReady()`, `gameReady()`, `onPause`/`onResume`, `onAudioEnabledChange`, `loadData`/`saveData`.
+2. **Large-Scale Gameplay, Physics & Bot AI (`src/game/**`):** Fixed 1/60s timestep, 12–20 named AI bot competitors with unstuck recovery steering, 3+ biomes/stages, and persistent Garage/Upgrade shop.
+3. **Ergonomic Input, Web Audio & HUD (`src/input/input-manager.ts`, `src/core/audio.ts`, `src/ui/hud.ts`, `src/main.ts`):** Camera-relative movement, floating joystick, Universal Start Menu (`!shell.isMenuOpen` lock + `Kolay / Normal / Zor` difficulty scaling), and all 3 mandatory Rewarded Ad hooks (Boosters, Near-Miss Revive, Victory Multiplier Bar).
+
+### Phase 3: `studio-qa-critic` Subagent (`CRITIQUE.md` — ChatDev Adversarial Gate)
+An independent QA Critic subagent inspects and verifies the combined build:
+1. Runs `node scripts/sync-shared-core.mjs`, `npm --prefix <game-name> install`, `npm --prefix <game-name> run typecheck`, and `npm --prefix <game-name> run build`.
+2. Evaluates all **4 Game Director Filters**:
+   - **Filter A (Camera & Ergonomics):** Zero occlusion; camera-relative input; 9:16 portrait & 16:9 landscape framing; Universal Start Menu lock.
+   - **Filter B (Art, Daylight & ASMR Juice):** Soft Daylight palette, compound 3D prefabs, particle bursts, and Web Audio synthesis.
+   - **Filter C (YouTube Playables SDK & Revenue Hooks):** `ytgame` lifecycle hooks wired, all 3 Rewarded Ad hooks functional, zero external network calls, bundle `< 50 MB`.
+   - **Filter D (Technical & 60 FPS QA):** Zero per-frame heap allocations in hot paths; `typecheck` and `build` exit with code 0.
+3. Applies surgical fixes if any defect is detected and writes `<game-name>/CRITIQUE.md`.

@@ -1,46 +1,36 @@
 ---
 name: audit
 description: >-
-  Runs static analysis, TypeScript type checking, production bundle builds,
-  and defensive gameplay/performance checks across all HTML5 3D games.
-  Use when the user types /audit or asks for a full codebase quality inspection.
+  Runs parallel multi-agent QA inspection (Model: flash), static analysis, TypeScript type
+  checking, production bundle builds, and defensive gameplay/performance checks across all
+  active HTML5 3D games. Use when the user types /audit or asks for a codebase quality inspection.
 ---
 
-# /audit — Full Workspace Quality & Gameplay Audit (Read-Only Inspector & Queueing)
+# /audit — Multi-Agent Workspace Quality & Gameplay Audit (Batch Parallel Inspector)
 
-Conducts an automated health check, rule verification, performance inspection, and design critique across all **active** games (`active !== false`) dynamically registered in root `games.json`.
+Conducts an automated health check, rule verification, performance inspection, and design critique across all **active** games (`active !== false`) registered in root `games.json` using **parallel `research` subagents (`Model: "flash"`)**.
 
 > **PASSIVE GAMES EXCLUSION:** Strictly ignore any game marked `"active": false` in `games.json`. Do not read, typecheck, build, sync, or queue tasks for passive games.
 > **STRICT AUDIT POLICY (QUEUE ONLY):** The audit pass is strictly an inspector and producer. It **DOES NOT modify game code directly**. All identified bugs, performance optimizations, visual juice, and mechanical depth upgrades must **ONLY be logged into `backlog/studio-todo.json`** for the Studio Executor (`/studio`) to implement.
 
-## Audit Steps
+## Multi-Agent Audit Steps
 
-1. **Shared UI & Monetization Core Sync:**
-   Run `node scripts/sync-shared-core.mjs` to verify synchronization of `shared/platform/ads.ts`, `shared/ui/shell-controller.ts`, and `shared/ui/arcade-shell.css`.
+1. **Shared UI & Monetization Core Sync + Typecheck:**
+   - Run `node scripts/sync-shared-core.mjs` to verify synchronization of `shared/platform/ads.ts`, `shared/ui/shell-controller.ts`, `shared/ui/arcade-shell.css`, `shared/render/`, and `shared/input/`.
+   - Run `npm --prefix <game-id> run typecheck --silent` across active games to verify compilation health.
 
-2. **Rule Compliance Verification:**
-   Audit all games against latest rules in `AGENTS.md` and `.agents/rules/`:
-   - **Art Direction:** Stylized Toony Soft Daylight (`32-daylight-and-lighting.md`) — pastel sky `0xcfe8f7`, warm key sunlight, biscuit boards, zero dark voids, zero blown-out white.
-   - **Monetization Hooks:** 3 mandatory rewarded ad hooks (`65-monetization-ads.md`) and ad-disabled latching.
-   - **Defensive Gameplay:** Pointerdown HUD isolation (`data-hud-interactive="true"`), single-shot transition latches, preflight `loadData`.
+2. **Parallel Batch Subagent Dispatch (`invoke_subagent` with `TypeName: "research"`, `Model: "flash"`):**
+   - Partition all active games (`active !== false` in `games.json`) into **batches of 3–4 games**.
+   - Spawn one `research` subagent (`Model: "flash"`) per batch in parallel. Each subagent inspects its assigned games across 4 pillars:
+     1. **P0 Bugs & Defensive Hardening (`25-defensive-gameplay-and-hardening.md`):** Spawn-death race conditions, AI bot stuck loops, missing `!shell.isMenuOpen` start-menu locks, missing `data-hud-interactive="true"`, camera-relative input inversion.
+     2. **P1 Mechanics & Hot-Path Performance (`20-performance-budget.md`):** Progression pacing, map/biome variety, and per-frame heap allocations (`new THREE.Vector3`, `.map()`, `.filter()`, closures inside `update`/`render`).
+     3. **P2 Soft Daylight & 3D Prefab Polish (`32-daylight-and-lighting.md`):** Overexposure (`toneMappingExposure > 0.92`, `environmentIntensity > 0.35`), dark voids, primitive box placeholders vs `ProceduralMeshBuilder` compound prefabs.
+     4. **SDK & Revenue Hooks (`62-youtube-playables.md`, `65-monetization-ads.md`):** `ytgame` lifecycle hooks and all 3 Rewarded Ad hooks (Boosters, Near-Miss Revive, Victory Multiplier).
+   - Each subagent returns structured JSON candidate tickets (`id`, `gameId`, `priority`, `score`, `type`, `title`, `description`, `targetFiles`).
 
-3. **Feature, Input Ergonomics & Gameplay Health Verification (`50-input-abstraction.md` / `universal-input-ergonomics`):**
-   - Verify camera-relative axis alignment (zero inverted Left/Right on `+Z` cameras), floating virtual thumbsticks with dynamic anchors, direct point-and-aim + hover tracking, dual-mode puzzle manipulation (Tap-to-Place + Drag-and-Drop), and magnetic raycast tap assist (`>= 18px` tap tolerance).
-   - Verify camera angles/bounds (9:16 portrait and 16:9 landscape), audio mute sync, and level solvability.
+3. **Aggregate, Deduplicate & Queue (`backlog/studio-todo.json`):**
+   - The Lead Orchestrator collects all subagent reports, filters out any duplicates against `backlog/studio-todo.json`, sorts `ready` tasks by `P0 > P1 > P2` (and descending `score`), writes `backlog/studio-todo.json`, and commits/pushes to `origin/main`.
 
-4. **Code & Performance Inspection (No Direct Edits):**
-   - Inspect hot paths (`update`, `fixedUpdate`, `render`) for heap allocations (`new THREE.Vector3`, array spreads, closures) and performance bottlenecks.
-   - Do NOT apply code changes in audit; record them as concrete file-level tickets in `backlog/studio-todo.json`.
-
-5. **Static Analysis & Production Bundle Check:**
-   - Run `npm run typecheck --silent` across all registered games.
-   - Run `npm run build --silent` across all registered games: verify `dist/` bundle size is strictly `< 50 MB`, zero external network calls in `index.html`.
-
-6. **Self-Feedback & Backlog Queueing (`backlog/studio-todo.json`):**
-   - Extract design, visual, performance, and mechanical critique notes.
-   - Queue all discovered items into `backlog/studio-todo.json` prioritized as `P0` (blockers), `P1` (mechanics/performance), `P2` (visual juice).
-   - Commit and push `backlog/studio-todo.json` to `origin/main`.
-
-7. **Output Report (Aircraft Maintenance Log + Simple Task List):**
+4. **Output Report (Aircraft Maintenance Log + Simple Task List):**
    - Provide the concise ASD-STE100 summary (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / RETURN TO SERVICE`).
-   - Immediately append a **Simple Task List** showing all active `ready` tasks in `backlog/studio-todo.json` (Priority, Game, Task Title).
+   - Append a **Simple Task List** showing all active `ready` tasks in `backlog/studio-todo.json` (Priority, Game, Task Title, Score).

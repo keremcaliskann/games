@@ -65,7 +65,7 @@
 - Search first (`grep` / file search), then read only the relevant line range. Do not reread unchanged files.
 - Truncate terminal outputs (`| tail -n 40`, `--silent`). Never dump `dist/`, `node_modules/`, `*.glb`, `*.wasm`, or lockfiles into context.
 - Keep delivery summaries concise (≤ 6 lines) using the Aircraft Maintenance Log schema (`DISCREPANCY / ROOT CAUSE / CORRECTIVE ACTION / VERIFICATION`).
-- Subagents for research, auditing, and scouting must default to lightweight models (`Model: "flash"` or `"flash_lite"`) to conserve quota and eliminate 429 errors.
+- **Multi-Agent Subagent Orchestration (`12-multi-agent-orchestration.md`):** `/studio` dispatches 4 specialist subagents (`studio-architect` → parallel `studio-3d-artist` + `studio-gameplay-engineer` via `<game>/SPEC.json` contract → `studio-qa-critic`). `/audit`, `/inspect`, and `/trend` dispatch parallel read-only `research` subagents (`Model: "flash"` or `"flash_lite"`) to conserve quota and eliminate 429 errors.
 - Compress multi-turn context using `/compact` after completing major milestones.
 
 ## 6. Performance Reflex
@@ -90,7 +90,8 @@ A task is complete only when:
 | File | Mode | Trigger Condition |
 |---|---|---|
 | `rules/10-code-quality.md` | glob | Triggered when editing `**/src/**/*.ts` |
-| `rules/15-game-studio-pipeline.md` | model_decision | 2-stage Producer-Consumer pipeline, 3-Phase Studio Squad, 4-Filter Game Director critique |
+| `rules/12-multi-agent-orchestration.md` | model_decision | Multi-agent subagent orchestration (`SPEC.json` SOP contract, BMAD domain sharding, ChatDev QA gate, parallel `flash` scouts/auditors) |
+| `rules/15-game-studio-pipeline.md` | model_decision | 3-automation Producer-Consumer pipeline, 4-Subagent Studio Squad, 4-Filter Game Director critique |
 | `rules/20-performance-budget.md` | model_decision | Performance, FPS, memory, hot paths |
 | `rules/25-defensive-gameplay-and-hardening.md` | model_decision | Defensive programming, HUD pointer isolation, state idempotency, procedural feasibility, SDK invariants |
 | `rules/30-three-render.md` | glob | Triggered when editing `**/src/render/**` |
