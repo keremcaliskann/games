@@ -1,0 +1,183 @@
+{
+  "gameId": "frontier-horizon-3d",
+  "title": "FRONTIER HORIZON 3D // ALL-TERRAIN SIMULATOR",
+  "category": "open-world-all-terrain-simulator",
+  "themeKey": "frontier-horizon-3d",
+  "palette": {
+    "skyTop": "0xcfe8f7",
+    "sunKey": "0xfff6e5",
+    "groundBase": "0xfcf8ee",
+    "accentPrimary": "#d97706",
+    "accentSecondary": "#15803d",
+    "biomePalettes": {
+      "forest": {
+        "sky": "0xcfe8f7",
+        "fog": "0xcfe8f7",
+        "groundPrimary": "0x5b8c5a",
+        "trail": "0x8b6f4e",
+        "mud": "0x5c4033",
+        "water": "0x38bdf8"
+      },
+      "desert": {
+        "sky": "0xdbeefd",
+        "fog": "0xf5e6ca",
+        "groundPrimary": "0xe6c288",
+        "trail": "0xd4a373",
+        "sandDune": "0xedc988",
+        "redRock": "0xc86d51"
+      },
+      "mountain": {
+        "sky": "0xcfe8f7",
+        "fog": "0xdbeafe",
+        "groundPrimary": "0x94a3b8",
+        "trail": "0x64748b",
+        "snowIce": "0xf1f5f9",
+        "granite": "0x475569"
+      }
+    }
+  },
+  "cameraSpec": {
+    "modes": ["tps_chase", "free_orbit_360", "hood_cockpit", "tactical_far"],
+    "fovPortrait": 60,
+    "fovLandscape": 50,
+    "followOffset": [0, 4.2, 9.5],
+    "farOffset": [0, 11.0, 18.0],
+    "hoodOffset": [0, 1.45, -0.8],
+    "lookAhead": [0, 0.8, -3.5]
+  },
+  "physicsSpec": {
+    "worldSizeMeters": 1400,
+    "maxElevationMeters": 120,
+    "suspensionRaycastWheels": true,
+    "surfaces": {
+      "dirt_trail": { "grip2WD": 1.0, "grip4WD": 1.1, "drag": 0.018, "sinkDepth": 0.0 },
+      "deep_mud": { "grip2WD": 0.42, "grip4WD": 0.86, "drag": 0.085, "sinkDepth": 0.18 },
+      "soft_sand": { "grip2WD": 0.50, "grip4WD": 0.88, "drag": 0.068, "sinkDepth": 0.14 },
+      "mountain_rock": { "grip2WD": 0.72, "grip4WD": 0.98, "drag": 0.022, "sinkDepth": 0.0 },
+      "alpine_ice": { "grip2WD": 0.36, "grip4WD": 0.64, "drag": 0.012, "sinkDepth": 0.02 },
+      "water_ford": { "grip2WD": 0.52, "grip4WD": 0.76, "drag": 0.11, "sinkDepth": 0.25 }
+    },
+    "controls": {
+      "throttleBrake": ["KeyW", "KeyS", "ArrowUp", "ArrowDown"],
+      "steer": ["KeyA", "KeyD", "ArrowLeft", "ArrowRight"],
+      "handbrake": "Space",
+      "diffLock4x4": "KeyE",
+      "recoverVehicle": "KeyR",
+      "headlights": "KeyL",
+      "horn": "KeyH",
+      "cameraMode": "KeyC",
+      "slowMotion": "KeyV"
+    }
+  },
+  "biomesSpec": [
+    {
+      "id": "forest",
+      "nameTr": "ZÜMRÜT ORMAN VADİSİ",
+      "unlockCondition": "unlocked_at_start",
+      "waypointsToUnlockNext": 5,
+      "watchtowersCount": 3,
+      "hiddenCratesCount": 5,
+      "hiddenRelicsCount": 5,
+      "landmarks": ["Hidden Waterfall Cavern", "Timber Log Bridges", "Deep Mud Marsh", "Old Lumber Mill Camp"]
+    },
+    {
+      "id": "desert",
+      "nameTr": "KIZIL KANYON & ÇÖL",
+      "unlockCondition": "forest_5_waypoints",
+      "waypointsToUnlockNext": 5,
+      "watchtowersCount": 3,
+      "hiddenCratesCount": 5,
+      "hiddenRelicsCount": 5,
+      "landmarks": ["Red Sandstone Arches", "Palm Oasis Lake", "Ancient Sun Temple Ruins", "Slot Canyon Jump"]
+    },
+    {
+      "id": "mountain",
+      "nameTr": "YABAN DAĞ ZİRVELERİ",
+      "unlockCondition": "desert_5_waypoints",
+      "waypointsToUnlockNext": 5,
+      "watchtowersCount": 3,
+      "hiddenCratesCount": 5,
+      "hiddenRelicsCount": 5,
+      "landmarks": ["Hairpin Switchbacks", "Abandoned Mine Tunnel", "Chasm Suspension Bridge", "Icy Summit Plateau"]
+    }
+  ],
+  "vehiclesSpec": [
+    { "id": "trail-scout", "name": "Trail Scout 4x4", "cost": 0, "wheels": 4, "maxSpeedKmh": 88, "torque": 58, "grip": 62, "suspension": 60 },
+    { "id": "dune-buggy", "name": "Dune Buggy V6", "cost": 1200, "wheels": 4, "maxSpeedKmh": 118, "torque": 54, "grip": 66, "suspension": 76 },
+    { "id": "canyon-pickup", "name": "Canyon Pickup 4x4", "cost": 2500, "wheels": 4, "maxSpeedKmh": 102, "torque": 74, "grip": 72, "suspension": 68 },
+    { "id": "rally-raid", "name": "Rally Raid SUV", "cost": 4200, "wheels": 4, "maxSpeedKmh": 134, "torque": 76, "grip": 80, "suspension": 80 },
+    { "id": "rock-crawler", "name": "Rock Crawler Pro", "cost": 6800, "wheels": 4, "maxSpeedKmh": 96, "torque": 92, "grip": 94, "suspension": 96 },
+    { "id": "mammoth-6x6", "name": "Mammoth 6x6 Truck", "cost": 10000, "wheels": 6, "maxSpeedKmh": 92, "torque": 98, "grip": 92, "suspension": 86 },
+    { "id": "apex-hyper", "name": "Apex Hyper 4x4", "cost": 15000, "wheels": 4, "maxSpeedKmh": 155, "torque": 95, "grip": 96, "suspension": 90 }
+  ],
+  "customizationSpec": {
+    "bodyColors": [
+      "0xf97316", "0xef4444", "0xeab308", "0x22c55e",
+      "0x15803d", "0x0ea5e9", "0x2563eb", "0x6366f1",
+      "0xa855f7", "0xf8fafc", "0x94a3b8", "0x334155"
+    ],
+    "paintFinishes": ["matte", "gloss", "metallic"],
+    "roofAccessories": [
+      { "id": "led_bar", "nameTr": "Tavan LED Projektör", "cost": 250 },
+      { "id": "roof_rack", "nameTr": "Keşif Sepeti & Yedek Lastik", "cost": 400 },
+      { "id": "snorkel", "nameTr": "Çöl & Nehir Şnorkeli", "cost": 350 }
+    ],
+    "mechanicalUpgrades": {
+      "stats": ["engine", "suspension", "tires", "drivetrain"],
+      "maxLevel": 5,
+      "levelCosts": [0, 250, 550, 1050, 1800]
+    }
+  },
+  "economySpec": {
+    "pacing": "challenging_slow_progression",
+    "waypointBaseReward": 110,
+    "waypointHardBonusMultiplier": 1.3,
+    "hiddenCrateReward": 180,
+    "hiddenRelicReward": 320,
+    "watchtowerReward": 120,
+    "biome10CollectiblesJackpot": 1200,
+    "airtimeReward": 35
+  },
+  "prefabContract": {
+    "className": "PrefabFactory",
+    "methods": [
+      {
+        "name": "createVehiclePrefab",
+        "params": "vehicleId: string, bodyColorHex: number, paintFinish: string, accessories: string[]",
+        "returns": "THREE.Group",
+        "notes": "Pivot at ground contact, faces -Z, exposes child 'chassis', 'wheels' array (4 or 6 independent wheels with coil springs), 'headlights', 'brakelights', and accessory groups."
+      },
+      {
+        "name": "createBiomeEnvironment",
+        "params": "biomeId: 'forest' | 'desert' | 'mountain'",
+        "returns": "THREE.Group",
+        "notes": "Builds 1400x1400m open-world heightmap mesh, surface zones, bridges, caves/tunnels, trees/cacti/boulders, and destructible physics props."
+      },
+      {
+        "name": "createCollectiblePrefab",
+        "params": "type: 'crate' | 'relic'",
+        "returns": "THREE.Group",
+        "notes": "Glowing tactile treasure chest or ancient golden relic with floating animation."
+      },
+      {
+        "name": "createWatchtowerPrefab",
+        "params": "biomeId: string",
+        "returns": "THREE.Group",
+        "notes": "Tall lookout tower / radio antenna with rotating radar dish."
+      }
+    ]
+  },
+  "gameplayContract": {
+    "friendlyPatrolBotsCount": 5,
+    "biomesCount": 3,
+    "vehiclesCount": 7,
+    "collectiblesPerBiome": 10,
+    "proximityRadarRangeMeters": 60,
+    "rewardedAdHooks": [
+      "booster_secret_radar_compass",
+      "booster_mega_torque_grip",
+      "revive_cliff_rescue_cash",
+      "victory_milestone_multiplier"
+    ]
+  }
+}
