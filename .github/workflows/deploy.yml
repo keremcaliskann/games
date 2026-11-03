@@ -24,28 +24,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Build All Registered Games & Assemble Portal Site
+      - name: Assemble Static Portal & Pre-Built Game Bundles
         run: |
           mkdir -p _site
           cp index.html _site/
           cp games.json _site/
           cp -f sitemap.xml robots.txt llms.txt _site/ || true
-          node -e '
-            const fs = require("fs");
-            const { execSync } = require("child_process");
-            const games = JSON.parse(fs.readFileSync("games.json", "utf8")).filter(g => g.active !== false);
-            for (const g of games) {
-              console.log("=== Building " + g.id + " ===");
-              execSync("npm install --no-audit --no-fund && npm run build", { cwd: g.id, stdio: "inherit" });
-              fs.mkdirSync("_site/" + g.id, { recursive: true });
-              fs.cpSync(g.id + "/dist", "_site/" + g.id, { recursive: true });
-            }
-          '
+          for dist_dir in */dist; do
+            if [ -d "$dist_dir" ]; then
+              game_id="${dist_dir%/dist}"
+              echo "=== Publishing pre-built bundle: $game_id ==="
+              mkdir -p "_site/$game_id"
+              cp -r "$dist_dir"/. "_site/$game_id"/
+            fi
+          done
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
