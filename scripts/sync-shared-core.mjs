@@ -23,6 +23,9 @@ const sharedVisualContent = fs.readFileSync(path.join(rootDir, 'shared/render/vi
 const sharedProceduralContent = fs.readFileSync(path.join(rootDir, 'shared/render/procedural-mesh-builder.ts'), 'utf8');
 const sharedResolverContent = fs.readFileSync(path.join(rootDir, 'shared/render/asset-resolver.ts'), 'utf8');
 const sharedInputContent = fs.readFileSync(path.join(rootDir, 'shared/input/ergonomic-input.ts'), 'utf8');
+const sharedGameLoopContent = fs.readFileSync(path.join(rootDir, 'shared/core/game-loop.ts'), 'utf8');
+const sharedObjectPoolContent = fs.readFileSync(path.join(rootDir, 'shared/core/object-pool.ts'), 'utf8');
+const sharedMathScratchContent = fs.readFileSync(path.join(rootDir, 'shared/core/math-scratch.ts'), 'utf8');
 
 function buildLeftSidebarHtml() {
   return `      <!-- Left Navigation Rail -->
@@ -221,6 +224,9 @@ for (const gameMeta of catalog) {
   const proceduralPath = path.join(gameDir, 'src/render/procedural-mesh-builder.ts');
   const resolverPath = path.join(gameDir, 'src/render/asset-resolver.ts');
   const ergonomicInputPath = path.join(gameDir, 'src/input/ergonomic-input.ts');
+  const gameLoopPath = path.join(gameDir, 'src/core/game-loop.ts');
+  const objectPoolPath = path.join(gameDir, 'src/core/object-pool.ts');
+  const mathScratchPath = path.join(gameDir, 'src/core/math-scratch.ts');
   const inputManagerPath = path.join(gameDir, 'src/input/input-manager.ts');
   const kbMousePath = path.join(gameDir, 'src/input/keyboard-mouse.ts');
   const lightingPath = path.join(gameDir, 'src/render/lighting.ts');
@@ -234,12 +240,16 @@ for (const gameMeta of catalog) {
     fs.mkdirSync(path.dirname(proceduralPath), { recursive: true });
     fs.mkdirSync(path.dirname(resolverPath), { recursive: true });
     fs.mkdirSync(path.dirname(ergonomicInputPath), { recursive: true });
+    fs.mkdirSync(path.dirname(gameLoopPath), { recursive: true });
     fs.writeFileSync(adsPath, sharedAdsContent, 'utf8');
     fs.writeFileSync(shellPath, sharedShellContent, 'utf8');
     fs.writeFileSync(visualPath, sharedVisualContent, 'utf8');
     fs.writeFileSync(proceduralPath, sharedProceduralContent, 'utf8');
     fs.writeFileSync(resolverPath, sharedResolverContent, 'utf8');
     fs.writeFileSync(ergonomicInputPath, sharedInputContent, 'utf8');
+    fs.writeFileSync(gameLoopPath, sharedGameLoopContent, 'utf8');
+    fs.writeFileSync(objectPoolPath, sharedObjectPoolContent, 'utf8');
+    fs.writeFileSync(mathScratchPath, sharedMathScratchContent, 'utf8');
 
     if (fs.existsSync(lightingPath)) {
       const currentLighting = fs.readFileSync(lightingPath, 'utf8');
@@ -301,6 +311,13 @@ for (const gameMeta of catalog) {
   const finalProcedural = fs.existsSync(proceduralPath) ? fs.readFileSync(proceduralPath, 'utf8') : '';
   const finalResolver = fs.existsSync(resolverPath) ? fs.readFileSync(resolverPath, 'utf8') : '';
   const hybridOk = finalProcedural === sharedProceduralContent && finalResolver === sharedResolverContent;
+  const finalLoop = fs.existsSync(gameLoopPath) ? fs.readFileSync(gameLoopPath, 'utf8') : '';
+  const finalPool = fs.existsSync(objectPoolPath) ? fs.readFileSync(objectPoolPath, 'utf8') : '';
+  const finalScratch = fs.existsSync(mathScratchPath) ? fs.readFileSync(mathScratchPath, 'utf8') : '';
+  const coreEngineOk =
+    finalLoop === sharedGameLoopContent &&
+    finalPool === sharedObjectPoolContent &&
+    finalScratch === sharedMathScratchContent;
   const hasSeoGeo =
     finalHtml.includes('id="seo-videogame-schema"') &&
     finalHtml.includes('id="seo-canonical"') &&
@@ -310,6 +327,7 @@ for (const gameMeta of catalog) {
     game: g,
     ads: adsSynced ? 'SYNCED' : 'DRIFT',
     shellCtrl: shellSynced ? 'SYNCED' : 'DRIFT',
+    coreEngine: coreEngineOk ? 'SYNCED' : 'DRIFT',
     visualIBL: visualSynced ? 'SYNCED' : 'DRIFT',
     hybrid3D: hybridOk ? 'SYNCED' : 'DRIFT',
     inputCtrl: inputErgonomicOk ? 'SYNCED' : 'DRIFT',
@@ -465,6 +483,7 @@ const failed = report.filter(
   (r) =>
     r.ads !== 'SYNCED' ||
     r.shellCtrl !== 'SYNCED' ||
+    r.coreEngine !== 'SYNCED' ||
     r.visualIBL !== 'SYNCED' ||
     r.hybrid3D !== 'SYNCED' ||
     r.inputCtrl !== 'SYNCED' ||

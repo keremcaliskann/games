@@ -337,16 +337,19 @@ class DropMergeApp {
   }
 
   private render(dt: number): void {
+    if (this.isFirstFrame) {
+      this.isFirstFrame = false;
+      this.renderer.render(this.scene, this.cameraRig.camera);
+      PlatformBridge.firstFrameReady();
+      return;
+    }
+    if (this.shell.isMenuOpen) return;
+
     this.clock.tick();
     this.particles.update(dt);
     this.cameraRig.update(dt);
 
     this.renderer.render(this.scene, this.cameraRig.camera);
-
-    if (this.isFirstFrame) {
-      this.isFirstFrame = false;
-      PlatformBridge.firstFrameReady();
-    }
   }
 }
 

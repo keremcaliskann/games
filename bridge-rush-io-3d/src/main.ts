@@ -110,9 +110,8 @@ async function bootstrap(): Promise<void> {
         cameraRig.update(dt, race.player.pos, race.player.brickCount);
       }
       hud?.update(dt);
+      renderer.render(scene, cameraRig.camera);
     }
-
-    renderer.render(scene, cameraRig.camera);
   }
 
   requestAnimationFrame(animate);

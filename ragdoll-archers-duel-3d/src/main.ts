@@ -198,6 +198,14 @@ export class ArcherDuelApp {
     this.lastTimeMs = nowMs;
     const dt = Math.min(0.05, Math.max(0.001, rawDt));
 
+    if (this.isFirstFrame) {
+      this.isFirstFrame = false;
+      this.renderer.render(this.scene, this.cameraRig.camera);
+      PlatformBridge.firstFrameReady();
+      PlatformBridge.gameReady();
+      return;
+    }
+
     if (!this.isPaused && !this.shell.isMenuOpen) {
       const simDt = dt * this.shell.getDifficultyMultiplier();
       this.duel.updateAimPreview(
@@ -209,14 +217,7 @@ export class ArcherDuelApp {
       this.particles.update(simDt);
       this.lighting.update(dt);
       this.cameraRig.update(dt);
-    }
-
-    this.renderer.render(this.scene, this.cameraRig.camera);
-
-    if (this.isFirstFrame) {
-      this.isFirstFrame = false;
-      PlatformBridge.firstFrameReady();
-      PlatformBridge.gameReady();
+      this.renderer.render(this.scene, this.cameraRig.camera);
     }
   }
 }

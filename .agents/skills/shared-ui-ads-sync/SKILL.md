@@ -14,17 +14,15 @@ Ensures that **every game in the workspace** shares the exact same 3-column UI s
 - `shared/platform/ads.ts` — Canonical `IAdProvider` & `UniversalAdProvider` supporting YouTube Playables (`ytgame.ads`), CrazyGames, Yandex Games, Poki, and the standardized 2-second interactive `YOUTUBE PLAYABLES REWARD REEL // SPONSOR` modal, plus automatic `body.ads-unavailable` disabled-state synchronization.
 - `shared/ui/shell-controller.ts` — Canonical `ShellController` managing:
   - `ResizeObserver` canvas stage resizing and `../games.json` SVG icon discovery in the Left Navigation Sidebar (active games only).
-  - Universal Minimalist Theme-Matched Start Menu Overlay (`#shell-start-menu`) over a live 3D background with `backdrop-filter: blur(12px)`.
-  - Initial `MENU` State Lock (`shell.isMenuOpen = true` on boot so physics, timers, enemies, and controls wait until `OYNA` is clicked).
+  - Universal Full-Cover Theme-Matched Start Menu Overlay (`#shell-start-menu`) covering 100% of `#shell-stage` (`inset: 0`, opaque theme-matched background).
+  - Zero Background Execution Before Play (`shell.isMenuOpen = true` on boot + `requestAnimationFrame` menu gate so zero physics, AI, camera, or WebGL rendering runs in the background until `OYNA` is clicked).
   - Difficulty Selection (`Kolay` / `Normal` / `Zor` -> `shell.getDifficultyMultiplier()`) and `ESC` / top-right `⏸` Pause menu toggle.
-- `shared/ui/arcade-shell.css` — Canonical 3-column layout (Left Navigation Sidebar `.shell-sidebar-left` + Center Stage `.shell-stage` + Right Ad Rail `.shell-sidebar-right`), `backdrop-filter: blur(12px)` Start Menu overlay with `--menu-theme-color` / `--menu-accent-gradient` variables, `.is-menu-locked` HUD hiding, and offline/adblock disabled button rules.
+- `shared/ui/arcade-shell.css` — Canonical 3-column layout (Left Navigation Sidebar `.shell-sidebar-left` + Center Stage `.shell-stage` + Right Ad Rail `.shell-sidebar-right`), full-cover opaque `.shell-start-menu-overlay` with `--menu-theme-color` / `--menu-accent-gradient` variables, `#shell-stage.is-menu-locked > *:not(#shell-start-menu)` canvas/HUD hiding, and offline/adblock disabled button rules.
+- `shared/core/game-loop.ts`, `shared/core/object-pool.ts`, `shared/core/math-scratch.ts` — Genre-agnostic Shared Engine Core (`ManagedGameLoop`, `GameLoop`, `ObjectPool<T>`, `SceneDisposableTracker`, and `Scratch` registers).
 
-## 2. Automated Synchronization & Verification Command
+## 2. Automated Synchronization & Verification Commands
 Run from workspace root after creating or modifying any game:
 ```powershell
 node scripts/sync-shared-core.mjs
-```
-To verify without writing (CI / pre-flight check):
-```powershell
-node scripts/sync-shared-core.mjs --check
+node scripts/verify-game-quality.mjs
 ```

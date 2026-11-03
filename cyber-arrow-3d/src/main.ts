@@ -332,18 +332,20 @@ class GameApp {
   }
 
   private update(delta: number): void {
+    if (this.shell.isMenuOpen) return;
     this.cameraRig.update(delta);
-    if (!this.shell.isMenuOpen) {
-      this.grid.update(delta);
-    }
+    this.grid.update(delta);
     this.particles.update(delta);
   }
 
   private render(): void {
     if (this.isFirstRender) {
       this.isFirstRender = false;
+      this.pipeline.render(this.cameraRig.camera);
       PlatformBridge.signalFirstFrameReady();
+      return;
     }
+    if (this.shell.isMenuOpen) return;
     this.pipeline.render(this.cameraRig.camera);
   }
 }

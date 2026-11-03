@@ -64,7 +64,7 @@ class HexaSortApp {
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.0;
+    this.renderer.toneMappingExposure = 0.85;
     this.appEl.appendChild(this.renderer.domElement);
 
     // 4. Camera & Lighting
@@ -407,10 +407,7 @@ class HexaSortApp {
   }
 
   private update(dt: number): void {
-    if (this.shell.isMenuOpen) {
-      this.cameraRig.update(dt);
-      return;
-    }
+    if (this.shell.isMenuOpen) return;
     const diffMult = this.shell.getDifficultyMultiplier();
     if (this.feverTimer > 0) {
       this.feverTimer = Math.max(0, this.feverTimer - dt * diffMult);
@@ -429,13 +426,15 @@ class HexaSortApp {
   }
 
   private render(): void {
-    this.renderer.render(this.scene, this.cameraRig.camera);
-
     if (this.isFirstRender) {
       this.isFirstRender = false;
+      this.renderer.render(this.scene, this.cameraRig.camera);
       PlatformBridge.signalFirstFrameReady();
       PlatformBridge.signalGameReady();
+      return;
     }
+    if (this.shell.isMenuOpen) return;
+    this.renderer.render(this.scene, this.cameraRig.camera);
   }
 }
 

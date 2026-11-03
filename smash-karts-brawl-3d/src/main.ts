@@ -109,9 +109,8 @@ async function bootstrap(): Promise<void> {
         cameraRig.update(dt, arena.player.pos, arena.player.powerCubes);
       }
       hud?.update(dt);
+      renderer.render(scene, cameraRig.camera);
     }
-
-    renderer.render(scene, cameraRig.camera);
   }
 
   requestAnimationFrame(animate);

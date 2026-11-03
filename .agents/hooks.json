@@ -1,0 +1,11 @@
+{
+  "studio-quality-gate": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "node scripts/verify-game-quality.mjs",
+        "timeout": 15
+      }
+    ]
+  }
+}

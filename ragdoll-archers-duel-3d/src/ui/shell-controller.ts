@@ -1,10 +1,13 @@
 /**
- * Standardized 3-Column Arcade Shell Controller & Minimalist Theme-Matched Start Menu
+ * Standardized 3-Column Arcade Shell Controller & Full-Screen Theme-Matched Start Menu
  * (Single Source of Truth across all active & future Arcade 3D games).
  * - Automatically mounts/enforces the canonical 3-Column Arcade Shell DOM around #app/#game-container and #hud/#hud-root.
  * - Permanently displays Left Navigation Sidebar + Center 3D Stage + Right Sponsor Ad Rail (zero fullscreen toggle).
- * - Enforces MENU State Lock on boot (`isMenuOpen = true`): gameplay physics, timers, bots, and player controls remain
- *   passive while the live 3D scene renders behind a `backdrop-filter: blur(12px)` glass overlay.
+ * - Enforces 100% Full-Screen Start Menu & Zero Background Execution (`isMenuOpen = true`):
+ *   - `#shell-start-menu` completely covers `#shell-stage` (`inset: 0`, 100% opaque theme-matched background),
+ *     hiding `#app` canvas and `#hud` until `OYNA` is clicked.
+ *   - Parks `requestAnimationFrame` callbacks after initial boot handshake so 0% background CPU/GPU simulation
+ *     or rendering occurs while the menu is open.
  * - Minimalist Start Menu Card: Game Title, Difficulty Selector (Kolay / Normal / Zor), prominent OYNA button,
  *   and optional minimal icon button for sound (only if the game already provides an audio toggle).
  * - Supports ESC key & top-right ⏸ button to pause gameplay and re-open the menu at any time.
@@ -138,6 +141,12 @@ export class ShellController {
   private lastObservedHeight = 0;
 
   private readonly onArcadeRestartBound = () => this.triggerRestart();
+  private nativeRaf: typeof window.requestAnimationFrame | null = null;
+  private nativeCancelRaf: typeof window.cancelAnimationFrame | null = null;
+  private readonly parkedRafCallbacks = new Map<number, FrameRequestCallback>();
+  private nextParkedRafId = 900_000;
+  private bootFramesRemaining = 2;
+
   private readonly onKeyDownBound = (e: KeyboardEvent) => {
     if (e.code === 'Escape') {
       e.preventDefault();
@@ -460,9 +469,48 @@ export class ShellController {
       this.difficultyChangedWhileOpen = false;
       this.triggerRestart();
     }
+
+    this.flushParkedAnimationFrames();
+  }
+
+  private installMenuRafGate(): void {
+    if (typeof window === 'undefined' || this.nativeRaf) return;
+    this.nativeRaf = window.requestAnimationFrame.bind(window);
+    this.nativeCancelRaf = window.cancelAnimationFrame.bind(window);
+
+    window.requestAnimationFrame = (callback: FrameRequestCallback): number => {
+      if (this.isMenuOpen) {
+        if (this.bootFramesRemaining > 0) {
+          this.bootFramesRemaining--;
+          return this.nativeRaf!(callback);
+        }
+        const parkedId = ++this.nextParkedRafId;
+        this.parkedRafCallbacks.set(parkedId, callback);
+        return parkedId;
+      }
+      return this.nativeRaf!(callback);
+    };
+
+    window.cancelAnimationFrame = (handle: number): void => {
+      if (this.parkedRafCallbacks.has(handle)) {
+        this.parkedRafCallbacks.delete(handle);
+        return;
+      }
+      this.nativeCancelRaf?.(handle);
+    };
+  }
+
+  private flushParkedAnimationFrames(): void {
+    if (!this.nativeRaf || this.parkedRafCallbacks.size === 0) return;
+    const callbacks = Array.from(this.parkedRafCallbacks.values());
+    this.parkedRafCallbacks.clear();
+    for (let i = 0; i < callbacks.length; i++) {
+      this.nativeRaf(callbacks[i]);
+    }
   }
 
   private init(): void {
+    this.installMenuRafGate();
     window.addEventListener('arcade:restart', this.onArcadeRestartBound);
     window.addEventListener('keydown', this.onKeyDownBound);
 
@@ -474,6 +522,7 @@ export class ShellController {
         this.stageEl?.classList.remove('is-menu-locked');
         this.startMenuEl?.classList.add('is-hidden');
         window.dispatchEvent(new CustomEvent('arcade:restart'));
+        this.flushParkedAnimationFrames();
       });
     }
 
@@ -560,6 +609,13 @@ export class ShellController {
   }
 
   public dispose(): void {
+    if (this.nativeRaf && typeof window !== 'undefined') {
+      window.requestAnimationFrame = this.nativeRaf;
+      if (this.nativeCancelRaf) {
+        window.cancelAnimationFrame = this.nativeCancelRaf;
+      }
+      this.parkedRafCallbacks.clear();
+    }
     window.removeEventListener('arcade:restart', this.onArcadeRestartBound);
     window.removeEventListener('keydown', this.onKeyDownBound);
     this.resizeObserver?.disconnect();

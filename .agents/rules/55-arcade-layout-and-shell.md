@@ -106,21 +106,21 @@ document.getElementById('shell-restart-btn')?.addEventListener('click', () => {
 ### 4.2 Dynamic "Diğer Oyunlar" Discovery List
 The sidebar dynamically requests `../games.json` and renders all active sibling games (`active !== false`) with their SVG icons (`../${g.id}/icon.svg`).
 
-### 4.3 Universal Minimalist Start Menu & `MENU` State Lock Invariant (`#shell-start-menu`)
-Every current and future game MUST begin with the standardized **Minimalist Theme-Matched Start Menu Overlay** (`#shell-start-menu`), automatically mounted and managed by `ShellController`:
+### 4.3 Universal Full-Cover Start Menu & Zero Background Execution Invariant (`#shell-start-menu`)
+Every current and future game MUST begin with the standardized **Full-Cover Theme-Matched Start Menu Overlay** (`#shell-start-menu`), automatically mounted and managed by `ShellController`:
 1. **Theme Harmony (`--menu-theme-color`, `--menu-accent-gradient`, `--menu-glow-rgba`):**
    - The menu card's top accent bar, icon crest, active difficulty pill, and **`OYNA`** button dynamically adopt the exact color palette and gradient of the host game (from `GAME_THEMES` and `../games.json`).
-2. **Dynamic Blurred Live 3D Background (`backdrop-filter: blur(12px)`):**
-   - While the menu is open (`shell.isMenuOpen === true`), `#shell-stage` has class `.is-menu-locked` (which hides `#hud` / `#hud-root` so there is zero UI clutter) while the live 3D WebGL scene continues rendering behind `backdrop-filter: blur(12px)`.
+2. **100% Full-Stage Opaque Coverage (`inset: 0` & `.is-menu-locked`):**
+   - While the menu is open (`shell.isMenuOpen === true`), `#shell-start-menu` covers 100% of `#shell-stage` (`inset: 0`, `width: 100%`, `height: 100%`, `z-index: 9999`) with an opaque theme-matched background (`linear-gradient(160deg, #f8fafc 0%, var(--menu-tint-bg, #e0f2fe) 52%, #e2e8f0 100%)`), and `#shell-stage.is-menu-locked > *:not(#shell-start-menu)` hides `#app` canvas and `#hud` (`visibility: hidden !important; opacity: 0 !important;`).
 3. **Minimalist Menu Structure:**
    - Centered **Game Icon** (`./icon.svg`) + **Game Title** (`#shell-start-title`).
    - **Difficulty Selector (`Kolay` / `Normal` / `Zor`)** segmented pill bar (`easy: 0.78x`, `normal: 1.0x`, `hard: 1.28x` via `shell.getDifficultyMultiplier()`).
    - Prominent **`▶ OYNA`** button (`#shell-start-play-btn`).
    - **Optional Minimal Icon Buttons Only When Applicable:** Do not render extra settings/sub-menu clutter. Only render the minimal sound icon (`#shell-menu-sound-btn` `🔊`/`🔇`) if the game already provides an audio toggle in its DOM, plus a minimal reset icon (`#shell-menu-reset-btn` `🔄`) when paused mid-session.
-4. **Game Loop & State Management (`MENU` State Lock, Fade-Out Transition, Pause):**
-   - **Initial `MENU` Lock:** On page load, `shell.isMenuOpen` starts as `true`. Until the player clicks **`OYNA`**, game physics, match timers, enemy/obstacle spawning, and player controls MUST remain passive (`if (!this.isPaused && !this.shell.isMenuOpen)`). Only the 3D scene/camera rendering runs.
-   - **Smooth Fade-Out Transition to Play:** Clicking **`OYNA`** applies the selected difficulty (`shell.getDifficultyMultiplier()`), smoothly fades out `#shell-start-menu` (`opacity: 0; visibility: hidden; transition: opacity 0.32s`), and starts gameplay at that exact moment.
-   - **Pause / Re-Open (`ESC` & Top-Right `⏸` Button):** Pressing `ESC` or clicking `#shell-stage-pause-btn` (`⏸` in the top-right of `#shell-stage`) pauses gameplay (`shell.isMenuOpen = true`) and re-opens `#shell-start-menu` (or allows a clean reset via `🔄` / difficulty change).
+4. **Zero Background Execution Before Play (`MENU` State Lock, RAF Gate, Pause):**
+   - **Zero Background Simulation & Rendering:** On page load, `shell.isMenuOpen` starts as `true`. After the initial boot frame handshake (`firstFrameReady()`), **0% of the game may run in the background** until **`OYNA`** is clicked — `ShellController` parks `requestAnimationFrame` callbacks and the game loop (`ManagedGameLoop` / `animate` / `onFrame`) skips all physics, AI, camera, particle, and `renderer.render()` calls while `shell.isMenuOpen === true`.
+   - **Instant Wake & Smooth Transition to Play:** Clicking **`OYNA`** sets `shell.isMenuOpen = false`, flushes parked animation frames, applies the selected difficulty (`shell.getDifficultyMultiplier()`), fades out `#shell-start-menu`, and starts gameplay at that exact moment.
+   - **Pause / Re-Open (`ESC` & Top-Right `⏸` Button):** Pressing `ESC` or clicking `#shell-stage-pause-btn` (`⏸` in the top-right of `#shell-stage`) pauses gameplay (`shell.isMenuOpen = true`), halts background execution, and re-opens `#shell-start-menu`.
 
 ---
 

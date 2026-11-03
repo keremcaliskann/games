@@ -245,9 +245,14 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
   transition: opacity 0.25s ease;
 }
 
+#shell-stage.is-menu-locked > *:not(#shell-start-menu),
+#shell-stage.is-menu-locked #app,
+#shell-stage.is-menu-locked #game-container,
+#shell-stage.is-menu-locked .game-canvas-container,
 #shell-stage.is-menu-locked #hud,
 #shell-stage.is-menu-locked #hud-root,
 #shell-stage.is-menu-locked .game-hud-overlay {
+  visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
 }
@@ -300,19 +305,22 @@ body.ads-unavailable [data-ad-hook="multiplier"] {
 .shell-start-menu-overlay {
   position: absolute !important;
   inset: 0 !important;
-  z-index: 95 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 9999 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 20px !important;
-  background: radial-gradient(circle at center, rgba(15, 23, 42, 0.18) 0%, rgba(15, 23, 42, 0.54) 100%) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  padding: 24px !important;
+  /* 100% Opaque Full-Stage Cover — zero background game visibility before Play is clicked */
+  background:
+    radial-gradient(circle at 50% 22%, var(--menu-glow-rgba) 0%, transparent 58%),
+    linear-gradient(160deg, #f8fafc 0%, var(--menu-tint-bg, #e0f2fe) 52%, #e2e8f0 100%) !important;
   pointer-events: auto !important;
   opacity: 1 !important;
   visibility: visible !important;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s ease !important;
+  transition: opacity 0.28s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.28s ease !important;
 }
 
 .shell-start-menu-overlay.is-hidden {

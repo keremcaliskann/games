@@ -34,8 +34,8 @@ Define the 4 specialist subagents via `define_subagent` (`EnableWriteTools: true
 Invoke `studio-architect` (`Model: "pro"`) to:
 1. Read `backlog/game-plans/<game-id>/STATUS.json`, `DESIGN.md`, and `SPEC.json`.
 2. Update `backlog/game-plans/<game-id>/STATUS.json` to `"status": "in_progress"`.
-3. Create `<game-id>/` at workspace root and copy `backlog/game-plans/<game-id>/DESIGN.md` and `SPEC.json` into `<game-id>/DESIGN.md` and `<game-id>/SPEC.json` verbatim — preserving 100% of the user's planned mechanics, maps, AI rules, and models.
-4. Write `<game-id>/package.json`, `tsconfig.json`, `vite.config.ts` (`base: './'`), `.gitignore`, and `public/manifest.json`.
+3. Run `node scripts/scaffold-game.mjs <game-id> "<title>" "<themeColor>"` to scaffold `<game-id>/` with the full Shared Engine Core (`src/core/game-loop.ts`, `src/core/object-pool.ts`, `src/core/math-scratch.ts`), 3-Column Arcade Shell, `package.json`, `tsconfig.json`, and `vite.config.ts`.
+4. Copy `backlog/game-plans/<game-id>/DESIGN.md` and `SPEC.json` into `<game-id>/DESIGN.md` and `<game-id>/SPEC.json` verbatim — preserving 100% of the user's planned mechanics, maps, AI rules, and models.
 
 ### Gate 2: Parallel Domain Shards (`studio-3d-artist` + `studio-gameplay-engineer` on Argon Medium)
 Once `<game-id>/SPEC.json` is written, invoke **`studio-3d-artist`** and **`studio-gameplay-engineer` in parallel** on **Argon Medium** (`Model: "inherit"`, strictly disjoint file ownership):
@@ -59,7 +59,7 @@ Reads `<game-id>/DESIGN.md`, `<game-id>/SPEC.json`, `25-defensive-gameplay-and-h
 
 ### Gate 3: `studio-qa-critic` Subagent (Argon High — `Model: "pro"`)
 After both Shard 2A and Shard 2B complete, invoke `studio-qa-critic` on **Argon High** (`Model: "pro"`):
-1. Register `<game-id>` in root `games.json`, `index.html`, and `shared/ui/shell-controller.ts` (`GAME_THEMES`), then run `node scripts/sync-shared-core.mjs`.
+1. Register `<game-id>` in root `games.json`, `index.html`, and `shared/ui/shell-controller.ts` (`GAME_THEMES`), then run `node scripts/sync-shared-core.mjs` and `node scripts/verify-game-quality.mjs`.
 2. Run `npm --prefix <game-id> install --prefer-offline --no-audit --no-fund`, `npm --prefix <game-id> run typecheck`, and `npm --prefix <game-id> run build`.
 3. Audit against all **4 Game Director Filters** and verify 100% fidelity to `<game-id>/DESIGN.md`.
 4. Apply immediate surgical fixes if any compiler error or rule violation is found, and write `<game-id>/CRITIQUE.md`.

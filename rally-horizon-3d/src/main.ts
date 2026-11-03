@@ -122,9 +122,8 @@ async function bootstrap(): Promise<void> {
         sunLight.target.updateMatrixWorld();
       }
       hud?.update(dt);
+      renderer.render(scene, cameraRig.camera);
     }
-
-    renderer.render(scene, cameraRig.camera);
   }
 
   requestAnimationFrame(animate);

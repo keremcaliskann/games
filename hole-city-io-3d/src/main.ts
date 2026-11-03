@@ -302,9 +302,14 @@ class HoleCityApp {
   }
 
   private onFrame(time: number): void {
-    if (this.lastTime === 0) this.lastTime = time;
+    if (this.lastTime === 0) {
+      this.lastTime = time;
+      this.renderer.render(this.scene, this.cameraRig.camera);
+      return;
+    }
     const dt = Math.min((time - this.lastTime) / 1000, 0.1);
     this.lastTime = time;
+    if (this.shell.isMenuOpen) return;
 
     if (this.isMatchRunning && !this.shell.isMenuOpen) {
       const simDt = dt * this.shell.getDifficultyMultiplier();
